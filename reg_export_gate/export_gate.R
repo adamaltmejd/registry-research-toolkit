@@ -23,7 +23,7 @@
 #
 # Fixed toolkit code: copy it unchanged. Its version is in every receipt.
 
-EXPORT_GATE_VERSION <- "0.4.0"
+EXPORT_GATE_VERSION <- "0.6.0"
 
 export_gate <- local({
   RECEIPT <- "receipt.json"
@@ -50,8 +50,27 @@ export_gate <- local({
     boolean = function() arrow::boolean(),
     date = function() arrow::date32()
   )
-  ROLES <- c("dimension", "count", "person_count", "statistic")
+  ROLES <- c(
+    "dimension",
+    "count",
+    "person_count",
+    "statistic",
+    "share",
+    "check_only"
+  )
   COUNT_ROLES <- c("count", "person_count")
+  # A statistic or a share: it rests on a support.
+  STATISTIC_ROLES <- c("statistic", "share")
+  COLUMN_FIELDS <- c(
+    "support",
+    "units",
+    "perturbation",
+    "numerator",
+    "denominator",
+    "min_support",
+    "group",
+    "description"
+  )
   SLUG <- "^[a-z0-9][a-z0-9_-]*$"
   FILE_NAME <- "^[a-z0-9][a-z0-9_-]*[.]parquet$"
   COLUMN_NAME <- "^[a-z][a-z0-9_]*$"
@@ -129,6 +148,71 @@ export_gate <- local({
 
   # ---- Setup: schema and policy ---------------------------------------------
 
+  # Whether a column's role, type and fields fit together; `col_of` gives a
+  # column of the same file by name. The Rust gate's valid_column.
+  valid_column <- function(col, col_of) {
+    names_role <- function(field, roles) {
+      is.null(field) ||
+        (is_string(field) && !is.null(col_of(field)) && col_of(field)$role %in% roles)
+    }
+    given <- function(field) !is.null(col[[field]])
+    units_ok <- names_role(col$units, "check_only")
+    perturbation <- given("perturbation")
+    if (
+      perturbation &&
+        !(is.numeric(col$perturbation) &&
+          length(col$perturbation) == 1L &&
+          !is.na(col$perturbation) &&
+          col$perturbation == round(col$perturbation) &&
+          col$perturbation >= 0)
+    ) {
+      return(FALSE)
+    }
+    share_fields <- given("numerator") || given("denominator")
+    group <- given("group")
+    statistic_fields <- given("support") || share_fields || given("min_support") || group
+    switch(
+      col$role,
+      dimension = ,
+      # A check-only column is a true count.
+      check_only = (col$role == "dimension" || col$type == "integer") &&
+        !statistic_fields &&
+        !given("units") &&
+        !perturbation,
+      # A count is a whole number; its suppression marker is null. A row
+      # count's units are not its truth, so no perturbation bound is defined
+      # for it.
+      count = col$type == "integer" && units_ok && !statistic_fields && !perturbation,
+      person_count = col$type == "integer" &&
+        units_ok &&
+        (!perturbation || given("units")) &&
+        !statistic_fields,
+      {
+        support <- if (is_string(col$support)) col_of(col$support)
+        # A group is tested against its support's truth, so the support has
+        # one: it is check-only, or a count with units.
+        support_has_truth <- !is.null(support) &&
+          (support$role == "check_only" || !is.null(support$units))
+        given("support") &&
+          names_role(col$support, c(COUNT_ROLES, "check_only")) &&
+          (!given("min_support") || is_count(col$min_support)) &&
+          !given("units") &&
+          !perturbation &&
+          if (col$role == "share") {
+            col$type == "double" &&
+              given("numerator") &&
+              given("denominator") &&
+              names_role(col$numerator, "check_only") &&
+              names_role(col$denominator, "check_only") &&
+              !group
+          } else {
+            !share_fields &&
+              (!group || (names_role(col$group, "check_only") && support_has_truth))
+          }
+      }
+    )
+  }
+
   valid_columns <- function(columns) {
     if (!is_array(columns)) {
       return(FALSE)
@@ -136,15 +220,13 @@ export_gate <- local({
     shape <- vapply(
       columns,
       function(col) {
-        closed(col, c("name", "type", "role"), c("support", "description")) &&
+        closed(col, c("name", "type", "role"), COLUMN_FIELDS) &&
           is_string(col$name) &&
           grepl(COLUMN_NAME, col$name) &&
           is_string(col$type) &&
           col$type %in% names(TYPES) &&
           is_string(col$role) &&
-          col$role %in% ROLES &&
-          # A count is a whole number; its suppression marker is null.
-          (!col$role %in% COUNT_ROLES || col$type == "integer")
+          col$role %in% ROLES
       },
       NA
     )
@@ -152,23 +234,23 @@ export_gate <- local({
       return(FALSE)
     }
     names <- vapply(columns, function(col) col$name, "")
-    counts <- names[vapply(
-      columns,
-      function(col) col$role %in% COUNT_ROLES,
-      NA
-    )]
-    # A statistic names the count it rests on, and only a statistic does.
-    supported <- vapply(
-      columns,
-      function(col) {
-        if (col$role != "statistic") {
-          return(is.null(col$support))
-        }
-        is_string(col$support) && col$support %in% counts
-      },
-      NA
-    )
-    !anyDuplicated(names) && all(supported)
+    if (anyDuplicated(names)) {
+      return(FALSE)
+    }
+    col_of <- function(name) {
+      at <- match(name, names)
+      if (is.na(at)) NULL else columns[[at]]
+    }
+    # A check-only column no rule reads would be truth kept in staging for
+    # nothing.
+    referenced <- unlist(lapply(columns, function(col) {
+      unlist(col[c("support", "units", "numerator", "denominator", "group")])
+    }))
+    roles <- vapply(columns, function(col) col$role, "")
+    # At least one column is exported.
+    any(roles != "check_only") &&
+      all(names[roles == "check_only"] %in% referenced) &&
+      all(vapply(columns, valid_column, NA, col_of = col_of))
   }
 
   load_schema <- function(path) {
@@ -250,8 +332,17 @@ export_gate <- local({
         "schema",
         "min_cell_count"
       ),
-      c("description", "statistic_min_support", "statistic_significant_digits")
+      c(
+        "description",
+        "statistic_min_support",
+        "statistic_significant_digits",
+        "count_units_required"
+      )
     ) &&
+      (is.null(p$count_units_required) ||
+        (is.logical(p$count_units_required) &&
+          length(p$count_units_required) == 1L &&
+          !is.na(p$count_units_required))) &&
       is_string(p$name) &&
       grepl(SLUG, p$name) &&
       is_count(p$version) &&
@@ -267,8 +358,28 @@ export_gate <- local({
     if (!ok) {
       refuse("setup", list(finding("policy_invalid", where)))
     }
-    if (p$schema$name != schema$name || p$schema$version != schema$version) {
+    # A column minimum raises the policy's, never lowers or restates it.
+    lowers <- !is.null(p$statistic_min_support) &&
+      any(vapply(
+        unlist(lapply(schema$files, `[[`, "columns"), recursive = FALSE),
+        function(col) !is.null(col$min_support) && col$min_support <= p$statistic_min_support,
+        NA
+      ))
+    if (
+      p$schema$name != schema$name ||
+        p$schema$version != schema$version ||
+        lowers
+    ) {
       refuse("setup", list(finding("policy_schema_mismatch", where)))
+    }
+    if (isTRUE(p$count_units_required)) {
+      for (f in schema$files) {
+        for (col in f$columns) {
+          if (col$role %in% COUNT_ROLES && is.null(col$units)) {
+            refuse("setup", list(finding("units_required", f$name, col$name)))
+          }
+        }
+      }
     }
     list(
       name = p$name,
@@ -436,23 +547,45 @@ export_gate <- local({
   any_true <- function(x) any(as.vector(x), na.rm = TRUE)
   is_null <- function(column) as.vector(arrow::call_function("is_null", column))
 
-  # Every count is at least the policy's minimum or null (suppressed), a
-  # statistic is null wherever the count it rests on is suppressed, and no
-  # double is NaN: a NaN carries about 51 payload bits through Parquet and the
-  # rewrite, so a cell that looks suppressed could hold a value.
-  # A non-null statistic resting on a non-null support below the minimum. A
-  # minimum past int64 is above every support, as for counts.
-  support_too_small <- function(column, support, min) {
-    small <- if (min >= 2^63) {
-      !is_null(support)
-    } else {
-      as.vector(arrow::call_function(
-        "less",
-        support$cast(arrow::int64()),
-        arrow::Scalar$create(min, arrow::int64())
-      ))
+  compare <- function(f, x, y) as.vector(arrow::call_function(f, x, y))
+  # Per row: the integer column is below `min` (NA where null). A minimum past
+  # int64 (2^63 and up) is above every value; Arrow would clamp it to
+  # INT64_MAX, letting that value pass.
+  below_int <- function(column, min) {
+    if (min >= 2^63) {
+      return(!is_null(column))
     }
-    any(!is_null(column) & small, na.rm = TRUE)
+    compare(
+      "less",
+      column$cast(arrow::int64()),
+      arrow::Scalar$create(min, arrow::int64())
+    )
+  }
+  # The truth rules' two differences (a person count minus its units, a
+  # denominator minus its numerator) are exact, with no wrap: the Rust gate
+  # uses i128, R has none, so both sides are widened to Arrow's
+  # decimal128(20, 0) and the difference is decimal128(21, 0), where any
+  # difference of two int64 values fits. Bounds are built from text in that
+  # type; one past 10^20 is above every such difference, so it is capped there.
+  difference <- function(a, b) {
+    wide <- arrow::decimal128(20L, 0L)
+    arrow::call_function("subtract", a$cast(wide), b$cast(wide))
+  }
+  bound <- function(x) {
+    x <- sign(x) * min(abs(x), 1e20)
+    arrow::Scalar$create(sprintf("%.0f", x), arrow::utf8())$cast(
+      arrow::decimal128(21L, 0L)
+    )
+  }
+  # Per row: `k` of `n` true units, or the `n - k` beside them, is a small cell
+  # (1 to `min - 1`) or negative. Zero singles out no one.
+  small_split <- function(k, n, min) {
+    small_k <- below_int(k, 0) |
+      (!below_int(k, 1) & below_int(k, min))
+    rest <- difference(n, k)
+    small_rest <- compare("less", rest, bound(0)) |
+      (compare("greater_equal", rest, bound(1)) & compare("less", rest, bound(min)))
+    small_k | small_rest
   }
 
   # Whether every finite double is exactly its rendering with `digits`
@@ -480,64 +613,106 @@ export_gate <- local({
     length(back) == length(x) && all(as.double(back) == x)
   }
 
+  # Every count is at least the policy's minimum or null (suppressed), a
+  # statistic is null wherever the count it rests on is suppressed, and no
+  # double is NaN: a NaN carries about 51 payload bits through Parquet and the
+  # rewrite, so a cell that looks suppressed could hold a value. Check-only
+  # columns hold the true figures behind published ones; the truth rules test
+  # them beside the published figures, whose floors stay. Findings are in the
+  # Rust gate's order.
   check_disclosure <- function(candidates, policy) {
     findings <- list()
-    # A minimum past int64 (2^63 and up) is above every count; Arrow would
-    # clamp it to INT64_MAX, letting that count pass.
-    above_all <- policy$min_cell_count >= 2^63
-    minimum <- if (!above_all) {
-      arrow::Scalar$create(policy$min_cell_count, arrow::int64())
-    }
+    min_cell <- policy$min_cell_count
     for (cand in candidates) {
       file <- cand$spec$name
       columns <- cand$columns
-      for (col in cand$spec$columns) {
+      specs <- cand$spec$columns
+      names(specs) <- vapply(specs, function(col) col$name, "")
+      add <- function(rule, col) {
+        findings <<- c(findings, list(finding(rule, file, col$name)))
+      }
+      for (col in specs) {
         column <- columns[[col$name]]
+        rows <- !is_null(column)
         if (
           col$type == "double" &&
             any_true(arrow::call_function("is_nan", column))
         ) {
-          findings <- c(findings, list(finding("nan_value", file, col$name)))
+          add("nan_value", col)
         }
         if (col$role %in% COUNT_ROLES) {
           # A negative count is below any minimum.
-          below <- if (above_all) {
-            !is_null(column)
-          } else {
-            arrow::call_function("less", column$cast(arrow::int64()), minimum)
+          if (any_true(below_int(column, min_cell))) {
+            add("min_cell_count", col)
           }
-          if (any_true(below)) {
-            findings <- c(
-              findings,
-              list(finding("min_cell_count", file, col$name))
-            )
+          if (!is.null(col$units)) {
+            units <- columns[[col$units]]
+            if (any(rows & is_null(units))) {
+              add("unsupported_count", col)
+            }
+            if (any(rows & below_int(units, min_cell), na.rm = TRUE)) {
+              add("count_units_too_small", col)
+            }
+            if (col$role == "person_count") {
+              d <- if (is.null(col$perturbation)) 0 else col$perturbation
+              off <- difference(column, units)
+              beyond <- compare("greater", off, bound(d)) |
+                compare("less", off, bound(-d))
+              if (any(rows & beyond, na.rm = TRUE)) {
+                add("count_perturbation_exceeded", col)
+              }
+            }
           }
-        } else if (col$role == "statistic") {
+        } else if (col$role %in% STATISTIC_ROLES) {
           support <- columns[[col$support]]
-          if (any(!is_null(column) & is_null(support))) {
-            findings <- c(
-              findings,
-              list(finding("unsupported_statistic", file, col$name))
-            )
+          support_spec <- specs[[col$support]]
+          # A check-only support is its own truth; a count's truth is its units.
+          truth <- if (support_spec$role == "check_only") {
+            support
+          } else if (!is.null(support_spec$units)) {
+            columns[[support_spec$units]]
           }
+          group <- if (!is.null(col$group)) columns[[col$group]]
+          unsupported <- is_null(support)
+          if (!is.null(truth)) unsupported <- unsupported | is_null(truth)
+          if (!is.null(group)) unsupported <- unsupported | is_null(group)
+          if (any(rows & unsupported)) {
+            add("unsupported_statistic", col)
+          }
+          # The schema check ensured a group's support has a truth.
           if (
-            !is.null(policy$statistic_min_support) &&
-              support_too_small(column, support, policy$statistic_min_support)
+            !is.null(group) &&
+              any(rows & small_split(group, truth, min_cell), na.rm = TRUE)
           ) {
-            findings <- c(
-              findings,
-              list(finding("statistic_support_too_small", file, col$name))
-            )
+            add("group_cell_too_small", col)
+          }
+          # A published support is floored by min_cell_count as a count; a
+          # check-only support is not, so its minimum is at least that floor.
+          floor <- if (support_spec$role == "check_only") min_cell
+          min <- c(policy$statistic_min_support, col$min_support, floor)
+          if (length(min)) {
+            small <- below_int(support, max(min))
+            if (!is.null(truth)) small <- small | below_int(truth, max(min))
+            if (any(rows & small, na.rm = TRUE)) {
+              add("statistic_support_too_small", col)
+            }
+          }
+          if (col$role == "share") {
+            k <- columns[[col$numerator]]
+            n <- columns[[col$denominator]]
+            if (any(rows & (is_null(k) | is_null(n)))) {
+              add("unsupported_share", col)
+            }
+            if (any(rows & small_split(k, n, min_cell), na.rm = TRUE)) {
+              add("share_cell_too_small", col)
+            }
           }
           if (
             !is.null(policy$statistic_significant_digits) &&
               col$type == "double" &&
               !rounded(column, policy$statistic_significant_digits)
           ) {
-            findings <- c(
-              findings,
-              list(finding("statistic_not_rounded", file, col$name))
-            )
+            add("statistic_not_rounded", col)
           }
         }
       }
@@ -570,6 +745,10 @@ export_gate <- local({
     for (cand in candidates) {
       file <- cand$spec$name
       for (col in cand$spec$columns) {
+        # A check-only value is never exported, so it is not scanned.
+        if (col$role == "check_only") {
+          next
+        }
         values <- scan_text(cand$columns[[col$name]], col$type)
         if (any(grepl(IDENTIFIER, values[!is.na(values)], perl = TRUE))) {
           findings <- c(
@@ -614,13 +793,16 @@ export_gate <- local({
   # is pinned, so the same data writes the same bytes under one arrow release.
   # Arrow still adds its own ARROW:schema entry (derived from the schema built
   # here) and a created_by string naming its version.
+  # Check-only columns are dropped here and only here: the true figures reach
+  # no exported file and no receipt hash.
   write_checked <- function(cand, path) {
-    columns <- lapply(cand$spec$columns, function(col) {
+    exported <- Filter(function(col) col$role != "check_only", cand$spec$columns)
+    columns <- lapply(exported, function(col) {
       type <- EXPORT_TYPES[[col$type]]()
       chunks <- cand$columns[[col$name]]$cast(type)$chunks
       do.call(arrow::concat_arrays, c(chunks, list(type = type)))
     })
-    names(columns) <- vapply(cand$spec$columns, function(col) col$name, "")
+    names(columns) <- vapply(exported, function(col) col$name, "")
     arrow::write_parquet(
       do.call(arrow::Table$create, columns),
       path,

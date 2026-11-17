@@ -60,7 +60,10 @@ Thresholds are not in the schema. A separate policy file beside the schema holds
 disclosure rules, such as the smallest count allowed. The schema says what each column
 is (a count of persons, a statistic resting on a count); the policy says how strict the
 rules on those roles are. The schema stays fixed while an institution's thresholds
-change. The toolkit asserts no universal threshold. The schema in force is identified by
+change. Every disclosure parameter is the project's to set: the toolkit ships motivated
+defaults, each citing published best practice (the ESSnet and SDAP handbooks, SCB,
+ONS), never an ad hoc choice, and a project may replace any of them with its own
+reviewed schema and policy (maintainer, 2026-11-17). The schema in force is identified by
 name, version and content hash, and every check records them.
 
 The code under check must not also define what the check accepts. In education-returns
@@ -121,14 +124,13 @@ Every object is closed: an unknown key is a setup refusal.
 differently (a person count is the unit disclosure control protects); the format-1
 policy applies one minimum to both.
 
-#### Check-only columns (gate 0.5.0, Rust only)
+#### Check-only columns (gate 0.5.0; `group` 0.6.0)
 
 Some disclosure rules need figures the export does not hold: the true number of persons
 behind a perturbed count, or the true numerator of a share. A schema declares them as
 **check-only** columns: present in staging, read by the disclosure rules, never
-exported. The R gate does not read them yet. Its objects are closed, so it refuses such
-a schema (`schema_invalid`), which means it fails closed (maintainer, 2026-11-15: R
-follows when a MONA project needs these rules).
+exported. The R gate reads them from 0.6.0, ported when the aggregates default needed
+them on MONA (maintainer, 2026-11-15: R follows when a MONA project needs these rules).
 
 ```json
 { "name": "units_true", "type": "integer", "role": "check_only" },
@@ -163,6 +165,21 @@ follows when a MONA project needs these rules).
   `statistic_min_support` for that column. It must exceed the policy's value when the
   policy has one (`policy_schema_mismatch`), so a schema can never appear to lower the
   policy.
+- `group` (gate 0.6.0), on a `statistic`, names a check-only column: the true units the
+  statistic's value describes within its support's truth. For a regression term: for a
+  dummy (a factor level, an interaction of dummies), the persons with value 1; for the
+  intercept, the persons at the reference level of every categorical regressor (the
+  whole sample if there is none); for a continuous term, the whole sample. The
+  intercept is the reference group's mean, and a dummy's coefficient is the difference
+  of its group's mean from it, so each group, and what is left beside it, must be large
+  enough to be a cell (maintainer, 2026-11-17; the SDC Outputs handbook [O],
+  "Regressions", lists a regression on a single unit, sequential regressions whose
+  samples differ by a few observations, and a model of only categorical variables as
+  the disclosive cases). The support must have a truth (a check-only support, or a
+  count with `units`). The gate cannot tell a dummy from a continuous term; a group set
+  to the whole sample passes, and the reviewer checks what it means. A cell made by
+  combining terms (a level of A outside an A × B interaction) is no term's group and is
+  not checked either.
 
 The rules are in "The check" below. The format version stays 1: these are additions,
 and a gate that predates them refuses them (`schema_invalid`, `policy_invalid`).
@@ -195,7 +212,7 @@ one its rule does not apply:
   carries 64 bits the other rules leave free; 3 digits leave about 10. R's own parser
   (`as.numeric`) is not correctly rounded at extreme exponents, so the R gate reads the
   rendering back through jsonlite (C `strtod`); the corpus pins two such values.
-- `count_units_required`, a boolean (Rust gate 0.5.0): every `count` and `person_count`
+- `count_units_required`, a boolean (gate 0.5.0): every `count` and `person_count`
   names its `units`, or setup refuses (`units_required`, located by file and column). A
   statistic's or share's support is then a count with units or a check-only column, so
   every statistic is tested on its truth, and a share's numerator and denominator are
@@ -222,6 +239,66 @@ The shipped files:
   the sum of each unit's rows, δ = 0.1, maintainer, 2026-11-05), so it is not a whole
   number. Its protection is the 50 units it rests on and its 3 digits; a small value
   over 50 units is not a small cell.
+- `schemas/aggregates.schema.json` and `schemas/aggregates.policy.json`, the toolkit's
+  default for a real project's aggregate results (maintainer, 2026-11-17), in long form
+  so one schema fits any project. A project may replace it with its own. Its schema
+  sets `min_support` 10 on the median, so a project policy pairing with it must keep
+  `statistic_min_support` below 10 (`policy_schema_mismatch`), or use its own schema. A file the
+  project does not use is written with zero rows. Gate 0.6.0, so the R gate on MONA runs
+  it. Each choice and its source:
+  - **One floor of 5** for every published count and every statistic's true support
+    (`min_cell_count` 5; a check-only support's minimum is that floor). SCB's handbook
+    on disclosure control [S] sets thresholds of 3, 5 or 10 (ch. 5.1–5.3), and the SDC
+    Outputs handbook [O] gives 3 to 30 (section 5); the maintainer ruled 5, as SCB uses
+    (2026-11-05, 2026-11-17).
+  - **Counts are perturbed by the pipeline with the cell key method**, not suppressed:
+    per-record keys from a secret key file that stays on MONA, an explicit key epoch,
+    and the p-table D = 5, V = 6.5, js = 4 (maintainer, 2026-11-05, for mock-stats; the
+    same for this default, 2026-11-17). SCB has used the method since 2022 in place of
+    suppression [S]. It is unbiased, never publishes 1–4
+    (a true 1–4 is published as 0 or as 5 or more) and gives a cell with one person more
+    an unrelated cell key, so differencing two tables does not recover a person. That is
+    why there is no secondary-suppression rule and no count rounding. The gate cannot
+    verify noise, so it keeps the floor of 5 on the published counts. The toolkit has no
+    cell key implementation yet: the mock-stats plan's `mock_stats.R` scaffold is unbuilt.
+  - **Every statistic rests on a check-only true count** (`n_true`), never only on the
+    published, perturbed `n_persons`: a published 5 can rest on one true person, and a
+    mean is not perturbed. So a mean needs 5 true persons.
+  - **Quantiles are fixed columns** (p10, p25, p50, p75, p90) with a `min_support` of 5
+    divided by the smaller tail (50, 20, 10, 20, 50): at least 5 persons on each side,
+    so no quantile is one person's value. That is the floor of 5 per group, as ruled for
+    the mock-stats deciles (2026-11-05). [O] ("Percentiles") asks for at least the
+    threshold behind each percentile, and its box-plot rule asks that the quartiles and
+    median not be single observations. A free quantile key would admit p99, a minimum
+    or a maximum on 5 persons, which [O] treats as one person's value.
+  - **Regression terms** carry their check-only `group` (above), so a dummy or an
+    intercept that describes 1–4 true persons, or leaves 1–4 beside it, refuses. [O]
+    ("Regressions") releases regression results by default and lists three disclosive
+    cases; the group rule covers the categorical one. Its rule of thumb, a check of the
+    degrees of freedom and of sequential models whose samples differ by a few
+    observations, is the reviewer's.
+  - **Shares are counts**: one `counts.parquet` row per outcome category, each a
+    perturbed cell under the floor, never a ratio. A ratio computed from true counts
+    beside perturbed ones would undo the noise, and the reader can divide.
+  - **4 significant digits** for every double statistic (maintainer, 2026-11-17, for
+    coefficients and standard errors; the digits field is the policy's, so it covers
+    means and quantiles too). [O] recommends rounding percentile values.
+  - **Known limits.** No dominance rule: a magnitude statistic over firms (a mean
+    turnover, a total) is not protected against one firm dominating it, so the
+    reviewer checks it ([O] section 5 calls dominance mainly a concern for business
+    statistics; maintainer, 2026-11-17: skipped for now). Free string keys (`table`,
+    `group_1` to `group_3`, `statistic`, `variable`, `model`, `term`) are an open
+    channel that the backstop and the reviewer cover. Server-mode `export` refuses
+    check-only schemas, so this default delivers through MONA's own export only.
+
+  Sources: [S] SCB, *Handbok i statistisk röjandekontroll* (2015, updated 2018),
+  <https://www.scb.se/contentassets/0cd92207266d40eb8829244d51d90b94/handbok_i_statistisk_rojandekontroll_2015_uppdaterad_2018.pdf>,
+  and *Utveckling av röjandeskyddet* (the cell key method from 2022),
+  <https://www.scb.se/dokumentation/statistikomraden-under-forandring/utveckling-av-rojandeskyddet/>;
+  [O] Griffiths et al., *Handbook on Statistical Disclosure Control for Outputs*, v2.0
+  (Safe Data Access Professionals, July 2024), <https://securedatagroup.org/sdc-handbook/>.
+  [P] the `ptable` R package (Destatis), which builds the p-table from D, V and js,
+  <https://cran.r-project.org/web/packages/ptable/vignettes/introduction.html>.
 
 ## The check
 
@@ -269,7 +346,12 @@ output. In order:
      Either its numerator `k` or its complement `n − k` in `1..min_cell_count − 1`, or
      negative, is `share_cell_too_small`. A share of 0 or 1 singles no one out and
      passes.
-   - Integer rules compare exactly, with no wrap (the Rust gate uses `i128`).
+   - A non-null statistic with a `group` whose value is null is
+     `unsupported_statistic`. The group `k` or its complement `n − k` within the
+     support's truth `n`, in `1..min_cell_count − 1` or negative, is
+     `group_cell_too_small` (gate 0.6.0). Zero singles out no one and passes.
+   - Integer rules compare exactly, with no wrap (the Rust gate uses `i128`, the R gate
+     Arrow's `decimal128`).
 
    The published floors stay: a published count below `min_cell_count`, or a published
    support below the minimum, refuses even when its truth passes, since a count below 5
@@ -338,9 +420,11 @@ across releases.
 
 A failed check tells the agent only the refusal category code. Each export is checked
 alone in v1; differencing against earlier approved exports comes later. The format-1
-policy has a single threshold rule: no secondary suppression, dominance rule or check
-across files (a suppressed cell recoverable from a margin in another file passes). Those
-are policy work for later versions; until then the human review covers them.
+The format-1 policy has no secondary suppression, dominance rule or check across files (a
+suppressed cell recoverable from a margin in another file passes). A policy that
+perturbs counts with the cell key method, as the aggregates default does, needs no
+secondary suppression; the human review covers dominance and, under a policy that
+suppresses, recovery across files.
 
 ### Refusal codes and rules
 
@@ -361,9 +445,9 @@ The code is the category; the rule locates the finding. Both are stable.
 - `structure`: `unreadable`, `too_large`, `missing_column`, `extra_column`,
   `column_order`, `column_type`.
 - `disclosure`: `nan_value`, `min_cell_count`, `unsupported_statistic`,
-  `statistic_support_too_small`, `statistic_not_rounded`, and in the Rust gate (0.5.0)
+  `statistic_support_too_small`, `statistic_not_rounded`, and from gate 0.5.0
   `unsupported_count`, `count_units_too_small`, `count_perturbation_exceeded`,
-  `unsupported_share`, `share_cell_too_small`.
+  `unsupported_share`, `share_cell_too_small`, and from 0.6.0 `group_cell_too_small`.
 - `backstop`: `identifier_pattern`.
 - `delivery` (the Rust gate's `export` only): `receipt_mismatch`,
   `destination_writable`, `hash_mismatch` (`crates/reg-export-gate/DESIGN.md`, "Export
@@ -446,10 +530,10 @@ The Rust binary and the R file are two implementations of one check, an exceptio
 "one implementation per contract". One case corpus (schema and candidate folder →
 expected pass or refusal code) runs against both, so their agreement is the oracle. The
 binary is the reference; `EXPORT_GATE_VERSION` in the R file is its pin, in every
-receipt: it names the binary version the R file imitates (0.4.0 today;
+receipt: it names the binary version the R file imitates (0.6.0 today, the binary's own;
 `crates/reg-export-gate/DESIGN.md`, "The R gate follows"). The R file may lag the
-binary: the binary is at 0.5.0 (check-only columns), which the R file does not
-implement yet, and the corpus marks such cases with `gate_min`.
+binary; the corpus marks a case with `gate_min`, and the R run skips a case past its
+version.
 
 ### The R file
 
@@ -506,6 +590,9 @@ implement yet, and the corpus marks such cases with `gate_min`.
     that cannot be created is `export_not_writable` before `too_large`; the binary
     checks the rewrite in memory first.
   - Links in staging go unseen on Windows (`Sys.readlink()`).
+  - Integer truth rules compare in Arrow's `decimal128`, R's stand-in for `i128`,
+    verified on arrow 25; arrow 9 has decimal subtraction and comparison, untested
+    here. A `perturbation` past 2^53 arrives from jsonlite as an inexact double.
 - **The export is written, then renamed.** The checked tables and the receipt go into a
   folder `.export-gate-<random>` (hidden on Unix only) the gate creates beside `output`,
   which one `file.rename()` turns into `output`; so only the output folder's parent must
@@ -567,7 +654,6 @@ exported file decodes to exactly the schema's columns less its check-only ones.
 
 - Level-1 mock data (metadata-only, generated from a draft `project_data.json`): epic
   #707.
-- The disclosure policy values of any institution.
 - Changes to the MONA extract runner.
 - Carrying code into the data VM (the first stop of the education-returns flow).
 - Differencing against earlier approved exports.

@@ -75,6 +75,10 @@ pub struct Column {
     /// Raises the policy's `statistic_min_support` for this statistic or share.
     #[serde(default)]
     pub min_support: Option<u64>,
+    /// A statistic's check-only column: the true units its value singles out
+    /// within its support's truth (a regression term's group).
+    #[serde(default)]
+    pub group: Option<String>,
     #[serde(default)]
     pub description: Option<String>,
 }
@@ -215,22 +219,31 @@ fn typed<T: DeserializeOwned>(bytes: &[u8]) -> Option<T> {
     serde_json::from_slice(bytes).ok()
 }
 
-/// Whether a column's role, type and fields fit together; `role_of` gives the
-/// role of a column of the same file by name.
-fn valid_column(col: &Column, role_of: &impl Fn(&str) -> Option<Role>) -> bool {
+/// Whether a column's role, type and fields fit together; `col_of` gives a
+/// column of the same file by name.
+fn valid_column<'a>(col: &Column, col_of: &impl Fn(&str) -> Option<&'a Column>) -> bool {
+    let role_of = |name: &str| col_of(name).map(|c| c.role);
     let names = |name: &Option<String>, ok: fn(Role) -> bool| {
         name.as_deref().and_then(role_of).is_some_and(ok)
     };
     let check_only: fn(Role) -> bool = |r| r == Role::CheckOnly;
     let supports: fn(Role) -> bool = |r| r.is_count() || r == Role::CheckOnly;
     let units = col.units.is_none() || names(&col.units, check_only);
-    let (support, perturbation, share_fields, min_support) = (
+    let (support, perturbation, share_fields, min_support, group) = (
         col.support.is_some(),
         col.perturbation.is_some(),
         col.numerator.is_some() || col.denominator.is_some(),
         col.min_support.is_some(),
+        col.group.is_some(),
     );
-    let statistic_fields = support || share_fields || min_support;
+    let statistic_fields = support || share_fields || min_support || group;
+    // A group is tested against its support's truth, so the support has one:
+    // it is check-only, or a count with units.
+    let support_has_truth = col
+        .support
+        .as_deref()
+        .and_then(col_of)
+        .is_some_and(|s| s.role == Role::CheckOnly || s.units.is_some());
     match col.role {
         Role::Dimension | Role::CheckOnly => {
             // A check-only column is a true count.
@@ -258,8 +271,10 @@ fn valid_column(col: &Column, role_of: &impl Fn(&str) -> Option<Role>) -> bool {
                     col.ty == ColumnType::Double
                         && names(&col.numerator, check_only)
                         && names(&col.denominator, check_only)
+                        && !group
                 } else {
                     !share_fields
+                        && (!group || (names(&col.group, check_only) && support_has_truth))
                 }
         }
     }
@@ -270,11 +285,11 @@ fn valid_columns(columns: &[Column]) -> bool {
     let unique = columns
         .iter()
         .all(|col| names.insert(col.name.as_str()) && is_column_name(&col.name));
-    let role_of = |name: &str| columns.iter().find(|c| c.name == name).map(|c| c.role);
+    let col_of = |name: &str| columns.iter().find(|c| c.name == name);
     // A check-only column no rule reads would be truth kept in staging for nothing.
     let referenced = |name: &str| {
         columns.iter().any(|c| {
-            [&c.support, &c.units, &c.numerator, &c.denominator]
+            [&c.support, &c.units, &c.numerator, &c.denominator, &c.group]
                 .iter()
                 .any(|r| r.as_deref() == Some(name))
         })
@@ -283,7 +298,7 @@ fn valid_columns(columns: &[Column]) -> bool {
         // At least one column is exported.
         && columns.iter().any(|col| col.role != Role::CheckOnly)
         && columns.iter().all(|col| {
-            valid_column(col, &role_of) && (col.role != Role::CheckOnly || referenced(&col.name))
+            valid_column(col, &col_of) && (col.role != Role::CheckOnly || referenced(&col.name))
         })
 }
 

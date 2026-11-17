@@ -1,0 +1,69 @@
+{
+  "format": "reg-export-gate/schema",
+  "format_version": 1,
+  "name": "aggregates",
+  "version": 1,
+  "description": "The toolkit's default for a register-research project's aggregate results, in long form: person counts, means, quantiles and regression coefficients by groups. A file the project does not use is written with zero rows. Published counts are perturbed by the pipeline with the cell key method; a share is published as one count per outcome category, never as a ratio. Each statistic rests on a check-only true person count (n_true), which the gate tests and never exports. Gate 0.6.0.",
+  "files": [
+    {
+      "name": "counts.parquet",
+      "description": "Persons per cell, cell-key perturbed. table names the output (a table or figure in the paper); year and group_1 to group_3 are its keys, null where a table has fewer. A share is two or more rows, one per outcome category.",
+      "columns": [
+        { "name": "table", "type": "string", "role": "dimension" },
+        { "name": "year", "type": "integer", "role": "dimension" },
+        { "name": "group_1", "type": "string", "role": "dimension" },
+        { "name": "group_2", "type": "string", "role": "dimension" },
+        { "name": "group_3", "type": "string", "role": "dimension" },
+        { "name": "n_persons", "type": "integer", "role": "person_count" }
+      ]
+    },
+    {
+      "name": "statistics.parquet",
+      "description": "One mean-type statistic per row (a mean or a standard deviation of a variable), never a quantile, an extreme or a ratio of a binary variable. statistic names it, for example mean_income. n_persons is the cell-key perturbed count; n_true the true distinct persons, check-only.",
+      "columns": [
+        { "name": "table", "type": "string", "role": "dimension" },
+        { "name": "year", "type": "integer", "role": "dimension" },
+        { "name": "group_1", "type": "string", "role": "dimension" },
+        { "name": "group_2", "type": "string", "role": "dimension" },
+        { "name": "group_3", "type": "string", "role": "dimension" },
+        { "name": "statistic", "type": "string", "role": "dimension" },
+        { "name": "n_true", "type": "integer", "role": "check_only" },
+        { "name": "n_persons", "type": "integer", "role": "person_count" },
+        { "name": "value", "type": "double", "role": "statistic", "support": "n_true" }
+      ]
+    },
+    {
+      "name": "quantiles.parquet",
+      "description": "Fixed quantiles of one variable per row. A quantile is one person's value unless at least 5 persons lie on each side of it, so each column's minimum support is 5 divided by its smaller tail: 50 for p10 and p90, 20 for p25 and p75, 10 for the median.",
+      "columns": [
+        { "name": "table", "type": "string", "role": "dimension" },
+        { "name": "year", "type": "integer", "role": "dimension" },
+        { "name": "group_1", "type": "string", "role": "dimension" },
+        { "name": "group_2", "type": "string", "role": "dimension" },
+        { "name": "group_3", "type": "string", "role": "dimension" },
+        { "name": "variable", "type": "string", "role": "dimension" },
+        { "name": "n_true", "type": "integer", "role": "check_only" },
+        { "name": "n_persons", "type": "integer", "role": "person_count" },
+        { "name": "p10", "type": "double", "role": "statistic", "support": "n_true", "min_support": 50 },
+        { "name": "p25", "type": "double", "role": "statistic", "support": "n_true", "min_support": 20 },
+        { "name": "p50", "type": "double", "role": "statistic", "support": "n_true", "min_support": 10 },
+        { "name": "p75", "type": "double", "role": "statistic", "support": "n_true", "min_support": 20 },
+        { "name": "p90", "type": "double", "role": "statistic", "support": "n_true", "min_support": 50 }
+      ]
+    },
+    {
+      "name": "coefficients.parquet",
+      "description": "One regression term per row. n_true is the estimation sample's true distinct persons and k_true the true persons the term's estimate describes, both check-only: for a dummy (a factor level, an interaction of dummies), those with value 1; for the intercept, those at the reference level of every categorical regressor (all of n_true if there is none); for a continuous term, all of n_true. A cell made by combining terms (a level of A outside an A x B interaction) is not a term, and the reviewer checks it. n_persons and n_obs (rows, person-years say) are published.",
+      "columns": [
+        { "name": "model", "type": "string", "role": "dimension" },
+        { "name": "term", "type": "string", "role": "dimension" },
+        { "name": "n_true", "type": "integer", "role": "check_only" },
+        { "name": "k_true", "type": "integer", "role": "check_only" },
+        { "name": "n_persons", "type": "integer", "role": "person_count" },
+        { "name": "n_obs", "type": "integer", "role": "count" },
+        { "name": "estimate", "type": "double", "role": "statistic", "support": "n_true", "group": "k_true" },
+        { "name": "std_error", "type": "double", "role": "statistic", "support": "n_true", "group": "k_true" }
+      ]
+    }
+  ]
+}

@@ -222,9 +222,10 @@ the policy's two optional statistic rules (`statistic_support_too_small`,
 through jsonlite (C `strtod`), since `as.numeric` is not correctly rounded at extreme
 exponents.
 
-The R file may lag. 0.5.0 (check-only columns, the truth rules, `units_required`) is
-Rust only (maintainer, 2026-11-15): R follows when a MONA project needs those rules.
-Until then the R gate refuses such schemas, since its objects are closed, and its corpus
-run skips the cases marked `gate_min` 0.5.0. Integer truth rules compare in `i128`
-here. R has no `i128`, so a port must use checked Arrow arithmetic and turn an
-overflow into the rule's finding, never into `internal_error`.
+The R file may lag: 0.5.0 (check-only columns, the truth rules, `units_required`) was
+Rust only (maintainer, 2026-11-15) until a MONA project needed it. The aggregates
+default did (maintainer, 2026-11-17), so both are at 0.6.0, which also added a
+statistic's `group` (`group_cell_too_small`). The share and group rules share one leaf,
+`small_split`. Integer truth rules compare in `i128` here; R has no `i128`, so it
+widens to Arrow's `decimal128`, where an `int64` difference cannot overflow, and no
+overflow reaches `internal_error`.
