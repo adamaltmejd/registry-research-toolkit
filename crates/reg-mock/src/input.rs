@@ -1,5 +1,5 @@
 //! The saved catalog answers `compile` reads: HTTP API response documents (`{data,
-//! meta}`) saved verbatim by `curl`. Only the fields compile uses are read, and unknown
+//! meta}`) saved verbatim by `fetch`. Only the fields compile uses are read, and unknown
 //! fields are ignored, since these are another contract's documents
 //! (conformance/api/operations.toml), not this crate's.
 

@@ -151,7 +151,7 @@ fn check_periods<'a>(
 }
 
 /// Every saved page under `dir`, in page order. Each answer's pages are named
-/// `<name>-0001.json`, `<name>-0002.json`, ... (as `save-answers.sh` writes them), so a
+/// `<name>-0001.json`, `<name>-0002.json`, ... (as `fetch` writes them), so a
 /// page left out or a last page that still points to a next one is refused rather
 /// than compiled from part of an answer.
 fn pages<T: DeserializeOwned>(

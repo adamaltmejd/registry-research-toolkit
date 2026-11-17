@@ -34,15 +34,19 @@ catalog's answers, write the rules and compile them into `mock_spec.json`, gener
 ## 1. Save the answers
 
 ```bash
-scripts/save-answers.sh <catalog_url> project_data.json order|materialize mock/answers
+reg-mock fetch --catalog <catalog_url> --project project_data.json \
+  --mode order|materialize --out mock/answers
 ```
 
-The script (curl and jq) sends the project to the catalog's MCP tools and saves the
-order answer, every segment page for each column, and every page of each value set,
-unchanged. Commit
+`fetch` sends the project to the catalog's MCP tools and saves the order answer, every
+segment page for each column, and every page of each value set, unchanged. It replaces
+the answers saved before only once all have arrived, and waits out the hosted rate
+limit, so a large project takes about a second per call beyond the first 60. A refusal
+is JSON on stderr, exit 2, as for compile; `catalog_refused` items carry the catalog's
+own findings: fix the project (`register-project` skill) and fetch again.
 
-`mock/answers/`: compile reads only these files, so the mock never depends on the
-network again. Save again whenever the project changes; compile refuses answers saved
+Commit `mock/answers/`: compile reads only these files, so the mock never depends on
+the network again. Save again whenever the project changes; compile refuses answers saved
 for another version of it (`answers_stale`).
 
 ## 2. Write the rules and compile

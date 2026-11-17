@@ -2632,8 +2632,8 @@ in the FK child projection have separately evidenced recipient/child identifier 
 and stay text whatever their codes.
 
 Mock generation is not a server capability. `reg-mock` runs on the researcher's
-machine, offline, on catalog answers saved from the metadata operations (the order,
-`segments`, `values`) over MCP and a reviewed rules file; the hosted MCP exposes
+machine, offline, on catalog answers its `fetch` saves from the metadata operations (the
+order, `segments`, `values`) over MCP, and a reviewed rules file; the hosted MCP exposes
 metadata only. A mock uses adopted types, lengths, value sets and classification pins,
 reads no MONA rows, and refuses a type that would need a guess. Synthetic keys are
 conspicuous and reused only across compatible identifier kinds, never real person
