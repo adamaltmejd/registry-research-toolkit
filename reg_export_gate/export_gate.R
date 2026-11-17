@@ -547,30 +547,45 @@ export_gate <- local({
   any_true <- function(x) any(as.vector(x), na.rm = TRUE)
   is_null <- function(column) as.vector(arrow::call_function("is_null", column))
 
-  # The truth rules compare integers exactly, with no wrap: the Rust gate uses
-  # i128, R has none, so int64 values are widened to Arrow's decimal128, where
-  # the difference of two int64 values fits. A JSON minimum or bound arrives as
-  # a double; one past 10^37 is above every int64 difference either way.
-  exact <- function(column) column$cast(arrow::decimal128(20L, 0L))
-  exact_scalar <- function(x) {
-    arrow::Scalar$create(sprintf("%.0f", min(x, 1e37)), arrow::utf8())$cast(
-      arrow::decimal128(38L, 0L)
+  compare <- function(f, x, y) as.vector(arrow::call_function(f, x, y))
+  # Per row: the integer column is below `min` (NA where null). A minimum past
+  # int64 (2^63 and up) is above every value; Arrow would clamp it to
+  # INT64_MAX, letting that value pass.
+  below_int <- function(column, min) {
+    if (min >= 2^63) {
+      return(!is_null(column))
+    }
+    compare(
+      "less",
+      column$cast(arrow::int64()),
+      arrow::Scalar$create(min, arrow::int64())
     )
   }
-  compare <- function(f, x, y) as.vector(arrow::call_function(f, x, y))
-  # Per row: the integer column is below `min` (NA where null).
-  below_exact <- function(column, min) compare("less", exact(column), exact_scalar(min))
+  # The truth rules' two differences (a person count minus its units, a
+  # denominator minus its numerator) are exact, with no wrap: the Rust gate
+  # uses i128, R has none, so both sides are widened to Arrow's
+  # decimal128(20, 0) and the difference is decimal128(21, 0), where any
+  # difference of two int64 values fits. Bounds are built from text in that
+  # type; one past 10^20 is above every such difference, so it is capped there.
+  difference <- function(a, b) {
+    wide <- arrow::decimal128(20L, 0L)
+    arrow::call_function("subtract", a$cast(wide), b$cast(wide))
+  }
+  bound <- function(x) {
+    x <- sign(x) * min(abs(x), 1e20)
+    arrow::Scalar$create(sprintf("%.0f", x), arrow::utf8())$cast(
+      arrow::decimal128(21L, 0L)
+    )
+  }
   # Per row: `k` of `n` true units, or the `n - k` beside them, is a small cell
   # (1 to `min - 1`) or negative. Zero singles out no one.
   small_split <- function(k, n, min) {
-    k <- exact(k)
-    rest <- arrow::call_function("subtract", exact(n), k)
-    small <- function(x) {
-      compare("less", x, exact_scalar(0)) |
-        (compare("greater_equal", x, exact_scalar(1)) &
-          compare("less", x, exact_scalar(min)))
-    }
-    small(k) | small(rest)
+    small_k <- below_int(k, 0) |
+      (!below_int(k, 1) & below_int(k, min))
+    rest <- difference(n, k)
+    small_rest <- compare("less", rest, bound(0)) |
+      (compare("greater_equal", rest, bound(1)) & compare("less", rest, bound(min)))
+    small_k | small_rest
   }
 
   # Whether every finite double is exactly its rendering with `digits`
@@ -627,7 +642,7 @@ export_gate <- local({
         }
         if (col$role %in% COUNT_ROLES) {
           # A negative count is below any minimum.
-          if (any_true(below_exact(column, min_cell))) {
+          if (any_true(below_int(column, min_cell))) {
             add("min_cell_count", col)
           }
           if (!is.null(col$units)) {
@@ -635,14 +650,14 @@ export_gate <- local({
             if (any(rows & is_null(units))) {
               add("unsupported_count", col)
             }
-            if (any(rows & below_exact(units, min_cell), na.rm = TRUE)) {
+            if (any(rows & below_int(units, min_cell), na.rm = TRUE)) {
               add("count_units_too_small", col)
             }
             if (col$role == "person_count") {
               d <- if (is.null(col$perturbation)) 0 else col$perturbation
-              off <- arrow::call_function("subtract", exact(column), exact(units))
-              beyond <- compare("greater", off, exact_scalar(d)) |
-                compare("less", off, arrow::call_function("negate", exact_scalar(d)))
+              off <- difference(column, units)
+              beyond <- compare("greater", off, bound(d)) |
+                compare("less", off, bound(-d))
               if (any(rows & beyond, na.rm = TRUE)) {
                 add("count_perturbation_exceeded", col)
               }
@@ -676,8 +691,8 @@ export_gate <- local({
           floor <- if (support_spec$role == "check_only") min_cell
           min <- c(policy$statistic_min_support, col$min_support, floor)
           if (length(min)) {
-            small <- below_exact(support, max(min))
-            if (!is.null(truth)) small <- small | below_exact(truth, max(min))
+            small <- below_int(support, max(min))
+            if (!is.null(truth)) small <- small | below_int(truth, max(min))
             if (any(rows & small, na.rm = TRUE)) {
               add("statistic_support_too_small", col)
             }

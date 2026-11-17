@@ -166,15 +166,20 @@ them on MONA (maintainer, 2026-11-15: R follows when a MONA project needs these 
   policy has one (`policy_schema_mismatch`), so a schema can never appear to lower the
   policy.
 - `group` (gate 0.6.0), on a `statistic`, names a check-only column: the true units the
-  statistic's value singles out within its support's truth. For a regression term that
-  is the persons whose value of the term is non-zero: for a dummy, those with value 1;
-  for an intercept or a continuous term, the whole sample. A coefficient on a dummy is
-  the difference of two group means, so with the intercept it reproduces the mean of
-  either group, and each must be large enough to be a cell (maintainer, 2026-11-17; the
-  SDC Outputs handbook [O], "Regressions", names a model of only categorical variables
-  as the disclosive case). The support must have a truth (a check-only support, or a
+  statistic's value describes within its support's truth. For a regression term: for a
+  dummy (a factor level, an interaction of dummies), the persons with value 1; for the
+  intercept, the persons at the reference level of every categorical regressor (the
+  whole sample if there is none); for a continuous term, the whole sample. The
+  intercept is the reference group's mean, and a dummy's coefficient is the difference
+  of its group's mean from it, so each group, and what is left beside it, must be large
+  enough to be a cell (maintainer, 2026-11-17; the SDC Outputs handbook [O],
+  "Regressions", lists a regression on a single unit, sequential regressions whose
+  samples differ by a few observations, and a model of only categorical variables as
+  the disclosive cases). The support must have a truth (a check-only support, or a
   count with `units`). The gate cannot tell a dummy from a continuous term; a group set
-  to the whole sample passes, and the reviewer checks what it means.
+  to the whole sample passes, and the reviewer checks what it means. A cell made by
+  combining terms (a level of A outside an A × B interaction) is no term's group and is
+  not checked either.
 
 The rules are in "The check" below. The format version stays 1: these are additions,
 and a gate that predates them refuses them (`schema_invalid`, `policy_invalid`).
@@ -236,7 +241,9 @@ The shipped files:
   over 50 units is not a small cell.
 - `schemas/aggregates.schema.json` and `schemas/aggregates.policy.json`, the toolkit's
   default for a real project's aggregate results (maintainer, 2026-11-17), in long form
-  so one schema fits any project. A project may replace it with its own. A file the
+  so one schema fits any project. A project may replace it with its own. Its schema
+  sets `min_support` 10 on the median, so a project policy pairing with it must keep
+  `statistic_min_support` below 10 (`policy_schema_mismatch`), or use its own schema. A file the
   project does not use is written with zero rows. Gate 0.6.0, so the R gate on MONA runs
   it. Each choice and its source:
   - **One floor of 5** for every published count and every statistic's true support
@@ -248,7 +255,7 @@ The shipped files:
     per-record keys from a secret key file that stays on MONA, an explicit key epoch,
     and the p-table D = 5, V = 6.5, js = 4 (maintainer, 2026-11-05, for mock-stats; the
     same for this default, 2026-11-17). SCB has used the method since 2022 in place of
-    suppression [S], as ONS, Destatis and ABS do. It is unbiased, never publishes 1–4
+    suppression [S]. It is unbiased, never publishes 1–4
     (a true 1–4 is published as 0 or as 5 or more) and gives a cell with one person more
     an unrelated cell key, so differencing two tables does not recover a person. That is
     why there is no secondary-suppression rule and no count rounding. The gate cannot
@@ -264,10 +271,12 @@ The shipped files:
     threshold behind each percentile, and its box-plot rule asks that the quartiles and
     median not be single observations. A free quantile key would admit p99, a minimum
     or a maximum on 5 persons, which [O] treats as one person's value.
-  - **Regression terms** carry their check-only `group` (above), so a dummy that
-    singles out 1–4 true persons, or leaves 1–4 beside it, refuses. [O]
-    ("Regressions") releases regression results by default and names a model of only
-    categorical variables as the disclosive case.
+  - **Regression terms** carry their check-only `group` (above), so a dummy or an
+    intercept that describes 1–4 true persons, or leaves 1–4 beside it, refuses. [O]
+    ("Regressions") releases regression results by default and lists three disclosive
+    cases; the group rule covers the categorical one. Its rule of thumb, a check of the
+    degrees of freedom and of sequential models whose samples differ by a few
+    observations, is the reviewer's.
   - **Shares are counts**: one `counts.parquet` row per outcome category, each a
     perturbed cell under the floor, never a ratio. A ratio computed from true counts
     beside perturbed ones would undo the noise, and the reader can divide.

@@ -1,6 +1,6 @@
 {
   "gate_min": "0.6.0",
-  "description": "A regression term that singles out 5 of 9 true persons leaves 4 beside it: with the intercept, its estimate reproduces those 4 persons' mean. Both its estimate and its standard error refuse (group_cell_too_small), though the 5 it singles out and the 9 it rests on both pass the floor. The allowed twin, 5 of 10, is in pass-aggregates. The other files are empty, as a project that exports only a model writes them, and add no finding.",
+  "description": "A dummy that singles out 5 of 9 true persons leaves a reference group of 4, and the intercept describes those 4: the intercept is their mean, and the dummy's estimate with it reproduces it. Estimate and standard error refuse (group_cell_too_small) on both rows, through the dummy's complement and the intercept's group, though the 5 and the 9 pass the floor. The allowed twin, 5 of 10, is in pass-aggregates. The other files are empty, as a project that exports only a model writes them, and add no finding.",
   "schema": "../../../schemas/aggregates.schema.json",
   "policy": "../../../schemas/aggregates.policy.json",
   "candidate": {
@@ -49,7 +49,7 @@
         { "name": "model", "type": "string", "values": ["subgroup_ols", "subgroup_ols"] },
         { "name": "term", "type": "string", "values": ["intercept", "female"] },
         { "name": "n_true", "type": "int64", "values": [9, 9] },
-        { "name": "k_true", "type": "int64", "values": [9, 5] },
+        { "name": "k_true", "type": "int64", "values": [4, 5] },
         { "name": "n_persons", "type": "int64", "values": [9, 9] },
         { "name": "n_obs", "type": "int64", "values": [36, 36] },
         { "name": "estimate", "type": "double", "values": [312000, 0.08] },

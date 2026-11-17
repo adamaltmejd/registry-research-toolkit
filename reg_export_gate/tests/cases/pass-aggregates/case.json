@@ -1,9 +1,9 @@
 {
   "gate_min": "0.6.0",
-  "description": "The shipped aggregates schema and policy pass a typical project export at the policy's edges, and its check-only truths (sentinels) reach no exported file. Counts: exactly 5, a suppressed null, and a share as two outcome-category counts. Statistics: a mean on exactly 5 true persons, and a cell of 4 true persons, published as a perturbed 5, whose mean is null. Quantiles: every column on 50 true persons, and on 10 only the median. Coefficients at 4 significant digits: an intercept and a continuous term that single out the whole sample (n - k = 0), a dummy on a large sample, and a dummy on 10 persons that singles out exactly 5 and leaves exactly 5.",
+  "description": "The shipped aggregates schema and policy pass a typical project export at the policy's edges, and its check-only truths (sentinels) reach no exported file. Counts: exactly 5, a suppressed null, and a share as two outcome-category counts. Statistics: a mean on exactly 5 true persons, and a cell of 4 true persons, published as a perturbed 5, whose mean is null. Quantiles: every column on 50 true persons, and on 10 only the median. Coefficients at 4 significant digits: a continuous term that describes the whole sample (n - k = 0); intercepts that describe the reference group (the persons with every dummy at 0); a dummy on a large sample; and, on 10 persons, a dummy that singles out exactly 5 beside an intercept whose reference group is exactly 5.",
   "schema": "../../../schemas/aggregates.schema.json",
   "policy": "../../../schemas/aggregates.policy.json",
-  "sentinels": [7340033, 3670017],
+  "sentinels": [7340033, 3670017, 3670016],
   "candidate": {
     "counts.parquet": {
       "columns": [
@@ -47,14 +47,14 @@
     },
     "coefficients.parquet": {
       "columns": [
-        { "name": "model", "type": "string", "values": ["earnings_ols", "earnings_ols", "earnings_ols", "subgroup_ols"] },
-        { "name": "term", "type": "string", "values": ["intercept", "female", "age", "female"] },
-        { "name": "n_true", "type": "int64", "values": [7340033, 7340033, 7340033, 10] },
-        { "name": "k_true", "type": "int64", "values": [7340033, 3670017, 7340033, 5] },
-        { "name": "n_persons", "type": "int64", "values": [7340034, 7340034, 7340034, 10] },
-        { "name": "n_obs", "type": "int64", "values": [40000000, 40000000, 40000000, 40] },
-        { "name": "estimate", "type": "double", "values": [312000, -0.1253, 1234, 0.08] },
-        { "name": "std_error", "type": "double", "values": [4567, 0.03125, 98.76, 0.1] }
+        { "name": "model", "type": "string", "values": ["earnings_ols", "earnings_ols", "earnings_ols", "subgroup_ols", "subgroup_ols"] },
+        { "name": "term", "type": "string", "values": ["intercept", "female", "age", "intercept", "female"] },
+        { "name": "n_true", "type": "int64", "values": [7340033, 7340033, 7340033, 10, 10] },
+        { "name": "k_true", "type": "int64", "values": [3670016, 3670017, 7340033, 5, 5] },
+        { "name": "n_persons", "type": "int64", "values": [7340034, 7340034, 7340034, 10, 10] },
+        { "name": "n_obs", "type": "int64", "values": [40000000, 40000000, 40000000, 40, 40] },
+        { "name": "estimate", "type": "double", "values": [312000, -0.1253, 1234, 298000, 0.08] },
+        { "name": "std_error", "type": "double", "values": [4567, 0.03125, 98.76, 5100, 0.1] }
       ]
     }
   },

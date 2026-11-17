@@ -53,7 +53,7 @@
     },
     {
       "name": "coefficients.parquet",
-      "description": "One regression term per row. n_true is the estimation sample's true distinct persons and k_true the true persons the term singles out (for a dummy, those with value 1; for an intercept or a continuous term, all of n_true), both check-only. n_persons and n_obs (rows, person-years say) are published.",
+      "description": "One regression term per row. n_true is the estimation sample's true distinct persons and k_true the true persons the term's estimate describes, both check-only: for a dummy (a factor level, an interaction of dummies), those with value 1; for the intercept, those at the reference level of every categorical regressor (all of n_true if there is none); for a continuous term, all of n_true. A cell made by combining terms (a level of A outside an A x B interaction) is not a term, and the reviewer checks it. n_persons and n_obs (rows, person-years say) are published.",
       "columns": [
         { "name": "model", "type": "string", "role": "dimension" },
         { "name": "term", "type": "string", "role": "dimension" },

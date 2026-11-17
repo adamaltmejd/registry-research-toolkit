@@ -257,6 +257,11 @@ expect_case <- function(name, gate_bin = "R") {
   )) {
     expect_false(grepl(value, run$report_text, fixed = TRUE), label = value)
   }
+  # A check-only truth (a sentinel) reaches no report, as text.
+  sentinels <- as.numeric(unlist(run$case$sentinels))
+  for (n in sentinels) {
+    expect_false(grepl(sprintf("%.0f", n), run$report_text, fixed = TRUE))
+  }
   # Pass or refusal, staging is left as it was.
   expect_identical(listing(run$staging), sort(names(run$case$candidate)))
   expect_identical(
@@ -286,6 +291,25 @@ expect_case <- function(name, gate_bin = "R") {
     ""
   )
   expect_identical(listing(run$output), sort(c(declared, "receipt.json")))
+  # Each exported file holds exactly the schema's columns less its check-only
+  # ones, and no file the gate wrote holds a sentinel, as decimal text or as
+  # little-endian int64 bytes.
+  exported <- lapply(jsonlite::read_json(run$schema)$files, function(f) {
+    cols <- Filter(function(col) col$role != "check_only", f$columns)
+    vapply(cols, function(col) col$name, "")
+  })
+  names(exported) <- declared
+  for (file in c(declared, "receipt.json")) {
+    bytes <- read_raw(file.path(run$output, file))
+    for (n in sentinels) {
+      expect_length(grepRaw(sprintf("%.0f", n), bytes, fixed = TRUE), 0L)
+      expect_length(grepRaw(as.raw(floor(n / 256^(0:7)) %% 256), bytes, fixed = TRUE), 0L)
+    }
+  }
+  for (file in declared) {
+    table <- arrow::read_parquet(file.path(run$output, file), as_data_frame = FALSE)
+    expect_identical(names(table), exported[[file]])
+  }
   # The export holds the checked data only: no key-value metadata and none of
   # the bytes the candidate carried beside its values.
   for (file in declared) {
