@@ -6107,3 +6107,33 @@ kind = "set"
 subject = "var:aktier-och-andelar-inkl-bostadsratter-bl2036"
 fields = { "label" = "Aktier och andelar (inkl. bostadsrätter) (FS Slutdata (företagsenhet_Ovr))" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"FS Slutdata (företagsenhet_Ovr)\"."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "description" = "Antal anställda, dels som storleksklass (storleksklassindelning efter antal anställda), dels som medelantal anställda omräknat till heltidspersoner på årsbasis." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nStorleksklassvariablerna och medelantalsvariablerna mäter antal anställda på två sätt; texterna anger indelningen respektive heltidsomräkningen.\ncatalog:variable_text:19807:9862:12053\ncatalog:variable_text:20024:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:industriverksamhet"
+fields = { "description" = "Intäkter från industriverksamhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra medlemmar har samma definition.\ncatalog:variable_text:19845:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:lagerforandring-produkter"
+fields = { "description" = "Förändring av lager av produkter i arbete, färdiga varor och pågående arbete för annans räkning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:19924:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-rorelsekostnader"
+fields = { "description" = "Övriga rörelsekostnader, det vill säga övriga kostnader som härrör från företagets produktion." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTvå av tre medlemmar har denna definition; den tredje upprepar etiketten och motsäger den inte.\ncatalog:variable_text:20101:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:ravaru-och-fornodenhetskostnader"
+fields = { "description" = "Kostnader för råvaror och förnödenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre medlemmar har texten Råvaror och förnödenheter; mängdens etikett anger att det är kostnader.\ncatalog:variable_text:20141:9862:12053"

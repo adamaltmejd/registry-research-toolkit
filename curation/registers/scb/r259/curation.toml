@@ -650,3 +650,21 @@ kind = "set"
 subject = "foretagens-utgifter-for-it: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: orgnr-12 and person-orgnr identify a row: firm table; both columns carry the firm org number (fold peorgnr) in successive eras, 2006-2009 and 2009-2022 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:kop-av-molntjanster"
+fields = { "description" = "Företagets köp av molntjänster som del av utgifterna för it-tjänster, angivet som belopp i kronor och som andel i procent. Uppgifterna avser molntjänster från extern leverantör respektive från annat företag i koncernen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFyra enkätfrågor om molntjänster: belopp och andel, extern leverantör eller koncern.\ncatalog:variable_text:19639:18262:18628\ncatalog:variable_text:19671:18262:18628\ncatalog:variable_text:19672:18262:18628\ncatalog:variable_text:19673:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:marknadsforingsutgifter"
+fields = { "description" = "Utgifter för reklam och marknadsföring, som omfattar all form av reklam och PR, goodwill, marknadsundersökningar, konsulter med mera. Utgifterna redovisas dels som marknadsföringsutgifter, dels som marknadsföringsinvesteringar, det vill säga den andel av de totala utgifterna (interna och externa) som uppskattas ge ökad försäljning i minst ett år. De interna utgifterna beräknas utifrån uppskattat antal årsverken för marknadsföring multiplicerat med branschens genomsnittliga förädlingsvärde per anställd." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna delar definition och beräkningsbeskrivning; de skiljer sig i vilka konton som ingår, vilket etiketterna anger.\ncatalog:variable_text:19665:16071:17167\ncatalog:variable_text:19666:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:utgifter-for-it-tjanster"
+fields = { "description" = "Företagets utgifter eller kostnader för köp av it-tjänster, från extern leverantör respektive från annat bolag inom koncernen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFyra variabler för köpta it-tjänster, extern och intern leverantör.\ncatalog:variable_text:19656:16071:17532\ncatalog:variable_text:19657:16071:17532\ncatalog:variable_text:19658:13149:13514\ncatalog:variable_text:19659:13149:13514"

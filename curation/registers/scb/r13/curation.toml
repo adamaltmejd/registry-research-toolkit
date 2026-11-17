@@ -1274,3 +1274,15 @@ kind = "set"
 subject = "momsdeklarationsregistret: var:redovisningsmanad"
 fields.row_key = true
 evidence = "Row key: redovisningsmanad (RedMan) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:marginalbeskattad-omsattning"
+fields = { "description" = "Beskattningsunderlag för och omsättning av marginalbeskattade varor och tjänster." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna avser beskattningsunderlaget för marginalbeskattad omsättning respektive omsättningen av marginalbeskattade varor och tjänster.\ncatalog:variable_text:46478:10592:13514\ncatalog:variable_text:46492:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:varuforvarv-fran-eg"
+fields = { "description" = "Förvärv (import) av varor från annat EG-land, det vill säga länder inom EU." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har texten Import av varor från annat EG-land.\ncatalog:variable_text:46493:14245:19358\ncatalog:variable_text:46502:10592:13149"

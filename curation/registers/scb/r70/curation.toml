@@ -1019,3 +1019,9 @@ kind = "set"
 subject = "arbetsstallen-deso: var:lopnummer-for-arbetsstalle"
 fields.row_key = true
 evidence = "private:ev-3908"
+
+[[statement]]
+kind = "set"
+subject = "set:geografiska-koordinater"
+fields = { "description" = "Nordlig och östlig koordinat för fastigheter och adresser. Koordinaterna anges i koordinatsystemet RT90 (2003–2007) respektive Sweref 99 TM (2018–2023)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är nord- och östkoordinater för fastighet eller adress; koordinatsystemet byts från RT90 till Sweref 99 TM.\ncatalog:variable_text:28983:12053:12054\ncatalog:variable_text:28984:12053:12054\ncatalog:variable_text:29003:17532:17533\ncatalog:variable_text:29004:17532:17533"

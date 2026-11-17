@@ -1950,3 +1950,8 @@ subject = "var:juridisk-form"
 fields = { "label" = "Juridisk form (Juridiska enheter)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Juridiska enheter\"."
 
+[[statement]]
+kind = "set"
+subject = "set:belagenhetsadress"
+fields = { "description" = "Delar av belägenhetsadressen (besöksadressen): gata, gatunummer, bokstavsbeteckning, postnummer, postort och kompletterande specificering av gatudelen. För juridiska enheter med endast ett arbetsställe används adressinformation från Skatteverket. För företag med fler än ett arbetsställe samlas uppgiften in via undersökningen Kontroll av uppgifter i SCB:s Företagsdatabas." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är delar av belägenhetsadressen och delar insamlingssättet för adressuppgifter.\ncatalog:variable_text:18151:10592:20454\ncatalog:variable_text:18156:17897:20454\ncatalog:variable_text:18239:10592:20454"

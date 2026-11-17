@@ -736,18 +736,6 @@ evidence = "private:ev-3650"
 
 [[statement]]
 kind = "set"
-subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
-fields = { "description" = "Skattepliktig bilförmån som är underlag för arbetsgivaravgifter och SLF. Drivmedel ingår inte, och värdet minskas med den anställdes betalning genom nettolöneavdrag." }
-evidence = "private:ev-3651"
-
-[[statement]]
-kind = "set"
-subject = "var:bilforman-utom-drivmedel-underlag-egenavgift"
-fields = { "description" = "Skattepliktig bilförmån som är underlag för egenavgifter. Drivmedel ingår inte, och värdet minskas med den anställdes betalning genom nettolöneavdrag." }
-evidence = "private:ev-3652"
-
-[[statement]]
-kind = "set"
 subject = "var:bostadsforman-inte-smahus-underlag-arbetsgivaravgift"
 fields = { "description" = "Bostadsförmån som är underlag för arbetsgivaravgifter och SLF där bostaden inte finns i en småhusfastighet (ej semesterbostad)." }
 evidence = "private:ev-3653"
@@ -1706,3 +1694,27 @@ subject = "individuppgifter-agi-sociala-ersattningar: AVRAKNING_AVGIFTSFRI_ERS @
 fact = { "entity" = "occurrence", "fields" = { "label" = "Avräkning från avgiftsfri ersättning", "definition" = "Ersättning som redovisats i tidigare redovisningsperioder och som nu är avgiftspliktig.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "SCB delivers AVRAKNING_AVGIFTSFRI_ERS (int) in the final monthly social-benefit files for 2021-2023: SCB's delivery report for the 2023-2024 delivery lists it on every social-benefit file from January to December 2021, and the delivered social-benefit files for 2022-2023 carry it; the 2019-2020 social-benefit files do not. SCB's Registerinformation export documents the social-benefit table for 2019-2020 only, without this column. Same column and key as in the wage table (private:ev-3860); label, definition and type follow the export's 2020 edition there."
 caveat = "Not in the social-benefit table's documentation: the column rests on SCB's delivery report and on the delivered files."
+
+[[statement]]
+kind = "set"
+subject = "set:avdragen-inkomstskatt"
+fields = { "description" = "Skatt som har dragits av från utbetalningar: preliminär A-skatt från arbetsgivare och särskild inkomstskatt (SINK) för utomlands bosatta, där artistskatt för utomlands bosatta artister och idrottsutövare redovisas för sig." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är olika slag av avdragen inkomstskatt; SINK och artistskatt gäller utomlands bosatta, A-skatt gäller arbetsgivare.\ncatalog:variable_text:9589:17897:19723\ncatalog:variable_text:9590:17897:19723\ncatalog:variable_text:9592:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:bilforman"
+fields = { "description" = "Värdet av skattepliktig bilförmån (utom drivmedel), uppdelat efter om förmånen är underlag för arbetsgivaravgifter eller egenavgifter eller inte. Om den anställde har betalat för förmånen genom nettolöneavdrag minskas förmånens värde med den anställdes betalning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre medlemmarna delar definitionen av bilförmån utom drivmedel och nettolöneavdragsregeln; de skiljer sig i avgiftsunderlag. Lagrade texter för egenavgift täcks helt; arbetsgivaravgift behåller tillägget SLF.\ncatalog:variable_text:9596:17897:19723\ncatalog:variable_text:9597:17897:19723\ncatalog:variable_text:9598:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
+fields = { "description" = "Bilförmån som är underlag för arbetsgivaravgifter och SLF." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:9597:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsforman"
+fields = { "description" = "Bostadsförmåner som arbetsgivaren tillhandahåller de anställda (ej semesterbostad). Förmånerna är uppdelade efter om bostaden finns i en småhusfastighet eller inte och efter vilka avgifter förmånen är underlag för." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar definitionen av bostadsförmån och skiljer sig i småhus/ej småhus och avgiftsunderlag, vilket etiketterna redan visar.\ncatalog:variable_text:9599:17897:19723\ncatalog:variable_text:9600:17897:19723"

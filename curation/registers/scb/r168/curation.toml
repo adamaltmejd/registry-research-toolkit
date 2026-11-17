@@ -8803,3 +8803,147 @@ kind = "set"
 subject = "fek-slutdata-verksamhetsenhet: var:velopnr"
 fields.row_key = true
 evidence = "private:ev-3907"
+
+[[statement]]
+kind = "set"
+subject = "set:bidrag-for-verksamheten"
+fields = { "description" = "Bidrag till länstrafikbolag för verksamheten från stat, kommun eller landsting, på enhetsnivåerna företagsenhet, lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma bidrag på tre enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18282:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:bruttoinvesteringar-mark"
+fields = { "description" = "Bruttoinvesteringar i mark, på enhetsnivåerna företagsenhet, kommun och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18309:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:forlust-vid-avyttring-av-anlaggningstillgangar"
+fields = { "description" = "Förlust vid avyttring av anläggningstillgångar som inte är finansiella, på enhetsnivåerna företagsenhet, kommun och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18354:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-fran-internt-levererade-fardiga-varor"
+fields = { "description" = "Intäkter från färdiga varor som levererats från annan verksamhet inom företaget, på enhetsnivåerna lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på två enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18379:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-fran-kommissionarsverksamhet"
+fields = { "description" = "Intäkter från kommissionärsverksamhet, på enhetsnivåerna företagsenhet, lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18381:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-fran-koncernintern-hjalpverksamhet"
+fields = { "description" = "Intäkter från koncernintern hjälpverksamhet för holdingbolag, på enhetsnivåerna företagsenhet, lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18383:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:interna-kop-av-egenproducerade-varor"
+fields = { "description" = "Interna köp av egenproducerade varor, på enhetsnivåerna lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på två enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18389:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:interna-kop-av-handelsvaror"
+fields = { "description" = "Interna köp av handelsvaror, på enhetsnivåerna lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på två enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18390:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:interna-kop-av-ravaror"
+fields = { "description" = "Interna köp av råvaror, på enhetsnivåerna lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på två enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18391:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:interna-kop-av-tjanster"
+fields = { "description" = "Interna köp av tjänster, på enhetsnivåerna lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på två enhetsnivåer; de två verksamhetsenhetsvariablerna gäller olika perioder.\ncatalog:variable_text:18393:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:internleveranser-av-egenproducerade-varor"
+fields = { "description" = "Internleveranser av egenproducerade färdiga varor, på enhetsnivåerna lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på två enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18398:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:internleveranser-av-handelsvaror-och-tjanster"
+fields = { "description" = "Internleveranser av handelsvaror och tjänster, på enhetsnivåerna lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på två enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18399:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:internleveranser-av-ravaror-och-halvfabrikat"
+fields = { "description" = "Internleveranser av råvaror och halvfabrikat för vidareförädling, på enhetsnivåerna lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på två enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18400:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:kostnader-for-handelsvaror"
+fields = { "description" = "Kostnader för handelsvaror, på enhetsnivåerna företagsenhet, lokal och verksamhetsenhet. Variabeln finns också justerad för merchanting, det vill säga handelsvaror som köpts in och sålts utomlands utan att passera svensk gräns." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer, med och utan justering för merchanting enligt etiketterna.\ncatalog:variable_text:18415:12053:18993\ncatalog:variable_text:18416:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:kostnader-for-ravaror"
+fields = { "description" = "Kostnader för råvaror, på enhetsnivåerna företagsenhet, lokal och verksamhetsenhet, samt ett imputerat värde för kostnader för råvaror." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer plus en imputerad variant enligt etiketterna.\ncatalog:variable_text:18420:12053:18993\ncatalog:variable_text:18368:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:legoarbeten-och-underentreprenorer"
+fields = { "description" = "Kostnader för legoarbeten och underentreprenörer, på enhetsnivåerna företagsenhet, kommun och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18433:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:nettoinvesteringar-byggnader-markanlaggningar-och-mark"
+fields = { "description" = "Nettoinvesteringar i byggnader, markanläggningar och mark, på enhetsnivåerna företagsenhet, kommun, lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på fyra enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18456:13514:18993\ncatalog:variable_text:18458:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:nettoinvesteringar-byggnader-och-markanlaggningar"
+fields = { "description" = "Nettoinvesteringar i byggnader och markanläggningar, på enhetsnivåerna företagsenhet, kommun och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18457:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:nettoinvesteringar-mark"
+fields = { "description" = "Nettoinvesteringar i mark, på enhetsnivåerna företagsenhet, kommun och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18470:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:pensionskostnader"
+fields = { "description" = "Pensionskostnader, på enhetsnivåerna företagsenhet, kommun, lokal och verksamhetsenhet, samt ett imputerat värde för pensionskostnader." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på fyra enhetsnivåer plus en imputerad variant enligt etiketterna.\ncatalog:variable_text:18518:12053:13514\ncatalog:variable_text:18363:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:personalkostnader"
+fields = { "description" = "Personalkostnader, på enhetsnivåerna kommun, lokal och verksamhetsenhet, samt summa personalkostnader." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer plus summan enligt etiketterna.\ncatalog:variable_text:18408:12053:18262\ncatalog:variable_text:18524:12053:18993\ncatalog:variable_text:18577:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:provisionsintakter"
+fields = { "description" = "Intäkter från provision, på enhetsnivåerna lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på två enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18385:17167:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:rorelseresultat"
+fields = { "description" = "Rörelseresultat, totalt och före avskrivningar. Rörelseresultat före avskrivningar finns på enhetsnivåerna företagsenhet, lokal och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nRörelseresultat och rörelseresultat före avskrivningar på tre enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18540:12053:18993\ncatalog:variable_text:18541:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:vinst-vid-avyttring-av-anlaggningstillgangar"
+fields = { "description" = "Vinst vid avyttring av anläggningstillgångar som inte är finansiella, på enhetsnivåerna företagsenhet, kommun och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18604:12053:13514"

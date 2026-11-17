@@ -4600,3 +4600,105 @@ kind = "set"
 subject = "var:vakant-lokalyta-lokalytavakant"
 fields = { "label" = "Vakant lokalyta (Taxeringsenheter)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "set:adressland"
+fields = { "description" = "Land för en utlandsadress, som landsnamn eller som landkod." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nDe tre variablerna beskriver landet i en utlandsadress; texterna skiljer bara på namn och kod.\ncatalog:variable_text:28789:15706:15707\ncatalog:variable_text:28790:10227:10228\ncatalog:variable_text:28797:10227:10228"
+
+[[statement]]
+kind = "set"
+subject = "set:agarandel"
+fields = { "description" = "Taxeringsenhetsägarens ägarandel, angiven som ett bråk med täljare och nämnare. Täljare och nämnare finns både för ägare och för taxeringsenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra variablerna är delar av samma ägarandelsbråk; ägare/taxeringsenheter framgår av etiketterna.\ncatalog:variable_text:28795:10227:10228\ncatalog:variable_text:28853:10227:10228"
+
+[[statement]]
+kind = "set"
+subject = "set:agarkategori"
+fields = { "description" = "Klassificering av ägaren. Ägarkategori, grupperad är en grupperad ägarkategori som fås ur juridisk form, och ägarkontroll anger vem som äger eller kontrollerar en institutionell enhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda klassificerar ägaren; vad som skiljer dem framgår av texterna och sägs därför i beskrivningen.\ncatalog:variable_text:28628:10227:10228\ncatalog:variable_text:28629:10227:10228"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-varderingsenheter"
+fields = { "description" = "Antal värderingsenheter inom taxeringsenheten av en viss typ, till exempel med skogsmark, åkermark, betesmark, ekonomibyggnad eller småhusbyggnad. Varje variabel räknar värderingsenheterna av en typ." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler är antal värderingsenheter per typ; vilken typ framgår av etiketten.\ncatalog:variable_text:28635:10227:10228\ncatalog:variable_text:28637:14975:14976\ncatalog:variable_text:28639:10227:10228\ncatalog:variable_text:28643:13149:13150\ncatalog:variable_text:28641:15706:15707"
+
+[[statement]]
+kind = "set"
+subject = "set:bad-och-duschutrymme"
+fields = { "description" = "Anger för värderingsenheten bad- eller duschutrymmen: antal i bostadsplan respektive om sådant finns i källarvåning. Variablerna finns i separata varianter för lantbruksenheter och småhusenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra gäller bad/duschutrymme per värderingsenhet; standardpoäng och typkodsbegränsning gäller bara vissa och utelämnas.\ncatalog:variable_text:28817:10227:10228\ncatalog:variable_text:28818:12053:12054\ncatalog:variable_text:28820:10227:10228"
+
+[[statement]]
+kind = "set"
+subject = "set:diskmaskin"
+fields = { "description" = "Anger för värderingsenheten om inbyggd diskmaskin finns i köket och antal standardpoäng för diskmaskin. Finns även som variant för lantbruksenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda texterna är samma mening; varianten för lantbruksenheter har bara en typkodsbegränsning som medlemmen behåller.\ncatalog:variable_text:28764:10227:10228\ncatalog:variable_text:28765:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "set:elstandard"
+fields = { "description" = "Anger för värderingsenheten om el finns indragen. Finns som variant för lantbruksenheter och för småhusenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre anger om el är indragen; standardpoäng och typkodsbegränsning gäller bara vissa och utelämnas.\ncatalog:variable_text:28684:10227:10228\ncatalog:variable_text:28690:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "set:elsystemsbyte"
+fields = { "description" = "Anger om elsystemet har bytts ut under en viss period eller efter ett visst år, till exempel 1966–89, efter 1989 eller 2003 eller senare. Variablerna skiljer sig åt i vilken period som avses." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTexterna anger elsystemsbyte (flera saknar sakinnehåll och har bara en tillfällig-variabel-rad); tidsperioden framgår av etiketterna.\ncatalog:variable_text:28685:10227:10228\ncatalog:variable_text:28686:12053:12054\ncatalog:variable_text:28692:12053:12054\ncatalog:variable_text:28697:14245:14246"
+
+[[statement]]
+kind = "set"
+subject = "set:fasadstandard"
+fields = { "description" = "Standarden på värderingsenhetens exteriör, bland annat fasaden." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre medlemmar anger fasad/fasadmaterial; Standard, exteriör är den samlande variabeln för exteriörens standard.\ncatalog:variable_text:28705:12784:12785\ncatalog:variable_text:28720:12053:12054\ncatalog:variable_text:28847:10227:10228"
+
+[[statement]]
+kind = "set"
+subject = "set:fonsterstandard"
+fields = { "description" = "Anger för värderingsenheten typ av fönster som hälften eller mer av den sammanlagda fönsterytan består av. Finns som variant för lantbruksenheter och för småhusenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre har samma definition av fönstertyp; standardpoäng gäller bara vissa och utelämnas.\ncatalog:variable_text:28687:10227:10228\ncatalog:variable_text:28698:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "set:frysskap"
+fields = { "description" = "Anger för värderingsenheten om frysskåp (minst 150 liter) finns i köket och antal standardpoäng för frysskåp. Finns även som variant för lantbruksenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda texterna är samma mening; typkodsbegränsningen för lantbruksvarianten behålls hos medlemmen.\ncatalog:variable_text:28766:10227:10228\ncatalog:variable_text:28767:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "set:h-nivafaktor"
+fields = { "description" = "Nivåfaktor för hyreshus, uppdelad på bostäder och lokaler." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra är nivåfaktor för hyreshus; härledning och typkodsbegränsning anges bara för vissa år och utelämnas.\ncatalog:variable_text:28740:12784:12785\ncatalog:variable_text:28741:15706:15707\ncatalog:variable_text:28800:15706:15707"
+
+[[statement]]
+kind = "set"
+subject = "set:isolering"
+fields = { "description" = "Anger för värderingsenheten om vinterbonad finns. Finns som variant för lantbruksenheter och för småhusenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre anger om vinterbonad finns; standardpoäng gäller bara vissa och utelämnas.\ncatalog:variable_text:28688:10227:10228\ncatalog:variable_text:28700:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "set:kokso"
+fields = { "description" = "Anger för värderingsenheten om köksö finns i köket (en fristående spisenhet med kupa och matberedningsyta) och antal standardpoäng för köksö. Finns även som variant för lantbruksenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda texterna är samma mening; typkodsbegränsningen behålls hos lantbruksvarianten.\ncatalog:variable_text:28773:10227:10228\ncatalog:variable_text:28774:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "set:koksspis"
+fields = { "description" = "Anger för värderingsenheten om el- eller gasspis med minst tre plattor och ugn, eller keramisk spishäll med ugn, finns i köket och antal standardpoäng för spis. Finns även som variant för lantbruksenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda texterna är samma mening; typkodsbegränsningen behålls hos lantbruksvarianten.\ncatalog:variable_text:28775:10227:10228\ncatalog:variable_text:28776:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "set:spishall"
+fields = { "description" = "Anger för värderingsenheten om spishäll och separat inbyggd ugn i arbetshöjd finns i köket och antal standardpoäng för spishäll. Finns även som variant för lantbruksenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda texterna är samma mening; typkodsbegränsningen behålls hos lantbruksvarianten.\ncatalog:variable_text:28777:10227:10228\ncatalog:variable_text:28778:12053:12054"
+
+[[statement]]
+kind = "set"
+subject = "set:wc-standard"
+fields = { "description" = "Standarden på värderingsenhetens sanitetsutrustning, avseende om wc finns. Finns som variant för lantbruksenheter och för småhusenheter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre variabler anger om wc finns; Standard, sanitet är den samlande variabeln för sanitetsutrustningens standard.\ncatalog:variable_text:28834:12784:12785\ncatalog:variable_text:28841:12053:12054\ncatalog:variable_text:28848:10227:10228"
