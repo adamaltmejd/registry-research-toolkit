@@ -11,6 +11,7 @@ use serde_json::{Value, json};
 
 use super::{Item, Pair, Report, Section, memberships, query};
 use crate::error::Result;
+use crate::holdings::orderable::{self, Reason};
 
 /// (`table_pid`, `variable_pid`, start, end), the bounds as text.
 type Placement = (String, String, String, String);
@@ -127,18 +128,30 @@ fn schema(conn: &rusqlite::Connection) -> Result<(i64, Option<String>)> {
     Ok((user, meta.into_iter().next()))
 }
 
-fn placements(
-    conn: &rusqlite::Connection,
-) -> Result<BTreeMap<Column, (String, BTreeSet<Placement>)>> {
-    let mut out: BTreeMap<Column, (String, BTreeSet<Placement>)> = BTreeMap::new();
-    for (table, disposition) in query(
+/// Each census column with its status ([`status`]) and its placements, and whether the
+/// orderability classifier could read this side. An older holdings schema it cannot
+/// answer leaves every status unclassified, and the rest of the diff goes on.
+fn placements(conn: &rusqlite::Connection) -> Result<(Census, bool)> {
+    let mut out: Census = BTreeMap::new();
+    for column in query(
         conn,
-        "SELECT t.schema_name, t.physical_name, c.name, c.disposition FROM holding_column c \
+        "SELECT t.schema_name, t.physical_name, c.name FROM holding_column c \
          JOIN holding_table t ON t.id = c.holding_id",
-        |r| Ok(((r.get(0)?, r.get(1)?, r.get(2)?), r.get(3)?)),
+        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
     )? {
-        out.insert(table, (disposition, BTreeSet::new()));
+        out.insert(column, ("unclassified", BTreeSet::new()));
     }
+    let classified = match orderable::columns(conn) {
+        Ok(columns) => {
+            for c in columns {
+                if let Some(entry) = out.get_mut(&(c.schema, c.physical, c.name)) {
+                    entry.0 = status(c.reason);
+                }
+            }
+            true
+        }
+        Err(_) => false,
+    };
     for (column, placement) in query(
         conn,
         "SELECT t.schema_name, t.physical_name, c.name, m.table_pid, m.variable_pid, \
@@ -155,19 +168,13 @@ fn placements(
             set.insert(placement);
         }
     }
-    Ok(out)
+    Ok((out, classified))
 }
 
-/// Placed: at least one mapping. Held: hold/unmap disposition, no mapping. Unplaced:
-/// a candidate with no mapping.
-fn status(disposition: &str, placed: &BTreeSet<Placement>) -> &'static str {
-    if !placed.is_empty() {
-        "placed"
-    } else if matches!(disposition, "hold" | "unmap") {
-        "held"
-    } else {
-        "unplaced"
-    }
+/// `orderable`, or why the column is not: the classification the holdings build
+/// reports (`crate::holdings::orderable`).
+fn status(reason: Option<Reason>) -> &'static str {
+    reason.map_or("orderable", Reason::as_str)
 }
 
 fn table_pids(placed: &BTreeSet<Placement>) -> String {
@@ -203,28 +210,23 @@ fn shown(item: Item) -> Item {
     }
 }
 
-type Census = BTreeMap<Column, (String, BTreeSet<Placement>)>;
+/// Census columns by key: (status, placements).
+type Census = BTreeMap<Column, (&'static str, BTreeSet<Placement>)>;
 
-/// Placed, held and unplaced totals, and the columns on one side only.
-fn totals(old: &Census, new: &Census) -> Vec<Item> {
-    let count = |side: &Census| {
-        let mut t = BTreeMap::from([("held", 0), ("placed", 0), ("unplaced", 0)]);
-        for (d, set) in side.values() {
-            *t.entry(status(d, set)).or_default() += 1;
-        }
-        t
-    };
-    let (to, tn) = (count(old), count(new));
-    let mut counts: Vec<Item> = ["placed", "held", "unplaced"]
-        .into_iter()
-        .map(|s| {
-            let item = Item::new(
-                json!({"status": s, "old": to[s], "new": tn[s]}),
-                format!("{s}: {} → {}", to[s], tn[s]),
-            );
-            if to[s] == tn[s] { shown(item) } else { item }
-        })
-        .collect();
+/// Orderable and per-reason totals, blocked tables, and the columns on one side only.
+/// When either side's schema cannot answer the classifier, one line says so in place of
+/// the totals and blocked tables.
+fn totals(p: &Pair, old: &Census, new: &Census, classified: bool) -> Result<Vec<Item>> {
+    let mut counts = Vec::new();
+    if classified {
+        counts = orderability(p, old, new)?;
+    } else {
+        let (user, _) = schema(&p.old)?;
+        counts.push(shown(Item::new(
+            json!({"status": "orderability", "compared": false, "old_schema": user}),
+            format!("orderability: not comparable, holdings schema {user}"),
+        )));
+    }
     let only = |a: &BTreeMap<Column, _>, b: &BTreeMap<Column, _>| -> Vec<Value> {
         a.keys()
             .filter(|k| !b.contains_key(*k))
@@ -242,12 +244,80 @@ fn totals(old: &Census, new: &Census) -> Vec<Item> {
             ));
         }
     }
-    counts
+    Ok(counts)
+}
+
+/// Orderable and per-reason totals and blocked tables, both sides classified.
+fn orderability(p: &Pair, old: &Census, new: &Census) -> Result<Vec<Item>> {
+    let count = |side: &Census| {
+        let mut t: BTreeMap<&str, usize> = BTreeMap::new();
+        for (s, _) in side.values() {
+            *t.entry(s).or_default() += 1;
+        }
+        t
+    };
+    let (to, tn) = (count(old), count(new));
+    let mut counts: Vec<Item> = std::iter::once("orderable")
+        .chain(Reason::ALL.iter().map(|r| r.as_str()))
+        .filter(|s| to.contains_key(s) || tn.contains_key(s))
+        .map(|s| {
+            let (o, n) = (
+                to.get(s).copied().unwrap_or(0),
+                tn.get(s).copied().unwrap_or(0),
+            );
+            let item = Item::new(
+                json!({"status": s, "old": o, "new": n}),
+                format!("{s}: {o} → {n}"),
+            );
+            if o == n { shown(item) } else { item }
+        })
+        .collect();
+    // Blocked tables as the build reports them, by (schema, table).
+    let blocked = |conn| -> Result<BTreeSet<(Option<String>, String)>> {
+        let summary = orderable::summary(conn)?;
+        Ok(summary["tables"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter(|t| !t["blocked"].is_null())
+            .map(|t| {
+                (
+                    t["schema"].as_str().map(str::to_owned),
+                    t["table"].as_str().unwrap_or_default().to_owned(),
+                )
+            })
+            .collect())
+    };
+    let (bo, bn) = (blocked(&p.old)?, blocked(&p.new)?);
+    let item = Item::new(
+        json!({"status": "blocked tables", "old": bo.len(), "new": bn.len()}),
+        format!("blocked tables: {} → {}", bo.len(), bn.len()),
+    );
+    counts.push(if bo == bn { shown(item) } else { item });
+    // A blocked table that left the census is a removed column set, listed below, not
+    // an unblocked table.
+    let census: BTreeSet<(Option<String>, String)> =
+        new.keys().map(|(s, t, _)| (s.clone(), t.clone())).collect();
+    let still: BTreeSet<_> = bo.intersection(&census).cloned().collect();
+    for (name, a, b) in [("newly blocked", &bn, &bo), ("unblocked", &still, &bn)] {
+        let list: Vec<Value> = a
+            .difference(b)
+            .map(|(s, t)| json!({"schema": s, "table": t}))
+            .collect();
+        if !list.is_empty() {
+            counts.push(Item::new(
+                json!({"status": name, "tables": list}),
+                format!("tables {name}: {}", list.len()),
+            ));
+        }
+    }
+    Ok(counts)
 }
 
 fn census(p: &Pair) -> Result<Vec<Section>> {
-    let (old, new) = (placements(&p.old)?, placements(&p.new)?);
-    let mut counts = totals(&old, &new);
+    let ((old, old_classified), (new, new_classified)) = (placements(&p.old)?, placements(&p.new)?);
+    let classified = old_classified && new_classified;
+    let mut counts = totals(p, &old, &new, classified)?;
 
     let mut moves: BTreeMap<(String, String), Vec<Value>> = BTreeMap::new();
     let mut statuses: BTreeMap<(&str, &str), Vec<Value>> = BTreeMap::new();
@@ -264,11 +334,8 @@ fn census(p: &Pair) -> Result<Vec<Section>> {
                 .entry((table_pids(op), table_pids(np)))
                 .or_default()
                 .push(c);
-        } else if status(od, op) != status(nd, np) {
-            statuses
-                .entry((status(od, op), status(nd, np)))
-                .or_default()
-                .push(column);
+        } else if classified && od != nd {
+            statuses.entry((*od, *nd)).or_default().push(column);
         }
     }
     let mut moves: Vec<_> = moves.into_iter().collect();
@@ -323,7 +390,7 @@ fn census(p: &Pair) -> Result<Vec<Section>> {
         placement,
         Section::flat(
             "status_changes",
-            "held/unplaced status changes",
+            "orderability status changes (old → new reason)",
             status_items,
         ),
     ])

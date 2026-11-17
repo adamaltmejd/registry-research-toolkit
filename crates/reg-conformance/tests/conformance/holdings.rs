@@ -86,11 +86,39 @@ fn replace_key(root: &Path, name: &str) {
 fn verify_refuses_a_mapping_beside_its_held_row_key() {
     // Fails if a stored mapping is admitted beside its pinned held row-key claim: an
     // explicit missing-time-key hold must hold every column of the received table.
+    // Also fails if the build report counts those columns as their own holds (the
+    // compiler stamps the key's hold on each, and `Held` has its own) instead of
+    // listing the table as blocked by its key: all 9 census columns of Pool
+    // (`steward/census.csv`) under `row_key_held`, with the hold from
+    // `row-key-hold.toml`.
     let dir = Scratch::new("held-key").unwrap();
     let root = locked_copy(dir.path()).unwrap();
     replace_key(&root, "row-key-hold.toml");
     let out = dir.path().join("held.db");
-    compile(dir.path(), &out).ok();
+    let report = dir.path().join("report.json");
+    let holdings = pinned_holdings(dir.path()).unwrap();
+    exec(
+        holdings
+            .command()
+            .arg("--out")
+            .arg(&out)
+            .arg("--report")
+            .arg(&report),
+    )
+    .ok();
+    let tables = read_json(&report).unwrap()["orderability"]["tables"].clone();
+    let pool = tables
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|t| t["table"] == "Pool")
+        .expect("Pool is reported");
+    assert_eq!(pool["reasons"], serde_json::json!({"row_key_held": 9}));
+    assert_eq!(pool["blocked"]["reason"], "row_key_held");
+    assert_eq!(
+        pool["blocked"]["holds"][0]["hold"],
+        "required_time_key_absent: EventDate"
+    );
     let base = cached_reader_artifact(&holdings_case().join("base")).unwrap();
     verify_holdings(&out, &base, &root).ok();
     verify_refusals(&out, &base, &root, "held-key");

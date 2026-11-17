@@ -1013,8 +1013,9 @@ release assets are left unchanged.
   `[start, end)` periods. Explicit table ids are compared by table name; implicit tables
   share their register's id and are excluded. `--holdings` compares two holdings
   catalogs instead (release step 8g), OLD on the same or an older holdings schema with
-  the same cross-schema report: census columns by (physical table, column), with placed,
-  held and unplaced counts, changed placements grouped by old and new `table_pid` and
+  the same cross-schema report: census columns by (physical table, column), with orderable
+  and per-reason counts and blocked tables as the holdings build reports them ("Orderable
+  columns"), changed placements grouped by old and new `table_pid` and
   classed newly placed, folded or renamed, variable or interval changed, or unmapped;
   reader-visible text by kind, keyed by pid and source key and listing keys, never
   bodies; and holdings-notice deltas by code, compared by (code, table and column,
@@ -1999,6 +2000,66 @@ the table header and numbered-column prefix, optionally a schema header, and per
 evidenced exact-name renames and literal prefix rewrites only. Identifiers remain exact
 after reader trimming; renames and rewrites affect matching, not emitted physical names.
 CSV errors identify input roles and row numbers without echoing private source values.
+
+#### Orderable columns
+
+The goal is every delivered column orderable (maintainer 2026-11-17), so every holdings
+build measures how far it is. Orderable is what `materialize_order` would put in a file
+for an order of everything the steward holds, derived from its own selection, not
+re-stated: `reg_core::placement` holds the placement query and the projection fold
+materialization selects with (`placements_sql`, `select`), and the count runs them for
+every (table, variable) over all days and every database, once with no release and once
+per release that files state, as materialization folds a concurrent table's shared days
+within one release's files. The builder and
+the reader share only `reg-core` (ARCHITECTURE.md), so the rule lives there rather than
+the builder calling the reader. A column a selected placement names is orderable. So is each column a table's unheld
+declared keys map to (`reg_core::placement::key_variables`) once any placement opens its
+file, a parent-covered `carried` key copy included, as materialization's keys add them.
+So is
+a table's period column when an unheld key reads its time from it
+(`period_key = "column"`, `reg_core::placement::key_reads_period_column`) over days the
+table places and the table has a selected placement: materialization adds it as a row
+key with no mapping (`period_column_offered`, shared with `reg-build verify`).
+`reg-build verify` has already cleared the other refusals that path can raise (keys,
+storage, file names). The count is at whole-delivery grain where materialization resolves
+keys and the period column over the days a file extracts, so it may overcount one where
+a parent covers part of a year (a `simplify:` note in `orderable.rs` names the trigger).
+
+A projection column whose every placement its parent also places (`select` keeps none
+of it) is `delivered_through_parent`: no order selects its file, the parent delivers the
+data, and it counts neither as orderable nor as a gap. Every other column that is not
+orderable gets exactly one reason, from what the compiler recorded, table-level first so
+that a held row key's stamped column holds count once, under the key:
+
+| Reason | Recorded as | Gap |
+| --- | --- | --- |
+| `delivered_through_parent` | placements `select` drops for the parent's | no |
+| `table_excluded`, `table_superseded`, `table_lookup` | the table's disposition | no |
+| `table_unknown` | disposition `unknown` | yes |
+| `row_key_held` | a `hold` in the table's `key_requirements` | yes |
+| `column_unmapped` | column disposition `unmap` | no |
+| `column_held` | column disposition `hold`, or a `mapping_held` notice | yes |
+| `ambiguous` | an `ambiguous_delivered_owners` or `ambiguous_catalog_segment` notice | yes |
+| `unmatched` | an `unmatched` or `mapping_missing` notice | yes |
+| `other` | none of these | yes |
+
+A gap is work still owed; the rest are accounted for (a parent delivers them, or a
+stated decision not to order them). A table with no orderable column and some gap is
+blocked as a whole: by `row_key_held` (with each key's hold and follow-up),
+`table_unknown`, or else `no_orderable_column`.
+
+`reg-build holdings` prints this as warnings (totals, columns and tables per reason,
+each blocked table) before its summary line, which stays last since steward workflows
+read the final line, and never refuses on it: a hold is a valid recorded state. With
+`--report` the same numbers go to the report's `orderability` object: `columns`,
+`orderable`, `not_orderable`, `gaps`, `accounted`, `reasons` (`{reason: {columns,
+gap}}`) and `tables`, one entry per table with a column that is not orderable
+(`schema`, `table`, its `routes` table pids, `columns`, `orderable`, `reasons` by count,
+`blocked`, null or `{reason, holds}`, and `through`, the parent table that delivers its
+`delivered_through_parent` columns). The steward report is the steward's, so it names
+its physical tables. One classifier (`reg-build/src/holdings/orderable.rs`) serves the
+build, the report and `reg-build diff --holdings`; when an older holdings schema cannot
+answer it, the diff says "orderability: not comparable" and compares the rest.
 
 #### Census reader renames and rewrites
 
