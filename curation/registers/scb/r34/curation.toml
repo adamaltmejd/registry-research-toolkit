@@ -16506,12 +16506,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:agi1jobbyrk"
-fields = { "description" = "Jobbets yrkesställning (anställd/företagare). För personer som varit sysselsatta någon gång under året väljs novemberuppgiften, annars den senaste månaden med arbete på företaget enligt slutliga månadsversioner." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A237\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:375330:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:agi1lonfinkapril"
 fields = { "description" = "April - kontant bruttolön för anställning eller nettoinkomst av näringsverksamhet för egenföretagare, för personens största förvärvskälla under året. För anställning avses utbetalningen under månaden och för egenföretagare årets nettoinkomst dividerad med tolv. Från 2022 ingår utländsk beskattad lön, annat nordiskt land." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A224\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:375331:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The earlier definition allocates annual net self-employment income over 12 months, whereas the 2022 opdef names only surplus plus Nordic income; do not apply that component list backward. Evidence: rel070-base/reg_meta.db occurrences 374192, 375331.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the common monthly allocation from the definition directly; remove a date based on newly available opdef text and retain the actual Nordic-income inclusion change. Evidence: rel070-base/reg_meta.db occurrences 374192, 375331."
@@ -16527,12 +16521,6 @@ kind = "set"
 subject = "var:agi1peorgnr"
 fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A233\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
-subject = "var:agi1sektorgrp"
-fields = { "description" = "Sektortillhörighet (företag) Grupperad enligt BAS officiella statistik" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A242\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
 
 [[statement]]
 kind = "set"
@@ -16578,12 +16566,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:agi2jobbyrk"
-fields = { "description" = "Jobbets yrkesställning (anställd/företagare). För personer som varit sysselsatta någon gång under året väljs novemberuppgiften, annars den senaste månaden med arbete på företaget enligt slutliga månadsversioner." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A303\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:375360:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:agi2lonfinkapril"
 fields = { "description" = "April - kontant bruttolön för anställning eller nettoinkomst av näringsverksamhet för egenföretagare, för personens näst största förvärvskälla under året. För anställning avses utbetalningen under månaden och för egenföretagare årets nettoinkomst dividerad med tolv. Från 2022 ingår utländsk beskattad lön, annat nordiskt land." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A290\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:375361:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The earlier definition allocates annual net self-employment income over 12 months, whereas the 2022 opdef names only surplus plus Nordic income; do not apply that component list backward. Evidence: rel070-base/reg_meta.db occurrences 374223, 375361.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the common monthly allocation from the definition directly; remove a date based on newly available opdef text and retain the actual Nordic-income inclusion change. Evidence: rel070-base/reg_meta.db occurrences 374223, 375361."
@@ -16599,12 +16581,6 @@ kind = "set"
 subject = "var:agi2peorgnr"
 fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A299\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
-subject = "var:agi2sektorgrp"
-fields = { "description" = "Sektortillhörighet (företag) Grupperad enligt BAS officiella statistik" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A308\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
 
 [[statement]]
 kind = "set"
@@ -16650,12 +16626,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:agi3jobbyrk"
-fields = { "description" = "Jobbets yrkesställning (anställd/företagare). För personer som varit sysselsatta någon gång under året väljs novemberuppgiften, annars den senaste månaden med arbete på företaget enligt slutliga månadsversioner." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A370\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:375389:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:agi3lonfinkapril"
 fields = { "description" = "April - kontant bruttolön för anställning eller nettoinkomst av näringsverksamhet för egenföretagare, för personens tredje största förvärvskälla under året. För anställning avses utbetalningen under månaden och för egenföretagare årets nettoinkomst dividerad med tolv. Från 2022 ingår utländsk beskattad lön, annat nordiskt land." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A357\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:375390:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: The earlier definition allocates annual net self-employment income over 12 months, whereas the 2022 opdef names only surplus plus Nordic income; do not apply that component list backward. Evidence: rel070-base/reg_meta.db occurrences 374253, 375390.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the common monthly allocation from the definition directly; remove a date based on newly available opdef text and retain the actual Nordic-income inclusion change. Evidence: rel070-base/reg_meta.db occurrences 374253, 375390."
@@ -16671,12 +16641,6 @@ kind = "set"
 subject = "var:agi3peorgnr"
 fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A366\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
-subject = "var:agi3sektorgrp"
-fields = { "description" = "Sektortillhörighet (företag) Grupperad enligt BAS officiella statistik" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A375\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
 
 [[statement]]
 kind = "set"
@@ -16740,21 +16704,9 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:aktivitetsstod-dagar"
-fields = { "description" = "Aktivitetsstöd, antal dagar. Uppgiften är årssumman för aktivitetsstöd vid utbildning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A601\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:380293:opdef_text; rel070-base/reg_meta.db:occurrence:373610:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:aktivitetsstod-sjuk-belopp"
 fields = { "description" = "Aktivitetsstöd vid utbildning, sjuk med sjukpenning, utbetalt bruttobelopp under året." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A569\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nMaintainer audit follow-up 2026-11-02: Verified against own occurrence definition, opdef and response domain: Description error: \"(netto)\" is unsupported; opdef says gross amount in every year. Description edit.\nrel070-base/reg_meta.db:occurrence:371617\nrel070-base/reg_meta.db:occurrence:373611"
-
-[[statement]]
-kind = "set"
-subject = "var:aktivitetsstod-sjuk-dag"
-fields = { "description" = "Aktivitetsstöd med sjukpenning, antal dagar. Dagarna avser personer med aktivitetsstöd vid utbildning som varit sjuka med sjukpenning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A568\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376626:opdef_text; rel070-base/reg_meta.db:occurrence:373612:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -16908,12 +16860,6 @@ evidence = "private:ev-3523"
 
 [[statement]]
 kind = "set"
-subject = "var:anninkf"
-fields = { "description" = "Summa Annan inkomst för familj. Summan omfattar andra inkomster än inkomst av förvärvskälla, arbetsrelaterad social inkomst och kapitalinkomst." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A736\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376111:opdef_text; rel070-base/reg_meta.db:occurrence:377095:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:anninkf04"
 fields = { "description" = "Summa annan inkomst för familjen: särskilt pensionstillägg, inkomst-, tilläggs-, premie- och garantipension, efterlevandeförmån, tjänstepension, handikappersättning, underhållsstöd eller bidragsförskott, individualiserat socialbidrag, bostadsbidrag och bostadstillägg, privat pensionsförsäkring, livränta och arbetsskadelivränta. Beloppet anges i hundratal kronor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A737\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nIdentity review: rel070-base/reg_meta.db: AnnInkF04 v37046, 2004-2014 formula excludes Underhållsbidrag; 2015-2017 includes it (occurrences listed in item-1.jsonl)."
@@ -16947,12 +16893,6 @@ kind = "set"
 subject = "var:antal-dagar-arbetsloshet"
 fields = { "description" = "Antal dagar i arbetslöshet, öppet arbetslösa. Årsantalet beräknas från inskrivnings- och avaktualiseringsdatum i aktuell sökandekategori i Arbetsförmedlingens datalager." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A583\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376448:opdef_text; rel070-base/reg_meta.db:occurrence:378273:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-dagar-i-deltidsarbetsloshet"
-fields = { "description" = "Antal dagar i deltidsarbetslöshet. Årsantalet beräknas från inskrivnings- och avaktualiseringsdatum i aktuell sökandekategori i Arbetsförmedlingens datalager." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A585\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376440:opdef_text; rel070-base/reg_meta.db:occurrence:378262:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -18234,12 +18174,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:institutionell-sektor-aggregerad"
-fields = { "description" = "Sektortillhörighet (företag) Grupperad enligt BAS officiella statistik" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Arbetsställe!A13\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A29\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A181\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
 subject = "var:institutionell-sektorkod-foretag"
 fields = { "description" = "Institutionell sektorkod. Position 1–3 anger samhällssektor, 4–5 ägarkontroll och 6–7 juridisk form." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A24\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:369091:opdef_text. One variable, one description."
@@ -18339,12 +18273,6 @@ kind = "set"
 subject = "var:jobbbyte"
 fields = { "description" = "Kodning av arbetsgivarbyte samt in- och utflöde mellan två år. Inflöde avser ej förvärvsarbetande år 1 men förvärvsarbetande år 2, och utflöde det omvända." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen omfattar även in- och utflöde, inte enbart arbetsgivarbyte.\ncatalog:valueset:12168\ncatalog:variable_text:37759:15706:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:372578:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:jobbyrk"
-fields = { "description" = "Yrkesställning (anställd/företagare). För personer som varit sysselsatta någon gång under året väljs novemberuppgiften, annars den senaste månaden med arbete på företaget enligt slutliga månadsversioner." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A155\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:375581:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -18528,12 +18456,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:ku1ink"
-fields = { "description" = "Inkomst av största förvärvskälla" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A253\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
 subject = "var:ku1instkod-2014"
 fields = { "description" = "Institutionell sektorkod (företag)" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A263\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
@@ -18588,12 +18510,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:ku2ink"
-fields = { "description" = "Inkomst av näst största förvärvskälla" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A318\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
 subject = "var:ku2instkod-2014"
 fields = { "description" = "Institutionell sektorkod (företag)" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A329\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
@@ -18645,12 +18561,6 @@ kind = "set"
 subject = "var:ku3faman"
 fields = { "description" = "Fåmansaktiebolagsdelägare. Markeringen avser kvalificerade andelar i fåmansföretaget för individens tredje största förvärvskälla." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen i den kurerade beskrivningen.\ncatalog:variable_text:37814:13514:17897\nregisters/scb/r34/curation.toml:8607\nregisters/scb/r34/curation.toml:8613\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:380181:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:ku3ink"
-fields = { "description" = "Inkomst av tredje största förvärvskälla" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A381\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
 
 [[statement]]
 kind = "set"
@@ -20172,39 +20082,9 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:sjukfall-avslutade-midas"
-fields = { "description" = "Antal avslutade fall med sjukpenningförmåner under året" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A516\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
-subject = "var:sjukfall-bruttodagar"
-fields = { "description" = "Summerar bruttodagar för ersättningsslagen sjuk-, rehabiliterings- och arbetsskadesjukpenning. Årssumman omfattar även förebyggande sjukpenning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A526\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376802:opdef_text; rel070-base/reg_meta.db:occurrence:373838:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:sjukfall-ersattningsbelopp"
-fields = { "description" = "Summerar ersättningsbelopp för ersättningsslagensjuk-, rehabiliterings- och arbetsskadesjukpenning. Årssumman omfattar även förebyggande sjukpenning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A528\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376803:opdef_text; rel070-base/reg_meta.db:occurrence:373839:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:sjukfall-nettodagar"
-fields = { "description" = "Summerar nettodagar för ersättningsslagen sjuk-, rehabiliterings- och arbetsskadesjukpenning. Årssumman omfattar även förebyggande sjukpenning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A527\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376804:opdef_text; rel070-base/reg_meta.db:occurrence:373840:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:sjukfall-pgstart"
 fields = { "description" = "Startdatum för sjukfall som pågår sedan år t-1" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A518\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
-subject = "var:sjukfall-startade-midas"
-fields = { "description" = "Antal startade fall med sjukpenningförmåner under året" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A515\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
 
 [[statement]]
 kind = "set"
@@ -20616,45 +20496,9 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:sun2000inr"
-fields = { "description" = "Utbildningsinriktning, högsta avslutade, SUN2000" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A128\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva"
-fields = { "description" = "Utbildningsnivå, högsta avslutade, SUN2000" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A127\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-old"
-fields = { "description" = "Utbildningsnivå, högsta, aggregerad till 7 svenska nivåer" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A126\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
 subject = "var:sun2020grp"
 fields = { "description" = "Utbildningsgrupp, högsta avslutade, SUN2020. SUN-koderna grupperas till cirka 100 utbildningsgrupper." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A124\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:376080:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020inr"
-fields = { "description" = "Utbildningsinriktning, högsta avslutade, SUN2020" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A123\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva"
-fields = { "description" = "Utbildningsnivå, högsta avslutade, SUN2020" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A122\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2020niva-old"
-fields = { "description" = "Utbildningsnivå, högsta, aggregerad till 7 svenska nivåer" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A121\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
 
 [[statement]]
 kind = "set"
@@ -20946,12 +20790,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:yrkesstallning-enligt-justerad-metod"
-fields = { "description" = "Yrkesställning enligt justerad metod (anställd/företagare)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A154\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
 subject = "var:yrkesstallning-nast-forvarvskallan"
 fields = { "description" = "Yrkesställning (anställd/företagare). Kategorierna omfattar sjöman, anställd, företagare och företagare i eget aktiebolag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A322\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:378400:opdef_text. One variable, one description."
@@ -20973,18 +20811,6 @@ kind = "set"
 subject = "var:yrkesstallning-storsta-forvarvskallan-agi"
 fields = { "description" = "Yrkesställning (anställd/företagare). Kategorierna omfattar sjöman, anställd, företagare och företagare i eget aktiebolag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A236\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years.\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:374212:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesstallning-yrkstalln"
-fields = { "description" = "Yrkesställning (anställd/företagare)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A153\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
-
-[[statement]]
-kind = "set"
-subject = "var:yrkstallnkomb"
-fields = { "description" = "Kombinatörer (anställd + företagare m.m.)" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A156\n\nLISA workbook: Beskrivning / Känslig1; whole occurrence within worksheet family and documented years."
 
 [[statement]]
 kind = "set"
@@ -27969,3 +27795,81 @@ kind = "set"
 subject = "set:antal-barn"
 fields = { "description" = "Antal hemmavarande barn (biologiska barn, adoptivbarn och övriga barn) efter barnets ålder. För enskilda åldrar 0–21 år, från 2020, räknas barnen i hushållet, genom koppling till hushållsidentitet i Befolkningsregistret, Folkbokförda personer. För åldersgrupperna räknas barnen i familjen, 1990–1994 och från 2000 genom koppling till familjeidentitet i Befolkningsregistret och 1995–1999 härlett ur källregistret; gruppen 18 år och däröver finns 1990–2004, grupperna 18–19 år och 20 år och däröver från 2004." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna upprepar en text där bara åldern skiljer; ettårsåldrarna (2020–) kopplas till hushållsidentitet, åldersgrupperna till familjeidentitet.\ncatalog:variable_text:44629:18262:20089\ncatalog:variable_text:44630:18262:20089\ncatalog:variable_text:44631:18262:20089\ncatalog:variable_text:44632:18262:20089\ncatalog:variable_text:44633:18262:20089\ncatalog:variable_text:44634:18262:20089\ncatalog:variable_text:44635:18262:20089\ncatalog:variable_text:44636:18262:20089\ncatalog:variable_text:44637:18262:20089\ncatalog:variable_text:44638:18262:20089\ncatalog:variable_text:44639:18262:20089\ncatalog:variable_text:44640:18262:20089\ncatalog:variable_text:44641:18262:20089\ncatalog:variable_text:44642:18262:20089\ncatalog:variable_text:44643:18262:20089\ncatalog:variable_text:44644:18262:20089\ncatalog:variable_text:44645:18262:20089\ncatalog:variable_text:44646:18262:20089\ncatalog:variable_text:44647:18262:20089\ncatalog:variable_text:44648:18262:20089\ncatalog:variable_text:44649:18262:20089\ncatalog:variable_text:44650:18262:20089\ncatalog:variable_text:44713:10957:20089\ncatalog:variable_text:44713:7305:9131\ncatalog:variable_text:44713:9131:10957\ncatalog:variable_text:44714:12418:20089\ncatalog:variable_text:44715:10957:20089\ncatalog:variable_text:44715:7305:9131\ncatalog:variable_text:44715:9131:10957\ncatalog:variable_text:44716:10957:20089\ncatalog:variable_text:44716:7305:9131\ncatalog:variable_text:44716:9131:10957\ncatalog:variable_text:44717:10957:12784\ncatalog:variable_text:44717:7305:9131\ncatalog:variable_text:44717:9131:10957\ncatalog:variable_text:44718:12418:20089\ncatalog:variable_text:44719:10957:20089\ncatalog:variable_text:44719:7305:9131\ncatalog:variable_text:44719:9131:10957\ncatalog:variable_text:44720:10957:20089\ncatalog:variable_text:44720:7305:9131\ncatalog:variable_text:44720:9131:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:agijobbyrk"
+fields = { "description" = "Personens yrkesställning (anställd eller företagare) på företaget i fråga. Uppgiften finns för alla som någon gång varit sysselsatta under året. Om den varierar under året väljs novemberuppgiften; finns ingen novemberuppgift väljs uppgiften från den senaste månad personen arbetat på företaget, enligt de slutliga månadsversionerna. Variablerna avser personens största, näst största respektive tredje största förvärvskälla under året, och finns även utan denna uppdelning. Från 2024 används en ny metod för att klassificera företagare i BAS, vilket påverkar jämförbarheten med tidigare statistik." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra medlemmar delar urvalsregeln (november, annars senaste arbetsmånad) och metodbytet 2024; förvärvskällan skiljer, så den beskrivs som variation.\ncatalog:variable_text:44551:18993:19723\ncatalog:variable_text:44551:19723:20089\ncatalog:variable_text:44941:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:agilongarant"
+fields = { "description" = "Markering av att personen fått lönegaranti utbetald någon gång under året, eftersom arbetsgivaren gått i konkurs eller genomgår en företagsrekonstruktion. Uppgiften finns uppdelad på personens största, näst största och tredje största förvärvskälla under året, och för personens huvudsakliga jobb." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensamt är markeringen av utbetald lönegaranti från Länsstyrelsen; urvalsregeln vid flera företag står bara i äldre texter och tas därför inte med, så alla lagrade texter behålls.\ncatalog:variable_text:44553:17897:18993\ncatalog:variable_text:44553:18993:20089\ncatalog:variable_text:45070:17897:18993\ncatalog:variable_text:45070:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:agisektorgrp"
+fields = { "description" = "Institutionell sektor för det företag som uppgiften avser, aggregerad utifrån BAS - Årsuppgifter enligt Standard för klassificering av institutionella enheter efter institutionell sektor. Finns för företaget och för personens största, näst största respektive tredje största förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma sektorklassificering; skillnaden är bara vilken förvärvskälla de avser, vilket etiketter och facetter redan visar.\ncatalog:variable_text:44555:18993:20089\ncatalog:variable_text:44923:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:aktivitetsstod"
+fields = { "description" = "Aktivitetsstöd vid utbildning, som årssumma per person: utbetalt belopp respektive antal utbetalda dagar, dels totalt och dels för den del som avser tid då personen varit sjuk med sjukpenning. Uppgifterna avser händelser som skett under året." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är belopp och dagar, totalt och för sjuk med sjukpenning; belopp/brutto-nettouppgifter skiljer och står kvar i lagrad text för beloppsvariablerna.\ncatalog:variable_text:44593:13879:17167\ncatalog:variable_text:44594:13879:16801\ncatalog:variable_text:44595:8401:17167\ncatalog:variable_text:44596:8401:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:annan-inkomst"
+fields = { "description" = "Familjens summerade andra inkomster än inkomst av förvärvskälla, arbetsrelaterad social inkomst och kapitalinkomst. Variablerna följer olika definitioner av vilka inkomster som ingår, bland annat 2004 och 2018 års definition." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam är summan av andra inkomster; vilka delposter som ingår skiljer mellan definitionerna och står kvar i de lagrade texterna.\ncatalog:variable_text:44622:16436:17532\ncatalog:variable_text:44623:9131:12784\ncatalog:variable_text:44624:12418:16436\ncatalog:variable_text:44625:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsloshet"
+fields = { "description" = "Uppgifter om en persons arbetslöshet under året: antal dagar i arbetslöshet och i deltidsarbetslöshet, som räknas fram från inskrivnings- och avaktualiseringsdatum för aktuell sökandekategori i Arbetsförmedlingens datalager, samt en kod som kombinerar arbetslöshetshändelser i Arbetsförmedlingens sökanderegister med inkomststatistikens uppgift om utbetald arbetslöshetsersättning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre bygger på Arbetsförmedlingens sökandeuppgifter; dagvariablerna delar beräkningssättet och koden beskrivs separat.\ncatalog:variable_text:44651:8035:10957\ncatalog:variable_text:44652:8035:10957\ncatalog:variable_text:44678:8035:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:lone-eller-foretagarinkomst"
+fields = { "description" = "Bruttolön för anställning och företagarinkomst (nettoinkomst av näringsverksamhet) för egenföretagare. Variablerna avser personer, företag eller arbetsställen. För personer finns årssumman för största, näst största respektive tredje största förvärvskälla under året, och belopp för enskilda månader, antingen för huvudsakligt jobb eller för respektive förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam är inkomsttypen (lön och företagarinkomst); enhet, period och förvärvskälla varierar. Metodtexter om månadsberäkning och inkluderade poster gäller bara en del av medlemmarna och står kvar i lagrad text; bara KU-årsvariablerna täcks fullt av beskrivningen.\ncatalog:variable_text:44550:18993:20089\ncatalog:variable_text:44552:17897:18993\ncatalog:variable_text:44552:18993:20089\ncatalog:variable_text:44973:7305:17167\ncatalog:variable_text:45019:19723:20089\ncatalog:variable_text:45020:17897:18993\ncatalog:variable_text:45352:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:operativ-foretagsledning"
+fields = { "description" = "Markering av den person som utifrån administrativa uppgifter bedöms vara operativ ledare för ett företag. Personen väljs ut med en algoritm som bygger på uppgifter från bland annat Bolagsverket och Yrkesregistret." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre markerar företagets operativa ledare med registerbaserad algoritm; metodvarianterna och kopplingen till företag skiljer och står kvar i lagrade texter.\ncatalog:variable_text:45165:19358:20089\ncatalog:variable_text:45167:12418:17532\ncatalog:variable_text:45168:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:sjukfall"
+fields = { "description" = "Sjukfall där personen under året haft sjukpenning, förebyggande sjukpenning, arbetsskadesjukpenning och/eller rehabiliteringspenning. Variablerna anger antal sjukfall, startade och avslutade fall, antal bruttodagar och nettodagar (bruttodagar viktade med omfattningen), utbetalt ersättningsbelopp samt en markering för sjukfall som påbörjats före aktuellt år." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller sjukfall med samma ersättningsslag; de skiljer i vad som räknas.\ncatalog:variable_text:45272:17167:20089\ncatalog:variable_text:45273:16801:20089\ncatalog:variable_text:45274:17167:20089\ncatalog:variable_text:45275:17167:19723\ncatalog:variable_text:45276:17167:19723\ncatalog:variable_text:45277:8401:16071\ncatalog:variable_text:45279:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Inriktningen på personens högsta avslutade utbildning enligt Svensk utbildningsnomenklatur (SUN), som hela inriktningskoden med fyra positioner. Finns enligt SUN 2000 och SUN 2020." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda är samma uppgift i två versioner av SUN; skillnaden syns i etiketten.\ncatalog:variable_text:45355:7305:18993\ncatalog:variable_text:45359:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "description" = "Nivån på personens högsta avslutade utbildning enligt Svensk utbildningsnomenklatur (SUN), i detaljerad form eller aggregerad till sju nivåer anpassade till det svenska utbildningssystemet. Finns enligt SUN 2000 och SUN 2020." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra är utbildningsnivå enligt SUN; detaljgrad och SUN-version framgår av etiketterna.\ncatalog:variable_text:45356:7305:17897\ncatalog:variable_text:45357:7305:17897\ncatalog:variable_text:45360:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesstallning"
+fields = { "description" = "Personens yrkesställning, anställd eller företagare. Variablerna bestämmer yrkesställningen på olika sätt: utifrån personens huvudsakliga verksamhet eller utifrån personens största, näst största respektive tredje största förvärvskälla under året (enligt kontrolluppgift eller arbetsgivardeklaration), samt varianter för personer som kombinerar anställning och företagande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensamt är yrkesställning anställd/företagare; kategorilistan (sjöman m.m.) gäller bara en del av medlemmarna och står kvar i de lagrade texterna.\ncatalog:variable_text:44582:17897:18993\ncatalog:variable_text:45002:17167:17897\ncatalog:variable_text:45421:19723:20089\ncatalog:variable_text:45422:12053:12418\ncatalog:variable_text:45427:7305:18993\ncatalog:variable_text:45428:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkstallnkomb"
+fields = { "description" = "Yrkesställning för kombinatörer, det vill säga personer med anknytning till mer än en yrkesställning under året (anställd och företagare)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:45428:12053:18993"

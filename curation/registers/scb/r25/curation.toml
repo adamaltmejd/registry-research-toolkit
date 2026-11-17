@@ -22599,18 +22599,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 
 [[statement]]
 kind = "set"
-subject = "var:vardbidrag-deklarationsuppgift"
-fields = { "description" = "Utbetalt vårdbidrag till en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett belopp medan beskrivningen anger rätt till bidrag.\ncatalog:variable_text:31933:14245:20089\ncatalog:variable_text:31933:8401:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:vardbidrag-kontrolluppgift-pensions-forsakringsutbetalare"
-fields = { "description" = "Utbetalt vårdbidrag till en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett belopp medan beskrivningen anger rätt till bidrag.\ncatalog:variable_text:31934:17897:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:vardbidrag-merkostnadsdel"
 fields = { "description" = "Vårdbidragets merkostnadsdel för föräldrar till sjuka barn eller barn med funktionshinder." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger merkostnadsdelen av vårdbidrag, medan beskrivningen anger rätt till vårdbidrag generellt.\ncatalog:variable_text:31204:12053:20089"
@@ -29237,3 +29225,225 @@ kind = "set"
 subject = "individer-och-dodsbon: INBTJ"
 fields = { "variable" = "inbtj" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1173), never delivered together in one table, so they are one variable renamed between releases: BINTJ 1971-01-01..1977-12-31; INBTJ 1980-01-01..1984-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:folkpensionsbelopp"
+fields = { "description" = "Utbetalda belopp av folkpension till en person, som summa eller uppdelat på typ av folkpension." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är belopp av folkpension (summor och delbelopp som förtidspension och hustrutillägg); fp1 och fp2 behåller sina förklaringar av FPKOD.\ncatalog:variable_text:37823:3287:4018\ncatalog:variable_text:38159:4018:7305\ncatalog:variable_text:38162:4018:7305\ncatalog:variable_text:38164:1461:3652\ncatalog:variable_text:38225:4018:7305"
+
+[[statement]]
+kind = "set"
+subject = "set:vardbidrag"
+fields = { "description" = "Vårdbidrag, som kan erhållas när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet, samt skattepliktigt ferievårdbidrag." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFem av sex medlemmar har samma beskrivning av vårdbidraget; ferievårdbidrag har bara etikettens text. Medlemmar med extra villkor eller källa behåller sin lagrade text.\ncatalog:variable_text:39103:8401:13514\ncatalog:variable_text:39328:7305:7670\ncatalog:variable_text:39329:8401:14245\ncatalog:variable_text:38150:12053:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:aktieinnehavets-varde"
+fields = { "description" = "Värdet av aktieinnehav enligt kontrolluppgift, för aktier noterade på A-listan, på O-listan (inklusive OTC-listan) och på andra listor. Värdet anges som deklarationsvärde, normalt 80 procent av marknadsvärdet sista bankdagen respektive år, eller som marknadsvärde enligt marknadskursen sista bankdagen respektive år." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är värden på aktier enligt kontrolluppgift, uppdelade på börslista och på deklarations- respektive marknadsvärde.\ncatalog:variable_text:37581:10592:10957\ncatalog:variable_text:37582:10592:10957\ncatalog:variable_text:37584:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:aldersgranser-i-hushallet"
+fields = { "description" = "Ålder på den äldsta respektive yngsta personen i hushållet. Härledd variabel. Hushållsbegreppet baseras på folkbokföring på lägenhet och hämtas från Registret över totalbefolkningen (RTB). Bortfallet imputeras med familjebegreppet i RTB." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma härledning; de är äldsta respektive yngsta personens ålder.\ncatalog:variable_text:37597:14975:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:annan-inkomst"
+fields = { "description" = "Annan inkomst enligt kontrolluppgift 20, 21 och 31, per kontrolluppgift eller sammanlagt." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är annan inkomst; de skiljer sig i vilken kontrolluppgift uppgiften kommer från.\ncatalog:variable_text:37649:13879:16436\ncatalog:variable_text:38391:16436:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:atp-formanskod"
+fields = { "description" = "Kod för ATP, efterlevandeförmån, uppdelad på förmån 1, 2 och 3." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är samma kod för ATP, uppdelad på tre efterlevandeförmåner.\ncatalog:variable_text:37724:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:avdrag-kontrolluppgift"
+fields = { "description" = "Avdrag enligt kontrolluppgift från arbetsgivare. Avser speciella avgifter som den anställde får dra av i sin inkomstdeklaration, till exempel avgifter som den anställde betalar i tjänsten för egen eller efterlevandes pension. Beloppet ingår även i den kontanta bruttolönen på kontrolluppgiften." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk text; de skiljer sig i datakälla (kontrolluppgift respektive arbetsgivardeklaration och kontrolluppgift).\ncatalog:variable_text:37733:12784:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:avdragen-preliminar-a-skatt"
+fields = { "description" = "Avdragen preliminär A-skatt, från arbetsgivare respektive från pensions- och försäkringsutbetalare, enligt kontrolluppgift eller arbetsgivardeklaration." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är avdragen preliminär A-skatt; de skiljer sig i utbetalare och datakälla.\ncatalog:variable_text:37745:12784:17897\ncatalog:variable_text:38678:12784:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:blandad-inkomst"
+fields = { "description" = "Summan av företagarinkomst, inkomst från fåmansföretag samt andra inkomster som inte är pensionsgrundande, för individ eller hushåll." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition av blandad inkomst; de skiljer sig i enhet och definition.\ncatalog:variable_text:37881:12053:17167\ncatalog:variable_text:37979:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsforman"
+fields = { "description" = "Förmån av fri bostad (bostadsförmån), som värde eller som markering för om förmånen har erhållits, totalt eller uppdelat på bostad i småhusfastighet respektive bostad som inte är i småhusfastighet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är bostadsförmån i olika avgränsningar; värde eller markering varierar mellan medlemmar och år.\ncatalog:variable_text:37909:6574:6940\ncatalog:variable_text:37910:10227:17167\ncatalog:variable_text:37911:9131:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsrattens-transaktionsandel"
+fields = { "description" = "Uppgifter om andel av bostadsrätt som förvärvats respektive överlåtits, samt markering för om endast en del av bostadsrätten har överlåtits." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller förvärvad eller överlåten andel av bostadsrätt, eller om bara en del överlåtits; källans detaljer gäller inte alla medlemmar.\ncatalog:variable_text:37912:10592:15706\ncatalog:variable_text:37914:10592:16436\ncatalog:variable_text:37922:12784:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:civilstandsdatum"
+fields = { "description" = "Datum från vilket det angivna civilståndet gäller." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:37812:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:delagarstallning-i-famansforetag"
+fields = { "description" = "Uppgift om delägare m.fl. i fåmansföretag enligt kontrolluppgift. Det finns en variant per kontrolluppgiftsblankett (20, 25, 31 och 32)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är delägarskap i fåmansföretag enligt kontrolluppgift; de skiljer sig i vilken blankett uppgiften kommer från.\ncatalog:variable_text:37867:12053:19358\ncatalog:variable_text:38002:12784:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:ersattning-kod-420"
+fields = { "description" = "Pension som är delvis skattepliktig, enligt ersättningskod 420 på kontrolluppgiften från pensions- och försäkringsutbetalare, uppdelad på skattefri och skattepliktig del. Delarna beräknas utifrån inkomsttagarens ålder." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk text; de är skattefri respektive skattepliktig del.\ncatalog:variable_text:38097:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:ersattning-kod-426"
+fields = { "description" = "Engångsbelopp (brutto) till följd av personskada, enligt ersättningskod 426 på kontrolluppgiften från pensions- och försäkringsutbetalare, uppdelat på skattefri och skattepliktig del." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk text; de är skattefri respektive skattepliktig del.\ncatalog:variable_text:38103:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:ersattning-kod-429"
+fields = { "description" = "Livränta som är skattepliktig till viss del, enligt ersättningskod 429 på kontrolluppgiften från pensions- och försäkringsutbetalare, uppdelad på skattefri och skattepliktig del. Delarna beräknas utifrån inkomsttagarens ålder." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk text; de är skattefri respektive skattepliktig del.\ncatalog:variable_text:38105:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:familjetyp"
+fields = { "description" = "Klassificering av en familjs sammansättning (till exempel familj med eller utan barn). Härledd variabel baserad på uppgifter från folkbokföringen; en variant tar även hänsyn till arbetsinkomst (förvärvsarbete)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma klassificering; de skiljer sig i om arbetsinkomst ingår i härledningen.\ncatalog:variable_text:38139:2922:10227\ncatalog:variable_text:38140:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:folkbokforingsort"
+fields = { "description" = "Personens aktuella folkbokföringsort, som kod för ej territoriell församling, län, kommun och församling, vid taxeringsuttaget eller per 31 december inkomståret efter indelningen 1 januari året därpå." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är aktuell folkbokföringsort med samma kodning; de skiljer sig i tidpunkten uppgiften avser.\ncatalog:variable_text:37593:8401:9496\ncatalog:variable_text:37594:2922:6209"
+
+[[statement]]
+kind = "set"
+subject = "set:folkpension-efterlevandeformanskod"
+fields = { "description" = "Kod för folkpension, efterlevandeförmån, som helhet eller uppdelad på förmån 1, 2 och 3." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är kod för folkpension, efterlevandeförmån; de skiljer sig i förmånens nummer.\ncatalog:variable_text:38165:7305:9862\ncatalog:variable_text:38166:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:forvarvsarbete"
+fields = { "description" = "Förvärvsarbetande, den som haft en arbetsinkomst som är större än basbeloppet för inkomståret. Variablerna avser individen eller, i en variant, antal förvärvsarbetande i familjen (ingen, en eller minst två)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar bygger på arbetsinkomst över basbeloppet; de skiljer sig i individ eller familj.\ncatalog:variable_text:38212:2922:8401\ncatalog:variable_text:38221:10227:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:garantibelopp-fastighet"
+fields = { "description" = "Garantibelopp för en- eller tvåfamiljsfastighet i hemortskommunen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:38237:2922:3287\ncatalog:variable_text:38244:2922:3287"
+
+[[statement]]
+kind = "set"
+subject = "set:hyresersattning"
+fields = { "description" = "Marknadsmässig ersättning för lokal som arbetsgivaren har hyrt av den anställde." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk text; de skiljer sig i datakälla (kontrolluppgift respektive arbetsgivardeklaration och kontrolluppgift).\ncatalog:variable_text:38275:12784:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:kyrkoavgift"
+fields = { "description" = "Kyrkoavgift, exklusive eller inklusive begravningsavgift, som avgiftssats respektive betald avgift, för individ eller hushåll." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är kyrkoavgift i olika avgränsningar (med eller utan begravningsavgift, sats eller betalt belopp).\ncatalog:variable_text:37595:10957:17167\ncatalog:variable_text:37837:10957:20089\ncatalog:variable_text:38441:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:land-for-utlandskt-organisationsnummer"
+fields = { "description" = "Landskod för utländska organisationsnummer enligt kontrolluppgift. Det finns en variant för kontrolluppgiftsblanketterna 50 och 52 och en för 80 och 81." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är landskod för utländska organisationsnummer; de skiljer sig i blankett.\ncatalog:variable_text:37876:13879:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-skattepliktiga-tjansteersattningar"
+fields = { "description" = "Övriga skattepliktiga ersättningar för tjänst, enligt kontrolluppgift." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk text; de skiljer sig i datakälla (kontrolluppgift respektive arbetsgivardeklaration och kontrolluppgift).\ncatalog:variable_text:38593:6574:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-vardepappers-varde"
+fields = { "description" = "Värdet av övriga värdepapper, till exempel emissionsrätter, konverteringslån och konvertibler, enligt kontrolluppgift. Värdet anges som deklarationsvärde, normalt 80 procent av marknadsvärdet sista bankdagen respektive år, eller som marknadsvärde sista bankdagen respektive år." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är värdet av övriga värdepapper enligt kontrolluppgift; de skiljer sig i deklarations- respektive marknadsvärde.\ncatalog:variable_text:38602:10592:10957\ncatalog:variable_text:38603:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:pensionsforsakringspremie"
+fields = { "description" = "Belopp som betalats in till pensionsförsäkring eller pensionssparkonto (pensionsförsäkringspremie), med en variant för egen premie i näringsverksamheten och en variant omräknad till SEK." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är inbetalda premier till pensionsförsäkring eller pensionssparkonto i olika avgränsningar.\ncatalog:variable_text:38058:9496:9862\ncatalog:variable_text:38638:8766:17167\ncatalog:variable_text:38639:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:samfundsavgift"
+fields = { "description" = "Avgift för det första, andra, tredje respektive fjärde samfundet som en skattskyldig tillhör." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är avgift till ett samfund, uppdelad på samfundets ordningsnummer.\ncatalog:variable_text:37751:11323:17167\ncatalog:variable_text:37752:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:skattefria-stipendier"
+fields = { "description" = "Utbetalt belopp av skattefritt stipendium, uppdelat på ordinarie stipendium och krisstipendium från Konstnärsnämnden och Sveriges författarfond samt totalt av båda, för individ eller hushåll." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är utbetalda skattefria stipendier; de skiljer sig i stipendietyp (ordinarie, kris eller totalt) och enhet.\ncatalog:variable_text:38437:18262:19358\ncatalog:variable_text:38568:18262:19358\ncatalog:variable_text:38974:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:skattepliktiga-ersattningar-utan-avgiftsunderlag"
+fields = { "description" = "Skattepliktiga ersättningar som inte är underlag för socialavgifter eller särskild löneskatt och som inte ger rätt till skattereduktion för arbetsinkomst." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk text; de skiljer sig i datakälla (kontrolluppgift respektive arbetsgivardeklaration och kontrolluppgift).\ncatalog:variable_text:38861:13514:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:skattereduktion-for-arbetsinkomst"
+fields = { "description" = "Skattereduktion för arbetsinkomst, dels ordinarie och dels tillfällig, för individ eller hushåll." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är skattereduktion för arbetsinkomst; de skiljer sig i om reduktionen är ordinarie eller tillfällig och i enhet.\ncatalog:variable_text:38872:14975:20089\ncatalog:variable_text:39084:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:statlig-och-kommunal-inkomstskatt"
+fields = { "description" = "Summan av statlig och kommunal inkomstskatt, för individ eller hushåll." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är summan av statlig och kommunal inkomstskatt; de skiljer sig i enhet och avgränsning av inkomst.\ncatalog:variable_text:38954:6574:7305\ncatalog:variable_text:38956:7670:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:taxerad-inkomst"
+fields = { "description" = "Taxerad inkomst, den sammanlagda inkomsten minskad med allmänt avdrag och förlustavdrag, beräknad kommunalt respektive statligt." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är taxerad inkomst; de skiljer sig i om den är kommunal eller statlig.\ncatalog:variable_text:38346:7305:7670\ncatalog:variable_text:38414:-731:7305\ncatalog:variable_text:38971:-731:7305"
+
+[[statement]]
+kind = "set"
+subject = "set:taxerad-kapitalinkomst"
+fields = { "description" = "Inkomst av kapital: statlig taxerad inkomst av kapital respektive beskattningsbar inkomst av kapital, för individ eller hushåll." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är inkomst av kapital; de skiljer sig i statlig taxerad respektive beskattningsbar inkomst och i enhet.\ncatalog:variable_text:37830:18628:20089\ncatalog:variable_text:38959:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-efterlevandepensionsavgift"
+fields = { "description" = "Underlag för beräkning av efterlevandepensionsavgift. Variablerna avser hela perioden, föregående år eller en delperiod av året. För delperioder gäller olika avgiftssatser beroende på födelseår." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är underlag för efterlevandepensionsavgift i olika tidsavgränsningar; avgiftssatserna skiljer sig mellan perioder och födelseår.\ncatalog:variable_text:39169:10592:16801\ncatalog:variable_text:39170:16436:17167\ncatalog:variable_text:39168:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-foraldraforsakringsavgift"
+fields = { "description" = "Underlag för beräkning av föräldraförsäkringsavgift. Variablerna avser hela perioden, föregående år eller en delperiod av året. För delperioder gäller olika avgiftssatser beroende på födelseår." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är underlag för föräldraförsäkringsavgift i olika tidsavgränsningar; avgiftssatserna skiljer sig mellan perioder och födelseår.\ncatalog:variable_text:37708:10592:16801\ncatalog:variable_text:37709:16436:17167\ncatalog:variable_text:39212:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-skogsvardsavgift"
+fields = { "description" = "Underlag för skogsvårdsavgift, det taxerade jordbruksvärdet, jämkat om beskattningsåret är kortare eller längre än 12 månader eller fastigheten har förvärvats eller avyttrats under året. Avgiften var 8 promille för tid som belöper på 1991 och 4 promille för januari till juni 1992, och lagen om skogsvårdsavgift upphörde att gälla vid utgången av juni 1992." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma underlag; avgiftssatsen (8 respektive 4 promille) och lagens upphörande gäller hela avgiften.\ncatalog:variable_text:39264:7670:8035\ncatalog:variable_text:39265:8035:8401\ncatalog:variable_text:39266:8035:8401"
