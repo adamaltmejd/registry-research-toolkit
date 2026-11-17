@@ -761,18 +761,6 @@ fields = { "description" = "Senaste år då barnet eller den unga beviljades upp
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/bu.toml:427\n\nComplete accepted BU native family: SENINV. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/seninv"
 
 
-[[statement]]
-kind = "set"
-subject = "var:vardslut"
-fields = { "description" = "Barnets eller den ungas vårdnadshavare när insatsen slutar. Före 1998 angavs i stället familjeställning; dessa värden har kompletterats med en inledande 1:a." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/bu.toml:436\n\nComplete accepted BU native family: VARDSLUT. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/vardslut"
-
-
-[[statement]]
-kind = "set"
-subject = "var:vardst"
-fields = { "description" = "Barnets eller den ungas vårdnadshavare när insatsen börjar. Före 1998 angavs i stället familjeställning; dessa värden har kompletterats med en inledande 1:a." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/bu.toml:445\n\nComplete accepted BU native family: VARDST. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json.\n\nMaintainer description review 2026-11-02: sos/bu/vardst"
 
 
 [[statement]]
@@ -1118,3 +1106,21 @@ kind = "set"
 subject = "var:fmfodland"
 fields = { "label" = "Föräldrarnas födelseland (bu_barn_pnrq0)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"bu_barn_pnrq0\"."
+
+[[statement]]
+kind = "set"
+subject = "set:vardnadshavare-vid-insats"
+fields = { "description" = "Barnets eller den ungas vårdnadshavare vid olika tidpunkter för en insats: när beslut om insatsen fattades, när insatsen började och när den avslutades." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFyra medlemmar för olika tidpunkter; de lagrade texterna för start och slut behåller bara tillägget om tiden före 1998, som inte gäller alla medlemmar.\ncatalog:variable_text:62928:17532:2932897\ncatalog:variable_text:62929:17532:2932897\ncatalog:variable_text:62930:-3653:11323\ncatalog:variable_text:62931:-3653:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vardslut"
+fields = { "description" = "För tiden före 1998 anges familjeställning i stället för vårdnadshavare; dessa värden har kompletterats med en inledande 1:a." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:62930:-3653:11323\ncatalog:variable_text:62930:11323:16436\ncatalog:variable_text:62930:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vardst"
+fields = { "description" = "För tiden före 1998 anges familjeställning i stället för vårdnadshavare; dessa värden har kompletterats med en inledande 1:a." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:62931:-3653:17167"
