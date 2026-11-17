@@ -77,7 +77,6 @@ colors:
   viz-span: "{colors.white}"
   viz-span-out: "{colors.border}"
   viz-edge-succession: "{colors.text}"
-  viz-edge-rename: "{colors.text-muted}"
   viz-edition: "{colors.white}"
 
 typography:
@@ -340,8 +339,9 @@ pure role remaps.
   type's (maintainer ruling 2026-11-10, quoted in PR #2391). Fill and border take the
   raw hue (10 % and 35 %), the glyph its `-ink` stop; the text is always `text`, on
   every hued pill, and a pill link's underline is the text colour (maintainer, #2399, approved 2026-11-11).
-- **Graph marks:** `viz-edge-succession` (ink, solid) is a definition change;
-  `viz-edge-rename` (muted, dashed) is a rename. Spans are `viz-span` with a
+- **Graph marks:** `viz-edge-succession` (ink, solid) is a definition change. A
+  rename inside one lane has no mark: its spans sharing the lane say it (maintainer,
+  relayed by the Operator 2026-11-17). Spans are `viz-span` with a
   `border-strong` stroke; outside the study window they take `viz-span-out` and
   `text-muted`. `viz-edition` cuts edition ticks into a coverage bar.
 
@@ -967,9 +967,10 @@ Time is the axis every relation is drawn on.
   drawn at their real half-open dates, so school years abut instead of sharing a year
   cell; a one-day period (a 31 December snapshot) takes its calendar year, as its text
   does (#2408, 2026-11-11). Where a row joins several spellings, each name sits in its
-  own widest part; its tooltip lists each column with its years and says each rename
-  ("Renamed from X to Y."), as the lane's sentences do (new rule, proposed by the
-  implementer). A span's column name sits inside its widest delivered part with its
+  own widest part, and where one is cut its tooltip lists each column with its years
+  (new rule, proposed by the implementer). The spellings sharing the row say the
+  rename; it has no mark and no sentence (maintainer, relayed by the Operator
+  2026-11-17). A span's column name sits inside its widest delivered part with its
   glyph, cut with an ellipsis where the part is too narrow, never set beside the span:
   a name outside the box lost its glyph and repeated beside the next lane (maintainer
   finding, IFAU, relayed by the Operator 2026-11-17; this overturns "never cut",
@@ -1004,7 +1005,7 @@ Time is the axis every relation is drawn on.
   shows a RAC `Tooltip` with no delay only where the span's own text is cut off
   (maintainer, dogfood 2026-11-05, #2321; the strict reading, maintainer ruling,
   2026-11-10): on a column span where the pill cuts a name, with the whole name and its
-  years, or where the span holds a rename, to say it; never a whole name with only its
+  years; never a whole name with only its
   years, which the axis already gives (maintainer finding, IFAU, relayed by the Operator
   2026-11-17). A classification version (a span with no column name, which carries its
   years where they fit) shows it only where they do not. The pill's own hover text is
@@ -1061,8 +1062,9 @@ Time is the axis every relation is drawn on.
   tables and years are added.
 
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, in the group's
-  member order), columns as spans, and relations as arrows: solid for succession, dashed
-  for rename. A succession arrow between overlapping spans drops at the edge's effective
+  member order), columns as spans, and successions between lanes as solid arrows; a
+  rename inside one lane has no mark (maintainer, relayed by the Operator 2026-11-17).
+  A succession arrow between overlapping spans drops at the edge's effective
   year. On a group page each member is a 28 px heading row with no track, over its
   tables' 36 px rows, indented 16 px and headed by their table pills (as on the variable
   page); a divider runs between members only, never between a member's tables (variant
@@ -1092,10 +1094,9 @@ Time is the axis every relation is drawn on.
   findings sit across its lane, under its spans. It shares the page's axis with the
   `Timeline`. It draws the study years' shade and, over it, an add window that differs,
   as on the variable page, with the axis years on the add window's bounds when one is
-  drawn. It has no legend: a span names its column, a tooltip adds what it cuts and the
-  rename a dashed hop marks, its accessible name carries its state, and each lane states
-  its relations in words to a screen reader, each rename its dashed hops draw among them
-  (maintainer 2026-11-04). Its add bar shows only while a change is
+  drawn. It has no legend: a span names its column, a tooltip adds what it cuts, its
+  accessible name carries its state, and each lane states its relations in words to a
+  screen reader (maintainer 2026-11-04). Its add bar shows only while a change is
   staged. On a variable page the `LaneGraph` is the `Timeline` (above). Don't draw
   free-form node graphs; the time axis is the information.
 

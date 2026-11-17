@@ -22,7 +22,6 @@ import findingStyles from "./Finding.module.css";
 import styles from "./LaneGraph.module.css";
 import {
   COVERAGE_HEIGHT,
-  type LaneEdgeKind,
   type LaneGeometry,
   type LaneRow,
   type LaneSegment,
@@ -112,7 +111,6 @@ export interface LaneEdgeModel {
   id: string;
   from: string;
   to: string;
-  kind: LaneEdgeKind;
   /** The year the succession takes effect: where an overlap's arrow drops. */
   year?: number | null;
 }
@@ -197,20 +195,6 @@ function breakMarks(
   }));
 }
 
-/** What each dashed rename hop under a span says (`laneGeometry` draws one
- * per change of name between its named parts), in date order. */
-function renames(span: LaneSpanModel): string[] {
-  const named = (span.segments ?? [])
-    .filter((segment) => segment.name !== null)
-    .toSorted((a, b) => a.from - b.from);
-  return named.slice(1).flatMap((after, i) => {
-    const before = named[i].name;
-    return before === after.name
-      ? []
-      : [`Renamed from ${before} to ${after.name}`];
-  });
-}
-
 /** Measured heights by lane id, and the callback a measured block reports
  * to; zero gives the room back. */
 function useHeights() {
@@ -232,8 +216,8 @@ function useHeights() {
 /**
  * Lanes over time (DESIGN.md → Time → LaneGraph): one lane per variable, each
  * column a span, the column pill stretched over its years, on one shared
- * axis, relations as arrows, solid for succession and dashed for a rename,
- * the study window as a light `accent-soft` shade 8 px past its bounds and an
+ * axis, successions between lanes as arrows (a rename inside one lane has no
+ * mark: its spans share the lane), the study window as a light `accent-soft` shade 8 px past its bounds and an
  * add window as a stronger `accent-bg` over it (#2399). The marks are one decorative SVG; the lanes and spans
  * are HTML over it, so every span is a real checkbox in reading order, named with
  * its column, variable and years. Tab walks the spans lane by lane and Space
@@ -446,19 +430,8 @@ export function LaneGraph({
                 aria-label={single ? undefined : label}
               >
                 {geometry.lanes.map((placed) => {
-                  const model = lanes.find((l) => l.id === placed.id);
-                  if (!model) return null;
-                  const laneSpans = spansByLane.get(model.id) ?? [];
-                  // The lane's sentences: its own relations, then each rename
-                  // its dashed hops draw, so the marks need no legend
-                  // (maintainer 2026-11-04).
-                  const relations = [
-                    ...(model.relations ?? []),
-                    ...laneSpans.flatMap(renames),
-                  ];
-                  const lane = relations.length
-                    ? { ...model, relations }
-                    : model;
+                  const lane = lanes.find((l) => l.id === placed.id);
+                  if (!lane) return null;
                   return (
                     <li
                       key={lane.id}
@@ -488,7 +461,7 @@ export function LaneGraph({
                         top={placed.y}
                       />
                       <ul className={styles.spans}>
-                        {laneSpans.map((span) => {
+                        {(spansByLane.get(lane.id) ?? []).map((span) => {
                           const at = geometry.spans.get(span.id);
                           return at ? (
                             <li
@@ -744,14 +717,13 @@ function Marks({
       {geometry.edges.map((edge) => (
         <path
           key={edge.id}
-          className={`${styles.edge} ${styles[edge.kind]} ${
+          className={`${styles.edge} ${
             hovered !== null && (edge.from === hovered || edge.to === hovered)
               ? styles.edgeActive
               : ""
           }`}
           d={edge.d}
-          // A rename hop under a span is a dash, no arrow.
-          markerEnd={edge.kind === "succession" ? `url(#${marker})` : undefined}
+          markerEnd={`url(#${marker})`}
         />
       ))}
     </svg>
@@ -1155,10 +1127,8 @@ function Span({
   // never shows (#2399); a whole name with only its years adds nothing the
   // axis lacks. A span with no column name (a classification version) opens
   // where its years do not fit.
-  // A span whose dashed hop marks a rename opens too, to say it in words.
-  const renamed = renames(span);
   const tipped = span.name
-    ? renamed.length > 0 || at.segments.some((segment) => segment.cut)
+    ? at.segments.some((segment) => segment.cut)
     : (!!span.label || !!span.years) && !showYears;
   const tip = tipped && (
     <Tooltip
@@ -1191,11 +1161,6 @@ function Span({
         ) : (
           (span.label ?? span.years)
         )}
-        {renamed.map((sentence) => (
-          <span key={sentence} className={styles.tipLine}>
-            {sentence}.
-          </span>
-        ))}
       </span>
     </Tooltip>
   );

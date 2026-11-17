@@ -56,17 +56,9 @@
 
 .edge {
   fill: none;
+  stroke: var(--viz-edge-succession);
   stroke-width: 1.2;
   transition: stroke-width var(--duration-quick) var(--ease-standard);
-}
-
-.succession {
-  stroke: var(--viz-edge-succession);
-}
-
-.rename {
-  stroke: var(--viz-edge-rename);
-  stroke-dasharray: 3 3;
 }
 
 .edgeActive {

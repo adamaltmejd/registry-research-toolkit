@@ -33,13 +33,12 @@ export interface LaneSpanGeometryInput {
   segments?: LaneSegment[];
 }
 
-export type LaneEdgeKind = "succession" | "rename";
-
+/** A succession between two lanes; a rename inside one lane is shown by the
+ * spans sharing that lane, with no mark (maintainer, 2026-11-17). */
 interface LaneEdgeInput {
   id: string;
   from: string;
   to: string;
-  kind: LaneEdgeKind;
   /** The year the succession takes effect: where the arrow is drawn when the
    * two spans overlap. Unknown, the arrow drops where they start to overlap. */
   year?: number | null;
@@ -128,13 +127,11 @@ export interface LaneGeometry {
     label?: string;
     anchor?: "start" | "end";
   }[];
-  /** Drawn from a span's end to the next one's start. A span folding a
-   * rename also gets one dashed edge per change of name inside it. */
+  /** Drawn from a span's end to the next one's start. */
   edges: {
     id: string;
     from: string;
     to: string;
-    kind: LaneEdgeKind;
     d: string;
   }[];
 }
@@ -460,27 +457,6 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       },
     ];
   });
-  for (const span of placed.values()) {
-    const named = span.segments.filter((segment) => segment.name !== null);
-    for (let i = 1; i < named.length; i += 1) {
-      const before = named[i - 1];
-      const after = named[i];
-      if (before.name === after.name) continue;
-      const mid = span.y + SPAN_HEIGHT / 2;
-      // A short dashed hop under the join, so it reads even where the two
-      // eras touch.
-      const x1 = span.x + before.x + before.width - 16;
-      const x2 = span.x + after.x + 16;
-      edges.push({
-        id: `${span.id}#rename${i}`,
-        from: span.id,
-        to: span.id,
-        kind: "rename",
-        d: `M${x1},${mid + SPAN_HEIGHT / 2 + 3} L${Math.max(x2, x1 + 10)},${mid + SPAN_HEIGHT / 2 + 3}`,
-      });
-    }
-  }
-
   return {
     stacked,
     nameWidth,

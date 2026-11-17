@@ -370,7 +370,6 @@ export function successionLanes({
       id: `${edge.to}|${edge.from}|${edge.at?.start ?? ""}`,
       from: predecessor.id,
       to: successor.id,
-      kind: "succession",
       year,
     });
   }

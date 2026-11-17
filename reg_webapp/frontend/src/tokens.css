@@ -237,8 +237,6 @@
   --viz-span: #ffffff; /* a column span's fill; its stroke is --border-strong */
   --viz-span-out: var(--border); /* stroke of a span outside the study window */
   --viz-edge-succession: var(--text); /* solid arrow: definition change */
-  /* dashed arrow: renamed, same definition */
-  --viz-edge-rename: var(--text-muted);
   --viz-edition: #ffffff; /* edition ticks cut into a coverage bar */
 
   /* Status roles — AA-cleared FOREGROUND values, each paired with a glyph (✕ ▲ i ✓)
