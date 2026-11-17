@@ -96443,7 +96443,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:skattesats-energiskatt-fotfgensksats"
-fields = { "description" = "Skattesats för energiskatt för flygfotogen, föregående år, i ansökan om återbetalning för yrkesmässig luftfart." }
+fields = { "description" = "Skattesats för energiskatt för flygfotogen för föregående år, i ansökan om återbetalning för yrkesmässig luftfart." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering. Definitionen om värmeleverans och övrigt bränsle delas av många skattesatskolumner, motsäger operationaliseringen och tas inte med.\ncatalog:variable_text:26956:13879:14245\ncatalog:variable_text:26956:16071:17167\ncatalog:variable_text:26956:17167:19358"
 
 [[statement]]
@@ -96467,7 +96467,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:skattesats-koldioxidskatt-fotfgco2sksats"
-fields = { "description" = "Skattesats för koldioxidskatt för flygfotogen, föregående år, i ansökan om återbetalning för yrkesmässig luftfart." }
+fields = { "description" = "Skattesats för koldioxidskatt för flygfotogen för föregående år, i ansökan om återbetalning för yrkesmässig luftfart." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering.\ncatalog:variable_text:27000:13879:14245\ncatalog:variable_text:27000:16071:17167\ncatalog:variable_text:27000:17167:19358"
 
 [[statement]]
