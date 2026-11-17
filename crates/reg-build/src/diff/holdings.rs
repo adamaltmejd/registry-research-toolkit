@@ -457,6 +457,35 @@ fn editions(p: &Pair) -> Result<Section> {
     )
 }
 
+/// Each table's disposition and stored delivery, keyed by its stored schema and name,
+/// with the kept extract a `superseded` one names (crates/DESIGN.md, "Cumulative
+/// tables"). Holdings before schema 11 have no `superseded_by`; there the field is blank
+/// on both sides.
+fn dispositions(p: &Pair) -> Result<Section> {
+    let has = |conn: &rusqlite::Connection| -> Result<bool> {
+        Ok(conn.query_row(
+            "SELECT EXISTS(SELECT 1 FROM pragma_table_info('holding_table') WHERE name = 'superseded_by')",
+            [],
+            |r| r.get(0),
+        )?)
+    };
+    let kept = if has(&p.old)? && has(&p.new)? {
+        "ifnull((SELECT json_array(s.schema_name, s.physical_name) FROM holding_table s \
+         WHERE s.id = t.superseded_by), '')"
+    } else {
+        "''"
+    };
+    delta(
+        "dispositions",
+        "table dispositions (by table: disposition and delivery, superseded by)",
+        p,
+        &format!(
+            "SELECT t.disposition, json_array(t.schema_name, t.physical_name), \
+             ifnull(t.delivery, ''), {kept} FROM holding_table t"
+        ),
+    )
+}
+
 /// The linkage spaces (id, name, order) and each table's space, keyed by its stored
 /// schema and name. Holdings before schema 8 have no spaces: the section says so and
 /// compares nothing, and the schema changes list the added table and column.
@@ -580,5 +609,6 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
     )?);
     out.push(editions(p)?);
     out.push(spaces(p)?);
+    out.push(dispositions(p)?);
     Ok(out)
 }
