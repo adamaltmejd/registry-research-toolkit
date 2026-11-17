@@ -1,0 +1,9 @@
+{"kind":"register","provider":"demo","register":"wave","name":"Wave fixture"}
+{"kind":"table","provider":"demo","register":"wave","table":"t","name":"T"}
+{"kind":"release","provider":"demo","register":"wave","table":"t","release":"r1","name":"2001 - 2002","from":"2001-01-01","to":"2002-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"wave","table":"t","release":"r2","name":"2002 - 2003","from":"2002-01-01","to":"2003-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"wave","table":"t","release":"r1","column":"X","source_key":"v1","label":"X, first wave"}
+{"kind":"occurrence","provider":"demo","register":"wave","table":"t","release":"r2","column":"X","source_key":"v1","label":"X, second wave"}
+{"kind":"occurrence","provider":"demo","register":"wave","table":"t","release":"r1","column":"Y","source_key":"v2","label":"Y, first wave"}
+{"kind":"occurrence","provider":"demo","register":"wave","table":"t","release":"r2","column":"Y","source_key":"v2","label":"Y, second wave"}
+{"kind":"occurrence","provider":"demo","register":"wave","table":"t","column":"Y","source_key":"v2","label":"Y, both waves","from":"2002-01-01","to":"2002-12-31"}

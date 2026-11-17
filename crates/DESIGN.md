@@ -439,7 +439,12 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
   source key or label is ambiguous and needs a `where` guard, except a pair of different
   keys already assigned one variable: default identity splits by key, so only curation
   joins them, and later `var:`, tags and sets statements address the merged variable.
-  The curator still sets the per-key labels so that the segment agrees.
+  The curator still sets the per-key labels so that the segment agrees. Like the fold
+  test, this test is per release (maintainer, #2515): two occurrences in different
+  releases of one table are not a choice, and a releaseless occurrence counts as in
+  every release whose days it meets. A subject that takes no guard (`var:`, `table:`,
+  `set:`, or a sets or tags statement, which reaches the whole variable) is refused
+  with the differing fields instead of a guard suggestion.
 - `label`, `definition`, `operational_definition`, `unit`, `value_set`, `coded`,
   `spelling`, `identifier`, `sensitive`, `type` and `format` belong to occurrences; text
   runs and segments derive from those occurrences. `period` changes occurrence bounds or

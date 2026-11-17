@@ -466,17 +466,22 @@ fn same_subject(a: &Source, b: &Source) -> bool {
 }
 
 /// Two overlapping matches at one coordinate must agree on source key and label, or the
-/// statement needs a `where` guard. The exception is a pair of different source keys
-/// that a curation `set variable` placed on one variable: default identity splits by
-/// source key (`crate::resolve`), so only that statement can join them, and once joined
-/// they are one variable rather than a choice. Same-key pairs keep the check. Only
-/// statements that address the variable (`var:` subjects, sets and tags) pass
-/// `source_variables`; the rest pass `&[]`, so an occurrence selector still needs its
-/// guard, whatever other statements in the batch load memberships.
+/// statement needs a `where` guard. The test is per release (maintainer ruling on #2515):
+/// two matches in different releases of the table never meet in one delivery, so they
+/// are not a choice; a releaseless match meets every release whose days it shares. The
+/// other exception is a pair of different source keys that a curation `set variable`
+/// placed on one variable: default identity splits by source key (`crate::resolve`), so
+/// only that statement can join them, and once joined they are one variable rather than
+/// a choice. Same-key pairs keep the check. Only statements that address the variable
+/// (`var:` subjects, sets and tags) pass `source_variables`; the rest pass `&[]`, so an
+/// occurrence selector still needs its guard, whatever other statements in the batch
+/// load memberships. `guardable` is false where the subject cannot take a guard, and the
+/// refusal then points at the occurrences instead.
 fn ambiguity(
     matches: &[Match],
     view: &[Source],
     source_variables: &[Vec<String>],
+    guardable: bool,
 ) -> Result<(), String> {
     let variables = |source: usize| source_variables.get(source).map_or(&[][..], Vec::as_slice);
     let mut candidates = BTreeSet::new();
@@ -506,8 +511,13 @@ fn ambiguity(
                     && variables(a.source)
                         .iter()
                         .any(|v| variables(b.source).contains(v));
+                let other_release = a_source
+                    .text("release")
+                    .zip(b_source.text("release"))
+                    .is_some_and(|(a, b)| a != b);
                 if overlaps(a, b)
                     && !merged
+                    && !other_release
                     && (keys_differ || a_source.fields.get("label") != b_source.fields.get("label"))
                 {
                     ambiguous = true;
@@ -524,10 +534,13 @@ fn ambiguity(
             }
         }
     }
-    if ambiguous {
+    let candidates = candidates.into_iter().collect::<Vec<_>>().join(", ");
+    if ambiguous && guardable {
+        Err(format!("ambiguous: add a `where` guard; candidates: {candidates}"))
+    } else if ambiguous {
         Err(format!(
-            "ambiguous: add a `where` guard; candidates: {}",
-            candidates.into_iter().collect::<Vec<_>>().join(", ")
+            "ambiguous: this subject takes no `where` guard; make the occurrences agree on \
+             label, or join their keys with `set variable`; they differ in: {candidates}"
         ))
     } else {
         Ok(())
@@ -1689,6 +1702,8 @@ pub fn resolve(
                     } else {
                         &[]
                     },
+                    matches!(address, Address::Occurrence { .. })
+                        && variable_membership_field(statement).is_none(),
                 )?;
             }
             whole?;
@@ -1843,7 +1858,12 @@ pub fn resolve(
                         return Err("empty match for link object".into());
                     }
                     if !matches!(address, Address::Variable(_)) {
-                        ambiguity(&objects, &view, &[])?;
+                        ambiguity(
+                            &objects,
+                            &view,
+                            &[],
+                            matches!(address, Address::Occurrence { .. }),
+                        )?;
                     }
                     whole_occurrences(&objects, &view)?;
                     dependency_fields(&address, &mut fields);

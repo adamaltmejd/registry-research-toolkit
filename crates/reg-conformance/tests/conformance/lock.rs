@@ -104,11 +104,23 @@ fn merged_source_keys_take_variable_statements() {
     // Regression: either a `var:` statement on a variable that curation merged from two
     // overlapping source keys is refused `ambiguous`, so the merge cannot be finished,
     // or the exemption widens and an unmerged two-key column takes an unguarded statement.
-    let case = cases().join("lock/merged-key-statements");
+    // `release-key-statements`: the test is per release (#2515). Fails if two releases
+    // sharing a day under one key with different labels refuse the `var:` statement, or
+    // if a releaseless occurrence meeting both on that day stops counting as in each.
+    for (name, register) in [
+        ("merged-key-statements", "merge"),
+        ("release-key-statements", "wave"),
+    ] {
+        variable_statement_case(name, register);
+    }
+}
+
+fn variable_statement_case(name: &str, register: &str) {
+    let case = cases().join("lock").join(name);
     let expected = read_json(&case.join("expected.json")).unwrap();
-    let dir = scratch("merged-keys");
+    let dir = scratch(name);
     let curation = curation_copy(&case, dir.path());
-    let statements = curation.join("registers/demo/merge/curation.toml");
+    let statements = curation.join(format!("registers/demo/{register}/curation.toml"));
     let inputs = case.join("inputs");
     curated("lock", &inputs, &curation, &[]).ok();
     let mut text = fs::read_to_string(&statements).unwrap();
