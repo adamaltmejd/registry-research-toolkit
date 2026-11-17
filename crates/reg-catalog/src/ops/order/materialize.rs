@@ -1263,7 +1263,7 @@ fn keys(
             }
             // The physical period column is a held row key wherever an active
             // declaration supplies its time from it; it places no logical variable.
-            if requirement["period_key"].as_str() == Some("column")
+            if reg_core::manifest::key_reads_period_column(requirement)
                 && let Some((column, ..)) = &holding.period_column
             {
                 draft

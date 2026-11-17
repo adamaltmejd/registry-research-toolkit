@@ -2,7 +2,8 @@
 //! columns"). An order reaches a delivered column only through its `holding_mapping`
 //! rows: the server's possession and `materialize_order`'s placements read nothing else,
 //! and a verified artifact has already cleared the other refusals that path can raise
-//! (keys, storage, file names). So a column is orderable when it has a mapping row, and
+//! (keys, storage, file names). So a column is orderable when it has a mapping row, or
+//! is the period column a declared key reads its time from (`period_column_offered`), and
 //! every other column gets exactly one reason, read from what the compiler recorded:
 //! the table's disposition and held row key first, then the column's own decision and
 //! notices. Never a refusal: the build prints it as a warning and writes it to the report.
@@ -87,7 +88,8 @@ pub(crate) fn columns(db: &Connection) -> Result<Vec<Column>> {
                 c.name, c.disposition,
                 EXISTS(SELECT 1 FROM holding_mapping m WHERE m.column_id = c.id),
                 (SELECT group_concat(DISTINCT n.code) FROM holding_notice n
-                 WHERE n.column_id = c.id)
+                 WHERE n.column_id = c.id),
+                c.id IS t.period_column_id
          FROM holding_column c JOIN holding_table t ON t.id = c.holding_id
          ORDER BY t.id, c.ordinal",
     )?;
@@ -102,12 +104,26 @@ pub(crate) fn columns(db: &Connection) -> Result<Vec<Column>> {
             r.get::<_, String>(6)?,
             r.get::<_, bool>(7)?,
             r.get::<_, Option<String>>(8)?,
+            r.get::<_, bool>(9)?,
         ))
     })?;
     let mut out = Vec::new();
     for row in rows {
-        let (table, schema, physical, table_disposition, keys, name, disposition, mapped, notices) =
-            row?;
+        let (
+            table,
+            schema,
+            physical,
+            table_disposition,
+            keys,
+            name,
+            disposition,
+            mapped,
+            notices,
+            period_column,
+        ) = row?;
+        // The period column a key reads its time from reaches orders as a row key with
+        // no mapping of its own, by materialization's rule.
+        let mapped = mapped || period_column && super::keys::period_column_offered(db, table)?;
         let notices = notices.unwrap_or_default();
         let has_notice = |code: &str| notices.split(',').any(|n| n == code);
         let reason = if mapped {

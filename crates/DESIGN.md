@@ -2008,7 +2008,11 @@ build measures how far it is. An order reaches a delivered column only through i
 `holding_mapping` rows: the server's possession and `materialize_order`'s placements
 read nothing else, and `reg-build verify` has already cleared the other refusals that
 path can raise (keys, storage, file names). A census column is therefore orderable when
-it has a mapping row. Every other column gets exactly one reason, from what the compiler
+it has a mapping row, or is the table's period column and an unheld key reads its time
+from it (`period_key = "column"`) over days the table places: materialization adds that
+column as a row key with no mapping. Materialization, `reg-build verify` and this count
+share that rule (`reg_core::manifest::key_reads_period_column`, and the holdings-side
+`period_column_offered`). Every other column gets exactly one reason, from what the compiler
 recorded, table-level first so that a held row key's stamped column holds count once,
 under the key:
 

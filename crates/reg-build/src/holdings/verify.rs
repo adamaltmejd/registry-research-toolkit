@@ -224,28 +224,8 @@ fn sources(
         if (&spec.period_column, &spec.period_encoding) != (&binding.0, &binding.1) {
             return Err(format!("{location}: holdings_period_source_mismatch").into());
         }
-        let period_keys: Vec<_> = recorded
-            .iter()
-            .filter(|key| key.hold.is_none() && key.period_key.as_deref() == Some("column"))
-            .collect();
-        let mut period_offered = false;
-        if !period_keys.is_empty() {
-            let spans: Vec<(i64, i64)> = rows(
-                db,
-                "SELECT m.start,m.end FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id WHERE c.holding_id=?",
-                [id],
-                |r| Ok((r.get(0)?, r.get(1)?)),
-            )?;
-            for key in period_keys {
-                let scope = key.period.as_deref().map(compile::periods).transpose()?;
-                if scope.as_ref().map_or(!spans.is_empty(), |scope| {
-                    !days::overlap(&spans, scope).is_empty()
-                }) {
-                    period_offered = true;
-                    break;
-                }
-            }
-        }
+        // The stored keys are the authored ones (checked above).
+        let period_offered = keys::period_column_offered(db, id)?;
         let mut query = db
             .prepare(
                 "SELECT c.name,c.ordinal,c.storage_type,c.length,c.precision,c.scale,

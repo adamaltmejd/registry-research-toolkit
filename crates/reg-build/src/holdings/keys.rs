@@ -37,6 +37,38 @@ pub(super) fn validate_shapes(holding: i64, keys: &[input::RowKey]) -> Result<()
     Ok(())
 }
 
+/// Whether holding `holding`'s physical period column reaches an order with no mapping
+/// of its own: a stored key reads its time from it
+/// ([`reg_core::manifest::key_reads_period_column`]) over days the table places, so
+/// materialization adds it as a row key there.
+pub(super) fn period_column_offered(db: &Connection, holding: i64) -> Result<bool> {
+    let stored: String = db.query_row(
+        "SELECT key_requirements FROM holding_table WHERE id=?",
+        [holding],
+        |r| r.get(0),
+    )?;
+    let stored: Vec<serde_json::Value> = serde_json::from_str(&stored)
+        .map_err(|_| format!("holdings:table={holding}: holdings_row_key_invalid"))?;
+    let spans: Vec<Span> = rows(
+        db,
+        "SELECT m.start,m.end FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id WHERE c.holding_id=?",
+        [holding],
+        |r| Ok((r.get(0)?, r.get(1)?)),
+    )?;
+    for key in stored
+        .iter()
+        .filter(|key| reg_core::manifest::key_reads_period_column(key))
+    {
+        let scope = key["period"].as_str().map(compile::periods).transpose()?;
+        if scope.as_ref().map_or(!spans.is_empty(), |scope| {
+            !days::overlap(&spans, scope).is_empty()
+        }) {
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
 fn declarations(db: &Connection) -> Result<Declarations> {
     db.prepare("SELECT id,key_requirements FROM holding_table")?
         .query_map([], |row| {
