@@ -1,7 +1,9 @@
 {
-  "description": "The shipped aggregates schema and policy pass a typical project export. A person count of exactly the minimum 5, and a suppressed (null) one. A share carried as two outcome-category counts. A statistic resting on exactly the minimum support of 50, and a cell of 49 persons whose statistic is null. Rounded coefficients on 50 persons beside an n_obs count.",
+  "gate_min": "0.6.0",
+  "description": "The shipped aggregates schema and policy pass a typical project export at the policy's edges, and its check-only truths (sentinels) reach no exported file. Counts: exactly 5, a suppressed null, and a share as two outcome-category counts. Statistics: a mean on exactly 5 true persons, and a cell of 4 true persons, published as a perturbed 5, whose mean is null. Quantiles: every column on 50 true persons, and on 10 only the median. Coefficients at 4 significant digits: an intercept and a continuous term that single out the whole sample (n - k = 0), a dummy on a large sample, and a dummy on 10 persons that singles out exactly 5 and leaves exactly 5.",
   "schema": "../../../schemas/aggregates.schema.json",
   "policy": "../../../schemas/aggregates.policy.json",
+  "sentinels": [7340033, 3670017],
   "candidate": {
     "counts.parquet": {
       "columns": [
@@ -21,18 +23,38 @@
         { "name": "group_2", "type": "string", "values": [null, null] },
         { "name": "group_3", "type": "string", "values": [null, null] },
         { "name": "statistic", "type": "string", "values": ["mean_income", "mean_income"] },
-        { "name": "n_persons", "type": "int64", "values": [50, 49] },
-        { "name": "value", "type": "double", "values": [284000, null] }
+        { "name": "n_true", "type": "int64", "values": [5, 4] },
+        { "name": "n_persons", "type": "int64", "values": [7, 5] },
+        { "name": "value", "type": "double", "values": [284100, null] }
+      ]
+    },
+    "quantiles.parquet": {
+      "columns": [
+        { "name": "table", "type": "string", "values": ["table_4", "table_4"] },
+        { "name": "year", "type": "int32", "values": [2020, 2020] },
+        { "name": "group_1", "type": "string", "values": ["men", "women"] },
+        { "name": "group_2", "type": "string", "values": [null, null] },
+        { "name": "group_3", "type": "string", "values": [null, null] },
+        { "name": "variable", "type": "string", "values": ["income", "income"] },
+        { "name": "n_true", "type": "int64", "values": [50, 10] },
+        { "name": "n_persons", "type": "int64", "values": [52, 9] },
+        { "name": "p10", "type": "double", "values": [101200, null] },
+        { "name": "p25", "type": "double", "values": [180000, null] },
+        { "name": "p50", "type": "double", "values": [254300, 261000] },
+        { "name": "p75", "type": "double", "values": [330000, null] },
+        { "name": "p90", "type": "double", "values": [412500, null] }
       ]
     },
     "coefficients.parquet": {
       "columns": [
-        { "name": "model", "type": "string", "values": ["earnings_ols", "earnings_ols", "earnings_ols"] },
-        { "name": "term", "type": "string", "values": ["intercept", "female", "age"] },
-        { "name": "n_persons", "type": "int64", "values": [50, 50, 50] },
-        { "name": "n_obs", "type": "int64", "values": [400, 400, 400] },
-        { "name": "estimate", "type": "double", "values": [312000, -0.125, 1230] },
-        { "name": "std_error", "type": "double", "values": [4560, 0.0312, 98.7] }
+        { "name": "model", "type": "string", "values": ["earnings_ols", "earnings_ols", "earnings_ols", "subgroup_ols"] },
+        { "name": "term", "type": "string", "values": ["intercept", "female", "age", "female"] },
+        { "name": "n_true", "type": "int64", "values": [7340033, 7340033, 7340033, 10] },
+        { "name": "k_true", "type": "int64", "values": [7340033, 3670017, 7340033, 5] },
+        { "name": "n_persons", "type": "int64", "values": [7340034, 7340034, 7340034, 10] },
+        { "name": "n_obs", "type": "int64", "values": [40000000, 40000000, 40000000, 40] },
+        { "name": "estimate", "type": "double", "values": [312000, -0.1253, 1234, 0.08] },
+        { "name": "std_error", "type": "double", "values": [4567, 0.03125, 98.76, 0.1] }
       ]
     }
   },

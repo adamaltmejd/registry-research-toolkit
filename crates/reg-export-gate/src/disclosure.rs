@@ -52,6 +52,14 @@ fn below(n: i64, min: u64) -> bool {
     i128::from(n) < i128::from(min)
 }
 
+/// Whether `k` of `n` true units, or the `n − k` beside them, is a small cell
+/// (1 to `min − 1`) or negative. Zero singles out no one.
+fn small_split(k: i64, n: i64, min: u64) -> bool {
+    let (k, n, min) = (i128::from(k), i128::from(n), i128::from(min));
+    let small = |x: i128| x < 0 || (1..min).contains(&x);
+    small(k) || small(n - k)
+}
+
 /// One decoded file: its columns by schema name.
 struct Table<'a> {
     cand: &'a Candidate,
@@ -134,10 +142,23 @@ fn statistic_support(
         (_, Some(units)) => Some(table.integers(units)),
         (_, None) => None,
     };
+    let group = col.group.as_deref().map(|g| table.integers(g));
     let at = |v: &Option<Vec<Option<i64>>>, i: usize| v.as_ref().map(|t| t[i]);
     let rows = || (0..array.len()).filter(|&i| array.is_valid(i));
-    if rows().any(|i| support[i].is_none() || at(&truth, i) == Some(None)) {
+    if rows().any(|i| {
+        support[i].is_none() || at(&truth, i) == Some(None) || at(&group, i) == Some(None)
+    }) {
         findings.push(Finding::column("unsupported_statistic", file, &col.name));
+    }
+    // The schema check ensured a group's support has a truth.
+    if let (Some(group), Some(truth)) = (&group, &truth) {
+        let small = rows().any(|i| match (group[i], truth[i]) {
+            (Some(k), Some(n)) => small_split(k, n, policy.min_cell_count),
+            _ => false,
+        });
+        if small {
+            findings.push(Finding::column("group_cell_too_small", file, &col.name));
+        }
     }
     // A published support is floored by `min_cell_count` as a count; a
     // check-only support is not, so its minimum is at least that floor.
@@ -174,17 +195,12 @@ fn share_cells(
     let file = table.cand.spec.name.as_str();
     let k = table.integers(col.numerator.as_deref().expect("a share's numerator"));
     let n = table.integers(col.denominator.as_deref().expect("a share's denominator"));
-    let min = i128::from(policy.min_cell_count);
-    let small = |x: i128| x < 0 || (1..min).contains(&x);
     let rows = || (0..array.len()).filter(|&i| array.is_valid(i));
     if rows().any(|i| k[i].is_none() || n[i].is_none()) {
         findings.push(Finding::column("unsupported_share", file, &col.name));
     }
     let bad = rows().any(|i| match (k[i], n[i]) {
-        (Some(k), Some(n)) => {
-            let (k, n) = (i128::from(k), i128::from(n));
-            small(k) || small(n - k)
-        }
+        (Some(k), Some(n)) => small_split(k, n, policy.min_cell_count),
         _ => false,
     });
     if bad {

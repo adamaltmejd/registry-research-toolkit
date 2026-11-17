@@ -3,9 +3,8 @@
   "format_version": 1,
   "name": "aggregates-min5",
   "version": 1,
-  "description": "Draft for maintainer review. Every count and person count is at least 5 or null, so no cell singles out one to four persons. A statistic rests on at least 50 persons (5 per decile group, as the mock-stats policy), so no decile or coarser quantile is one person's value; finer quantiles and extremes are the reviewer's to refuse. A double statistic has at most 3 significant digits, which narrows the bits an unsuppressed value can carry to about 10. No dominance, secondary suppression or count rounding: format 1 has none, and the reviewer covers them.",
+  "description": "The toolkit's default policy for a project's aggregates; a project may set its own. Every published count is at least 5 or null, and every statistic rests on at least 5 true persons (the floor of 5 SCB uses); a regression term singles out 0 or at least 5 true persons, and leaves 0 or at least 5 beside it. Counts are cell-key perturbed by the pipeline (D 5, V 6.5, js 4), which the gate cannot verify, so it keeps the floor. Statistics have at most 4 significant digits. Known limit: no dominance rule, so a magnitude statistic over firms is the reviewer's to check. Rationale and sources: reg_export_gate/DESIGN.md.",
   "schema": { "name": "aggregates", "version": 1 },
   "min_cell_count": 5,
-  "statistic_min_support": 50,
-  "statistic_significant_digits": 3
+  "statistic_significant_digits": 4
 }

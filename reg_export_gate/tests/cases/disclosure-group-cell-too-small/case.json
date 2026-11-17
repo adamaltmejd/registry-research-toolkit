@@ -1,0 +1,68 @@
+{
+  "gate_min": "0.6.0",
+  "description": "A regression term that singles out 5 of 9 true persons leaves 4 beside it: with the intercept, its estimate reproduces those 4 persons' mean. Both its estimate and its standard error refuse (group_cell_too_small), though the 5 it singles out and the 9 it rests on both pass the floor. The allowed twin, 5 of 10, is in pass-aggregates. The other files are empty, as a project that exports only a model writes them, and add no finding.",
+  "schema": "../../../schemas/aggregates.schema.json",
+  "policy": "../../../schemas/aggregates.policy.json",
+  "candidate": {
+    "counts.parquet": {
+      "columns": [
+        { "name": "table", "type": "string", "values": [] },
+        { "name": "year", "type": "int32", "values": [] },
+        { "name": "group_1", "type": "string", "values": [] },
+        { "name": "group_2", "type": "string", "values": [] },
+        { "name": "group_3", "type": "string", "values": [] },
+        { "name": "n_persons", "type": "int64", "values": [] }
+      ]
+    },
+    "statistics.parquet": {
+      "columns": [
+        { "name": "table", "type": "string", "values": [] },
+        { "name": "year", "type": "int32", "values": [] },
+        { "name": "group_1", "type": "string", "values": [] },
+        { "name": "group_2", "type": "string", "values": [] },
+        { "name": "group_3", "type": "string", "values": [] },
+        { "name": "statistic", "type": "string", "values": [] },
+        { "name": "n_true", "type": "int64", "values": [] },
+        { "name": "n_persons", "type": "int64", "values": [] },
+        { "name": "value", "type": "double", "values": [] }
+      ]
+    },
+    "quantiles.parquet": {
+      "columns": [
+        { "name": "table", "type": "string", "values": [] },
+        { "name": "year", "type": "int32", "values": [] },
+        { "name": "group_1", "type": "string", "values": [] },
+        { "name": "group_2", "type": "string", "values": [] },
+        { "name": "group_3", "type": "string", "values": [] },
+        { "name": "variable", "type": "string", "values": [] },
+        { "name": "n_true", "type": "int64", "values": [] },
+        { "name": "n_persons", "type": "int64", "values": [] },
+        { "name": "p10", "type": "double", "values": [] },
+        { "name": "p25", "type": "double", "values": [] },
+        { "name": "p50", "type": "double", "values": [] },
+        { "name": "p75", "type": "double", "values": [] },
+        { "name": "p90", "type": "double", "values": [] }
+      ]
+    },
+    "coefficients.parquet": {
+      "columns": [
+        { "name": "model", "type": "string", "values": ["subgroup_ols", "subgroup_ols"] },
+        { "name": "term", "type": "string", "values": ["intercept", "female"] },
+        { "name": "n_true", "type": "int64", "values": [9, 9] },
+        { "name": "k_true", "type": "int64", "values": [9, 5] },
+        { "name": "n_persons", "type": "int64", "values": [9, 9] },
+        { "name": "n_obs", "type": "int64", "values": [36, 36] },
+        { "name": "estimate", "type": "double", "values": [312000, 0.08] },
+        { "name": "std_error", "type": "double", "values": [4567, 0.1] }
+      ]
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "disclosure",
+    "findings": [
+      { "file": "coefficients.parquet", "column": "estimate", "rule": "group_cell_too_small" },
+      { "file": "coefficients.parquet", "column": "std_error", "rule": "group_cell_too_small" }
+    ]
+  }
+}
