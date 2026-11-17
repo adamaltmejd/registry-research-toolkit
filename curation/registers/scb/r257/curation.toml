@@ -315,7 +315,7 @@ evidence = "private:ev-2369"
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: enmrg @2010..2012"
+subject = "innovation-i-foretagssektorn: enmrg @2010..2012 where release = 'r5168'"
 fields = { "operational_definition" = "Gick företaget ihop med eller köpte ett annat företag eller köpte delar av ett annat företag" }
 evidence = "private:ev-2370"
 
@@ -327,7 +327,7 @@ evidence = "private:ev-2371"
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: enout @2010..2012"
+subject = "innovation-i-foretagssektorn: enout @2010..2012 where release = 'r5168'"
 fields = { "operational_definition" = "Sålde, stängde ner eller outsourcade delar av företaget" }
 evidence = "private:ev-2372"
 
@@ -429,7 +429,13 @@ evidence = "private:ev-2388"
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: lillans @2004..2006,2016..2018"
+subject = "innovation-i-foretagssektorn: lillans where release = 'r1182'"
+fields = { "operational_definition" = "Antal svarande företagsenheter per stratum i undersökning" }
+evidence = "private:ev-2389"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: lillans where release = 'r13272'"
 fields = { "operational_definition" = "Antal svarande företagsenheter per stratum i undersökning" }
 evidence = "private:ev-2389"
 
@@ -4107,7 +4113,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/innovation-foretag
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: lillans @2020..2022"
+subject = "innovation-i-foretagssektorn: lillans where release = 'r18898'"
 fields = { "unit" = "antal företag" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/innovation-foretag.toml:11199\n\nThe complete native-family definition explicitly names the same stratum population, sample or respondent count for both literal columns. Within this enterprise survey, the companion NPOP, NSAMP or NRESP column positively supplies antal företag for that exact count. Clarify only the generic Antal unit label; preserve each distinct count definition, all original units, coding associations, periods, names, columns, operational prose, types and scale. No observed values are recoded and no statistical equivalence is asserted."
 
@@ -5040,7 +5046,19 @@ evidence = "private:ev-3108"
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: ar @2002..2006,2014..2016"
+subject = "innovation-i-foretagssektorn: ar where release = 'r1209'"
+fields = { "operational_definition" = "Referensperiodens sista år" }
+evidence = "private:ev-3109"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: ar where release = 'r1182'"
+fields = { "operational_definition" = "Referensperiodens sista år" }
+evidence = "private:ev-3109"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: ar where release = 'r11529'"
 fields = { "operational_definition" = "Referensperiodens sista år" }
 evidence = "private:ev-3109"
 
@@ -5226,7 +5244,13 @@ evidence = "private:ev-3139"
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: lillan @2014..2018"
+subject = "innovation-i-foretagssektorn: lillan where release = 'r11529'"
+fields = { "operational_definition" = "Antal företagsenheter per stratum i urvalet" }
+evidence = "private:ev-3140"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: lillan where release = 'r13272'"
 fields = { "operational_definition" = "Antal företagsenheter per stratum i urvalet" }
 evidence = "private:ev-3140"
 
@@ -5364,7 +5388,25 @@ evidence = "private:ev-3162"
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: storan @2002..2006,2014..2018"
+subject = "innovation-i-foretagssektorn: storan where release = 'r1209'"
+fields = { "operational_definition" = "Antal företagsenheter per stratum i populationen" }
+evidence = "private:ev-3163"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: storan where release = 'r1182'"
+fields = { "operational_definition" = "Antal företagsenheter per stratum i populationen" }
+evidence = "private:ev-3163"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: storan where release = 'r11529'"
+fields = { "operational_definition" = "Antal företagsenheter per stratum i populationen" }
+evidence = "private:ev-3163"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: storan where release = 'r13272'"
 fields = { "operational_definition" = "Antal företagsenheter per stratum i populationen" }
 evidence = "private:ev-3163"
 
@@ -5394,7 +5436,25 @@ evidence = "private:ev-3167"
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: stratum @2002..2006,2014..2018"
+subject = "innovation-i-foretagssektorn: stratum where release = 'r1209'"
+fields = { "operational_definition" = "Det stratum företagsenheten tillhör. Tilldelas vid upprättande av ramen." }
+evidence = "private:ev-3168"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: stratum where release = 'r1182'"
+fields = { "operational_definition" = "Det stratum företagsenheten tillhör. Tilldelas vid upprättande av ramen." }
+evidence = "private:ev-3168"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: stratum where release = 'r11529'"
+fields = { "operational_definition" = "Det stratum företagsenheten tillhör. Tilldelas vid upprättande av ramen." }
+evidence = "private:ev-3168"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: stratum where release = 'r13272'"
 fields = { "operational_definition" = "Det stratum företagsenheten tillhör. Tilldelas vid upprättande av ramen." }
 evidence = "private:ev-3168"
 
@@ -12474,13 +12534,13 @@ evidence = "#2102 same-label cluster 'Logistikinnovationer - Hinder' (5 variable
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: PBNOCT @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: PBNOCT @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Typ av avtal (innovation ej krävd i upphandlingsavtal)" }
 evidence = "#2102 same-label cluster 'Typ av avtal' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The three ja/nej flags share one definition text; the only separation is the curated pid names (innovation ej krävd / krävd / innovationsaktivitet i upphandlingsavtal), kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: PBINCT @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: PBINCT @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Typ av avtal (innovation krävd i upphandlingsavtal)" }
 evidence = "#2102 same-label cluster 'Typ av avtal' (3 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; The three ja/nej flags share one definition text; the only separation is the curated pid names (innovation ej krävd / krävd / innovationsaktivitet i upphandlingsavtal), kept as proposed."
 
@@ -12816,73 +12876,73 @@ evidence = "#2102 same-label cluster 'Typ av samarbetspartner geografiskt förde
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INADPS @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INADPS @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av processinnovation (anpassad av företaget)" }
 evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INOTHPS @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INOTHPS @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av processinnovation (utvecklad av andra)" }
 evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INITPS @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INITPS @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av processinnovation (utvecklad av företaget)" }
 evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INTOPS @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INTOPS @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av processinnovation (utvecklad tillsammans med andra)" }
 evidence = "#2102 same-label cluster 'Utvecklare av processinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem som utvecklade ... processinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INADSV @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INADSV @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av produktinnovation, tjänster (anpassad av företaget)" }
 evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INOTHSV @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INOTHSV @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad av andra)" }
 evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INITSV @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INITSV @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad av företaget)" }
 evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INTOSV @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INTOSV @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad tillsammans med andra)" }
 evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, tjänster' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... tjänsteinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INADGD @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INADGD @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (anpassad av företaget)" }
 evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INOTHGD @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INOTHGD @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad av andra)" }
 evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INITGD @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INITGD @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad av företaget)" }
 evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: INTOGD @2014-01-01..2016-12-31"
+subject = "innovation-i-foretagssektorn: INTOGD @2014-01-01..2016-12-31 where release = 'r11529'"
 fields = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad tillsammans med andra)" }
 evidence = "#2102 same-label cluster 'Utvecklare av produktinnovation, varuinnovation' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Four ja/nej columns with one definition ('Vem utvecklade ... Varuinnovationer'); separated only by the curated pid names, kept as proposed."
 
@@ -13346,3 +13406,847 @@ subject = "innovation-i-foretagssektorn: Peorgnr @2018..2020 where key = 'v1839'
 fact = { "entity" = "occurrence", "fields" = { "label" = "Organisationsnummer" } }
 evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers the firm key Peorgnr in its CIS file for the 2018 - 2020 wave; SCB's documentation for that wave does not list the column. It is the same column as in the 2020 - 2022 wave, which documents it (VarId 1839)."
 caveat = "Not in SCB's documentation for the 2018 - 2020 wave: the column rests on SCB's delivered CIS file for that wave."
+
+# CIS columns SCB delivers in a wave file without documenting them for that wave, second pass (Operator plan 2026-11-17). The CIS2014 coNN columns stay out (#2515).
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: Ar @2000..2002 where key = 'v73' and release = '2000 - 2002'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "År" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers Ar in its CIS file for the 2000 - 2002 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2000 - 2002 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: RMacX @2000..2002 where key = 'v30368' and release = '2000 - 2002'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utgifter för förvärv av maskin utrustning, programvara och byggnader" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers RMacX in its CIS file for the 2000 - 2002 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2000 - 2002 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: RPRE @2000..2002 where key = 'v30127' and release = '2000 - 2002'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Innovationsverksamhet, Övrigt" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers RPRE in its CIS file for the 2000 - 2002 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2000 - 2002 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: STORAN @2000..2002 where key = 'v5696' and release = '2000 - 2002'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Stora N per stratum" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers STORAN in its CIS file for the 2000 - 2002 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2000 - 2002 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: ENMRG @2012..2014 where key = 'v36987' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Företags-/organisationsidentitetsvariabler ihop" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers ENMRG in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: FUNEU @2012..2014 where key = 'v36984' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Stöd för innovationsverksamhet EU" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers FUNEU in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: FUNGMT @2012..2014 where key = 'v36983' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Stöd för innovationsverksamhet staten" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers FUNGMT in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: FUNLOC @2012..2014 where key = 'v29914' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Stöd för innovationsverksamhet kommun" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers FUNLOC in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: FUNRTD @2012..2014 where key = 'v36985' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Stöd för innovationsverksamhet EU deltog" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers FUNRTD in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: FWTURN @2012..2014 where key = 'v29911' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel omsättning från produktinnovationer som var först i världen" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers FWTURN in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: GP @2012..2014 where key = 'v4045' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Koncernmarkering" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers GP in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: HCOMPH @2012..2014 where key = 'v37074' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utan innovationsverksamhet - konkurrens" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers HCOMPH in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: HCOMPL @2012..2014 where key = 'v37066' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utan innovationsverksamhet - Inget behov minimal konkurrens" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers HCOMPL in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: HCOM_HBAR @2012..2014 where key = 'v36988' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utan innovationsverksamhet anledning" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers HCOM_HBAR in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: HCRE @2012..2014 where key = 'v37069' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utan innovationsverksamhet - brist på kredit" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers HCRE in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: HDEM @2012..2014 where key = 'v37073' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utan innovationsverksamhet - osäker efterfrågan" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers HDEM in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: HFent @2012..2014 where key = 'v37068' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utan innovationsverksamhet - brist på finansiering" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers HFent in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: HIDIN @2012..2014 where key = 'v37067' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utan innovationsverksamhet - brist på ideér" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers HIDIN in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: HPAR @2012..2014 where key = 'v37072' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utan innovationsverksamhet - brist på samarbetspartner" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers HPAR in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: HPER @2012..2014 where key = 'v37070' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utan innovationsverksamhet - brist på personal" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers HPER in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: HPRIOR @2012..2014 where key = 'v37065' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utan innovationsverksamhet - Inget behov tidigare innovationer" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers HPRIOR in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: HSUBS @2012..2014 where key = 'v37071' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utan innovationsverksamhet - inget bidrag" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers HSUBS in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: Ho @2012..2014 where key = 'v37075' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Koncernmarkering - Huvudkontoret beläget" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers Ho in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INABA @2012..2014 where key = 'v20900' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Uppskjuten eller avbruten innovationsaktivitet" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INABA in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INADPS @2012..2014 where key = 'v28056' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation (anpassad av företaget)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INADPS in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INITPS @2012..2014 where key = 'v28056' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation (utvecklad av företaget)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INITPS in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INONG @2012..2014 where key = 'v20901' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pågående innovationsaktivitet" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INONG in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INOTHGD @2012..2014 where key = 'v28054' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad av andra)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INOTHGD in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INOTHPS @2012..2014 where key = 'v28056' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation (utvecklad av andra)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INOTHPS in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INOTHSV @2012..2014 where key = 'v28055' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad av andra)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INOTHSV in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INPDFC @2012..2014 where key = 'v28044' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Produktinnovation ny för Sverige" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INPDFC in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INPDFW @2012..2014 where key = 'v28042' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Produktinnovation ny för världen" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INPDFW in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INPDSV @2012..2014 where key = 'v15583' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av tjänster" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INPDSV in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INPSNM @2012..2014 where key = 'v29912' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Nya eller väsentligt förbättrade processer på företagets marknad" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INPSNM in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INPSPD @2012..2014 where key = 'v15571' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av produktionsmetoder" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INPSPD in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INPSSU @2012..2014 where key = 'v15579' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av stödverksamheter för företagets processer" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INPSSU in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INTOGD @2012..2014 where key = 'v28054' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad tillsammans med andra)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INTOGD in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INTOPS @2012..2014 where key = 'v28056' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av processinnovation (utvecklad tillsammans med andra)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INTOPS in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INTOSV @2012..2014 where key = 'v28055' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad tillsammans med andra)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INTOSV in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: InAdGd @2012..2014 where key = 'v28054' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation (anpassad av företaget)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers InAdGd in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: InAdSv @2012..2014 where key = 'v28055' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster (anpassad av företaget)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers InAdSv in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: InItGd @2012..2014 where key = 'v28054' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, varuinnovation (utvecklad av företaget)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers InItGd in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: InItSv @2012..2014 where key = 'v28055' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utvecklare av produktinnovation, tjänster (utvecklad av företaget)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers InItSv in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: InPdFe @2012..2014 where key = 'v28043' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Produktinnovation ny för Europa" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers InPdFe in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: InPslg @2012..2014 where key = 'v15578' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av  leveransmetoder" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers InPslg in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: Inpdgd @2012..2014 where key = 'v15582' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av varor" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers Inpdgd in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: Mareur @2012..2014 where key = 'v15556' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Geografisk marknad EU-kandidat land, EU och EFTA" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers Mareur in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: Marnat @2012..2014 where key = 'v15555' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Geografisk marknad nationellt" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers Marnat in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: MktDgp @2012..2014 where key = 'v20948' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av förändringar i utformning" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers MktDgp in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: MktPdp @2012..2014 where key = 'v20949' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av nya metoder för marknadsföring" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers MktPdp in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: NEWMKT @2012..2014 where key = 'v15562' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Nya eller väsentligt förbättrade varor/tjänster på företagets marknad" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers NEWMKT in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: OrgWkp @2012..2014 where key = 'v20941' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av nya metoder för ansvar och beslut" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers OrgWkp in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: Orgbup @2012..2014 where key = 'v20940' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av nya affärsmetoder" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers Orgbup in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: PBINN @2012..2014 where key = 'v30131' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers PBINN in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: PBNOCT @2012..2014 where key = 'v30131' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Typ av avtal (innovation ej krävd i upphandlingsavtal)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers PBNOCT in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: PRODSG @2012..2014 where key = 'v37076' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Immaterialla rättigheter och licensiering - Mönsterskydd" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers PRODSG in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: PROLEX @2012..2014 where key = 'v37078' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Immateriella rättigheter och licensiering - Sålt" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers PROLEX in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: PROLIN @2012..2014 where key = 'v37079' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Immateriella rättigheter och licensiering - Köpt" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers PROLIN in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: PROPAT @2012..2014 where key = 'v32713' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Immateriella rättigheter och licensiering - Patent" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers PROPAT in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: PROTM @2012..2014 where key = 'v37077' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Immateriella rättigheter och licensiering - Varumärke" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers PROTM in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: PUBDOM @2012..2014 where key = 'v30129' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Avtal svenska organisationer" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers PUBDOM in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: PUBFOR @2012..2014 where key = 'v30130' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Avtal utländska organisationer" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers PUBFOR in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: RALLX @2012..2014 where key = 'v15643' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Totala innovationsutgifter" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers RALLX in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: RDSG @2012..2014 where key = 'v28045' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Innovationsverksamhet, Design" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers RDSG in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: RMAC @2012..2014 where key = 'v15617' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Innovationsverksamhet, Förvärv av maskiner, utrustning och programvara" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers RMAC in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: RMACX @2012..2014 where key = 'v30368' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utgifter för förvärv av maskin utrustning, programvara och byggnader" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers RMACX in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: RMAR @2012..2014 where key = 'v15620' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Innovationsverksamhet, Marknadsintroduktion av innovationer" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers RMAR in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: ROEK @2012..2014 where key = 'v15618' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Innovationsverksamhet, Förvärv av existerande kunskap" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers ROEK in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: ROEKX @2012..2014 where key = 'v15613' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utgifter förvärv av existerande kunskap" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers ROEKX in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: ROTRX @2012..2014 where key = 'v29913' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utgifter all övrig innovationsverksamhet" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers ROTRX in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: RPRE @2012..2014 where key = 'v30127' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Innovationsverksamhet, Övrigt" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers RPRE in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: RRDEX @2012..2014 where key = 'v15616' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Innovationsverksamhet, Utlagd FoU" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers RRDEX in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: RRDEXX @2012..2014 where key = 'v7708' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utgifter för utlagd FoU" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers RRDEXX in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: RRdInX @2012..2014 where key = 'v7705' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utgifter för egen FoU" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers RRdInX in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: TURNIN @2012..2014 where key = 'v15569' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel omsättning från varor/tjänster nya endast för företaget" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers TURNIN in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: TURNMAR @2012..2014 where key = 'v15568' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel omsättning från varor/tjänster nya för företagets marknad" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers TURNMAR in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: co @2012..2014 where key = 'v15600' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Innovationssamarbete" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers co in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: enout @2012..2014 where key = 'v36989' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Företags-/organisationsidentitetsvariabler såld" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers enout in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: larmar @2012..2014 where key = 'v28040' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Geografisk marknad största området" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers larmar in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: marloc @2012..2014 where key = 'v15642' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Geografisk marknad regional/lokal" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers marloc in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: maroth @2012..2014 where key = 'v15559' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Geografisk marknad övriga länder" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers maroth in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: mktpdl @2012..2014 where key = 'v20950' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av nya metoder för produktplacering" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers mktpdl in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: mktpri @2012..2014 where key = 'v20951' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av nya metoder för prissättning" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers mktpri in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: newfrm @2012..2014 where key = 'v15563' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Nya eller väsentligt förbättrade varor/tjänster för företaget" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers newfrm in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: orgexr @2012..2014 where key = 'v20942' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av nya metoder för organsiering av externa relationer" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers orgexr in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: pbinct @2012..2014 where key = 'v30131' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Typ av avtal (innovation krävd i upphandlingsavtal)" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers pbinct in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: pmos @2012..2014 where key = 'v15665' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Mest värdefull samarbetspartner" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers pmos in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: rtr @2012..2014 where key = 'v15619' and release = 'r7293'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Innovationsverksamhet, Utbildning" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers rtr in its CIS file for the 2012 - 2014 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2012 - 2014 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INNA_COMPL @2018..2020 where key = 'v46601' and release = 'r17817'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Slutförda innovationsaktiviteter" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INNA_COMPL in its CIS file for the 2018 - 2020 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2018 - 2020 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: INNO_PCS_COMM @2018..2020 where key = 'v46610' and release = 'r17817'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Introduktion av metoder för kommunikation" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers INNO_PCS_COMM in its CIS file for the 2018 - 2020 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2018 - 2020 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: TUR_PRD_INN @2018..2020 where key = 'v46665' and release = 'r17817'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel av omsättning från nya varor/tjänster" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers TUR_PRD_INN in its CIS file for the 2018 - 2020 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2018 - 2020 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: lillan @2018..2020 where key = 'v5697' and release = 'r17817'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Lilla n per stratum" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers lillan in its CIS file for the 2018 - 2020 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2018 - 2020 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: lillans @2018..2020 where key = 'v6211' and release = 'r17817'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Svarande per stratum" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers lillans in its CIS file for the 2018 - 2020 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2018 - 2020 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: storaN @2018..2020 where key = 'v5696' and release = 'r17817'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Stora N per stratum" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers storaN in its CIS file for the 2018 - 2020 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2018 - 2020 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: stratum @2018..2020 where key = 'v462' and release = 'r17817'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Stratum" } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers stratum in its CIS file for the 2018 - 2020 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2018 - 2020 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "assert"
+subject = "innovation-i-foretagssektorn: emp2012 @2010..2012 where release = 'r5168'"
+fact = { "entity" = "occurrence", "fields" = { } }
+evidence = "Maintainer ruling 2026-11-09: provider-delivered content extends the global register, even when only a steward documents it. SCB delivers emp2012 in its CIS file for the 2010 - 2012 wave; SCB's documentation for that wave does not list the column. It is the same column as in the waves that document it."
+caveat = "Not in SCB's documentation for the 2010 - 2012 wave: the column rests on SCB's delivered CIS file for that wave."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: emp2012 @2010..2012 where release = 'r5168'"
+fields = { "variable" = "emp2012" }
+evidence = "The 2010 - 2012 wave's emp2012 is the same delivered column as the 2012 - 2014 wave's emp2012 (number of employees in reference year 2012); an assertion without a source key gets its own statement key, so it joins the variable explicitly. Maintainer ruling 2026-11-09 (provider-delivered content extends the global register)."
+
+# The 2006 - 2008 wave: SCB documents the columns under questionnaire item names; the delivered file uses the variable names (Operator plan 2026-11-17).
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: F12 where key = 'v15600' and release = 'r2675'"
+fields = { "spelling" = "CO" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item F12 (key v15600); SCB's delivered CIS file for that wave carries it as CO, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: D9a where key = 'v20900' and release = 'r2675'"
+fields = { "spelling" = "InAba" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item D9a (key v20900); SCB's delivered CIS file for that wave carries it as InAba, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: D9b where key = 'v20901' and release = 'r2675'"
+fields = { "spelling" = "InOng" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item D9b (key v20901); SCB's delivered CIS file for that wave carries it as InOng, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: C8b where key = 'v15578' and release = 'r2675'"
+fields = { "spelling" = "InPslg" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item C8b (key v15578); SCB's delivered CIS file for that wave carries it as InPslg, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: C8a where key = 'v15571' and release = 'r2675'"
+fields = { "spelling" = "InPspd" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item C8a (key v15571); SCB's delivered CIS file for that wave carries it as InPspd, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: C8c where key = 'v15579' and release = 'r2675'"
+fields = { "spelling" = "InPssu" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item C8c (key v15579); SCB's delivered CIS file for that wave carries it as InPssu, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: B5a where key = 'v15582' and release = 'r2675'"
+fields = { "spelling" = "Inpdgd" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item B5a (key v15582); SCB's delivered CIS file for that wave carries it as Inpdgd, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: B5b where key = 'v15583' and release = 'r2675'"
+fields = { "spelling" = "Inpdsv" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item B5b (key v15583); SCB's delivered CIS file for that wave carries it as Inpdsv, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: I18b where key = 'v20949' and release = 'r2675'"
+fields = { "spelling" = "MKTPDP" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item I18b (key v20949); SCB's delivered CIS file for that wave carries it as MKTPDP, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: A2c where key = 'v15556' and release = 'r2675'"
+fields = { "spelling" = "Mareur" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item A2c (key v15556); SCB's delivered CIS file for that wave carries it as Mareur, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: A2a where key = 'v15642' and release = 'r2675'"
+fields = { "spelling" = "Marloc" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item A2a (key v15642); SCB's delivered CIS file for that wave carries it as Marloc, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: A2b where key = 'v15555' and release = 'r2675'"
+fields = { "spelling" = "Marnat" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item A2b (key v15555); SCB's delivered CIS file for that wave carries it as Marnat, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: A2d where key = 'v15559' and release = 'r2675'"
+fields = { "spelling" = "Maroth" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item A2d (key v15559); SCB's delivered CIS file for that wave carries it as Maroth, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: B6b where key = 'v15563' and release = 'r2675'"
+fields = { "spelling" = "NewFrm" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item B6b (key v15563); SCB's delivered CIS file for that wave carries it as NewFrm, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: B6a where key = 'v15562' and release = 'r2675'"
+fields = { "spelling" = "NewMkt" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item B6a (key v15562); SCB's delivered CIS file for that wave carries it as NewMkt, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: H16c where key = 'v20942' and release = 'r2675'"
+fields = { "spelling" = "OrgExr" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item H16c (key v20942); SCB's delivered CIS file for that wave carries it as OrgExr, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: H16b where key = 'v20941' and release = 'r2675'"
+fields = { "spelling" = "OrgWkp" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item H16b (key v20941); SCB's delivered CIS file for that wave carries it as OrgWkp, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: E10c where key = 'v15617' and release = 'r2675'"
+fields = { "spelling" = "RMAC" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item E10c (key v15617); SCB's delivered CIS file for that wave carries it as RMAC, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: E11d where key = 'v15613' and release = 'r2675'"
+fields = { "spelling" = "ROEkX" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item E11d (key v15613); SCB's delivered CIS file for that wave carries it as ROEkX, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: E10b where key = 'v15616' and release = 'r2675'"
+fields = { "spelling" = "RRDEX" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item E10b (key v15616); SCB's delivered CIS file for that wave carries it as RRDEX, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: E11b where key = 'v7708' and release = 'r2675'"
+fields = { "spelling" = "RRdExX" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item E11b (key v7708); SCB's delivered CIS file for that wave carries it as RRdExX, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: E11a where key = 'v7705' and release = 'r2675'"
+fields = { "spelling" = "RRdInX" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item E11a (key v7705); SCB's delivered CIS file for that wave carries it as RRdInX, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: B7b where key = 'v15569' and release = 'r2675'"
+fields = { "spelling" = "TurnIn" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item B7b (key v15569); SCB's delivered CIS file for that wave carries it as TurnIn, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: B7a where key = 'v15568' and release = 'r2675'"
+fields = { "spelling" = "TurnMar" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item B7a (key v15568); SCB's delivered CIS file for that wave carries it as TurnMar, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: E10f where key = 'v15620' and release = 'r2675'"
+fields = { "spelling" = "rmar" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item E10f (key v15620); SCB's delivered CIS file for that wave carries it as rmar, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: E10d where key = 'v15618' and release = 'r2675'"
+fields = { "spelling" = "roek" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item E10d (key v15618); SCB's delivered CIS file for that wave carries it as roek, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: E10e where key = 'v15619' and release = 'r2675'"
+fields = { "spelling" = "rtr" }
+evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item E10e (key v15619); SCB's delivered CIS file for that wave carries it as rtr, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
