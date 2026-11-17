@@ -2157,8 +2157,8 @@ evidence = "Substans på dödsorsaksintyget.\ncatalog:variable_text:56045:15340:
 [[statement]]
 kind = "set"
 subject = "var:forkortad-dodsorsakslista-basic-tabulation-list"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "U är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56046:6209:9862"
+fields = { "sets" = ["underliggande-dodsorsak"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nDen underliggande dödsorsaken och de förkortade dödsorsakslistorna har ingen ordning och är inte en av de numrerade multipla dödsorsakerna.\nWas: U är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56046:6209:9862"
 
 [[statement]]
 kind = "set"
@@ -2169,8 +2169,8 @@ evidence = "U är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56046:620
 [[statement]]
 kind = "set"
 subject = "var:underliggande-dodsorsak"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "UL är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56047:-6575:2932897"
+fields = { "sets" = ["underliggande-dodsorsak"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nDen underliggande dödsorsaken och de förkortade dödsorsakslistorna har ingen ordning och är inte en av de numrerade multipla dödsorsakerna.\nWas: UL är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56047:-6575:2932897"
 
 [[statement]]
 kind = "set"
@@ -2205,8 +2205,8 @@ evidence = "Undersökning före döden. Coordinator group membership: Utöver ge
 [[statement]]
 kind = "set"
 subject = "var:nordisk-forkortad-dodsorsakslista"
-fields = { "sets" = ["dodsorsak"] }
-evidence = "U är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56050:6209:9862"
+fields = { "sets" = ["underliggande-dodsorsak"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nDen underliggande dödsorsaken och de förkortade dödsorsakslistorna har ingen ordning och är inte en av de numrerade multipla dödsorsakerna.\nWas: U är en ogenomskinlig bokstavskod.\ncatalog:variable_text:56050:6209:9862"
 
 [[statement]]
 kind = "set"
@@ -3823,3 +3823,9 @@ kind = "set"
 subject = "set:substans"
 fields = { "description" = "Substans i fritext från dödsorsaksintyget. Varje variabel innehåller en substans, numrerade 1–48." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma text och skiljer sig bara i ordningsnummer.\ncatalog:variable_text:63150:15340:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:underliggande-dodsorsak"
+fields = { "label" = "Underliggande dödsorsak" }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nNy mängd för de medlemmar som bröts ut ur dodsorsak."

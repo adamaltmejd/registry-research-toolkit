@@ -5012,12 +5012,6 @@ evidence = "Frågekoden är ogenomskinlig; den delade etiketten kräver disambig
 [[statement]]
 kind = "set"
 subject = "var:studerar-pa-gymnasieskolan-just-nu-eller-inte"
-fields = { "sets" = ["studiedeltagande"] }
-evidence = "Id:t är en frågekod.\ncatalog:variable_text:53750:16617:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:studerar-pa-gymnasieskolan-just-nu-eller-inte"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:53750:16617:16801"
 
@@ -13514,20 +13508,8 @@ evidence = "Variabeln kodar studiedeltagande och hör till samma begrepp som öv
 [[statement]]
 kind = "set"
 subject = "var:studerat-pa-distans"
-fields = { "sets" = ["studiedeltagande"] }
-evidence = "Variabeln anger studier på distans.\ncatalog:variable_text:54548:13149:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:studerat-pa-distans"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln anger studier på distans.\ncatalog:variable_text:54548:13149:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:studerat-pa-hogskola"
-fields = { "sets" = ["studiedeltagande"] }
-evidence = "Variabeln anger studiedeltagande på högskola.\ncatalog:variable_text:54549:13149:13514"
 
 [[statement]]
 kind = "set"
@@ -13546,12 +13528,6 @@ kind = "set"
 subject = "var:studieavbrott"
 fields = { "tags" = ["education"] }
 evidence = "Id:t är läsbart och återger etiketten; svarskoderna omfattar även studieuppehåll och byte av utbildning.\ncatalog:valueset:11659\ncatalog:variable_text:54550:11323:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:studiedeltagande-eftergy-minst-2ar"
-fields = { "sets" = ["studiedeltagande"] }
-evidence = "Variabeln gäller eftergymnasialt studiedeltagande.\ncatalog:variable_text:54551:16071:16436"
 
 [[statement]]
 kind = "set"
@@ -14218,12 +14194,6 @@ kind = "set"
 subject = "var:utb-form"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln kodar gymnasieprogrammets typ.\ncatalog:valueset:8163\ncatalog:variable_text:54612:18262:19174"
-
-[[statement]]
-kind = "set"
-subject = "var:utbdeltag"
-fields = { "sets" = ["studiedeltagande"] }
-evidence = "Variabeln gäller deltagande i kurs eller utbildning.\ncatalog:variable_text:54613:11323:11688"
 
 [[statement]]
 kind = "set"

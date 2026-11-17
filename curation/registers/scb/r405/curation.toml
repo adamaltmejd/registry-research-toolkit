@@ -3974,8 +3974,8 @@ evidence = "Lärares behandling.\ncatalog:variable_text:5548:19358:19723"
 [[statement]]
 kind = "set"
 subject = "var:sklaxhjalp"
-fields = { "sets" = ["laxhjalp"] }
-evidence = "Läxhjälp.\ncatalog:variable_text:5549:19358:19723"
+fields = { "sets" = ["hjalp-med-laxorna-vid-behov"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nFrågan om barnet får hjälp med läxorna när det behöver det är en annan fråga än vem som hjälper, som har en variabel per svarsalternativ.\nWas: Läxhjälp.\ncatalog:variable_text:5549:19358:19723"
 
 [[statement]]
 kind = "set"
@@ -4076,8 +4076,8 @@ evidence = "Definitionen anger olika frågor före och från 2016.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:skola-hjalp-med-laxorna"
-fields = { "sets" = ["laxhjalp"] }
-evidence = "Läxhjälp.\ncatalog:variable_text:5558:13879:18262"
+fields = { "sets" = ["hjalp-med-laxorna-vid-behov"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nFrågan om barnet får hjälp med läxorna när det behöver det är en annan fråga än vem som hjälper, som har en variabel per svarsalternativ.\nWas: Läxhjälp.\ncatalog:variable_text:5558:13879:18262"
 
 [[statement]]
 kind = "set"
@@ -7247,3 +7247,9 @@ kind = "set"
 subject = "set:urbaniseringsgrad"
 fields = { "description" = "Urbaniseringsgrad för den plats där barnet bor, det vill säga områdets egenskaper uttryckta i befolkningstäthet." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna beskriver områdets egenskaper i termer av befolkningstäthet.\ncatalog:variable_text:13383:19358:19723\ncatalog:variable_text:13406:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:hjalp-med-laxorna-vid-behov"
+fields = { "label" = "Hjälp med läxorna vid behov" }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nNy mängd för de medlemmar som bröts ut ur laxhjalp."

@@ -11937,8 +11937,8 @@ evidence = "Yrkesskadelivränta.\ncatalog:variable_text:37830:10957:19723\ncatal
 [[statement]]
 kind = "set"
 subject = "var:lone-eller-foretagarinkomst"
-fields = { "sets" = ["lone-eller-foretagarinkomst"] }
-evidence = "Summerad löne- eller företagarinkomst.\ncatalog:variable_text:37831:18993:19723"
+fields = { "sets" = ["summerad-lone-eller-foretagarinkomst"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nSumma för ett företag eller ett arbetsställe, inte en persons inkomst som övriga medlemmar.\nWas: Summerad löne- eller företagarinkomst.\ncatalog:variable_text:37831:18993:19723"
 
 [[statement]]
 kind = "set"
@@ -15411,8 +15411,8 @@ evidence = "Summan och namngivna komponenter ingår i kandidaten.\ncatalog:varia
 [[statement]]
 kind = "set"
 subject = "var:summerad-inkomst-ast"
-fields = { "sets" = ["lone-eller-foretagarinkomst"] }
-evidence = "Summerad löne- eller företagarinkomst.\ncatalog:variable_text:38143:19358:19723"
+fields = { "sets" = ["summerad-lone-eller-foretagarinkomst"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nSumma för ett företag eller ett arbetsställe, inte en persons inkomst som övriga medlemmar.\nWas: Summerad löne- eller företagarinkomst.\ncatalog:variable_text:38143:19358:19723"
 
 [[statement]]
 kind = "set"
@@ -28203,3 +28203,9 @@ kind = "set"
 subject = "var:lone-eller-foretagarinkomst-i-september-tredje-storsta"
 fields = { "facets" = { "manad" = { "value" = "09", "label" = "September" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
 evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i september, tredje största förvärvskälla\ncatalog:variable_text:45064:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:summerad-lone-eller-foretagarinkomst"
+fields = { "label" = "Summerad löne- eller företagarinkomst" }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nNy mängd för de medlemmar som bröts ut ur lone-eller-foretagarinkomst."

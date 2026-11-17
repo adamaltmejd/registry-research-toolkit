@@ -17582,8 +17582,8 @@ evidence = "r184 measures whether the increase in online remote meetings was unr
 [[statement]]
 kind = "set"
 subject = "var:anvandande-av-sociala-medier"
-fields = { "sets" = ["anvandning-av-sociala-medier"] }
-evidence = "r200 explicitly measures social-media use, included by r249.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32286\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32396\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
+fields = { "sets" = ["befolkningens-anvandning-av-sociala-medier"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nVariabeln finns i tabellen Befolkningens IT-användning och avser personer; övriga medlemmar finns i IT-användning i företag och avser företag.\nWas: r200 explicitly measures social-media use, included by r249.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32286\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32396\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
 
 [[statement]]
 kind = "set"
@@ -17678,8 +17678,8 @@ evidence = "r203 asks about computerized workplace equipment, including cash reg
 [[statement]]
 kind = "set"
 subject = "var:anvander-sociala-medier-arbete-minst-en-gang-veckan"
-fields = { "sets" = ["anvandning-av-sociala-medier"] }
-evidence = "r241 explicitly asks about using social media for work at least weekly; r249 includes use purposes and frequency.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32339\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33561\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
+fields = { "sets" = ["befolkningens-anvandning-av-sociala-medier"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nVariabeln finns i tabellen Befolkningens IT-användning och avser personer; övriga medlemmar finns i IT-användning i företag och avser företag.\nWas: r241 explicitly asks about using social media for work at least weekly; r249 includes use purposes and frequency.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32339\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33561\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
 
 [[statement]]
 kind = "set"
@@ -17924,8 +17924,8 @@ evidence = "r221 explicitly measures sharing documents or images as email attach
 [[statement]]
 kind = "set"
 subject = "var:delta-pa-sociala-natverkssajter"
-fields = { "sets" = ["anvandning-av-sociala-medier"] }
-evidence = "r223 explicitly measures social-network participation through profiles, information sharing and communication, covered by r249.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32664\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32786\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
+fields = { "sets" = ["befolkningens-anvandning-av-sociala-medier"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nVariabeln finns i tabellen Befolkningens IT-användning och avser personer; övriga medlemmar finns i IT-användning i företag och avser företag.\nWas: r223 explicitly measures social-network participation through profiles, information sharing and communication, covered by r249.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32664\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32786\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
 
 [[statement]]
 kind = "set"
@@ -18026,8 +18026,8 @@ evidence = "r215 explicitly measures company guidelines promoting digital meetin
 [[statement]]
 kind = "set"
 subject = "var:hur-ofta-aktiv-sociala-natverk"
-fields = { "sets" = ["anvandning-av-sociala-medier"] }
-evidence = "r230 measures frequency of social-network activity; r191 supplies the frequency categories. r249 includes frequency.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32961\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8506\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33096\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
+fields = { "sets" = ["befolkningens-anvandning-av-sociala-medier"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nVariabeln finns i tabellen Befolkningens IT-användning och avser personer; övriga medlemmar finns i IT-användning i företag och avser företag.\nWas: r230 measures frequency of social-network activity; r191 supplies the frequency categories. r249 includes frequency.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:32961\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8506\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33096\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
 
 [[statement]]
 kind = "set"
@@ -18350,8 +18350,8 @@ evidence = "r281 asks about using a tablet for internet access outside home and 
 [[statement]]
 kind = "set"
 subject = "var:mobil-internetanvandning-delta-i-sociala-natverk"
-fields = { "sets" = ["anvandning-av-sociala-medier"] }
-evidence = "r233 explicitly measures mobile social-network participation through profiles, messages or contributions, covered by r249.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33305\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33426\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
+fields = { "sets" = ["befolkningens-anvandning-av-sociala-medier"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nVariabeln finns i tabellen Befolkningens IT-användning och avser personer; övriga medlemmar finns i IT-användning i företag och avser företag.\nWas: r233 explicitly measures mobile social-network participation through profiles, messages or contributions, covered by r249.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33305\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33426\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
 
 [[statement]]
 kind = "set"
@@ -18614,8 +18614,8 @@ evidence = "r182 asks about online requests for personal certificates, matching 
 [[statement]]
 kind = "set"
 subject = "var:kommunikation-via-internet-lasa-bloggar"
-fields = { "sets" = ["anvandning-av-sociala-medier"] }
-evidence = "r239 measures reading blogs online. Blog/microblog use is an included platform type evidenced by r155 and covered by r365.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:32307\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:33145\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
+fields = { "sets" = ["befolkningens-anvandning-av-sociala-medier"] }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nVariabeln finns i tabellen Befolkningens IT-användning och avser personer; övriga medlemmar finns i IT-användning i företag och avser företag.\nWas: r239 measures reading blogs online. Blog/microblog use is an included platform type evidenced by r155 and covered by r365.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:32307\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:33145\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/anvandning-av-sociala-medier"
 
 [[statement]]
 kind = "set"
@@ -18722,8 +18722,8 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "set:anvandning-av-sociala-medier"
-fields = { "label" = "Användning av sociala medier" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+fields = { "label" = "Företagens användning av sociala medier" }
+evidence = "#2100 group name: slug words restored from the member and register labels; kept on review. Relabelled for the #2513 split (Operator ruling 2026-11-17, Q2): the members are questions in the table IT-användning i företag; the population questions moved to befolkningens-anvandning-av-sociala-medier."
 
 [[statement]]
 kind = "set"
@@ -20489,3 +20489,9 @@ kind = "set"
 subject = "set:vardbokning-pa-internet"
 fields = { "description" = "Om personen har använt internet för att boka tid hos läkare eller tandläkare via en webbsida, till exempel på sjukhus eller vårdcentral." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är samma aktivitet, bokning av vårdtid via webben, formulerad olika mellan åren.\ncatalog:variable_text:39754:15340:15706\ncatalog:variable_text:39755:17532:17897\ncatalog:variable_text:39894:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:befolkningens-anvandning-av-sociala-medier"
+fields = { "label" = "Befolkningens användning av sociala medier" }
+evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nNy mängd för de medlemmar som bröts ut ur anvandning-av-sociala-medier."
