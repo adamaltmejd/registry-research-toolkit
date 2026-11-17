@@ -8792,3 +8792,129 @@ kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: NFEWORKTIME3"
 fields = { "variable" = "nfeworktime3" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24835) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifarbtid3 2005-07-01..2006-06-30; NFEWORKTIME3 2011-07-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "set:behov-och-onskemal-om-utbildning"
+fields = { "description" = "Om personen har deltagit i utbildning och om personen ville delta i mer utbildning eller är i behov av (mer) utbildning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nVariablerna gäller alla personens deltagande i utbildning i förhållande till önskemål om eller behov av (mer) utbildning.\ncatalog:variable_text:9191:12965:13330\ncatalog:variable_text:9508:15156:15522\ncatalog:variable_text:9549:16801:17167\ncatalog:variable_text:9559:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "set:deltagande-i-formell-utbildning"
+fields = { "description" = "Personens deltagande i formell utbildning: om personen har deltagit i formell utbildning, och hur många formella utbildningar personen har deltagit i under det senaste året." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler gäller deltagande i formell utbildning, antingen som ja/nej eller som antal under de senaste 12 månaderna.\ncatalog:variable_text:9128:15156:15522\ncatalog:variable_text:9206:16801:17167\ncatalog:variable_text:9231:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "set:forvarvade-kunskaper"
+fields = { "description" = "Vilken förmåga eller kunskap personen huvudsakligen fick genom en slumpmässigt utvald icke-formell utbildningsaktivitet, den första respektive den andra." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är samma fråga om huvudsaklig förvärvad förmåga eller kunskap, för första och andra icke-formella aktiviteten.\ncatalog:variable_text:9250:18993:19358\ncatalog:variable_text:9251:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:funnen-utbildningsinformation"
+fields = { "description" = "Om personen har funnit information om utbildning efter att ha sökt information. Variablerna anger resultatet totalt, eller uppdelat på gratis information, betald information och att personen inte fått någon information trots sökning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler beskriver om informationssökningen gav information; härledningsnotisen utelämnad som proveniens.\ncatalog:variable_text:9266:15156:15522\ncatalog:variable_text:9174:16801:17167\ncatalog:variable_text:9236:16801:17167\ncatalog:variable_text:9304:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:hinder-for-utbildningsdeltagande"
+fields = { "description" = "Svårigheter som personen haft med att delta i utbildning, det vill säga orsaker till att personen inte ville delta i en utbildning eller kurs. Variablerna anger antalet svårigheter, den viktigaste svårigheten och om en viss orsak har förekommit, till exempel kostnad, tidsbrist, avstånd, schema, hälsa eller ålder eller bristande stöd." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler gäller svårigheter eller orsaker till att personen inte deltog i utbildning; enskilda orsaker skiljer variablerna åt.\ncatalog:variable_text:9192:15156:15522\ncatalog:variable_text:9193:15156:15522\ncatalog:variable_text:9194:18993:19358\ncatalog:variable_text:9512:18993:19358\ncatalog:variable_text:9507:18993:19358\ncatalog:variable_text:9522:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:informella-inlarningsmetoder"
+fields = { "description" = "Vilken metod personen har använt vid informell inlärning, det vill säga när personen lärt sig något på egen hand. Metoderna är bland annat böcker och tidningar, dator, surfplatta eller mobil, TV och radio, guidade visningar, lärocenter eller bibliotek och att lära av en vän, kollega eller familjemedlem." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla texter anger metoden som använts vid inlärning för den informella utbildningen; variablerna skiljer sig åt i vilken metod som avses.\ncatalog:variable_text:9285:16801:17167\ncatalog:variable_text:9289:18993:19358\ncatalog:variable_text:9291:15156:15522\ncatalog:variable_text:9540:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:internetaktiviteter"
+fields = { "description" = "Vilka aktiviteter personen har utfört på internet, till exempel söka information med sökmotor, skicka e-post med bilagor, ladda upp material på webbplatser, delta i chatt eller socialt nätverk, ringa telefonsamtal, använda fildelningsprogram, skapa webbsida och ändra webbläsarens säkerhetsinställningar. En variabel anger antalet aktiviteter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nÅtta variabler anger varsin internetaktivitet och en anger antalet.\ncatalog:variable_text:9122:15156:15522\ncatalog:variable_text:9131:15156:15522\ncatalog:variable_text:9186:15156:15522\ncatalog:variable_text:9310:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "set:kontakt-med-kurskamrater"
+fields = { "description" = "Hur ofta personen hade kontakt med kurskamrater eller andra deltagare via internet om utbildningens innehåll, till exempel via e-post, sociala medier, videosamtal eller skolans webbplats. Variablerna gäller formell utbildning och den första respektive andra slumpmässigt utvalda icke-formella utbildningsaktiviteten." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga om kontakt med kurskamrater via internet, uppdelad på formell och icke-formell utbildning.\ncatalog:variable_text:9209:18993:19358\ncatalog:variable_text:9313:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:kontakt-med-larare"
+fields = { "description" = "Hur ofta personen själv hade kontakt med läraren, ledaren eller föreläsaren via internet om utbildningens innehåll, till exempel via e-post, sociala medier, videosamtal eller skolans webbplats. Variablerna gäller formell utbildning och den första respektive andra slumpmässigt utvalda icke-formella utbildningsaktiviteten." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga om kontakt med lärare via internet, uppdelad på formell och icke-formell utbildning.\ncatalog:variable_text:9315:18993:19358\ncatalog:variable_text:9316:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:kunskapsanvandning"
+fields = { "description" = "Användningen av de färdigheter eller kunskaper som förvärvats vid utbildning: vid den senaste formella utbildningsaktiviteten respektive vid slumpmässigt utvalda icke-formella utbildningsaktiviteter. Variablerna gäller användning hittills eller förväntad användning längre fram." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler gäller användning av förvärvade kunskaper; formell eller icke-formell, hittills eller framtida, skiljer variablerna åt.\ncatalog:variable_text:9214:16801:17167\ncatalog:variable_text:9323:18993:19358\ncatalog:variable_text:9324:18993:19358\ncatalog:variable_text:9325:15156:15522\ncatalog:variable_text:9329:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:kunskapsniva-i-sprak"
+fields = { "description" = "Personens kunskapsnivå i det bäst kända respektive näst bäst kända språket förutom modersmål." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nVariablerna anger kunskapsnivå för bästa och näst bästa språket; självskattning anges bara för några år och utelämnas.\ncatalog:variable_text:9336:16801:17167\ncatalog:variable_text:9338:15156:15522\ncatalog:variable_text:9498:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "set:modersmal"
+fields = { "description" = "Personens modersmål. Personen kan ange två modersmål, och variablerna avser det första respektive andra." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler anger personens modersmål; första eller andra modersmålet skiljer dem åt.\ncatalog:variable_text:9339:18993:19358\ncatalog:variable_text:9340:16801:17167\ncatalog:variable_text:9356:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "set:orsaker-till-utbildningsmissnoje"
+fields = { "description" = "Orsaker till att personen var missnöjd med den senaste formella utbildningsaktiviteten: administrationen av utbildningen, att utbildningsnivån var för hög eller för låg, att utbildningen inte var relevant eller undervisningens kvalitet. En variabel anger antalet orsaker." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFem variabler anger var sin orsak till missnöje och en anger antalet.\ncatalog:variable_text:9132:15156:15522\ncatalog:variable_text:9351:15156:15522\ncatalog:variable_text:9354:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "set:resultat-av-utbildning"
+fields = { "description" = "Vad de nya färdigheter eller kunskaper som personen förvärvat vid utbildning har lett till, för den senaste formella utbildningsaktiviteten respektive den första, andra och tredje slumpmässigt utvalda icke-formella utbildningsaktiviteten. Resultaten är nytt arbete, befordran, högre lön, nya arbetsuppgifter, enklare att utföra arbetsuppgifterna och personliga orsaker, och det kan också vara att utbildningen inte gett några resultat hittills eller inte förväntas ge några. Det finns även variabler för antalet resultat och för det viktigaste resultatet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler gäller resultat av förvärvade kunskaper; aktivitet och enskilt resultat skiljer variablerna åt.\ncatalog:variable_text:9143:15156:15522\ncatalog:variable_text:9440:15156:15522\ncatalog:variable_text:9449:15156:15522\ncatalog:variable_text:9446:16801:17167\ncatalog:variable_text:9448:18993:19358\ncatalog:variable_text:9558:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:skal-till-utbildningsdeltagande"
+fields = { "description" = "Skäl till att personen deltog i utbildning, för den senaste formella utbildningsaktiviteten respektive den första, andra och tredje slumpmässigt utvalda icke-formella utbildningsaktiviteten. Skälen är bland annat att bli bättre i arbetet, förbättra karriärmöjligheterna, öka möjligheterna att få eller byta arbete, minska risken att förlora arbetet, starta eget företag, få ett utbildningsbevis, öka kunskaperna i ett ämne som intresserar, träffa nya människor eller att personen var tvungen att delta. Det finns även variabler för antalet skäl och för det viktigaste skälet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler gäller skäl till deltagande i utbildning; aktivitet och enskilt skäl skiljer variablerna åt.\ncatalog:variable_text:9147:15156:15522\ncatalog:variable_text:9210:15156:15522\ncatalog:variable_text:9212:18993:19358\ncatalog:variable_text:9403:16801:17167\ncatalog:variable_text:9404:15156:15522\ncatalog:variable_text:9476:18993:19358\ncatalog:variable_text:9434:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:sprak-som-personen-kan-anvanda"
+fields = { "description" = "Språk som personen kan använda förutom modersmål: det bäst och näst bäst kända språket, de enskilda språk personen anger (språk 1 till 7) och antalet språk." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler gäller personens språk utöver modersmålet; bästa språk, enskilda språk och antal skiljer variablerna åt (den lagrade texten för antalet språk motsägs inte).\ncatalog:variable_text:9331:18993:19358\ncatalog:variable_text:9342:16801:17167\ncatalog:variable_text:9343:16801:17167\ncatalog:variable_text:9499:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisningsmaterial"
+fields = { "description" = "Hur ofta läraren, ledaren eller föreläsaren gjorde undervisningsmaterial tillgängligt via internet, eller hänvisade till sådant material. Variablerna gäller formell utbildning och den första respektive andra slumpmässigt utvalda icke-formella utbildningsaktiviteten." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga om undervisningsmaterial via internet, uppdelad på formell och icke-formell utbildning.\ncatalog:variable_text:9208:18993:19358\ncatalog:variable_text:9534:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisningsmetod"
+fields = { "description" = "Vilken metod som använts vid inlärning i formell respektive icke-formell utbildning, bland annat om utbildningen gavs som distansstudier och om distansstudierna var helt nätbaserade. Variablerna för icke-formell utbildning gäller den första, andra eller tredje slumpmässigt valda aktiviteten." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nVariablerna anger undervisningsmetod; distansfrågorna gäller bara en del av dem, därför formulerat som 'bland annat'.\ncatalog:variable_text:9230:18993:19358\ncatalog:variable_text:9196:16801:17167\ncatalog:variable_text:9393:15156:15522\ncatalog:variable_text:9401:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisningstid"
+fields = { "description" = "Utbildningens omfattning i antal timmar, för den senaste formella utbildningsaktiviteten respektive för upp till tre icke-formella utbildningar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nVariablerna anger antal timmar för formell respektive icke-formell utbildning; avgränsningar i texterna gäller inte alla och utelämnas.\ncatalog:variable_text:9205:18993:19358\ncatalog:variable_text:9333:12965:13330"
+
+[[statement]]
+kind = "set"
+subject = "set:uppmanare-till-utbildning"
+fields = { "description" = "Vem som uppmanade personen att delta i en slumpmässigt utvald utbildningsaktivitet, den första respektive den andra." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga för första och andra utbildningsaktiviteten.\ncatalog:variable_text:9542:18993:19358\ncatalog:variable_text:9543:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:upprakningsvikter"
+fields = { "description" = "Vikt som används för uppräkning till populationen. Vikten är beräknad för varje svarande person eller för personens icke-formella utbildningsaktiviteter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler är Gregvikter för uppräkning; vilken enhet vikten avser skiljer variablerna åt.\ncatalog:variable_text:9237:15156:15522\ncatalog:variable_text:9238:18993:19358\ncatalog:variable_text:9239:15156:15522"

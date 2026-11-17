@@ -1296,3 +1296,15 @@ kind = "set"
 subject = "andra-halvaret: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Kommun kopplad till personen i aktivitetsansvaret: folkbokföringskommun vid olika tidpunkter (31 mars, 30 juni, 30 september och 31 december), registrerande kommun i aktivitetsansvaret och skolkommun vid senaste utbildningens slut." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler är regional indelning i kommuner; vilken kommun (folkbokförings-, registrerande eller skolkommun) skiljer dem åt.\ncatalog:variable_text:41622:16436:17167\ncatalog:variable_text:41630:16436:16801\ncatalog:variable_text:41647:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "set:lasar"
+fields = { "description" = "Läsåret startar på hösten ett kalenderår och avslutas på våren följande kalenderår. Variablerna anger det senaste läsår som eleven påbörjade i grundskolan respektive gymnasieskolan." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda delar definitionen av läsår och anger senast påbörjade läsår; skolformen skiljer dem åt.\ncatalog:variable_text:41634:16801:16983\ncatalog:variable_text:41635:16801:16983"

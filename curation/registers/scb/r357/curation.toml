@@ -1554,3 +1554,9 @@ kind = "set"
 subject = "hushall: MBOHELARZ"
 fields = { "variable" = "mbbohelarz" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v35989), never delivered together in one table, so they are one variable renamed between releases: MBOHELARZ 2015-01-01..2015-12-31; MBBOHELARZ 2017-01-01..2017-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:disponibel-inkomst"
+fields = { "description" = "Disponibel inkomst för kosthushållet: summan av alla inkomster och positiva transfereringar (t.ex. barn-, social- och bostadsbidrag) minus slutlig skatt för hushållets medlemmar. Variablerna anger den i olika form: enligt 2004 års definition, justerad med skatteeffekten av boendet för användning i boendesammanhang, och per konsumtionsenhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre är varianter av hushållets disponibla inkomst; definitionen anges i hushållsvariabeln och skillnaderna mellan varianterna beskrivs i ett led.\ncatalog:variable_text:14389:16436:16801\ncatalog:variable_text:14390:16436:16801\ncatalog:variable_text:14391:16436:16801"

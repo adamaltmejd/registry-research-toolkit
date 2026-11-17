@@ -930,3 +930,9 @@ kind = "set"
 subject = "gymnasial-yrkesutbildning: var:personnr-urval"
 fields.row_key = true
 evidence = "Row key: personnr-urval identify a row: survey of persons keys on the sampled person; the survey löpnummer and UENR are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:studiedeltagande-i-skolform"
+fields = { "description" = "Om personen finns registrerad i en formell skolform. Variablerna anger registrering i folkhögskola, högskola/universitet, Komvux, yrkeshögskola och gymnasieskola, samt en härledd uppgift om registrering i någon av dessa skolformer." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla sju har samma övergripande text; skolformerna räknas upp enligt medlemmarnas egna texter.\ncatalog:variable_text:29810:16436:16801\ncatalog:variable_text:29817:16436:16801\ncatalog:variable_text:29841:16436:16801\ncatalog:variable_text:29845:16436:16801\ncatalog:variable_text:29849:16436:16801"

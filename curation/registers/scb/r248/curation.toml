@@ -3952,3 +3952,9 @@ kind = "set"
 subject = "nationella-prov-resultat-kalenderar: var:termin"
 fields.row_key = true
 evidence = "Row key: termin (TERMIN, Termin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "description" = "Klassificering av nivån för personens genomförda utbildning enligt Svensk utbildningsnomenklatur (SUN). SUN är en standard för klassificering av enskilda utbildningar och ett system för aggregering av utbildningar till större grupper. Variablerna finns enligt SUN 2000 och SUN 2020." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre har identisk definition; SUN-version och nivåbredd framgår av etiketten.\ncatalog:variable_text:41868:9678:18078"

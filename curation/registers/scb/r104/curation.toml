@@ -1002,12 +1002,6 @@ fields = { "tags" = ["methods"] }
 evidence = "Urvalsstratum hör till undersökningsmetodik.\ncatalog:variable_text:7424:18262:18444"
 
 
-[[statement]]
-kind = "set"
-subject = "var:ml-betyg"
-fields = { "description" = "Betyg i ämnet modersmål. Uppgiften avser vårterminen i årskurs 8." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger ämnet men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7382:15706:15887\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54911:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -1016,32 +1010,8 @@ fields = { "description" = "Språk i ämnet modersmål. Uppgiften avser vårterm
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger ämnet men variabeln mäter vilket språk som läses.\ncatalog:valueset:2344\ncatalog:variable_text:7383:15706:15887\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54912:opdef_text. One variable, one description."
 
 
-[[statement]]
-kind = "set"
-subject = "var:moderna-sprak-elevens-val-betyg"
-fields = { "description" = "Betyg i moderna språk inom ramen för elevens val. Uppgiften avser vårterminen i årskurs 8." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger undervisningen men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7384:15706:15887\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54905:opdef_text. One variable, one description."
 
 
-[[statement]]
-kind = "set"
-subject = "var:moderna-sprak-elevens-val-sprak"
-fields = { "description" = "Språk i moderna språk inom ramen för elevens val. Uppgiften avser vårterminen i årskurs 8." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger undervisningen men variabeln mäter vilket språk som läses.\ncatalog:valueset:3984\ncatalog:variable_text:7385:15706:15887\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54906:opdef_text. One variable, one description."
-
-
-[[statement]]
-kind = "set"
-subject = "var:moderna-sprak-sprakval"
-fields = { "description" = "Språk i moderna språk inom ramen för språkval. Uppgiften avser vårterminen i årskurs 8." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger undervisningen men variabeln mäter vilket språk som läses.\ncatalog:valueset:3984\ncatalog:variable_text:7386:15706:15887\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54908:opdef_text. One variable, one description."
-
-
-[[statement]]
-kind = "set"
-subject = "var:moderna-sprak-sprakval-betyg"
-fields = { "description" = "Betyg i moderna språk inom ramen för språkval. Uppgiften avser vårterminen i årskurs 8." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger undervisningen men variabeln mäter betyget.\ncatalog:valueset:296\ncatalog:variable_text:7387:15706:15887\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:54907:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -1477,3 +1447,21 @@ kind = "set"
 subject = "release:elevpanel-7/r5510"
 fields = { "table" = "elevpanel-7-betyg" }
 evidence = "SCB documents the grades file (RegVerID 5510) beside the spring-term survey of the same term (5177), with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "set:amnesbetyg"
+fields = { "description" = "Elevens betyg i ett undervisningsämne från vårterminen i årskurs 8. Varje variabel avser ett ämne." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler är betyg i ett ämne från vårterminen i årskurs 8; ämnet framgår av etiketten, så de lagrade medlemstexterna täcks av mängdbeskrivningen.\ncatalog:variable_text:15059:15706:15887\ncatalog:variable_text:15071:15706:15887\ncatalog:variable_text:15093:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "set:sprak-i-moderna-sprak"
+fields = { "description" = "Det språk eleven läser i ämnet moderna språk under vårterminen i årskurs 8, inom ramen för språkval respektive elevens val." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna anger vilket språk som läses i moderna språk under vårterminen i årskurs 8; skillnaden (språkval eller elevens val) står i etiketten och täcks av mängdbeskrivningen.\ncatalog:variable_text:15096:15706:15887\ncatalog:variable_text:15097:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-utbildningsniva"
+fields = { "description" = "Faderns respektive moderns utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN). Uppgiften utgår från populationen 2013-12-31 och utbildningar avklarade till och med 2013-06-30." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är en förälders utbildningsnivå enligt SUN med samma population och avklarad-utbildning-datum; förälder är det enda som skiljer.\ncatalog:variable_text:15084:16071:16252\ncatalog:variable_text:15115:16071:16252"

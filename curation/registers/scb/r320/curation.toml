@@ -1854,3 +1854,9 @@ kind = "set"
 subject = "grundskola-nationella-prov-ak-6: SunNiva_Mor_Omkodad"
 fields = { "variable" = "sun-niva-mor-omkodad" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8073), never delivered together in one table, so they are one variable renamed between releases: SunNiva_Mor_Omkodad 2012-01-01..2012-06-30; Sun2000Niva_Mor_Omkodad 2013-01-01..2014-06-30."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrarnas-utbildningsniva"
+fields = { "description" = "Föräldrarnas utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN): den högsta utbildningsnivån av biologisk far och mor, hämtad från befolkningsregistret och utbildningsregistret. Variablerna finns enligt SUN 2000 och SUN 2020, i detaljerad och i grupperad form." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra har samma definition och härledning (högsta nivån av far och mor); SUN-version och detaljerad/grupperad form skiljer dem åt.\ncatalog:variable_text:29637:16436:16617\ncatalog:variable_text:29638:16436:16617"

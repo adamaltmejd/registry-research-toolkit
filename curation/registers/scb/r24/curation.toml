@@ -2485,3 +2485,27 @@ kind = "set"
 subject = "gymnasieintyg: var:ar"
 fields.row_key = true
 evidence = "Row key: ar (Ar) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:poangomfattning"
+fields = { "description" = "Avklarade poäng på kurser inom Komvux från och med höstterminen 1988. Flera av variablerna delar upp poängen på allmänna/studieförberedande och yrkesinriktade kurser, andra kategoriserar poängen efter omfattning eller huvudsaklig kursinriktning. Några variabler anger poängen enligt nuvarande respektive tidigare beräkning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller avklarade Komvuxpoäng från HT 1988; skillnaderna (kurstyp, kategorisering, beräkningssätt) framgår av etiketterna. De lagrade kursinriktningstexterna beskriver klassificering efter andel yrkesinriktade kurser och täcks inte av mängdbeskrivningen, så de behålls.\ncatalog:variable_text:60437:6756:11323\ncatalog:variable_text:60438:6756:19905\ncatalog:variable_text:60481:6756:20089\ncatalog:variable_text:60482:6756:20089\ncatalog:variable_text:60524:6756:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-utlandsk-bakgrund"
+fields = { "description" = "Anger om en person har utländsk eller svensk bakgrund. Den ena variabeln följer en alternativ indelning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma grunddefinition; härledningen från befolkningsregistret anges bara för 2024 och utelämnas därför.\ncatalog:variable_text:60575:11688:19723\ncatalog:variable_text:60576:11688:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsuppgiftens-kalla"
+fields = { "description" = "Den källa från vilken uppgiften om personens utbildning hämtats, angiven som källkod. Den ena variabeln gäller bara äldre personer födda 1911–1926 vars högsta utbildning hämtats från RAMS och LISA." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna definieras som källan till utbildningsuppgiften; den äldre varianten är en avgränsning av samma uppgift.\ncatalog:variable_text:60490:6756:9862\ncatalog:variable_text:60490:9862:14975\ncatalog:variable_text:60550:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:vald-utbildning"
+fields = { "description" = "Visar vilken av personens utbildningar som enligt Utbildningsregistrets prioriteringsregler är vald som högsta utbildning. De två variablerna skiljer sig i regeln för specialistläkare." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarnas gemensamma mening är att utbildningen är vald enligt registrets prioriteringsregler; skillnaden är regeln för specialistläkare.\ncatalog:variable_text:60577:9862:20089\ncatalog:variable_text:60578:17897:20089"

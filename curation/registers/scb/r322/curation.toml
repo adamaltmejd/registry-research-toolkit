@@ -2820,3 +2820,75 @@ kind = "set"
 subject = "distansutbildning-i-hogskolan: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per surveyed student; uenr is a survey number for the same person (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:fardighetstraning-i-kritiskt-tankande"
+fields = { "description" = "Hur personen bedömer den färdighetsträning som kursen gav när det gäller att utveckla förmåga till kritiskt tänkande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är samma enkätfråga om färdighetsträning i kursen (F15 respektive F20); texterna är identiska.\ncatalog:variable_text:14817:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:fardighetstraning-i-muntlig-presentation"
+fields = { "description" = "Hur personen bedömer den färdighetsträning som kursen gav när det gäller att göra muntliga presentationer." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är samma enkätfråga om färdighetsträning i kursen (F15 respektive F20); texterna är identiska.\ncatalog:variable_text:14814:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:fardighetstraning-i-problemlosning"
+fields = { "description" = "Hur personen bedömer den färdighetsträning som kursen gav när det gäller att självständigt lösa problem." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är samma enkätfråga om färdighetsträning i kursen (F15 respektive F20); texterna är identiska.\ncatalog:variable_text:14816:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:fardighetstraning-i-samarbete"
+fields = { "description" = "Hur personen bedömer den färdighetsträning som kursen gav när det gäller att samarbeta med andra." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är samma enkätfråga om färdighetsträning i kursen (F15 respektive F20); texterna är identiska.\ncatalog:variable_text:14815:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:fardighetstraning-i-skriftlig-presentation"
+fields = { "description" = "Hur personen bedömer den färdighetsträning som kursen gav när det gäller att göra skriftliga presentationer." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är samma enkätfråga om färdighetsträning i kursen (F15 respektive F20); texterna är identiska.\ncatalog:variable_text:14813:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:kommunikationsfunktioner"
+fields = { "description" = "I vilken utsträckning personen tycker att kommunikationsfunktionerna i lärplattformen var användbara, till exempel diskussionsforum, videokonferenser och meddelanden." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är samma enkätfråga (F10_3 respektive F12_3) med identisk text.\ncatalog:variable_text:14799:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:larplattformens-funktioner"
+fields = { "description" = "I vilken utsträckning personen själv klarade av att hantera lärplattformens funktioner." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är samma enkätfråga (F10_1 respektive F12_1) med identisk text.\ncatalog:variable_text:14797:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:nytta-av-tekniska-stod"
+fields = { "description" = "I vilken utsträckning personen hade nytta av lärplattformen och de tekniska stöden i kursen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är samma enkätfråga (F10_4 respektive F12_4) med identisk text.\ncatalog:variable_text:14800:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:studietid"
+fields = { "description" = "Personens nedlagda studietid på kursen enligt enkäten, som genomsnittlig tid per vecka inklusive egna studier, studier tillsammans med andra och föreläsningar. Två av variablerna är korrigerade för studietakt och härledda från studietid och kurstakt." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre anger nedlagd studietid; en är enkätsvaret och två är härledda korrigerade för studietakt.\ncatalog:variable_text:14918:14791:14975\ncatalog:variable_text:14785:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsattningstyp"
+fields = { "description" = "Personens sysselsättning under höstterminen 2010 (1 september 2010 – 20 januari 2011). Varje variabel avser en sysselsättningstyp, till exempel studerade heltid eller deltid, arbetade heltid eller deltid, föräldraledig, sjukskriven eller arbetssökande/arbetsmarknadspolitisk åtgärd." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variabler är samma enkätfråga om sysselsättning höstterminen 2010 med en sysselsättningstyp per variabel.\ncatalog:variable_text:14920:14791:14975\ncatalog:variable_text:14924:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:tekniska-baskunskaper"
+fields = { "description" = "I vilken utsträckning personen tycker att studierna krävde tekniska baskunskaper och datorvana." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är samma enkätfråga (F10_2 respektive F12_2) med identisk text.\ncatalog:variable_text:14798:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:tekniska-stod"
+fields = { "description" = "Om det fanns någon lärplattform eller andra tekniska stöd för kommunikation tillgängliga i kursen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är samma enkätfråga (F09 respektive F11) med identisk text.\ncatalog:variable_text:14796:14791:14975"

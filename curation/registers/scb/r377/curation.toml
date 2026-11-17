@@ -3167,3 +3167,39 @@ kind = "set"
 subject = "studerande-source-range-2005-2024: var:ar"
 fields.row_key = true
 evidence = "Row key: ar (Ar) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:behorighet"
+fields = { "description" = "Anger om den sökande är behörig till utbildningsomgången enligt behörighetskraven i förordningen (2009:130) om yrkeshögskolan. Variablerna avser behörighet totalt, behörighet med stöd av 20 %-regeln och grundläggande behörighet enligt 3 kap. 1 § punkt 4." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre anger behörighet till utbildningsomgången enligt förordning (2009:130); grunden för behörigheten skiljer dem åt.\ncatalog:variable_text:62590:16071:20089\ncatalog:variable_text:62591:16071:20089\ncatalog:variable_text:62592:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrarnas-utbildningsniva"
+fields = { "description" = "Föräldrarnas utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN), det vill säga den utbildning på högsta nivå som någon av föräldrarna har. Variablerna finns enligt SUN 2000 och SUN 2020, som kod och i klartext." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra har samma definition (förälders högsta utbildningsnivå enligt SUN); skillnaden är SUN-version och kod/klartext enligt etiketterna.\ncatalog:variable_text:62696:12784:13149\ncatalog:variable_text:62697:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:studielan"
+fields = { "description" = "Det län som hör till den studerande och utbildningen: senast kända län, länet där studierna påbörjades och länet där studierna bedrevs, som namn och som kod. Från och med referensår 2020 baseras regional information för en utbildning på individen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla sex anger ett län kopplat till den studerande; vilket län (senaste, start, utbildning) och namn/kod skiljer, och ändringen från referensår 2020 gäller alla.\ncatalog:variable_text:62665:12784:20089\ncatalog:variable_text:62667:12784:20089\ncatalog:variable_text:62669:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-utlandsk-bakgrund"
+fields = { "description" = "Anger om en person har utländsk eller svensk bakgrund. Variablerna skiljer sig i indelningens detaljeringsgrad." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra delar definitionen \"Anger om en person har utländsk eller svensk bakgrund\"; härledningen är bara dokumenterad för några, så den lämnas utanför.\ncatalog:variable_text:62714:12784:20089\ncatalog:variable_text:62736:16071:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:yh-utbildningens-inriktning"
+fields = { "description" = "Utbildningsomgångens utbildningsinriktning och utbildningsområde inom yrkeshögskolan. Inriktningen anges enligt SUN 2020 på 1- och 4-siffernivå och enligt MYH:s lokala utvidgning av SUN 4, som kod och i klartext." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nVariablerna beskriver utbildningsomgångens inriktning eller område; SUN-nivå, MYH-utvidgning och kod/klartext skiljer dem åt.\ncatalog:variable_text:62678:12784:20089\ncatalog:variable_text:62710:12784:20089\ncatalog:variable_text:62712:12784:20089\ncatalog:variable_text:62727:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:yh-utbildningens-niva"
+fields = { "description" = "Beräknad utbildningsnivå för utbildningsomgången enligt SUN 2020. Variablerna finns som kod och i klartext." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre anger utbildningsomgångens beräknade nivå enligt SUN 2020; hur nivån beräknats är dokumenterat bara för vissa och lämnas därför utanför.\ncatalog:variable_text:62707:18262:20089\ncatalog:variable_text:62708:12784:20089"

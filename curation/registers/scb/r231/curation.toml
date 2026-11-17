@@ -758,3 +758,9 @@ kind = "set"
 subject = "elever: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per pupil; parents personnr, school unit and provider are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:relativ-elev-alder"
+fields = { "description" = "Anger om eleven är äldre (överårig) eller yngre (underårig) än vad elever vanligen är i årskursen. Elevens födelseår jämförs med det födelseår som elever vanligen har i årskursen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda är samma jämförelse av födelseår mot årskursens normalår, i var sin riktning.\ncatalog:variable_text:11334:18184:18185\ncatalog:variable_text:11362:18184:18185"

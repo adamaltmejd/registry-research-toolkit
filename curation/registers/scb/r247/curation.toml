@@ -1662,3 +1662,9 @@ kind = "set"
 subject = "hogskolestuderandes-levnadsvillkor: var:scbid"
 fields.row_key = true
 evidence = "Row key: scbid identify a row: survey of persons keys on the respondent id, its only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-yrke"
+fields = { "description" = "Yrkesuppgift på 3-siffernivå för förälderns huvudsakliga sysselsättning under november, för pappan respektive mamman." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda har samma yrkestext och skiljer sig bara på förälder.\ncatalog:variable_text:33415:13514:13695\ncatalog:variable_text:33416:13514:13695"

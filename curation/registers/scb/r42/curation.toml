@@ -1021,32 +1021,8 @@ fields = { "description" = "Indikator för hemmavarande barn i åldern 0–5 år
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:3123\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390074:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire reference year; retain the study-start reference point. Evidence: rel070-base/reg_meta.db occurrences 390074.\n\nDefinition pass 2026-11-02: Valueset 3123 is an age-band checkbox, not a child count. The source question fixes the reference point at study start.\nrel070-base/reg_meta.db:occurrence:390074"
 
 
-[[statement]]
-kind = "set"
-subject = "var:hemmavarande-barn-13-16-ar-hosten-2000"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 13–16 år vid studiestarten. Uppgiften avser studiestarten hösten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:675\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390076:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire reference year; retain the study-start reference point. Evidence: rel070-base/reg_meta.db occurrences 390076."
 
 
-[[statement]]
-kind = "set"
-subject = "var:hemmavarande-barn-17-19-ar-hosten-2000"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 17–19 år vid studiestarten. Uppgiften avser studiestarten hösten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:2045\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390077:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire reference year; retain the study-start reference point. Evidence: rel070-base/reg_meta.db occurrences 390077."
-
-
-[[statement]]
-kind = "set"
-subject = "var:hemmavarande-barn-6-12-ar-hosten-2000"
-fields = { "description" = "Uppgift om hemmavarande barn i åldern 6–12 år vid studiestarten. Uppgiften avser studiestarten hösten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger förekomst i en åldersgrupp, inte antal.\ncatalog:valueset:6360\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390075:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire reference year; retain the study-start reference point. Evidence: rel070-base/reg_meta.db occurrences 390075."
-
-
-[[statement]]
-kind = "set"
-subject = "var:hemmavarande-barn-under-20-ar-nej-hosten-2000"
-fields = { "description" = "Uppgift om att personen inte hade hemmavarande barn under 20 år vid studiestarten. Uppgiften avser studiestarten hösten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKodningen anger att personen inte har hemmavarande barn, inte antalet barn.\ncatalog:valueset:4271\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:390073:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire reference year; retain the study-start reference point. Evidence: rel070-base/reg_meta.db occurrences 390073."
 
 
 [[statement]]
@@ -1525,3 +1501,15 @@ kind = "set"
 subject = "var:studieavbrott-svart-kombinera-studier-familjeliv"
 fields = { "label" = "Skäl till studieavbrott (svårt kombinera studier och familjeliv)" }
 evidence = "#2102 same-label cluster 'Skäl till studieavbrott' (11 variables): judged different meaning, high confidence; f8 is the single main reason; f7a-f7j are one checkbox per stated reason, each named in its opdef."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-hemmavarande-barn"
+fields = { "description" = "Antal hemmavarande barn under 20 år när personen påbörjade sina studier i komvux hösten 2000, uppdelat på åldersgrupperna 0–5, 6–12, 13–16 och 17–19 år. Variablerna anger antal barn eller en markering för om personen hade barn i åldersgruppen respektive inga barn under 20 år." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla nio kommer från samma enkätfråga F3 om hemmavarande barn vid studiestarten; åldersgrupp och antal/markering framgår av etiketterna. Medlemmen 0–5 år behåller sin text eftersom den anger kodning (2, 0, 9).\ncatalog:variable_text:46595:12053:12418\ncatalog:variable_text:46611:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:motiv-till-komvuxstudier"
+fields = { "description" = "Personens motiv för att gå kommunal vuxenutbildning (komvux) hösten 2000. Varje variabel avser ett svarsalternativ: komplettera gymnasieutbildningen med kurser, få fullständigt slutbetyg motsvarande treårig gymnasieskola, komplettera ej godkända gymnasiebetyg, höja gymnasiebetyg eller annat motiv." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fem är svarsalternativ på samma enkätfråga om motiv till komvuxstudier.\ncatalog:variable_text:46577:12053:12418\ncatalog:variable_text:46643:12053:12418\ncatalog:variable_text:46644:12053:12418\ncatalog:variable_text:46645:12053:12418\ncatalog:variable_text:46646:12053:12418"
