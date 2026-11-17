@@ -86,6 +86,10 @@ pub(super) struct Table {
     pub column: Vec<Column>,
     #[serde(default)]
     pub key: Vec<RowKey>,
+    /// The newer extract of a cumulative table this one is superseded by, as
+    /// `(schema, physical name)`; set by `cumulative::resolve`, never authored.
+    #[serde(skip)]
+    pub superseded_by: Option<(Option<String>, String)>,
 }
 
 /// Reviewed entity/time components of a served shape, not every identifier.

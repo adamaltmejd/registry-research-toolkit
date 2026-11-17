@@ -21,12 +21,15 @@ CREATE TABLE holding_table (
  schema_name TEXT,
  table_type TEXT,
  file_name TEXT NOT NULL UNIQUE,
- disposition TEXT NOT NULL CHECK(disposition IN ('dated','timeless','unknown','lookup','excluded')),
+ disposition TEXT NOT NULL CHECK(disposition IN ('dated','timeless','unknown','lookup','excluded','superseded')),
  delivery TEXT,
  -- The primary release of a routed table this file is, by its catalog name: in a table
  -- with concurrent releases it places only that release's segments and serves that
  -- release's entries on shared days (crates/DESIGN.md, "Concurrent releases").
  release TEXT,
+ -- The newer extract of a cumulative table this one is superseded by (crates/DESIGN.md,
+ -- "Cumulative tables"): it holds no periods and places nothing.
+ superseded_by INTEGER REFERENCES holding_table(id),
  partition TEXT,
  projection_of INTEGER REFERENCES holding_table(id),
  projection_token TEXT,
@@ -35,6 +38,7 @@ CREATE TABLE holding_table (
  reason TEXT,
  CHECK((disposition = 'dated') = (delivery IS NOT NULL)),
  CHECK(release IS NULL OR disposition = 'dated'),
+ CHECK((disposition = 'superseded') = (superseded_by IS NOT NULL)),
  CHECK(partition IS NULL OR projection_of IS NULL),
  CHECK((projection_of IS NULL) = (projection_token IS NULL)),
  CHECK((period_column_id IS NULL) = (period_encoding IS NULL)),

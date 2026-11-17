@@ -1319,7 +1319,10 @@ fn apply_fields(
                         | "notice"
                         | "long_format"
                 ),
-                "table" => matches!(field.as_str(), "name" | "description" | "coverage" | "role"),
+                "table" => matches!(
+                    field.as_str(),
+                    "name" | "description" | "coverage" | "role" | "cumulative"
+                ),
                 "release" => matches!(field.as_str(), "description" | "period"),
                 _ => false,
             };

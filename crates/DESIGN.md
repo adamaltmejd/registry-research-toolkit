@@ -693,7 +693,8 @@ Kind-specific content is:
 `set.fields` is closed: `table`, `name` (a table's), `variable`, `label`, `description`, `sets`, `unit`,
 `definition`, `operational_definition`, `value_set`, `coded`, `period`, `spelling`,
 `identifier`, `sensitive`, `type`, `format`, `notice`, `coverage`, `classification`,
-`tags`, `sentinels`, `role`, `row_key`, `axes`, `facets`, `long_format` and `series_break`
+`tags`, `sentinels`, `role`, `row_key`, `axes`, `facets`, `long_format`, `cumulative` (a
+`table:` subject, `true` only; see "Cumulative tables") and `series_break`
 (alone in its statement; see "Series breaks"). Source-shaped assertion fields have a
 separate closed schema: table `name`, `description` and `coverage`; occurrence `label`,
 `definition`, `unit`, `type`, `length`, `sensitive` and `identifier`. Lists of sets,
@@ -1866,6 +1867,47 @@ duplicate-placement rule is unchanged: a derived column placed on a variable tha
 another of the steward's tables in the same space holds over the same period refuses
 (`inventory_cell_conflict`), since an order would get two files for one cell. Mark the
 derived copy `carried` where it is a key, or decide the column (`unmap`, `hold`).
+
+#### Cumulative tables
+
+Some registers are delivered cumulatively: each extract holds the whole table from its
+start up to the extract's own date (SCB's Flergenerationsregistret: everyone registered
+since 1961). Dating each yearly extract to its own year claims false yearly coverage,
+and holding them all side by side would place one cell several times (maintainer,
+2026-11-17, #2536).
+
+- **The fact** is global curation: `set` on a `table:` subject with
+  `cumulative = true`, stored as `tbl.cumulative` (catalog schema 18). Only `true` is
+  stated, and a timeless table cannot be cumulative. The table's documented releases
+  are unchanged, so its documentation history stays visible.
+- **The steward** lists every extract it holds as an ordinary `dated` table routed
+  (`table_pids`) to the cumulative table, with `delivery` its own date. The own date is
+  the last day of the authored `delivery`; the toolkit never reads file names, so
+  `delivery = "2025"` means through 2025-12-31, and a steward whose 2025 file holds the
+  register as of 2024-12-31 writes `2024` or the day. No per-steward curation.
+- **The build** groups the extracts by linkage space, routes and stated release. In
+  each group the newest own date is kept, dated from its routes' earliest table start
+  to its own date (`1961..2025`), and placed as any dated table, clipping to documented
+  coverage. Partitions and projections of the newest vintage share its date and are all
+  kept. Every older extract becomes `superseded`, with `superseded_by` naming the kept
+  table (holdings schema 11): no periods, no placements, like `excluded`. A table
+  routed to both cumulative and other tables refuses `holdings_cumulative_invalid`, as
+  does an extract dated before its table starts; a steward cannot author `superseded`.
+- **Orders** name the kept extract only, since nothing else places a cell. Ordering an
+  older vintage is out of scope.
+- **Verify** re-derives the effective topology from the steward's sources and compares
+  it as for any table. Independently of that derivation, and before it, it checks the
+  artifact: a dated table routed to a cumulative table holds one span from the table's
+  start, at most one vintage per space, routes and release is dated, and no table that
+  does not route to a cumulative table places a column in it (a steward-derived table
+  would date its own year again). Refusals: `holdings_cumulative_partial`, and
+  `holdings_cumulative_unrouted`, which says to route the table with a delivery date or
+  mark it excluded.
+
+`simplify:` a cumulative table whose documented releases overlap (re-documented
+1961–2019, then 1961–2025) is a concurrent-releases table, and orders over its shared
+days block with `release_ambiguous`. No cumulative table has two primaries today; decide
+when one does whether the newest release then serves the shared days.
 
 ### Compiled facts and publication
 

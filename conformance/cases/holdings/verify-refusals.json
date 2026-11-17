@@ -110,5 +110,11 @@
     "sql": "UPDATE holding_space SET name='Renamed'",
     "code": "holdings_space_source_mismatch",
     "location": "config:space"
+  },
+  {
+    "variant": "cumulative",
+    "sql": "UPDATE holding_table SET delivery='2022' WHERE physical_name='People 2022'; UPDATE holding_period SET start=18993 WHERE holding_id=(SELECT id FROM holding_table WHERE physical_name='People 2022'); UPDATE holding_mapping SET start=18993 WHERE column_id IN (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='People 2022')",
+    "code": "holdings_cumulative_partial",
+    "location": "holdings:table="
   }
 ]

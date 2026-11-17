@@ -1247,3 +1247,27 @@ kind = "set"
 subject = "set:kalla-for-personnummer"
 fields = { "description" = "Från vilket register personnumret har hämtats, för personen själv och för adoptivfar, adoptivmor, biologisk far och biologisk mor." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är källa för personnummer; personen eller föräldern framgår av etiketterna.\ncatalog:variable_text:18680:-3287:20454\ncatalog:variable_text:18683:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "table:antal-barn"
+fields = { cumulative = true }
+evidence = "SCB Registerinformation, register Flergenerationsregistret (dictionaries/register.tsv row 17): the register holds persons born from 1932 \"som varit folkbokförda någon gång sedan 1961\", so each yearly delivery holds the whole register from 1961 to its own date; SCB documents one version, 1961-01-01 -- 2025-12-31. Maintainer ruling 2026-11-17 (#2536): the register's tables are cumulative. The personakt tables (1947-1967) are a closed archive and are not marked."
+
+[[statement]]
+kind = "set"
+subject = "table:barns-ordningsnummer"
+fields = { cumulative = true }
+evidence = "SCB Registerinformation, register Flergenerationsregistret (dictionaries/register.tsv row 17): the register holds persons born from 1932 \"som varit folkbokförda någon gång sedan 1961\", so each yearly delivery holds the whole register from 1961 to its own date; SCB documents one version, 1961-01-01 -- 2025-12-31. Maintainer ruling 2026-11-17 (#2536): the register's tables are cumulative. The personakt tables (1947-1967) are a closed archive and are not marked."
+
+[[statement]]
+kind = "set"
+subject = "table:folkbokforda-adoptivforaldrar"
+fields = { cumulative = true }
+evidence = "SCB Registerinformation, register Flergenerationsregistret (dictionaries/register.tsv row 17): the register holds persons born from 1932 \"som varit folkbokförda någon gång sedan 1961\", so each yearly delivery holds the whole register from 1961 to its own date; SCB documents one version, 1961-01-01 -- 2025-12-31. Maintainer ruling 2026-11-17 (#2536): the register's tables are cumulative. The personakt tables (1947-1967) are a closed archive and are not marked."
+
+[[statement]]
+kind = "set"
+subject = "table:folkbokforda-biologiska"
+fields = { cumulative = true }
+evidence = "SCB Registerinformation, register Flergenerationsregistret (dictionaries/register.tsv row 17): the register holds persons born from 1932 \"som varit folkbokförda någon gång sedan 1961\", so each yearly delivery holds the whole register from 1961 to its own date; SCB documents one version, 1961-01-01 -- 2025-12-31. Maintainer ruling 2026-11-17 (#2536): the register's tables are cumulative. The personakt tables (1947-1967) are a closed archive and are not marked."

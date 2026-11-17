@@ -120,7 +120,7 @@
   "provenance": {
     "catalog": {
       "release": "dev",
-      "schema": "17"
+      "schema": "18"
     },
     "holdings": {
       "owner": "fixture"

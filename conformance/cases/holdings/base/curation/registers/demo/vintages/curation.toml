@@ -1,0 +1,7 @@
+# Each delivery of People holds the table from 2010 to its own date (crates/DESIGN.md,
+# "Cumulative tables").
+[[statement]]
+kind = "set"
+subject = "table:people"
+fields = { cumulative = true }
+evidence = "Synthetic cumulative table."

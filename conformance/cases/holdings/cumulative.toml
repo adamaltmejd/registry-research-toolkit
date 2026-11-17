@@ -1,0 +1,51 @@
+# Three extracts of the cumulative table demo/vintages/people, each dated to its own
+# year (crates/DESIGN.md, "Cumulative tables").
+
+[[table]]
+physical_name = "People 2019"
+disposition = "dated"
+delivery = "2019"
+table_pids = ["demo/vintages/people"]
+locator = "fixture:people-2019"
+
+[[table.column]]
+name = "Id"
+locator = "fixture:people-2019-id"
+
+[[table.key]]
+entity = ["demo/vintages/id"]
+time = []
+locator = "fixture:people-2019-key"
+
+[[table]]
+physical_name = "People 2021"
+disposition = "dated"
+delivery = "2021"
+table_pids = ["demo/vintages/people"]
+locator = "fixture:people-2021"
+
+[[table.column]]
+name = "Id"
+locator = "fixture:people-2021-id"
+
+[[table.key]]
+entity = ["demo/vintages/id"]
+time = []
+locator = "fixture:people-2021-key"
+
+[[table]]
+physical_name = "People 2022"
+disposition = "dated"
+delivery = "2022"
+table_pids = ["demo/vintages/people"]
+locator = "fixture:people-2022"
+
+[[table.column]]
+name = "Id"
+locator = "fixture:people-2022-id"
+
+[[table.key]]
+entity = ["demo/vintages/id"]
+time = []
+locator = "fixture:people-2022-key"
+

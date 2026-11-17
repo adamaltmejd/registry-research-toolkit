@@ -26,6 +26,7 @@ struct StoredColumn {
 fn sources(
     db: &Connection,
     primaries: &compile::Primaries,
+    starts: &super::cumulative::Starts,
     root: &Path,
 ) -> Result<(
     input::Topology,
@@ -74,8 +75,17 @@ fn sources(
     let source_tables = census.tables.len();
     let source_columns: usize = census.tables.iter().map(|t| t.columns.len()).sum();
     let keyed = compile::schema_keyed(&census.tables);
-    let topology: input::Topology = crate::toml_file(&input::path(root, &config.inputs.holdings)?)
-        .map_err(|_| "holdings_topology_invalid: malformed authored topology")?;
+    let mut topology: input::Topology =
+        crate::toml_file(&input::path(root, &config.inputs.holdings)?)
+            .map_err(|_| "holdings_topology_invalid: malformed authored topology")?;
+    // The effective topology, as compile resolves the extracts of cumulative tables.
+    let mut effective: BTreeMap<compile::Identity, input::Table> = topology
+        .table
+        .drain(..)
+        .map(|t| (compile::authored_identity(&t, keyed), t))
+        .collect();
+    super::cumulative::resolve(&mut effective, &census.tables, &spaces, starts)?;
+    topology.table = effective.into_values().collect();
     // Each authored table with its delivery and coverage, parsed for every table before
     // any is compared.
     let authored: BTreeMap<compile::Identity, _> = topology
@@ -129,7 +139,16 @@ fn sources(
             return Err(format!("{location}: holdings_space_source_mismatch").into());
         }
         #[allow(clippy::type_complexity)]
-        let (placement, disposition, delivery, recorded, binding, parent_in_schema, release): (
+        let (
+            placement,
+            disposition,
+            delivery,
+            recorded,
+            binding,
+            parent_in_schema,
+            release,
+            superseded_by,
+        ): (
             (Option<String>, Option<String>, Option<String>),
             String,
             Option<String>,
@@ -137,15 +156,19 @@ fn sources(
             (Option<String>, Option<String>),
             bool,
             Option<String>,
+            Option<compile::Identity>,
         ) = db.query_row(
             // A schema-keyed projection's parent is in the projection's own schema.
             "SELECT p.physical_name,h.projection_token,h.partition,h.disposition,h.delivery,
                 h.key_requirements,c.name,h.period_encoding,
-                p.id IS NULL OR NOT ?2 OR p.schema_name IS h.schema_name,h.release
+                p.id IS NULL OR NOT ?2 OR p.schema_name IS h.schema_name,h.release,
+                s.schema_name,s.physical_name
              FROM holding_table h LEFT JOIN holding_table p ON p.id=h.projection_of
+             LEFT JOIN holding_table s ON s.id=h.superseded_by
              LEFT JOIN holding_column c ON c.id=h.period_column_id WHERE h.id=?1",
             rusqlite::params![id, keyed],
             |r| {
+                let schema: Option<String> = r.get(10)?;
                 Ok((
                     (r.get(0)?, r.get(1)?, r.get(2)?),
                     r.get(3)?,
@@ -154,6 +177,8 @@ fn sources(
                     (r.get(6)?, r.get(7)?),
                     r.get(8)?,
                     r.get(9)?,
+                    r.get::<_, Option<String>>(11)?
+                        .map(|name| (schema.filter(|_| keyed), name)),
                 ))
             },
         )?;
@@ -168,9 +193,17 @@ fn sources(
         {
             return Err(format!("{location}: holdings_topology_source_mismatch").into());
         }
-        if (&spec.disposition, spec_delivery, spec_periods)
-            != (&disposition, &delivery, &keys::periods(db, id)?)
-        {
+        if (
+            &spec.disposition,
+            spec_delivery,
+            spec_periods,
+            &spec.superseded_by,
+        ) != (
+            &disposition,
+            &delivery,
+            &keys::periods(db, id)?,
+            &superseded_by,
+        ) {
             return Err(format!(
                 "{location}: holdings_period_source_mismatch: authored table disposition or delivery differs"
             ).into());
@@ -356,9 +389,12 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     }
     // Before the source re-read: a leak refuses even when the steward checkout is gone.
     super::scope::check(&db)?;
+    // Before the source re-read, and independent of the resolver it checks.
+    let starts = super::cumulative::starts(&base, &db)?;
+    super::cumulative::check(&db, &starts)?;
     let primaries = compile::primaries(&base, &db)?;
     let shared = compile::shared_days(&primaries);
-    let (topology, census, declarations) = sources(&db, &primaries, root)?;
+    let (topology, census, declarations) = sources(&db, &primaries, &starts, root)?;
     for key in ["steward", "scope"] {
         if !serde_json::from_str::<serde_json::Value>(&meta(&db, key)?)
             .map_err(|_| "holdings_presentation_invalid")?

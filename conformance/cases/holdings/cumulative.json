@@ -1,0 +1,8 @@
+{
+  "note": "Three extracts of the cumulative demo/vintages/people (documented 2010-2022, cumulative.toml), each dated to its own year. The newest, People 2022, holds the table from its start to its own date; the older two are superseded by it and hold nothing. Rows are `table disposition delivery superseded_by periods placements`, periods as days since 1970-01-01, end exclusive: 2010-01-01 = 14610, 2023-01-01 = 19358. Oracle: the base frame's coverage and the authored deliveries.",
+  "tables": [
+    "People 2019 superseded - People 2022 - 0",
+    "People 2021 superseded - People 2022 - 0",
+    "People 2022 dated 2010..2022 - 14610-19358 1"
+  ]
+}

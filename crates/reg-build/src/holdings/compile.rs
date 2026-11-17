@@ -86,6 +86,7 @@ pub(super) fn table_periods(table: &input::Table) -> Result<Vec<Span>> {
             crate::emit::start(reg_frame::OPEN_START),
             crate::emit::end(reg_frame::OPEN_END),
         )]),
+        ("superseded", None) if table.superseded_by.is_some() => Ok(vec![]),
         ("unknown" | "lookup" | "excluded", None)
             if table.reason.as_ref().is_some_and(|r| !r.trim().is_empty()) =>
         {
@@ -772,6 +773,8 @@ pub(super) fn write(
     if ids.len() != authored.len() || ids.keys().any(|name| !authored.contains_key(name)) {
         return Err("holdings_accounting_invalid: authored tables differ from census".into());
     }
+    let starts = super::cumulative::starts(base, db)?;
+    super::cumulative::resolve(&mut authored, &census, spaces, &starts)?;
     let count_tables = census.len();
     let tx = db.transaction()?;
     let mut count_columns = 0usize;
@@ -858,9 +861,9 @@ pub(super) fn write(
                 ).into());
             }
             // The period column and its encoding are set together once the columns exist.
-            tx.execute("INSERT INTO holding_table(id,physical_name,space,key_requirements,schema_name,table_type,file_name,disposition,delivery,release,partition,projection_of,
-          projection_token,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,spaces.of(&table),serde_json::to_string(&authored.key)?,schema_name,table_type,
-          file_name,authored.disposition,authored.delivery.as_deref().map(canonical_period).transpose()?,release,authored.partition,projection,authored.projection_token,
+            tx.execute("INSERT INTO holding_table(id,physical_name,space,key_requirements,schema_name,table_type,file_name,disposition,delivery,release,superseded_by,partition,projection_of,
+          projection_token,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,spaces.of(&table),serde_json::to_string(&authored.key)?,schema_name,table_type,
+          file_name,authored.disposition,authored.delivery.as_deref().map(canonical_period).transpose()?,release,authored.superseded_by.as_ref().map(|kept| ids[kept]),authored.partition,projection,authored.projection_token,
           authored.reason]).map_err(|_|"holdings_table_invalid: duplicate name or invalid topology".to_owned())?;
             for (start, end) in &spans {
                 tx.execute(
@@ -1047,6 +1050,7 @@ pub(super) fn write(
         result.map_err(|error| format!("holdings:table={id}: {error}"))?;
     }
     super::keys::carry_projections(&tx)?;
+    super::cumulative::check(&tx, &starts)?;
     tx.commit()?;
     Ok((count_tables, count_columns, mapped, unmatched))
 }

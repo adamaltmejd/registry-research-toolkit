@@ -306,6 +306,53 @@ fn table_less_mapping_places_on_every_documenting_table() {
 }
 
 #[test]
+fn cumulative_table_keeps_the_newest_extract() {
+    // Fails if compile keeps an older extract of a cumulative table dated, dates the
+    // newest to its own year instead of from the table's start, or drops the
+    // supersession; if verify re-derives the effective topology differently; or if
+    // verify admits a kept extract shrunk back to its own year (`verify-refusals.json`,
+    // variant `cumulative`). Expected rows (`cumulative.json`) come from the base frame
+    // and the authored deliveries.
+    let expected = read_json(&holdings_case().join("cumulative.json")).unwrap();
+    let dir = Scratch::new("cumulative").unwrap();
+    let root = locked_copy(dir.path()).unwrap();
+    for year in [2019, 2021, 2022] {
+        append(
+            &root.join("census.csv"),
+            &format!("Synthetic,People {year},People {year},Id,,,,,,,,\n"),
+        )
+        .unwrap();
+        append(
+            &root.join("storage.csv"),
+            &format!("dbo,People {year},BASE TABLE,Id,int,,10,0,1\n"),
+        )
+        .unwrap();
+    }
+    append(
+        &root.join("holdings.toml"),
+        &read(&holdings_case().join("cumulative.toml")).unwrap(),
+    )
+    .unwrap();
+    let out = dir.path().join("cumulative.db");
+    compile(dir.path(), &out).ok();
+    assert_eq!(
+        column(
+            &out,
+            "SELECT h.physical_name||' '||h.disposition||' '||coalesce(h.delivery,'-')||' '||
+                coalesce(s.physical_name,'-')||' '||
+                coalesce((SELECT group_concat(p.start||'-'||p.end) FROM holding_period p WHERE p.holding_id=h.id),'-')||' '||
+                (SELECT count(*) FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id WHERE c.holding_id=h.id)
+             FROM holding_table h LEFT JOIN holding_table s ON s.id=h.superseded_by
+             WHERE h.physical_name LIKE 'People %' ORDER BY 1"
+        ),
+        serde_json::from_value::<Vec<String>>(expected["tables"].clone()).unwrap()
+    );
+    let base = cached_reader_artifact(&holdings_case().join("base")).unwrap();
+    verify_holdings(&out, &base, &root).ok();
+    verify_refusals(&out, &base, &root, "cumulative");
+}
+
+#[test]
 fn schema_keyed_census_holds_one_name_in_two_schemas() {
     // Fails if a schema-keyed census still keys tables by name (the aux twin of
     // Excluded refuses as a duplicate, or the unique physical name refuses it at

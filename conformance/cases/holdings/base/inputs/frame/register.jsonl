@@ -37,3 +37,6 @@
 {"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w2","column":"Score","source_key":"score","label":"Wave score","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w1","column":"Extra","source_key":"extra","label":"Wave extra","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w2","column":"Extra","source_key":"extra","label":"Wave extra","dtype":"int"}
+{"kind":"register","provider":"demo","register":"vintages","name":"Cumulative register"}
+{"kind":"table","provider":"demo","register":"vintages","table":"people","name":"People"}
+{"kind":"occurrence","provider":"demo","register":"vintages","table":"people","column":"Id","source_key":"id","label":"Person identity","dtype":"int","identifier":true,"from":"2010-01-01","to":"2022-12-31"}

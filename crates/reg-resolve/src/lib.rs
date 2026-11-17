@@ -521,6 +521,7 @@ fn resolve_pass(
         let mut table = stated.get(handle).map_or_else(
             || Table {
                 role: None,
+                cumulative: None,
                 provider: register.provider.clone(),
                 register: register.register.clone(),
                 table: handle.to_owned(),

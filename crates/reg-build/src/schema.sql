@@ -90,8 +90,12 @@ CREATE TABLE tbl (
   cadence          TEXT CHECK (cadence IN ('year','half','quarter','month','day','irregular')),
   start            INTEGER NOT NULL,      -- coverage hull
   end              INTEGER NOT NULL,
+  -- Each delivery holds the table from its start to its own date (curated; DESIGN.md,
+  -- "Cumulative tables"): a holdings build keeps the newest steward extract.
+  cumulative       INTEGER NOT NULL CHECK (cumulative IN (0,1)),
   CHECK (start < end),
-  CHECK (timeless = 0 OR cadence IS NULL)
+  CHECK (timeless = 0 OR cadence IS NULL),
+  CHECK (timeless = 0 OR cumulative = 0)
 ) STRICT;
 CREATE INDEX tbl_register ON tbl(register_id);
 
