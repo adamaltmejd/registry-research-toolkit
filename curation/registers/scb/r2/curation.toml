@@ -8551,3 +8551,51 @@ kind = "set"
 subject = "grund-bosattning-folkbokforda-31-12: GFBKod"
 fields = { "variable" = "grund-for-bosattning" }
 evidence = "SCB documents GFBKod (1990-2006) and GrundForBosattning (2007-2010) in the 31 December files under one VarId 8180; the two spellings never share a release. One variable on main; after the 31 December files moved to their own table (class C, maintainer ruling 2026-11-16) the default pass no longer joins the GrundForBosattning spelling to it, so the identity is stated."
+
+[[statement]]
+kind = "set"
+subject = "set:datum-annan-person"
+fields = { "description" = "Datum för personens relation till annan person 1 respektive 2, angivet som år, månad och dag (ÅÅÅÅMMDD)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma text; de skiljer sig bara åt i vilken annan person som avses.\ncatalog:variable_text:48863:10591:10592"
+
+[[statement]]
+kind = "set"
+subject = "set:datum-vardnadshavare"
+fields = { "description" = "Datum för personens relation till vårdnadshavare 1 respektive 2, angivet som år, månad och dag (ÅÅÅÅMMDD)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma text; de skiljer sig bara åt i vilken vårdnadshavare som avses.\ncatalog:variable_text:48866:10591:10592"
+
+[[statement]]
+kind = "set"
+subject = "set:ensamkommande-barn"
+fields = { "description" = "Ensamkommande barn, dvs. personer under 18 år som saknar vårdnadshavare vid ansökan om uppehållstillstånd. Variablerna anger antalet sökande ensamkommande barn per kombination av medborgarskap, kön, ålder och månad för ansökan (även enligt massflyktsdirektivet) samt om en enskild person är ensamkommande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla texter definierar ensamkommande barn som under 18 år utan vårdnadshavare; antalsvariablerna och personmarkeringen skiljer sig åt i enhet.\ncatalog:variable_text:48819:11688:13879\ncatalog:variable_text:48820:18993:20454\ncatalog:variable_text:48875:12052:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:familjestallning"
+fields = { "description" = "Klassificering av en persons relation till andra personer i familjen (gift, barn m.m.), härledd från uppgifter i folkbokföringen. Finns i en variant för 1990–1997 och en från 1998." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda varianterna klassificerar familjerelationer härledda från folkbokföringen; de skiljer sig åt i period.\ncatalog:variable_text:48878:10591:10592\ncatalog:variable_text:48879:7669:7670"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelselan"
+fields = { "description" = "Födelselän för personer födda i Sverige, för personen själv samt för personens far, mor och relationsperson." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar avser födelselän för personer födda i Sverige; de skiljer sig åt i vilken person som avses.\ncatalog:variable_text:48906:10227:14245\ncatalog:variable_text:48918:14245:2932897\ncatalog:variable_text:48919:14245:2932897\ncatalog:variable_text:48920:14245:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:personnrap"
+fields = { "description" = "Personnummer för annan person: annan person 1 är den äldste och annan person 2 den yngste. Personnumret består av födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna delar definitionen av personnummer och skiljer sig åt i ordning (äldste respektive yngste).\ncatalog:variable_text:49036:10591:10592\ncatalog:variable_text:49037:10591:10592"
+
+[[statement]]
+kind = "set"
+subject = "set:personnrvard"
+fields = { "description" = "Personnummer för personens vårdnadshavare: vårdnadshavare 1 är den äldste och vårdnadshavare 2 den yngste av vårdnadshavarna. Personnumret består av födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna delar definitionen av personnummer och skiljer sig åt i ordning (äldste respektive yngste).\ncatalog:variable_text:49038:10591:10592\ncatalog:variable_text:49039:10591:10592"
+
+[[statement]]
+kind = "set"
+subject = "set:yrke-vid-arbetstillstand"
+fields = { "description" = "Yrke, som tre- eller fyrsiffrig SSYK-kod, för den arbetstagare som har ansökt om och beviljats arbetstillstånd. Koden anges av arbetsgivaren vid ansökan om arbetstillstånd hos Migrationsverket. Finns enligt SSYK 96 och SSYK 2012." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition och skiljer sig åt i yrkesklassifikation (SSYK 96 respektive SSYK 2012).\ncatalog:variable_text:49081:15339:15340\ncatalog:variable_text:49082:16435:16436\ncatalog:variable_text:49083:16435:16436"

@@ -18571,24 +18571,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBesk
 
 [[statement]]
 kind = "set"
-subject = "var:antal-distansmoten-internet-okade-delvis-covid-19"
-fields = { "description" = "Företaget har riktlinjer som främjar digitala möten framför tjänsteresor." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292890\ncatalog:valueset:10571\ncatalog:variable_text:32877:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-distansmoten-internet-okade-helt-covid-19"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292889\ncatalog:valueset:7895\ncatalog:variable_text:32876:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antalet-distansmoten-over-internet-okade-inte-alls-pa-grund"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292891\ncatalog:valueset:10571\ncatalog:variable_text:32878:18628:18993"
-
-[[statement]]
-kind = "set"
 subject = "var:datd8"
 fields = { "description" = "Problem vid köp eller beställning via internet under de senaste 12 månaderna." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning och förtydligar den avbrutna tidsangivelsen med stöd av frågan.\ncatalog:occurrence:289418\ncatalog:variable_text:32753:14245:14610"
@@ -18616,18 +18598,6 @@ kind = "set"
 subject = "var:har-sakerhetsriktlinjer-for-distansmoten"
 fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:293000\ncatalog:valueset:7898\ncatalog:variable_text:33581:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:har-sakerhetsriktlinjer-for-fjarranslutning"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för fjärranslutning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:292180\ncatalog:valueset:7898\ncatalog:variable_text:33441:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:ra-sg"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för fjärranslutning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:292988\ncatalog:valueset:7898\ncatalog:variable_text:33548:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -20279,3 +20249,243 @@ kind = "set"
 subject = "var:stratum-befolkning"
 fields = { "label" = "Stratum (Befolkningens IT-användning)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Befolkningens IT-användning\"."
+
+[[statement]]
+kind = "set"
+subject = "set:pandemiforandring-av-distansmoten"
+fields = { "description" = "Om antalet distansmöten över internet ökade under 2020 oavsett orsak, och i vilken grad ökningen berodde på covid-19: helt, delvis eller inte alls." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är graderingar av samma fråga om ökning av distansmöten; de lagrade medlemstexterna handlar om riktlinjer och stämmer inte med medlemmarnas provider-text och etikett, så de tas bort.\ncatalog:variable_text:39646:18628:18993\ncatalog:variable_text:39647:18628:18993\ncatalog:variable_text:39657:18628:18993\ncatalog:variable_text:39658:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:sakerhetsriktlinjer-for-fjarranslutning"
+fields = { "description" = "Om företaget har säkerhetsriktlinjer för fjärranslutning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är samma indikator i olika årsomgångar; den lagrade texten är identisk med setbeskrivningen.\ncatalog:variable_text:40301:16071:16436\ncatalog:variable_text:40821:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:amnesomraden-for-it-utbildning"
+fields = { "description" = "Anger inom vilka IT-områden personen har utbildat sig under de senaste 12 månaderna. Flera områden kan anges, och varje variabel avser ett ämnesområde, till exempel dataanalys, programmering, sociala medier eller IT-säkerhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar enkätfrågan om IT-områden för utbildning de senaste 12 månaderna; svarsalternativet ger ämnesområdet.\ncatalog:variable_text:40306:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:anvandning-av-e-legitimation"
+fields = { "description" = "Om och för vilka slags tjänster personen har använt e-legitimation eller annan digital legitimering för privat bruk, till exempel offentliga e-tjänster, e-tjänster i andra europeiska länder och näringslivets e-tjänster." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller privatpersoners användning av e-legitimation, dels om den använts alls, dels för vilken typ av tjänst.\ncatalog:variable_text:39950:19358:19723\ncatalog:variable_text:39951:19358:19723\ncatalog:variable_text:40084:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:anvandning-av-generativ-ai"
+fields = { "description" = "Om personen har använt generativa AI-verktyg, till exempel ChatGPT eller Midjourney, under de senaste tre månaderna, och i så fall i vilket syfte: formell utbildning, privata ändamål eller arbetsrelaterade ändamål. Flera syften kan anges." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är frågan om användning och dess syftesalternativ, alla med referensperioden tre månader.\ncatalog:variable_text:39750:19723:20454\ncatalog:variable_text:40249:19723:20454\ncatalog:variable_text:40251:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:barnantal"
+fields = { "description" = "Antal barn hos personen, totalt eller i en viss åldersgrupp." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är antal barn, totalt eller per åldersgrupp; avgränsningen av barnen (hemmaboende, i familjen, folkbokförda) varierar mellan variablerna och lämnas till medlemmens egen text.\ncatalog:variable_text:39638:13514:14975\ncatalog:variable_text:39645:16801:17167\ncatalog:variable_text:39844:13514:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:begransning-av-appars-personuppgiftsatkomst"
+fields = { "description" = "Om personen, när hen använt eller installerat en app på sin smartphone, någon gång har begränsat eller nekat appen tillgång till personliga uppgifter, till exempel telefonkontakter eller geografisk position. Variablerna anger om personen har begränsat tillgången, inte har begränsat den eller inte kände till möjligheten." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar bygger på samma enkätfråga om begränsad eller nekad åtkomst i appar; de skiljer sig i svarsalternativ.\ncatalog:variable_text:39807:17532:17897\ncatalog:variable_text:40188:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:betydelse-av-egenskaper-vid-internetkop"
+fields = { "description" = "Vilken betydelse olika villkor har för att personen ska beställa varor eller tjänster via internet för privat bruk, till exempel lägre priser, större sortiment, bekvämlighet, enkel webbsida, betyg från andra användare och försäkran om garantier. Varje variabel avser ett villkor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är delfrågor i samma fråga om villkors betydelse vid internetbeställning.\ncatalog:variable_text:39875:14245:14610\ncatalog:variable_text:39876:14245:14610\ncatalog:variable_text:39877:14245:14610\ncatalog:variable_text:39878:14245:14610\ncatalog:variable_text:39879:14245:14610\ncatalog:variable_text:39880:14245:14610\ncatalog:variable_text:39881:14245:14610\ncatalog:variable_text:39882:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:digital-leverans-istallet-for-post"
+fields = { "description" = "Om personen, efter att ha köpt eller beställt produkter via internet, någon gång valde att ladda ned dem elektroniskt i stället för att få dem med post. Variablerna avser e-böcker, tidningar och läromedel, filmer och musik respektive programvara och spel." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är samma uppföljningsfråga om nedladdning i stället för postleverans, per produkttyp.\ncatalog:variable_text:40620:14610:14975\ncatalog:variable_text:40734:14245:14610\ncatalog:variable_text:40735:13514:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:digitala-arbetsaktiviteter"
+fields = { "description" = "Vilka digitala aktiviteter personen utför på sitt arbete minst en gång i veckan, till exempel att skapa eller redigera digitala dokument, skicka e-post, använda appar eller egenutvecklad programvara eller utveckla IT-system. Varje variabel avser en aktivitet, och en anger att personen inte utför någon av dem." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är alternativ i samma fråga om aktiviteter som utförs minst en gång i veckan på arbetet.\ncatalog:variable_text:39681:17532:17897\ncatalog:variable_text:40362:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:egenskaper-vid-kop-av-it-utrustning"
+fields = { "description" = "Vilka egenskaper personen ansåg vara viktiga när hen senast köpte en mobil, surfplatta, bärbar eller stationär dator, till exempel pris, varumärke, energieffektivitet, ekodesign eller möjlighet att förlänga livslängden. Varje variabel avser en egenskap, och en anger att personen aldrig har köpt någon av produkterna." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är alternativ i samma fråga om viktiga egenskaper vid senaste köp av IT-utrustning.\ncatalog:variable_text:40183:18993:19358\ncatalog:variable_text:40184:19723:20089\ncatalog:variable_text:40260:18993:19358\ncatalog:variable_text:40262:18993:19358\ncatalog:variable_text:40263:18993:19358\ncatalog:variable_text:40265:18993:19358\ncatalog:variable_text:40266:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:exponering-for-hotfulla-och-nedvarderande-inlagg"
+fields = { "description" = "Om personen under de senaste tre månaderna har sett inlägg på nätet som hen upplevde som hotfulla eller nedvärderande mot individer eller grupper, till exempel i videor, bloggar, sociala medier eller kommentarsfält, och vad anledningen till angreppen var, till exempel kön, religion, funktionsnedsättning eller politiska åsikter. Det finns en variabel för själva frågan och en per anledning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är huvudfrågan om hotfulla eller nedvärderande inlägg och dess anledningsalternativ.\ncatalog:variable_text:40302:19358:19723\ncatalog:variable_text:40189:19358:19723\ncatalog:variable_text:40191:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:hantering-av-forbrukad-it-utrustning"
+fields = { "description" = "Vad som görs med förbrukad IT-utrustning, till exempel om den förvaras kvar, kasseras eller lämnas tillbaka, eller säljs vidare. Variablerna gäller dels företagets utrustning, dels personens gamla bärbara dator, mobil eller stationära dator." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller hantering av förbrukad IT-utrustning, för företag respektive privatperson.\ncatalog:variable_text:40212:18993:20454\ncatalog:variable_text:40215:18993:20454\ncatalog:variable_text:40218:18993:20454\ncatalog:variable_text:40259:18993:19358\ncatalog:variable_text:40267:18993:19358\ncatalog:variable_text:40268:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:hinder-for-kop-av-molntjanster"
+fields = { "description" = "Vilka faktorer som hindrar eller begränsar företagets köp av molntjänster, till exempel kostnad, bristande säkerhet, osäkerhet om lokalisering av data eller om tillämplig lag, problem med åtkomst, svårigheter att byta leverantör eller otillräcklig kännedom om molntjänster. Med molntjänst menas IT-tjänst som erbjuder mjukvara, lagringsutrymme, datorkraft eller liknande över internet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är hinderalternativ för företagets köp av molntjänster, med samma definition av molntjänst.\ncatalog:variable_text:39898:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:hinder-for-webbforsaljning"
+fields = { "description" = "Vilka faktorer som begränsade eller förhindrade företaget från att sälja via en webbplats, till exempel betalningsproblem, logistikproblem, juridiska problem, problem med säkerhet eller skydd av data, kostnad i förhållande till nytta eller att varorna eller tjänsterna inte lämpade sig för webbförsäljning. Varje variabel avser en faktor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är faktoralternativ i samma fråga om hinder för webbförsäljning.\ncatalog:variable_text:39874:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:internetkop-av-evenemangsbiljetter"
+fields = { "description" = "Om personen för privat bruk har köpt eller beställt biljetter till evenemang via internet, till exempel bio, konserter, mässor eller sportevenemang. Variablerna skiljer sig i vilka slags evenemang som avses: evenemang i allmänhet, kulturella evenemang eller sportevenemang." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller alla internetköp av evenemangsbiljetter, med olika avgränsning av evenemangstyp.\ncatalog:variable_text:40545:18262:19723\ncatalog:variable_text:40546:19723:20454\ncatalog:variable_text:40547:18262:19723\ncatalog:variable_text:40548:13514:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:internetkop-med-handburen-utrustning"
+fields = { "description" = "Om och vad personen har köpt eller beställt över internet med mobiltelefon eller annan handburen utrustning: varor eller tjänster i allmänhet, fysiska varor, digitala produkter eller tjänster." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller köp via handburen utrustning, i total och per produktslag.\ncatalog:variable_text:40557:15340:15706\ncatalog:variable_text:40569:15340:15706\ncatalog:variable_text:40612:15340:15706\ncatalog:variable_text:40617:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:it-utbildning-for-anstallda"
+fields = { "description" = "IT-utbildning i anslutning till arbete. Dels om personen har utfört IT-utbildning som organiserats eller bekostats av arbetsgivaren eller som skett under arbetets gång, dels om företaget har tillhandahållit IT-utbildning för sina IT-specialister respektive övriga anställda." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller IT-utbildning som arbetsgivaren ger eller som sker på arbetet, ur personens respektive företagets perspektiv.\ncatalog:variable_text:40313:17532:17897\ncatalog:variable_text:40314:17532:17897\ncatalog:variable_text:40963:16436:16801\ncatalog:variable_text:40964:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:it-utbildningens-finansiering-och-form"
+fields = { "description" = "Vilka slags IT-utbildningsaktiviteter personen har utfört under de senaste 12 månaderna, uppdelat efter hur utbildningen finansierats eller bedrivits: gratis IT-utbildning online eller självstudier, utbildning som betalats av någon annan än arbetsgivaren eller utbildning som personen själv betalat." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är alternativ i samma fråga om IT-utbildningsaktiviteter de senaste 12 månaderna; de skiljer sig i finansiering och form.\ncatalog:variable_text:40311:17532:17897\ncatalog:variable_text:40312:17532:17897\ncatalog:variable_text:40817:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:kannedom-om-konsumentrattigheter"
+fields = { "description" = "Vilka grundläggande EU-rättigheter för konsumenter vid köp via internet, utom auktioner, personen känner till: rätten att häva köpet och få pengarna tillbaka, rätten till leverans inom 30 dagar, rätten att bli informerad om avtalsvillkoren och skydd för personliga uppgifter. Varje variabel avser en rättighet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är rättighetsalternativ i samma kännedomsfråga.\ncatalog:variable_text:40507:14245:14610\ncatalog:variable_text:40508:14245:14610\ncatalog:variable_text:40509:14245:14610\ncatalog:variable_text:40510:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:kontaktkanal-till-myndigheter"
+fields = { "description" = "På vilket sätt personen har kontaktat myndigheter under de senaste 12 månaderna, utöver myndigheternas webbplatser: genom besök, via e-post, per telefon eller på annat sätt, till exempel brev, SMS eller fax." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är kontaktvägsalternativ i samma fråga om kontakter med myndigheter.\ncatalog:variable_text:40703:15706:16071\ncatalog:variable_text:40713:15706:16071\ncatalog:variable_text:40725:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:kontroll-av-falsk-information"
+fields = { "description" = "Om personen har kontrollerat om information eller innehåll som hen hittat på internet var sant, och hur: genom att kontrollera källor eller hitta annan information på internet, följa eller delta i diskussioner på internet, diskutera informationen offline eller på annat sätt." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är frågan om kontroll av information och dess metodalternativ.\ncatalog:variable_text:40297:19358:19723\ncatalog:variable_text:40520:18628:18993\ncatalog:variable_text:40521:19358:19723\ncatalog:variable_text:40522:18628:18993\ncatalog:variable_text:40523:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:kop-av-molntjanster"
+fields = { "description" = "Vilka slags molntjänster som köps, till exempel e-post, kontorsmjukvara, ekonomi- eller CRM-mjukvara, ERP, databastjänster, fillagring, datorkraft, datorplattformar och säkerhetsapplikationer, samt om tjänsten levereras från en server som delas med andra kunder eller är reserverad för det egna företaget. Med molntjänst menas IT-tjänster som erbjuder mjukvara, lagringsutrymme, datorkraft och liknande över internet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är tjänsteslag och leveranssätt för köpta molntjänster, med samma definition av molntjänst.\ncatalog:variable_text:39913:16071:16436\ncatalog:variable_text:40070:18628:18993\ncatalog:variable_text:40525:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:orsaker-till-rekryteringssvarigheter-for-it-specialister"
+fields = { "description" = "Vilka svårigheter företaget hade i rekryteringen av IT-specialister: brist på sökande, sökande som saknade IT-relaterade kvalifikationer från utbildning, sökande som saknade relevant arbetslivserfarenhet eller sökande med för höga löneanspråk. Varje variabel avser en svårighet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är svarsalternativ i samma fråga om rekryteringssvårigheter.\ncatalog:variable_text:39896:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:problem-vid-digitala-myndighetskontakter"
+fields = { "description" = "Vilka problem personen har stött på under de senaste 12 månaderna när hen använt myndigheters eller offentlig sektors webbplatser eller appar, till exempel att tjänsten var svår att använda, tekniska problem, problem med elektronisk identifiering, otillräcklig eller otydlig information eller att den inte var anpassad för smartphone eller surfplatta. Det finns också variabler för andra problem och för att inte ha stött på några problem." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är problemalternativ vid användning av myndigheters webbplatser och appar, alla med referensperioden 12 månader.\ncatalog:variable_text:39911:18993:19358\ncatalog:variable_text:40702:15706:16436\ncatalog:variable_text:40707:15706:16071\ncatalog:variable_text:40719:15706:16071\ncatalog:variable_text:40724:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:problem-vid-iot-anvandning"
+fields = { "description" = "Vilka problem personen har stött på under de senaste tre månaderna när hen använt internetanslutna enheter eller system (IoT), till exempel svårigheter att installera, ansluta eller para ihop enheter, säkerhets- eller integritetsproblem eller säkerhets- eller hälsoproblem. Det finns också variabler för annat problem och för att inte ha stött på några problem." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är problemalternativ i samma IoT-fråga med referensperioden tre månader.\ncatalog:variable_text:40108:18993:19358\ncatalog:variable_text:40461:18993:19358\ncatalog:variable_text:40462:18993:19358\ncatalog:variable_text:40469:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:problem-vid-mobil-internetanvandning"
+fields = { "description" = "Vilka problem personen har haft under de senaste tre månaderna när hen använt internet via bärbar dator, surfplatta eller handburen utrustning utanför hemmet, till exempel obekväm liten skärm eller textinmatning, oväntat höga kostnader, svårigheter att ändra inställningar, svårigheter att få information om kostnaden eller upprepade svårigheter med täckningen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är problemalternativ i samma fråga om internetanvändning utanför hemmet.\ncatalog:variable_text:40280:15340:15706\ncatalog:variable_text:40655:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:problemlosning-vid-internetanvandning"
+fields = { "description" = "Hur personen har försökt lösa problem vid internetanvändning under de senaste tre månaderna: genom att lösa eller försöka lösa problemet själv, genom att någon annan löste det, på annat sätt eller genom att inte försöka alls. Det finns också en variabel för att personen inte har stött på några problem." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är svarsalternativ i samma fråga om hur internetproblem lösts.\ncatalog:variable_text:39838:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:produktkategorier-vid-internetkop-fran-utlandet"
+fields = { "description" = "Vilka slags produkter personen har köpt eller beställt via internet för privat bruk från försäljare i andra länder under de senaste 12 månaderna: fysiska föremål, nedladdat material, resor och semesteraktiviteter eller andra tjänster." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är produktalternativ i samma fråga om köp från utlandet.\ncatalog:variable_text:40570:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:saljarland-vid-internetkop"
+fields = { "description" = "Från vilka länder personen har köpt eller beställt varor eller tjänster via internet för privat bruk: Sverige, andra EU-länder, länder utanför EU eller ett okänt land." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna anger säljarland vid internetköp, i fyra grupper; referensperiod och formulering skiljer mellan frågorna och lämnas till medlemmens egen text.\ncatalog:variable_text:40586:18262:19723\ncatalog:variable_text:40587:18262:19723\ncatalog:variable_text:40610:13879:16071\ncatalog:variable_text:40611:13879:16071\ncatalog:variable_text:40613:13879:16071\ncatalog:variable_text:40614:13879:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:skal-till-utebliven-digital-dokumentansokan"
+fields = { "description" = "Skälen till att personen under de senaste 12 månaderna inte har ansökt om något dokument eller gjort andra förfrågningar via en myndighets eller offentlig sektors webbplats eller app, till exempel att hen inte har behövt, att det inte fanns någon sådan tjänst, att hen saknar elektronisk legitimering, integritets- eller säkerhetsskäl, att någon annan gjorde det åt hen eller att det var för komplicerat." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är skäl i samma fråga om utebliven ansökan via myndigheters webbplatser.\ncatalog:variable_text:39909:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:skal-till-utebliven-informationskontroll"
+fields = { "description" = "Skälen till att personen inte kontrollerade om information eller innehåll som hen hittat på internet var sant: att hen inte visste hur man gör eller att det var för komplicerat, att hen redan visste att informationen eller källan inte var tillförlitlig, eller andra skäl." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är skäl i samma fråga om utebliven kontroll av information.\ncatalog:variable_text:40387:18628:18993\ncatalog:variable_text:40388:18628:18993\ncatalog:variable_text:40389:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:skal-till-utebliven-internetanvandning"
+fields = { "description" = "Skälen till att personen inte har använt internet under de senaste tre månaderna, till exempel att det är för dyrt eller för svårt, att hen inte har behövt internet, fysiska eller psykiska skäl, integritets- eller säkerhetsskäl eller att hen inte tycker om eller litar på internet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är skäl i samma fråga om utebliven internetanvändning.\ncatalog:variable_text:40374:20089:20454\ncatalog:variable_text:40375:20089:20454\ncatalog:variable_text:40376:20089:20454\ncatalog:variable_text:40765:20089:20454\ncatalog:variable_text:40766:20089:20454\ncatalog:variable_text:40767:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:skal-till-utebliven-iot-anvandning"
+fields = { "description" = "Skälen till att personen inte har använt internetanslutna enheter eller system (IoT) för privata ändamål, till exempel att det är för dyrt, att hen inte har någon användning för dem, att de inte fungerar med befintliga enheter, oro för it-säkerhet, integritet eller hälsa, att hen inte vet hur man använder dem eller inte visste att de finns." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är skäl i samma fråga om utebliven IoT-användning; andra orsaker har ingen egen text och beskrivs av etiketten.\ncatalog:variable_text:40452:18262:18628\ncatalog:variable_text:40453:18262:18628\ncatalog:variable_text:40455:18262:18628\ncatalog:variable_text:40459:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:skal-till-utebliven-mobil-internetanvandning"
+fields = { "description" = "Skälen till att personen inte har använt internet med mobil utrustning, till exempel bärbar dator, surfplatta eller handburen utrustning, utanför hemmet eller arbetet: till exempel att det är för dyrt, att personen inte vet hur man gör eller att det är för krångligt, att hen inte har behov, att bredbandsanslutning saknas eller är för långsam, eller säkerhets- eller sekretesskäl." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är skäl i samma fråga om utebliven mobil internetanvändning; referensperiod varierar mellan frågorna (tre respektive 12 månader) och nämns inte.\ncatalog:variable_text:40164:14610:14975\ncatalog:variable_text:40662:15340:15706\ncatalog:variable_text:40663:15340:15706\ncatalog:variable_text:40665:15340:15706\ncatalog:variable_text:40666:15340:15706\ncatalog:variable_text:40667:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:skyddsatgarder-for-personuppgifter"
+fields = { "description" = "Vilka åtgärder personen har utfört under de senaste tre månaderna för att hantera åtkomst till sina personuppgifter på internet, till exempel att begränsa åtkomst till geografisk plats eller profil, neka användning av personuppgifter för reklam, läsa sekretesspolicy, kontrollera att en webbplats är säker eller begära tillgång till data som bevarats om personen. Varje variabel avser en åtgärd." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är åtgärdsalternativ i samma e-säkerhetsfråga med referensperioden tre månader.\ncatalog:variable_text:40089:18262:18993\ncatalog:variable_text:40090:18262:18993\ncatalog:variable_text:40092:18262:18993\ncatalog:variable_text:40093:18262:18993\ncatalog:variable_text:40095:18262:18993\ncatalog:variable_text:40097:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:sokning-efter-halsoinformation"
+fields = { "description" = "Om personen har använt internet för att söka hälsoinformation, till exempel om skada, sjukdom eller diet. Variablerna avser hälsoinformation i allmänhet, information om fysisk hälsa respektive information om psykisk hälsa." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller sökning av hälsoinformation på internet, totalt och per slag av hälsa.\ncatalog:variable_text:39762:20089:20454\ncatalog:variable_text:39772:13514:15340\ncatalog:variable_text:40917:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:syfte-med-utbildning-pa-internet"
+fields = { "description" = "Vad syftet var med de utbildningsaktiviteter via internet som personen genomfört under de senaste tre månaderna: formell utbildning, professionella eller arbetsrelaterade ändamål eller privata ändamål." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är syftesalternativ i samma fråga om utbildningsaktiviteter.\ncatalog:variable_text:39834:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:utforare-av-it-sakerhetsarbete"
+fields = { "description" = "Vem som utför företagets arbete med informations- och IT-säkerhet: den egna personalen, inklusive anställda i moder- och dotterbolag, eller externa leverantörer som konsulter eller serviceavtal." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna anger utförare av IT-säkerhetsarbete: egen personal respektive externa leverantörer.\ncatalog:variable_text:40180:17897:18262\ncatalog:variable_text:40390:17897:18262\ncatalog:variable_text:40487:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:vardbokning-pa-internet"
+fields = { "description" = "Om personen har använt internet för att boka tid hos läkare eller tandläkare via en webbsida, till exempel på sjukhus eller vårdcentral." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är samma aktivitet, bokning av vårdtid via webben, formulerad olika mellan åren.\ncatalog:variable_text:39754:15340:15706\ncatalog:variable_text:39755:17532:17897\ncatalog:variable_text:39894:16801:17167"

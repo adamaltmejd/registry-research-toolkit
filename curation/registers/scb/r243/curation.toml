@@ -1875,3 +1875,15 @@ kind = "set"
 subject = "var:landstingets-namn-lansnamn"
 fields = { "label" = "Landstingets namn (Riksdagsval)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Riksdagsval\"."
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-och-utlandsk-bakgrund"
+fields = { "description" = "Anger om en person har utländsk eller svensk bakgrund, som kod respektive som text." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition i alla år; de skiljer sig bara i kod eller text.\ncatalog:variable_text:11249:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Inriktningen på en persons genomförda utbildning, klassificerad enligt Svensk utbildningsnomenklatur (SUN), som kod respektive text och enligt SUN 2000 eller SUN 2020." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma SUN-definition; kod/text och SUN-version framgår av etiketterna. Uppgiften om röstberättigades högsta utbildning finns inte för alla år och utelämnas.\ncatalog:variable_text:11235:11688:12053"

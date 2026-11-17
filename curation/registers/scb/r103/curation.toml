@@ -3072,3 +3072,51 @@ kind = "set"
 subject = "studiemedel-erhallet: var:kalenderar"
 fields.row_key = true
 evidence = "Row key: kalenderar (Ar) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-barn"
+fields = { "description" = "Antal barn i en viss åldersgrupp som tillhör personens hushåll eller är folkbokförda hos personen. Åldersgrupperna är 0–3, 4–10, 16–17, under 16 och 0–17 år." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna räknar barn i olika åldersgrupper; basen (hushåll respektive folkbokförda hos personen) varierar något mellan texterna.\ncatalog:variable_text:48605:10592:10957\ncatalog:variable_text:48606:10592:10957\ncatalog:variable_text:48609:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:avklarade-undervisningstimmar"
+fields = { "description" = "Antal lärarledda undervisningstimmar som eleven eller kursdeltagaren har genomfört, för höstterminen respektive vårterminen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma text; de skiljer sig åt i termin.\ncatalog:variable_text:48617:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrarnas-utbildningsniva"
+fields = { "description" = "Föräldrarnas utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN), dvs. utbildningen hos den förälder som har högsta nivå. Finns med och utan adoptivföräldrar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla texter definierar nivån som den förälders som har högst utbildning; varianterna skiljer sig åt i om adoptivföräldrar ingår.\ncatalog:variable_text:48739:10592:10957\ncatalog:variable_text:48741:10592:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:institutionell-sektor"
+fields = { "description" = "Sektortillhörighet för en enhet, antingen som institutionell sektor eller i grov indelning som privat respektive offentlig sektor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna avser sektortillhörighet i olika detaljnivå; gemensamt är bara sektorbegreppet.\ncatalog:variable_text:48641:10227:10592\ncatalog:variable_text:48652:11323:12784\ncatalog:variable_text:48690:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "set:kurstyp-folkhogskola"
+fields = { "description" = "Den kurstyp i folkhögskolan som kursen tillhör, för höstterminen respektive vårterminen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma text; de skiljer sig åt i termin.\ncatalog:variable_text:48661:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:loneinkomst"
+fields = { "description" = "Personens löneinkomst under året: summerad kontant bruttolön från anställning, i vissa varianter med semesterersättning, provision m.m." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna avser olika avgränsningar av årets lön från anställning.\ncatalog:variable_text:48613:17897:18628\ncatalog:variable_text:48660:11688:12418\ncatalog:variable_text:48665:12053:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:studiemedelslan"
+fields = { "description" = "Lånedelen av studiemedel. Variablerna anger utbetalt lån per kalenderhalvår eller höstterminen respektive beviljat lånebelopp för studierna." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar avser lånedelen av studiemedel; de skiljer sig åt i utbetalt eller beviljat belopp och period.\ncatalog:variable_text:48715:9131:9496\ncatalog:variable_text:48716:11323:20089\ncatalog:variable_text:48718:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:studiernas-niva"
+fields = { "description" = "Nivån på personens studier: vilken utbildning personen har fått studiemedel för, nivån på studierna i vuxenutbildning inom Komvux, SSV eller CFL per termin och nivån enligt ISCED." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna beskriver nivån på studierna ur olika perspektiv; den lagrade texten för ISCED-variabeln behålls.\ncatalog:variable_text:48674:11323:20089\ncatalog:variable_text:48675:11323:11688\ncatalog:variable_text:48727:11323:11688"

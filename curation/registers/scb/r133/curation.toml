@@ -558,3 +558,21 @@ kind = "set"
 subject = "arbetsstalle-manad: var:redman"
 fields.row_key = true
 evidence = "Row key: redman (RedMan) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "description" = "Antal anställda, dels på arbetsstället enligt FDB:s definition, dels på företaget (den juridiska enheten)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTvå medlemmar anger antal anställda på arbetsstället enligt FDB, en anger antal på företaget.\ncatalog:variable_text:48572:10592:13514\ncatalog:variable_text:48574:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:mervardesskatt"
+fields = { "description" = "Mervärdesskatt (moms) på företags arbetsställen: utgående moms, totalt och per skattesats (6, 12 och 25 procent), samt avdragsgill ingående moms. Företagets uppgifter har fördelats ut på arbetsställena utifrån arbetsställets bransch och antal anställda." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är momsbelopp och har samma fördelning till arbetsställen.\ncatalog:variable_text:48579:8766:20454\ncatalog:variable_text:48596:10227:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:omsattning"
+fields = { "description" = "Omsättning på företags arbetsställen enligt momsdeklarationer, uppdelad på bland annat inrikes omsättning, momsfri omsättning och export, med export till länder inom respektive utanför EU. Företagets uppgifter har fördelats ut på arbetsställena utifrån arbetsställets bransch och antal anställda." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är omsättningsslag från momsuppgifter och har samma fördelning till arbetsställen; uppdelningen framgår av etiketterna.\ncatalog:variable_text:48582:10227:20454\ncatalog:variable_text:48584:8766:20454\ncatalog:variable_text:48586:1826:20454\ncatalog:variable_text:48590:8766:20454\ncatalog:variable_text:48593:10592:20454"

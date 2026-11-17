@@ -2017,3 +2017,39 @@ kind = "set"
 subject = "lss-utjamning: namn where key = 'v446'"
 fields = { "variable" = "kommunnamn-namn" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v446), never delivered together in one table, so they are one variable renamed between releases: Namn 2007-01-01..2023-12-31; namn 2015-01-01..2017-12-31; Kommunnamn 2008-01-01..2014-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:beraknad-halso-och-sjukvardskostnad"
+fields = { "description" = "Länets beräknade kostnad för hälso- och sjukvård, som utgör del av standardkostnaden för hälso- och sjukvård. Variablerna avser kostnaden för vårdtunga personer, för personer med HIV, för övriga invånare och sammantaget." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla texter anger att kostnaden utgör del av standardkostnaden för hälso- och sjukvård; medlemmarna avser olika delar.\ncatalog:variable_text:41462:13514:16436\ncatalog:variable_text:41479:13514:16071\ncatalog:variable_text:41480:16071:18262\ncatalog:variable_text:41481:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:gymnasieprogram"
+fields = { "description" = "Variabler per gymnasieprogram enligt Skolverkets riksprislista. Varje variabel avser ett av programmen, till exempel Ekonomiprogrammet eller Teknikprogrammet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har identisk text och skiljer sig bara åt i vilket program som avses; texterna säger inte vad som mäts.\ncatalog:variable_text:41442:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Kommun enligt den officiella regionala indelningen i kommuner, som kod och som kommunens namn i klartext." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar avser regional indelning i kommuner; de skiljer sig åt i kod respektive namn.\ncatalog:variable_text:41475:18262:20819\ncatalog:variable_text:41477:13514:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:kommunalekonomiskt-utjamningsutfall"
+fields = { "description" = "Utfallet av den kommunalekonomiska utjämningen, som summan av utfallet från de delsystem som ingår (inkomstutjämning, kostnadsutjämning, strukturbidrag och regleringspost). Anges i kronor per invånare och som belopp i kronor, dvs. kronor per invånare multiplicerat med folkmängden den 1 november året före utjämningsåret. Finns för kommuner och för regioner." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla texter beskriver utfallet som en summa av utjämningens delar, per invånare eller som belopp.\ncatalog:variable_text:41525:19358:19723\ncatalog:variable_text:41526:19358:19723\ncatalog:variable_text:41527:13514:18262\ncatalog:variable_text:41528:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:lss-utjamningsbidrag-och-avgift"
+fields = { "description" = "Kommunens bidrag från eller avgift till LSS-utjämningen. Per invånare beräknas det som skillnaden mellan kommunens slutliga standardkostnad i kronor per invånare och motsvarande vägda riksmedelvärde för utjämningsåret. Som belopp i kronor är det kronor per invånare multiplicerat med folkmängden den 1 november året före utjämningsåret. Variablerna avser bidrag, avgift eller båda." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna beskriver bidrag och avgift i LSS-utjämningen, i kronor per invånare eller som belopp; den lagrade texten behålls eftersom den särskilt beskriver kolumnstrukturen.\ncatalog:variable_text:41521:19723:20819\ncatalog:variable_text:41490:13879:16436\ncatalog:variable_text:41491:13879:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:tillagg-avdrag-for-institutionsboende-i-glesbygd"
+fields = { "description" = "Tillägg eller avdrag för institutionsboende i glesbygd, i kronor per invånare. Variablerna avser beräkning efter landareal respektive tätortsgrad." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma text; de skiljer sig åt i underlag (landareal respektive tätortsgrad).\ncatalog:variable_text:41484:16071:18262"

@@ -4574,3 +4574,21 @@ kind = "set"
 subject = "var:utbytesstudier-utbytstud"
 fields = { "label" = "Utbytesstudier (Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1993 års studieordning)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1993 års studieordning\"."
+
+[[statement]]
+kind = "set"
+subject = "set:forsorjningsomfattning"
+fields = { "description" = "Doktorandens försörjning i ett ämne, som försörjningsprocent och grupperad som försörjningsgrad. Doktorandens försörjning i ett ämne kan anges med flera försörjningstyper under ett kalenderhalvår." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna avser doktorandens försörjning i ett ämne och delar noteringen om flera försörjningstyper.\ncatalog:variable_text:33764:730:20089\ncatalog:variable_text:33766:730:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:imputationsmarkering"
+fields = { "description" = "Anger om värdet på en annan variabel i registret, till exempel anställningsform, forskningsämne eller lärosäte, är imputerat, dvs. beräknat." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är imputeringsmarkeringar; de skiljer sig åt i vilken variabel de gäller.\ncatalog:variable_text:33673:17532:19723\ncatalog:variable_text:33793:9496:9862\ncatalog:variable_text:33794:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:programmets-utbildningsinriktning"
+fields = { "description" = "Inriktning för ett utbildningsprogram, som högskolans egen programinriktningskod (för högskolor som har Ladok) eller som SUN-inriktning på 3-siffernivå (SUN2000 respektive SUN2020)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna avser programmets inriktning i olika klassifikationer; den lagrade texten behålls eftersom den inte motsägs.\ncatalog:variable_text:33798:12965:13149\ncatalog:variable_text:33863:8401:20089"

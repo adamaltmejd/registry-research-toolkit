@@ -1811,3 +1811,39 @@ kind = "set"
 subject = "fortroendevalda-i-regioner-landsting: Positionstext"
 fields = { "variable" = "positionstext" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v17647), never delivered together in one table, so they are one variable renamed between releases: pos 2007-01-01..2007-12-31; Position__text 2011-01-01..2011-12-31; Positionstext 2015-01-01..2015-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:disponibel-inkomst"
+fields = { "description" = "Beräknad disponibel inkomst, för personen eller för familjen; för familjen finns den även enligt 2004 års definition. För familjen avses summan av alla inkomster och positiva transfereringar (t.ex. barn-, social- och bostadsbidrag) minus slutlig skatt." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna avser disponibel inkomst; familjevarianterna och 2004 års definition framgår av etiketterna.\ncatalog:variable_text:20667:14975:15340\ncatalog:variable_text:20668:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:forekomst-av-arbetsloshetsersattning"
+fields = { "description" = "Anger om personen har erhållit ersättning från arbetslöshetskassa under året." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra medlemmar har identisk text; de skiljer sig åt i variantbeteckning.\ncatalog:variable_text:20660:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:kommungrupp"
+fields = { "description" = "Kommungruppsindelning enligt Sveriges Kommuner och Regioner: indelning av kommuner i nio grupper efter strukturella egenskaper som bland annat befolkningsstorlek, pendlingsmönster och näringslivsstruktur. Finns som kod och som namn." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma text; de skiljer sig åt i version och i kod respektive namn.\ncatalog:variable_text:20719:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:medborgarskapstidpunkt"
+fields = { "description" = "Tidpunkten för personens medborgarskap, antingen som datum för det aktuella prioriterade medborgarskapet eller som år för svenskt medborgarskap." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna anger tidpunkt för medborgarskap, som datum eller år.\ncatalog:variable_text:20666:13514:13879\ncatalog:variable_text:20696:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:senaste-invandringstidpunkt"
+fields = { "description" = "Tidpunkten för personens senaste invandring till Sverige, som datum eller som år." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna anger tidpunkt för senaste invandring, som datum eller år.\ncatalog:variable_text:20665:12053:12418\ncatalog:variable_text:20716:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsattningsstatus-i-november"
+fields = { "description" = "Klassificering av skattad sysselsättningsstatus (förvärvsarbete) under november. Som förvärvsarbete räknas inkomstbringande arbete under i genomsnitt en timme per vecka under november. Finns enligt 1997 och 2001 års definition." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma text; de skiljer sig åt i definition.\ncatalog:variable_text:20709:12053:12418"

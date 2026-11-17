@@ -6325,12 +6325,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 
 [[statement]]
 kind = "set"
-subject = "var:kommunala-bolag-under-moderbolag"
-fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382635"
-
-[[statement]]
-kind = "set"
 subject = "var:polsekrant"
 fields = { "description" = "Antal anställda politiska sekreterare." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:383094"
@@ -6352,24 +6346,6 @@ kind = "set"
 subject = "var:privvardcant"
 fields = { "description" = "Antal vårdcentraler i privat regi som landstinget har vårdavtal med. Räknar vårdgivare." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382951\ncatalog:occurrence:383014\n\nIdentity review: SCB 2007 questionnaire, lokal-demokrati/text/ba091a4fe38bbdf8f41180869c8c98cc380ee0f9a3762772e0f222d0afda2f34.json, page 20, questions 10-12: Hur många vårdcentraler?; rel070-base/reg_meta.db 2003 and 2008 privvardcant occurrences."
-
-[[statement]]
-kind = "set"
-subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-fr38"
-fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382736"
-
-[[statement]]
-kind = "set"
-subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-fr40"
-fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382860"
-
-[[statement]]
-kind = "set"
-subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-samlbolag"
-fields = { "description" = "Samlat kommunens eller landstingets bolag under ett moderbolag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln omfattar både kommuner och regioner.\ncatalog:occurrence:382582\ncatalog:variable_text:38842:15340:15706"
 
 [[statement]]
 kind = "set"
@@ -11134,3 +11110,159 @@ kind = "set"
 subject = "regioner: VARDAVTALPRIV"
 fields = { "variable" = "vardavtalpriv" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28608) in one table, renamed between survey rounds and never delivered together, so they are one variable: PRIVSJUKH 2003-01-01..2008-12-31; VARDAVTALPRIV 2012-01-01..2012-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:bolag-under-moderbolag"
+fields = { "description" = "Om kommunens eller landstingets (regionens) bolag har samlats under ett moderbolag." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition; kommuner, regioner eller båda skiljer dem åt, och det visar etiketten och facetten.\ncatalog:variable_text:45806:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:allmanhetens-fragestund"
+fields = { "description" = "Om allmänheten har möjlighet att ställa frågor till fullmäktige vid en allmänhetens frågestund." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre varianter av samma fråga för kommuner, regioner eller båda; ordagrant samma definition.\ncatalog:variable_text:45560:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:andra-organ-under-fullmaktige"
+fields = { "description" = "Om det finns andra organ direkt under fullmäktige än nämnder och styrelser, till exempel utskott eller beredningar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga i både nyare och äldre formulering; skiljer sig bara i kommuner eller regioner.\ncatalog:variable_text:45563:18262:18628\ncatalog:variable_text:45894:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:ansvar-for-fortroendevaldas-trygghet"
+fields = { "description" = "Om det finns ett beslut om utökat ansvar i kommunen eller regionen för de förtroendevalda inom ramen för deras politiska uppdrag. Utökat ansvar innebär att kommunen eller regionen har tydliggjort sitt ansvar för de förtroendevaldas arbetsmiljö och trygghet i uppdraget." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre varianter av samma fråga med identisk definition.\ncatalog:variable_text:45671:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:arvodestyper-for-fortroendevalda"
+fields = { "description" = "Vilka typer av arvode som utgår till förtroendevalda som inte har uppdrag på hel- eller deltid (deltid motsvarar minst 40 procent av en heltidstjänst). Varje variabel anger om en viss arvodestyp utgår: sammanträdesarvode, månadsarvode, inläsningsarvode, ersättning för förlorad arbetsförtjänst, annat arvode eller inget annat arvode. Variablerna finns för kommuner och för regioner." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar den inledande definitionen; arvodestypen och kommun eller region framgår av etikett och facett.\ncatalog:variable_text:45565:18262:18628\ncatalog:variable_text:45747:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:beslut-om-foraldraledighet"
+fields = { "description" = "Om fullmäktige har fattat beslut om att hel- eller deltidsarvoderade förtroendevalda har rätt till föräldraledighet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTvå varianter, kommuner och regioner, med identisk definition.\ncatalog:variable_text:45585:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:beslut-om-medborgardialoger"
+fields = { "description" = "Om kommunen eller regionen har tagit beslut om arbete med medborgardialoger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTvå varianter, kommuner och regioner, med identisk definition.\ncatalog:variable_text:45587:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:digitalt-diarie-och-arendesystem-pa-webbplats"
+fields = { "description" = "Om allmänheten kan ta del av organisationens digitala diarie- och ärendesystem via dess webbplats." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar beskriver organisationens webbplats där allmänheten kan ta del av det digitala diarie- och ärendesystemet.\ncatalog:variable_text:46062:16801:17167\ncatalog:variable_text:46074:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:funktion-for-hot-hat-och-vald-mot-fortroendevalda"
+fields = { "description" = "Om det finns en utpekad funktion i kommunen eller regionen som handhar hot, hat och våld mot förtroendevalda. Utpekad funktion innebär att kommunen eller regionen har tydliggjort för de förtroendevalda var de ska vända sig för stöd i frågor som rör hot, hat och våld." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre varianter med identisk definition.\ncatalog:variable_text:45770:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:ideburet-offentligt-partnerskap"
+fields = { "description" = "Om kommunen eller landstinget (regionen) deltar i något idéburet offentligt partnerskap (IOP) med ideella organisationer avseende en specifik verksamhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTvå varianter, kommuner och regioner, med identisk definition.\ncatalog:variable_text:45620:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:information-om-politiskt-styre-pa-webbplats"
+fields = { "description" = "Om allmänheten kan ta del av vilka partier som ingår i det politiska styret via organisationens webbplats." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna beskriver organisationens webbplats där allmänheten kan se vilka partier som ingår i det politiska styret.\ncatalog:variable_text:46079:16801:17167\ncatalog:variable_text:46080:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:kommunala-foreskrifter-pa-webbplats"
+fields = { "description" = "Om allmänheten kan ta del av organisationens (kommunens eller regionens) föreskrifter via webbplatsen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar beskriver organisationens webbplats där allmänheten kan ta del av föreskrifter.\ncatalog:variable_text:46083:16801:17167\ncatalog:variable_text:46085:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:medborgardialog-via-webbplats"
+fields = { "description" = "Om det i samtliga medborgardialoger var möjligt att delta via webbplatsen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTvå varianter, kommuner och regioner, med identisk definition.\ncatalog:variable_text:45618:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:medskapande-i-andra-aktorers-verksamhet"
+fields = { "description" = "Förekomst av utvecklade former av brukarmedverkan (medskapande) i andra aktörers verksamhet, till exempel sätt att systematiskt ta tillvara enskilda brukares erfarenhetskunskap, brukare som genomför utvärderingar eller revisioner av verksamhet och brukare som organiserat ger stöd till andra brukare. Variablerna avser olika verksamhetsområden: äldreomsorg, förskola, funktionsnedsättning, grundskola, gymnasieskola, individ- och familjeomsorg och annat område." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma grundtext; verksamhetsområdet skiljer dem åt. Exemplen hämtas från den förklarande texten för individ- och familjeomsorg.\ncatalog:variable_text:45863:15340:15706\ncatalog:variable_text:45869:15340:15706\ncatalog:variable_text:45864:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:medskapande-i-kommunens-verksamhet"
+fields = { "description" = "Förekomst av utvecklade former av brukarmedverkan (medskapande) i kommunens verksamhet, till exempel sätt att systematiskt ta tillvara enskilda brukares erfarenhetskunskap, brukare som genomför utvärderingar eller revisioner av verksamhet och brukare som organiserat ger stöd till andra brukare. Variablerna avser olika verksamhetsområden: äldreomsorg, förskola, funktionsnedsättning, grundskola, gymnasieskola, individ- och familjeomsorg och annat område." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma grundtext; verksamhetsområdet skiljer dem åt. Exemplen hämtas från den förklarande texten för individ- och familjeomsorg.\ncatalog:variable_text:45854:15340:15706\ncatalog:variable_text:45861:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:mojlighet-att-lamna-e-forslag"
+fields = { "description" = "Allmänhetens möjligheter att lämna in e-förslag till kommunen eller regionen: om möjligheten finns (ja eller nej, eller med införandetidpunkt) och om den har tagits bort eller aldrig funnits." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller möjligheten att lämna e-förslag; etiketterna skiljer ja/nej, införandetidpunkt och borttagen möjlighet.\ncatalog:variable_text:45870:19723:20089\ncatalog:variable_text:45589:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:moteshandlingar-pa-webbplats"
+fields = { "description" = "Om allmänheten kan ta del av handlingar inför kommande sammanträden via organisationens webbplats." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar beskriver organisationens webbplats där allmänheten kan ta del av handlingar över kommande sammanträden.\ncatalog:variable_text:46064:16801:17167\ncatalog:variable_text:46090:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:offentlig-privat-samverkan"
+fields = { "description" = "Om kommunen eller regionen (landstinget) deltar i offentlig-privat samverkan med det privata näringslivet. Före 2020 avsåg frågan offentligt-privat partnerskap (OPP) för samverkan kring utvecklingsfrågor tillsammans med näringsliv och organisationer. 2020 avsåg den offentlig-privat samverkan (OPS), samarbetsformer mellan det offentliga och det privata näringslivet där riskerna fördelas på ett förutbestämt sätt." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller deltagande i offentlig-privat samverkan; definitionen byter formulering mellan OPP och OPS.\ncatalog:variable_text:45621:18262:18628\ncatalog:variable_text:45622:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:politiska-sekreterare"
+fields = { "description" = "Förekomst av anställda politiska sekreterare i kommunen eller regionen, och i vissa variabler antalet anställda." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller anställda politiska sekreterare; vissa anger förekomst, andra antal.\ncatalog:variable_text:45568:19723:20089\ncatalog:variable_text:45673:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:revisionsordforandens-majoritetstillhorighet"
+fields = { "description" = "Om revisionens ordförande har utsetts från fullmäktiges majoritet eller minoritet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har identisk definition; svarsalternativen kan skilja i formulering men frågan är densamma.\ncatalog:variable_text:45991:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:revisorer-med-undantag-fran-granskning"
+fields = { "description" = "Om någon av revisorerna i kommunen eller regionen är vald med undantag för granskning av en eller flera nämnder. En förtroendevald revisor kan väljas med undantag, det vill säga inte ha uppdraget att granska en eller flera nämnder. Det kan göras när det finns en redovisningsskyldighet gentemot nämnden, till exempel att revisorn har en närstående i nämnden eller förvaltningen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre varianter med identisk definition.\ncatalog:variable_text:45997:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:stod-for-e-forslag"
+fields = { "description" = "Hur många medborgare som behöver uttrycka stöd för ett e-förslag för att det ska hanteras i fullmäktige, nämnd eller annat politiskt organ." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre varianter med identisk definition.\ncatalog:variable_text:46024:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:strategi-for-demokratiutveckling"
+fields = { "description" = "Om det finns en strategi för arbete med demokratifrågor och demokratiutveckling." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma fråga för kommuner, regioner eller båda.\ncatalog:variable_text:46028:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:strategi-for-samarbete-om-verksamhetsutveckling"
+fields = { "description" = "Om kommunen eller regionen har en strategi för hur medborgare, brukare och medarbetare systematiskt kan utveckla verksamheter tillsammans, och inom vilka verksamheter strategin gäller: förskola, grundskola, gymnasieskola, individ- och familjeomsorg, omsorg om äldre, omsorg om personer med funktionsnedsättning, hälso- och sjukvård (regioner) eller annan verksamhet. Det finns också variabler för att ingen strategi finns och för fritextsvar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar frågan om strategi för systematiskt samarbete; verksamhetsområde eller svarstyp skiljer dem åt.\ncatalog:variable_text:45730:16801:17167\ncatalog:variable_text:45981:19723:20089\ncatalog:variable_text:45988:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:vardavtal-med-privata-vardcentraler"
+fields = { "description" = "Om landstinget eller kommunen har vårdavtal med någon vårdcentral som bedrivs i privat regi. Variablerna anger förekomst eller antal, totalt eller uppdelat på bolagiserade och ideella leverantörer." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar bygger på samma grundtext om vårdavtal med privat vårdcentral; förekomst, antal och leverantörstyp skiljer dem åt.\ncatalog:variable_text:45941:12053:12418\ncatalog:variable_text:45942:12053:12418\ncatalog:variable_text:46056:15340:15706\ncatalog:variable_text:46058:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:ytterligare-vardavtalssystem"
+fields = { "description" = "Om landstinget eller kommunen har ytterligare vårdavtal inom hälso- och sjukvården, uppdelat på bolagiserade och ideella leverantörer." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma grundtext; leverantörstyp skiljer dem åt.\ncatalog:variable_text:45907:15340:15706"

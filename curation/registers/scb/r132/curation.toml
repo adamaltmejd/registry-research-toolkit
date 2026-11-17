@@ -1375,3 +1375,27 @@ kind = "set"
 subject = "industrins-energianvandning: var:cfar-nummer-arbetsstalle"
 fields.row_key = true
 evidence = "Row key: cfar-nummer and cfar-nummer-arbetsstalle identify a row: rows are workplace energy use per fuel, keyed on the workplace CFAR number of each era; organisation and control numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "description" = "Antalet anställda på arbetsstället enligt företagsregistret vid urvalsdragningen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra medlemmar har samma definition; de är olika kolumnnamn för samma uppgift.\ncatalog:variable_text:39439:12418:13149\ncatalog:variable_text:39441:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:branslets-varmevarde"
+fields = { "description" = "Värmevärden för olika bränsleslag. Värmevärdet är en faktor som används för att räkna fram den energi som finns att utnyttja i olika bränslen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger bränsleslagens värmevärden; faktorförklaringen finns i de senare texterna och definierar begreppet.\ncatalog:variable_text:39459:12784:13149\ncatalog:variable_text:39465:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:elanvandning"
+fields = { "description" = "Kvantiteten elanvändning i megawattimmar (MWh), fördelad på olika användningsområden. Omfattar inköpt el och el från företagets egna elverk; saknas bokförda värden från egna anläggningar ska de beräknas." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk text i alla år.\ncatalog:variable_text:39469:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "set:inkopt-kvantitet"
+fields = { "description" = "Inköpt kvantitet avser kvantiteter som fakturerats av företag eller arbetsställen, även sådana inom det egna företaget eller den egna koncernen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:39481:12418:20089"
