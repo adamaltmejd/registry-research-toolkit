@@ -1001,3 +1001,9 @@ kind = "set"
 subject = "var:amneskod-aemn-kod-pg"
 fields = { "label" = "Ämneskod i programgymnasiet" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label.\n\nAEMN_KOD_PG, and AEMN_KOD in Nya kurser i programgymnasiet (14GX), are codes of Ämnen i programgymnasiet (14FX); AEMN_KOD in the other tables are codes of Ämnen (14XX).\nÄmneskod: Ämneskod. Se tabell Ämnen i programgymnasiet (14FX).\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:amneskod-aemn-kod-pg"
+fields = { "description" = "Kod för ämne i programgymnasiet. I Nya kurser i programgymnasiet (2002–2005) täcker kodtabellen Ämnen i programgymnasiet (14FX) långt ifrån alla koder som används." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\nAnmärkningen om den främmande nyckeln står bara för AEMN_KOD i Nya kurser i programgymnasiet (14GX), 2002–2005.\ncatalog:variable_text:8866:8401:11688\ncatalog:variable_text:8866:11688:13149"

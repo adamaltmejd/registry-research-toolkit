@@ -8963,3 +8963,21 @@ kind = "set"
 subject = "arpost: ATG_UPA_UP"
 fields = { "variable" = "utlandsk-examenspoang-atg-upa-up" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Utländsk examenspoäng. Columns: ATG_ATGUP 1986-07-01..1991-07-01; ATG_ATG_UP 1987-07-01..1989-07-01; ATG_UPA_UP 1991-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "set:betygsgrupper"
+fields = { "description" = "Sökandens betyg, i upp till 36 betygsgrupper per anmälan (position 1–36). Varje betygsgrupp har fyra uppgifter: betygsvärde (1–5), årskurs, ämne som kod och ämnets studieomfattning. Årskurs anges 1–3 till och med VT1987 och 1–4 från HT1987; HT1986–VT1987 förekommer även 4." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nPostbeskrivningen delar BETGR i BETYG, AK och AMNE (kod och studieomfattning), upprepad 36 gånger; årskursens kodintervall byter HT1987. Hänvisningen till kodfil och tjänsteanteckning tas inte med.\ncatalog:variable_text:8325:2738:8217\ncatalog:variable_text:8426:2738:6025\ncatalog:variable_text:8426:6025:6390\ncatalog:variable_text:8426:6390:8217\ncatalog:variable_text:8526:2738:8217\ncatalog:variable_text:8527:2738:3103\ncatalog:variable_text:8527:3103:8217"
+
+[[statement]]
+kind = "set"
+subject = "set:behorighetsgivande-bakgrund"
+fields = { "description" = "Sökandens behörighetsgivande bakgrund, i fyra positioner per anmälan och fem HT1991–VT1992. Varje position anger år, studiekod i två delar och en markering för kvotgrupp eller urvalsgrupp." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nPostbeskrivningen delar BEH i BEHAR, BEHS1, BEHS2 och BEHKV, upprepad fyra gånger och HT1991–VT1992 fem gånger. Kodlistorna för studiekod del 2 och markeringen hör till medlemmarna.\ncatalog:variable_text:8493:2738:5844\ncatalog:variable_text:8494:3103:3287\ncatalog:variable_text:8499:2738:7121\ncatalog:variable_text:8499:7121:7851\ncatalog:variable_text:8499:7851:8217\ncatalog:variable_text:8688:2738:2922\ncatalog:variable_text:8688:2922:3468\ncatalog:variable_text:8688:3468:4564\ncatalog:variable_text:8688:4564:6390\ncatalog:variable_text:8689:4564:6025\ncatalog:variable_text:8823:7121:7851\ncatalog:variable_text:8823:7851:8217"
+
+[[statement]]
+kind = "set"
+subject = "var:arskurs-merit-ak"
+fields = { "description" = "Årskurs för ämnesmeriten, angiven 1–3 till och med VT1987 och 1–4 från HT1987; HT1986–VT1987 förekommer även 4." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\nAK (HT1977–VT1987) och MERIT_AK (HT1987–VT1992) är samma kolumn; kodintervallet byter HT1987. Hänvisningen till tjänsteanteckning tas inte med.\ncatalog:variable_text:8462:2738:6025\ncatalog:variable_text:8462:6025:6390\ncatalog:variable_text:8462:6390:7121\ncatalog:variable_text:8462:7121:7486\ncatalog:variable_text:8462:7486:7851\ncatalog:variable_text:8462:7851:8217"
