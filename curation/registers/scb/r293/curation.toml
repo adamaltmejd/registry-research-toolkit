@@ -1195,3 +1195,9 @@ kind = "set"
 subject = "var:budgetitem-name"
 fields = { "description" = "Namnet på anslaget; från 2019 hämtat från budgetpropositionen." }
 evidence = "The variables of set:anslagsnamn were merged into this one, so the set is removed and its curated description moves here. Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger namn på anslag; källan budgetpropositionen står bara i OP 2019–2022.\ncatalog:variable_text:51349:14610:14975\ncatalog:variable_text:51349:17897:18628\ncatalog:variable_text:51349:18628:18993\ncatalog:variable_text:51353:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:fou-anslag-ej-fordelade-pa-forskningsamne"
+fields = { "description" = "FoU-medel inom det socioekonomiska målet (syftet/ändamålet) allmän vetenskaplig utveckling som inte fördelats på forskningsämne." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nDet gemensamma är allmän vetenskaplig utveckling och att medlen inte är fördelade på forskningsämne; finansieringskälla och skattningsmetod gäller bara nabs-variablerna och behålls i deras lagrade texter.\ncatalog:variable_text:51737:18628:18993\ncatalog:variable_text:51768:13514:13879"

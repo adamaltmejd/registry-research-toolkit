@@ -2485,3 +2485,9 @@ kind = "set"
 subject = "gymnasieintyg: var:ar"
 fields.row_key = true
 evidence = "Row key: ar (Ar) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:poangomfattning"
+fields = { "description" = "Avklarade poäng på kurser inom Komvux från och med höstterminen 1988. Flera av variablerna delar upp poängen på allmänna/studieförberedande och yrkesinriktade kurser, andra kategoriserar poängen efter omfattning eller huvudsaklig kursinriktning. Några variabler anger poängen enligt nuvarande respektive tidigare beräkning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller avklarade Komvuxpoäng från HT 1988; skillnaderna (kurstyp, kategorisering, beräkningssätt) framgår av etiketterna. De lagrade kursinriktningstexterna beskriver klassificering efter andel yrkesinriktade kurser och täcks inte av mängdbeskrivningen, så de behålls.\ncatalog:variable_text:60437:6756:11323\ncatalog:variable_text:60438:6756:19905\ncatalog:variable_text:60481:6756:20089\ncatalog:variable_text:60482:6756:20089\ncatalog:variable_text:60524:6756:20089"

@@ -2221,18 +2221,6 @@ evidence = "The catalog labels and definitions explicitly concern language or re
 
 [[statement]]
 kind = "set"
-subject = "var:antal-barn-i-hushallet-enkatfraga-har-du-hemmaboende-barn-f5"
-fields = { "description" = "Om personen har hemmaboende barn i Sverige i åldern 0–18 år." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och svarskoderna gäller förekomst, inte antal.\ncatalog:valueset:1610\ncatalog:variable_text:54747:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-barn-i-hushallet-enkatfraga-har-du-hemmaboende-barn-f7"
-fields = { "description" = "Om personen har hemmaboende barn i Sverige i åldern 0–18 år." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan och svarskoderna gäller förekomst, inte antal.\ncatalog:valueset:1610\ncatalog:variable_text:54748:15706:16071"
-
-[[statement]]
-kind = "set"
 subject = "var:forsorjningssituation-doktorandanstallning-f10-02"
 fields = { "description" = "Beskriver försörjning genom annan anställning inom högskolan under forskarstudierna. Uppgiften avser vårterminen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser en annan anställning inom högskolan.\ncatalog:occurrence:511999\ncatalog:valueset:10827\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:511999:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire reference year; retain the term and variable meaning. Evidence: rel070-base/reg_meta.db occurrences 511999."
@@ -2338,90 +2326,6 @@ kind = "set"
 subject = "var:forsorjningssituation-doktorandanstallning-f7-10"
 fields = { "description" = "Beskriver försörjning genom annan finansiering under forskarstudierna. Uppgiften avser vårterminen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger doktorandanställning, men svaret avser annan finansiering.\ncatalog:occurrence:512117\ncatalog:valueset:2877\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512117:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire reference year; retain the term and variable meaning. Evidence: rel070-base/reg_meta.db occurrences 512117."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f15-01"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser lärarnas stöd och stimulans på grundnivå eller avancerad nivå för att gå vidare till forskarnivå i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54833:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512024:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f15-02"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser stöd och stimulans från andra än lärare på grundnivå eller avancerad nivå för att gå vidare till forskarnivå i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54834:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512025:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f15-03"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser förhandsinformationen om utbildning på forskarnivå i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54835:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512026:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f15-04"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser lärosätets introduktion för nyantagna till forskarutbildningen i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54836:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512027:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f15-05"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser information om rättigheter och skyldigheter som forskarstuderande i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54837:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512028:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f15-06"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser tydligheten i antagningskraven till forskarutbildningen i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54838:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512029:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f21-01"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser lärarnas stöd och stimulans på grundnivå eller avancerad nivå för att gå vidare till forskarnivå i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54839:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512061:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f21-02"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser stöd och stimulans från andra än lärare på grundnivå eller avancerad nivå för att gå vidare till forskarnivå i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54840:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512062:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f21-03"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser förhandsinformationen om utbildning på forskarnivå i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54841:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512063:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f21-04"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser lärosätets introduktion för nyantagna till forskarutbildningen i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54842:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512064:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f21-05"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser information om rättigheter och skyldigheter som forskarstuderande i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54843:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512065:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:nojd-eller-missnojd-f21-06"
-fields = { "description" = "Beskriver om personen är nöjd eller missnöjd med en företeelse eller verksamhet. Bedömningen avser tydligheten i antagningskraven till forskarutbildningen i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen upprepar missnöjd och utelämnar nöjd.\ncatalog:variable_text:54844:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512066:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:tillracklig-inkomstniva-enkatfraga-hur-latt-eller-svart-f8"
-fields = { "description" = "Hur lätt eller svårt personen upplever att få ekonomin att gå ihop. Uppgiften avser vårterminen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan mäter hur lätt ekonomin går ihop, inte inkomstnivån.\ncatalog:variable_text:54859:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512118:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire reference year; retain the term and variable meaning. Evidence: rel070-base/reg_meta.db occurrences 512118."
-
-[[statement]]
-kind = "set"
-subject = "var:tillracklig-inkomstniva-f12"
-fields = { "description" = "Hur lätt eller svårt personen upplever att få ekonomin att gå ihop. Uppgiften avser vårterminen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan mäter hur lätt ekonomin går ihop, inte inkomstnivån.\ncatalog:variable_text:54858:15706:16071\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:512013:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire reference year; retain the term and variable meaning. Evidence: rel070-base/reg_meta.db occurrences 512013."
 
 [[statement]]
 kind = "set"
@@ -2669,3 +2573,21 @@ kind = "set"
 subject = "utlandska-doktorander: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the doctoral student; the survey sequence number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:hemmaboende-barn"
+fields = { "description" = "Om personen har hemmaboende barn i Sverige i åldern 0–18 år." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna ställer samma enkätfråga; beskrivningen följer den lagrade medlemstexten.\ncatalog:variable_text:61930:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:nojdhet-med-forskarutbildningens-start"
+fields = { "description" = "Om personen är nöjd eller missnöjd med olika delar av hur utbildningen på forskarnivå i Sverige började. Varje variabel avser en del: lärarnas stöd och stimulans på grundnivå eller avancerad nivå att gå vidare till forskarnivå, motsvarande stöd och stimulans från andra än lärare, förhandsinformationen om utbildningen, lärosätets introduktion för nyantagna, informationen om rättigheter och skyldigheter som forskarstuderande samt tydligheten i antagningskraven." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma frågestam om nöjdhet; delen framgår av etiketten, och den lagrade texten läggs helt i uppsättningsbeskrivningen.\ncatalog:variable_text:62008:15706:16071\ncatalog:variable_text:62009:15706:16071\ncatalog:variable_text:62010:15706:16071\ncatalog:variable_text:62011:15706:16071\ncatalog:variable_text:62012:15706:16071\ncatalog:variable_text:62013:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:upplevd-ekonomisk-tillracklighet"
+fields = { "description" = "Hur lätt eller svårt personen tycker att det har varit att få ekonomin att gå ihop under vårterminen 2013." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma enkätfråga; den lagrade texten täcks helt av uppsättningsbeskrivningen.\ncatalog:variable_text:62036:15706:16071"

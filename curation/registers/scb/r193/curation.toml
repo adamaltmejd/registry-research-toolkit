@@ -1275,18 +1275,6 @@ fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
 evidence = "private:ev-2121"
 
 
-[[statement]]
-kind = "set"
-subject = "var:skolkommun"
-fields = { "description" = "Skolkommun. Uppgiften avser kommunen där grundskolan ligger." }
-evidence = "private:ev-2122"
-
-
-[[statement]]
-kind = "set"
-subject = "var:skom"
-fields = { "description" = "Skolkommun. Uppgiften avser kommunen där grundskolan ligger." }
-evidence = "private:ev-2123"
 
 
 [[statement]]
@@ -1560,3 +1548,9 @@ kind = "set"
 subject = "individregister: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Regional indelning i kommuner. Variablerna anger en kommun som eleven knyts till: folkbokföringskommunen, kommunen där grundskolan ligger (skolkommun) eller kommunen där fritidshemmet är beläget." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fem variablerna anger en kommun; de skiljer i vilken koppling till eleven. De lagrade skolkommun-texterna täcks av setbeskrivningen plus etiketten.\ncatalog:variable_text:29321:14167:14168\ncatalog:variable_text:29330:14167:14168\ncatalog:variable_text:29331:19280:19281"
