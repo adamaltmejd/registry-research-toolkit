@@ -2581,57 +2581,9 @@ evidence = "r156 defines classification as employed using alternative qualifying
 
 [[statement]]
 kind = "set"
-subject = "var:aldreforsorjningsstod"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till stöd medan variabeln mäter belopp.\ncatalog:variable_text:5681:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:aldreforsorjningsstod-ialdfp"
-fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer vars grundläggande försörjningsbehov inte är tillgodosedda. Det utbetalda beloppet fördelas efter den period som händelsen avser." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till stöd medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5682:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:37972:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:boendetillagg"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltexten beskriver möjlighet att ansöka, medan variabeln mäter belopp.\ncatalog:variable_text:5720:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:boendetillagg-iboentp"
-fields = { "description" = "Utbetalt boendetillägg i kronor till personer som fått tidsbegränsad sjukersättning i maximal tid. Utbetalningen avser en aktivitet som pågick minst en dag under referensmånaden." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltexten beskriver möjlighet att ansöka, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5721:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:37975:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:bostadsersattning"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjlighet till ersättning medan variabeln mäter belopp.\ncatalog:variable_text:5724:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:bostadsersattning-iebostp"
-fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och utöver etableringsersättning får bostadsersättning från Försäkringskassan. Det utbetalda beloppet fördelas efter den period som händelsen avser." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjlighet till ersättning medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:5725:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:37980:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:bstudovr"
 fields = { "description" = "Personen är inskriven i utbildning. Inskrivningen avser grundläggande högskoleutbildning eller kommunal vuxenutbildning inklusive sfi." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar en grammatisk felskrivning utan att ändra betydelsen.\ncatalog:variable_text:5734:18262:19723\ncatalog:variable_text:5734:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:37960:opdef_text; rel070-base/reg_meta.db:occurrence:38375:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:ekonomiskt-bistand"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt. Beloppet fördelas på sökande och medsökande." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5740:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:37420:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:ekonomiskt-bistand-isocbu"
-fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt. Beloppet fördelas på sökande och medsökande." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter ett belopp, medan texten beskriver rätten till bistånd.\ncatalog:variable_text:5741:19723:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:38407:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -2653,42 +2605,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 
 [[statement]]
 kind = "set"
-subject = "var:narstaendepenning"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5814:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:narstaendepenning-tnarp"
-fields = { "description" = "Belopp i närståendepenning till personer som vårdar en svårt sjuk närstående. Utbetalningen avser en aktivitet som pågick minst en dag under referensmånaden." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter belopp, medan texten beskriver rätt till ersättning.\ncatalog:variable_text:5815:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:38023:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:omstallningsstudiestod-tomstbid"
-fields = { "description" = "Den under året summerade inkomsten föranledd av bidragsdelen av omställningsstudiestöd. Studiestöd för vuxna mitt i arbetslivet som vill studera och bredda sin kompetens för att bli mer attraktiv på arbetsmarknaden." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger lån och bidrag, men variabeln omfattar endast bidragsdelen.\ncatalog:variable_text:5818:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:omstallningsstudiestod-tomstbidp"
-fields = { "description" = "Den under året summerade inkomsten föranledd av bidragsdelen av omställningsstudiestöd. Studiestöd för vuxna mitt i arbetslivet som vill studera och bredda sin kompetens för att bli mer attraktiv på arbetsmarknaden." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger lån och bidrag, men variabeln omfattar endast bidragsdelen.\ncatalog:variable_text:5819:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:omvardnadsbidrag"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning. Villkoren omfattar minst sex månaders omvårdnad och tillsyn till följd av funktionsnedsättningen samt att förälder och barn är försäkrade i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5820:18262:20454\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:37448:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:omvardnadsbidrag-tomvardp"
-fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning. Beloppet fördelas efter händelseperioden och villkoren omfattar minst sex månaders omvårdnad och tillsyn samt att förälder och barn är försäkrade i Sverige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter belopp, medan texten beskriver möjligheten att få bidrag.\ncatalog:variable_text:5821:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:38024:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:premiepension"
 fields = { "description" = "Belopp i premiepension." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5830:18262:20454"
@@ -2698,30 +2614,6 @@ kind = "set"
 subject = "var:premiepension-pprepegp"
 fields = { "description" = "Belopp i premiepension. Utbetalningen avser en aktivitet som pågick minst en dag under referensmånaden." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver intjänad pensionsrätt, medan variabeln mäter pensionsbelopp.\ncatalog:variable_text:5831:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:38008:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:rehabiliteringsersattning"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5835:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:rehabiliteringsersattning-trehabp"
-fields = { "description" = "Belopp i rehabiliteringsersättning vid arbetslivsinriktad rehabilitering för att kunna få eller behålla ett arbete. Utbetalningen avser en aktivitet som pågick minst en dag under referensmånaden." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till ersättning, medan variabeln mäter belopp.\ncatalog:variable_text:5836:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:38026:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:vardbidrag"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5871:18262:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:vardbidrag-tvardp"
-fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Utbetalningen avser en aktivitet som pågick minst en dag under referensmånaden." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver möjligheten att få bidrag, medan variabeln mäter belopp.\ncatalog:variable_text:5872:18262:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:38034:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -3845,3 +3737,117 @@ kind = "set"
 subject = "slutliga-manadsuppgifter: var:referensmanad"
 fields.row_key = true
 evidence = "Row key: referensmanad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:aldreforsorjningsstod"
+fields = { "description" = "Utbetalt äldreförsörjningsstöd i kronor till personer som har fyllt 65 år, är bosatta i Sverige och inte har sina grundläggande försörjningsbehov tillgodosedda. Stödet är inkomstprövat och knyter an till reglerna för bostadstillägg och särskilt bostadstillägg." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda varianterna har samma grundtext; den slutliga har dessutom en fördelning efter händelseperiod.\ncatalog:variable_text:13413:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:boendetillagg"
+fields = { "description" = "Utbetalt boendetillägg i kronor till personer som har fått tidsbegränsad sjukersättning (sjukpenning och rehabiliteringspenning) i maximal tid. Boendetillägget ansöks om hos Försäkringskassan." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda varianterna har samma grundtext; den slutliga anger dessutom aktivitetsvillkoret för utbetalningen.\ncatalog:variable_text:13451:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsersattning"
+fields = { "description" = "Utbetald bostadsersättning i kronor till personer som är nya i Sverige och som utöver etableringsersättning får bostadsersättning från Försäkringskassan." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda varianterna har samma grundtext; den slutliga har dessutom en fördelning efter händelseperiod.\ncatalog:variable_text:13455:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:ekonomiskt-bistand"
+fields = { "description" = "Belopp i ekonomiskt bistånd för försörjning och livsföring i övrigt. En individ har rätt till bistånd från socialnämnden om behovet inte kan tillgodoses på annat sätt. Beloppet fördelas på sökande och medsökande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda varianterna har identisk text och identisk lagrad beskrivning.\ncatalog:variable_text:13470:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrapenning"
+fields = { "description" = "Föräldrapenning som betalas ut till föräldrar, dels i samband med barns födelse (även vid adoption av barn under 10 år), dels som tillfällig föräldrapenning för vård av barn under 12 år." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är föräldrapenning vid barns födelse respektive tillfällig vård av barn; de lagrade vab-texterna skiljer sig från födelsevarianterna och behålls.\ncatalog:variable_text:13497:18262:20454\ncatalog:variable_text:13500:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:narstaendepenning"
+fields = { "description" = "Belopp i närståendepenning, ersättning från sjukförsäkringen till den som är hemma och vårdar en svårt sjuk närstående person. Personen har också rätt till ledighet från sin anställning så länge närståendepenning betalas." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda varianterna har samma grundtext; den slutliga anger dessutom aktivitetsvillkoret för utbetalningen.\ncatalog:variable_text:13548:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:omstallningsstudiestod"
+fields = { "description" = "Den under året summerade inkomsten föranledd av omställningsstudiestöd, studiestöd för vuxna mitt i arbetslivet som vill studera och bredda sin kompetens för att bli mer attraktiv på arbetsmarknaden. Variablerna omfattar antingen summan av bidrag och lån eller endast bidragsdelen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla varianter har samma grundtext; de skiljer sig i om lån ingår, vilket etiketterna visar.\ncatalog:variable_text:13550:19358:20089\ncatalog:variable_text:13552:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:omvardnadsbidrag"
+fields = { "description" = "Belopp i omvårdnadsbidrag till förälder till barn med funktionsnedsättning. Villkoren är att barnet har en funktionsnedsättning, att föräldern ger barnet omvårdnad och tillsyn till följd av den i minst sex månader, och att förälder och barn är försäkrade i Sverige." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda varianterna har samma villkorstext; den slutliga har dessutom en fördelning efter händelseperiod.\ncatalog:variable_text:13554:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:rehabiliteringsersattning"
+fields = { "description" = "Belopp i rehabiliteringsersättning till den som deltar i arbetslivsinriktad rehabilitering, det vill säga åtgärder som behövs för att man ska kunna få eller behålla ett arbete." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda varianterna har samma grundtext; den slutliga anger dessutom aktivitetsvillkoret för utbetalningen.\ncatalog:variable_text:13571:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:vardbidrag"
+fields = { "description" = "Belopp i vårdbidrag när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda varianterna har samma grundtext; den slutliga anger dessutom aktivitetsvillkoret för utbetalningen.\ncatalog:variable_text:13602:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:aldreforsorjningsstod-ialdfp"
+fields = { "description" = "Det utbetalda äldreförsörjningsstödet fördelas efter den period som händelsen avser." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:13414:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:boendetillagg-iboentp"
+fields = { "description" = "Utbetalt boendetillägg avser en aktivitet som pågick minst en dag under referensmånaden." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:13452:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsersattning-iebostp"
+fields = { "description" = "Den utbetalda bostadsersättningen fördelas efter den period som händelsen avser." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:13456:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:narstaendepenning-tnarp"
+fields = { "description" = "Utbetald närståendepenning avser en aktivitet som pågick minst en dag under referensmånaden." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:13549:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omstallningsstudiestod-tomstbid"
+fields = { "description" = "Den under året summerade inkomsten föranledd av bidragsdelen av omställningsstudiestöd." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:13552:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:omstallningsstudiestod-tomstbidp"
+fields = { "description" = "Den under året summerade inkomsten föranledd av bidragsdelen av omställningsstudiestöd." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:13553:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omvardnadsbidrag-tomvardp"
+fields = { "description" = "Det utbetalda omvårdnadsbidraget fördelas efter den period som händelsen avser." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:13555:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rehabiliteringsersattning-trehabp"
+fields = { "description" = "Utbetald rehabiliteringsersättning avser en aktivitet som pågick minst en dag under referensmånaden." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:13572:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vardbidrag-tvardp"
+fields = { "description" = "Utbetalt vårdbidrag avser en aktivitet som pågick minst en dag under referensmånaden." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:13603:18262:20089"

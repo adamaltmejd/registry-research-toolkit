@@ -17663,18 +17663,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBesk
 
 [[statement]]
 kind = "set"
-subject = "var:etableringstillagg"
-fields = { "description" = "Utbetalt etableringstillägg till personer som är nya i Sverige och kan få tillägget utöver etableringsersättning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjlighet att få tillägget, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:36536:14975:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:etableringstillagg-utbetalt-belopp-rtb-familj"
-fields = { "description" = "Utbetalt etableringstillägg till personer som är nya i Sverige och kan få tillägget utöver etableringsersättning. Familjen avgränsas enligt RTB den 31 december och samma belopp anges för alla familjemedlemmar." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger möjlighet att få tillägget, medan variabeln mäter utbetalt belopp.\ncatalog:variable_text:36643:16071:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:344705:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:expansionsmedelsskatt-tillgodoraknad"
 fields = { "description" = "Tillgodoräknad expansionsmedelsskatt. Skatten återfås när avsättningen till expansionsmedel återförs till beskattning, samtidigt som beloppet beskattas som inkomst." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans operativa definition anger tillgodoräknad skatt, inte den allmänna skatten.\ncatalog:occurrence:336525\ncatalog:variable_text:36539:9131:10227\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:335934:opdef_text. One variable, one description."
@@ -17777,45 +17765,15 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 
 [[statement]]
 kind = "set"
-subject = "var:tvard"
-fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Uppgiften hämtas från Försäkringskassan eller deklaration." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37233:12784:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:335458:opdef_text; rel070-base/reg_meta.db:occurrence:339924:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove narration about source periods; retain the benefit and actual data inputs. Evidence: rel070-base/reg_meta.db occurrences 335458, 339924."
-
-[[statement]]
-kind = "set"
 subject = "var:underlag-for-hyreshusskatt-med-0-85-procent"
 fields = { "description" = "Underlag för fastighetsskatt på hyreshus med 0,85 procent. Underlaget är taxeringsvärdet för hyreshusenheter med bostäder som beskattas med denna skattesats." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger fastighetsavgift men källans korrigerade etikett och operationalisering avser fastighetsskatt.\ncatalog:variable_text:37268:9496:10592\nregisters/scb/r29/curation.toml:680\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:336023:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove a fixed occurrence-specific value-year cohort; identify the tax base by the named rate rather than a calendar-year interval. Evidence: rel070-base/reg_meta.db occurrences 336023."
 
 [[statement]]
 kind = "set"
-subject = "var:vardb"
-fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37357:3652:8401"
-
-[[statement]]
-kind = "set"
-subject = "var:vardbidrag-kontrolluppgift"
-fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Uppgiften hämtas från kontrolluppgift." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37208:12784:17897\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:335437:opdef_text; rel070-base/reg_meta.db:occurrence:354374:opdef_text; rel070-base/reg_meta.db:occurrence:339899:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. State the measurement rule directly for the variable; silence or less detailed wording in other periods is not a measurement change. Evidence: rel070-base/reg_meta.db occurrences 335437, 354374, 339371, 339899."
-
-[[statement]]
-kind = "set"
-subject = "var:vardbidrag-merkostnadsdel"
-fields = { "description" = "Vårdbidragets merkostnadsdel." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till vårdbidrag, medan variabeln mäter merkostnadsdelen.\ncatalog:variable_text:36704:12053:17897"
-
-[[statement]]
-kind = "set"
 subject = "var:varldsdel"
 fields = { "description" = "Kod för födelselandets världsdel, med Sverige särredovisat." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger att världsdel avser födelselandet och att Sverige särredovisas.\ncatalog:variable_text:37360:11688:13514\ncatalog:variable_text:37360:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:vbbel"
-fields = { "description" = "Utbetalt vårdbidrag för en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet. Ersättning kan lämnas till och med månaden före 16-årsdagen, med belopp efter vårdbehov och merkostnader." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nTexten beskriver rätt till bidrag; variabeln mäter ett belopp.\ncatalog:variable_text:37361:7305:8401\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:350393:opdef_text. One variable, one description.\n\nMaintainer audit follow-up 2026-11-02: Provider opdef supports age limit and amount by care needs/extra costs; source-provenance clause adds no measurement rule and is omitted for consistent style.\nrel070-base/reg_meta.db:occurrence:334943"
 
 [[statement]]
 kind = "set"
@@ -20671,3 +20629,45 @@ kind = "set"
 subject = "tillaggsurval-utrikesfodda-taxeringshushall: INSROR"
 fields = { "variable" = "insror" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v40056), never delivered together in one table, so they are one variable renamed between releases: INRO 1968-01-01..1970-12-31; INSROR 1981-01-01..1990-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:etableringstillagg"
+fields = { "description" = "Utbetalt etableringstillägg, som personer som är nya i Sverige kan få från Försäkringskassan utöver etableringsersättning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är samma tillägg; den ena redovisas för familjen enligt RTB, vilket behålls som egen text.\ncatalog:variable_text:43677:14975:17897\ncatalog:variable_text:43678:16071:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:vardbidrag"
+fields = { "description" = "Vårdbidrag som en förälder kan få när föräldern vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet, totalt och uppdelat på merkostnadsdel och ferievårdbidrag." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller vårdbidrag; källa, delbelopp och period skiljer dem åt. Medlemmar med egen källa, merkostnadsförklaring eller åldersgräns får egen text.\ncatalog:variable_text:44521:3652:8401\ncatalog:variable_text:44362:8401:12418\ncatalog:variable_text:44522:8401:12053\ncatalog:variable_text:44523:12053:17897\ncatalog:variable_text:44527:7305:8401"
+
+[[statement]]
+kind = "set"
+subject = "var:etableringstillagg-utbetalt-belopp-rtb-familj"
+fields = { "description" = "Utbetalt etableringstillägg, redovisat för familjen enligt RTB den 31 december, med samma belopp för alla familjemedlemmar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:43678:16071:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:tvard"
+fields = { "description" = "Utbetalt vårdbidrag enligt uppgift från Försäkringskassan eller deklaration." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:44362:8401:12418\ncatalog:variable_text:44362:12784:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardbidrag-kontrolluppgift"
+fields = { "description" = "Utbetalt vårdbidrag enligt kontrolluppgift." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:44522:8401:12053\ncatalog:variable_text:44522:12053:12418\ncatalog:variable_text:44522:12418:12784\ncatalog:variable_text:44522:12784:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:vardbidrag-merkostnadsdel"
+fields = { "description" = "Den del av vårdbidraget som avser merkostnader, det vill säga extra utgifter på grund av barnets sjukdom eller funktionshinder." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:44523:12053:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:vbbel"
+fields = { "description" = "Utbetalt vårdbidrag; ersättning kan lämnas till och med månaden före barnets 16-årsdag, med belopp efter vårdbehov och merkostnader." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:44527:7305:8401"

@@ -22599,18 +22599,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 
 [[statement]]
 kind = "set"
-subject = "var:vardbidrag-deklarationsuppgift"
-fields = { "description" = "Utbetalt vårdbidrag till en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett belopp medan beskrivningen anger rätt till bidrag.\ncatalog:variable_text:31933:14245:20089\ncatalog:variable_text:31933:8401:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:vardbidrag-kontrolluppgift-pensions-forsakringsutbetalare"
-fields = { "description" = "Utbetalt vårdbidrag till en förälder som vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger ett belopp medan beskrivningen anger rätt till bidrag.\ncatalog:variable_text:31934:17897:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:vardbidrag-merkostnadsdel"
 fields = { "description" = "Vårdbidragets merkostnadsdel för föräldrar till sjuka barn eller barn med funktionshinder." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger merkostnadsdelen av vårdbidrag, medan beskrivningen anger rätt till vårdbidrag generellt.\ncatalog:variable_text:31204:12053:20089"
@@ -29237,3 +29225,15 @@ kind = "set"
 subject = "individer-och-dodsbon: INBTJ"
 fields = { "variable" = "inbtj" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1173), never delivered together in one table, so they are one variable renamed between releases: BINTJ 1971-01-01..1977-12-31; INBTJ 1980-01-01..1984-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:folkpensionsbelopp"
+fields = { "description" = "Utbetalda belopp av folkpension till en person, som summa eller uppdelat på typ av folkpension." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är belopp av folkpension (summor och delbelopp som förtidspension och hustrutillägg); fp1 och fp2 behåller sina förklaringar av FPKOD.\ncatalog:variable_text:37823:3287:4018\ncatalog:variable_text:38159:4018:7305\ncatalog:variable_text:38162:4018:7305\ncatalog:variable_text:38164:1461:3652\ncatalog:variable_text:38225:4018:7305"
+
+[[statement]]
+kind = "set"
+subject = "set:vardbidrag"
+fields = { "description" = "Vårdbidrag, som kan erhållas när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet, samt skattepliktigt ferievårdbidrag." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFem av sex medlemmar har samma beskrivning av vårdbidraget; ferievårdbidrag har bara etikettens text. Medlemmar med extra villkor eller källa behåller sin lagrade text.\ncatalog:variable_text:39103:8401:13514\ncatalog:variable_text:39328:7305:7670\ncatalog:variable_text:39329:8401:14245\ncatalog:variable_text:38150:12053:19358"

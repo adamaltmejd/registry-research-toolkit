@@ -25668,12 +25668,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRät
 
 [[statement]]
 kind = "set"
-subject = "var:fpr102"
-fields = { "description" = "Skuldbelopp för statliga lån på eget hem. Variabeln avser den andra av högst fyra förekomster." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltexten är avhuggen; etiketten anger låneslaget.\ncatalog:variable_text:24496:1826:2191\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:218945:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:garantipension"
 fields = { "description" = "Utbetald garantipension för personer med låg eller ingen inkomst under livet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger rätt till pension medan variabeln mäter belopp.\ncatalog:variable_text:24512:12053:16071"
@@ -25761,12 +25755,6 @@ kind = "set"
 subject = "var:skattereduktion-underskott-kapital"
 fields = { "description" = "Skattereduktion för underskott av kapital." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter skattereduktionsbeloppet, inte enbart rätten till reduktion.\ncatalog:variable_text:25351:12418:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:skuldbelopp-eget-hem-statligt-fpr1022"
-fields = { "description" = "Skuldbelopp för statliga lån på eget hem. Variabeln avser den första av högst fyra förekomster." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltexten är avhuggen; etiketten anger låneslaget.\ncatalog:variable_text:25358:1826:2191\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:218946:opdef_text. One variable, one description."
 
 [[statement]]
 kind = "set"
@@ -32042,32 +32030,14 @@ evidence = "Maintainer 2026-11-14: where the claimants are variants of one conce
 
 [[statement]]
 kind = "set"
-subject = "var:bilinnehav-bransleforbrukning"
-fields = { "description" = "Bränsleförbrukning per mil för hushållets bil. I hushåll med flera bilar avser uppgiften bil 1." }
-evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILB1Z: VarId 22377 \"Bilinnehav - Bränsleförbrukning\" and VarId 22378 \"Bilinnehav - Bränsleförbrukning, bil 1\". VarId 22377 is the fuel use per mil of the household car (the question for a one-car household) and VarId 22378 that of \"bil 1\" (the question for a household with several cars); the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
-
-[[statement]]
-kind = "set"
 subject = "var:bilinnehav-bransleforbrukning-bensin"
 fields = { "label" = "Bilinnehav - Bränsleförbrukning bensin, hushållets bil eller bil 1" }
 evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILBB1Z: VarId 22407 \"Bilinnehav - Bränsleförbrukning bensin\" and VarId 22402 \"Bilinnehav - Bränsleförbrukning bensin, bil 1\". VarId 22407 is the petrol use per mil of the household car and VarId 22402 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
 
 [[statement]]
 kind = "set"
-subject = "var:bilinnehav-bransleforbrukning-bensin"
-fields = { "description" = "Bränsleförbrukning per mil med bensin för hushållets bil. I hushåll med flera bilar avser uppgiften bil 1." }
-evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILBB1Z: VarId 22407 \"Bilinnehav - Bränsleförbrukning bensin\" and VarId 22402 \"Bilinnehav - Bränsleförbrukning bensin, bil 1\". VarId 22407 is the petrol use per mil of the household car and VarId 22402 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
-
-[[statement]]
-kind = "set"
 subject = "var:bilinnehav-bransleforbrukning-etanol"
 fields = { "label" = "Bilinnehav - Bränsleförbrukning etanol, hushållets bil eller bil 1" }
-evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILBE1Z: VarId 22398 \"Bilinnehav - Bränsleförbrukning etanol\" and VarId 22399 \"Bilinnehav - Bränsleförbrukning etanol, bil 1\". VarId 22398 is the ethanol use per mil of the household car and VarId 22399 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
-
-[[statement]]
-kind = "set"
-subject = "var:bilinnehav-bransleforbrukning-etanol"
-fields = { "description" = "Bränsleförbrukning per mil med etanol för hushållets bil. I hushåll med flera bilar avser uppgiften bil 1." }
 evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILBE1Z: VarId 22398 \"Bilinnehav - Bränsleförbrukning etanol\" and VarId 22399 \"Bilinnehav - Bränsleförbrukning etanol, bil 1\". VarId 22398 is the ethanol use per mil of the household car and VarId 22399 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
 
 [[statement]]
@@ -32286,3 +32256,15 @@ kind = "set"
 subject = "individregister: SEGEN"
 fields = { "variable" = "segen" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v727), never delivered together in one table, so they are one variable renamed between releases: ITN014 1975-01-01..1975-12-31; SEGEN 1996-01-01..2013-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:bilars-bransleforbrukning"
+fields = { "description" = "Bränsleförbrukning per mil för hushållets bilar. Uppgifterna avser upp till tre bilar: bil 1 (hushållets bil), bil 2 och bil 3. Finns för bränsle oavsett slag och separat för bensin och etanol." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är bränsleförbrukning per mil, per bil och bränsleslag; det lagrade bil 1-tillägget bärs nu av beskrivningen och etiketten.\ncatalog:variable_text:31472:12418:13879\ncatalog:variable_text:31472:13879:14245\ncatalog:variable_text:31473:13879:14245\ncatalog:variable_text:31474:13879:14245\ncatalog:variable_text:31668:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:skulder-bostadsfastighet"
+fields = { "description" = "Skuldbelopp för lån på eget hem och på fritidsfastighet, uppdelat på statliga lån och övriga lån (ej statliga)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är skuldbelopp för eget hem eller fritidsfastighet, statligt eller övrigt; förekomstnumret bärs av etiketten.\ncatalog:variable_text:31960:1826:2191\ncatalog:variable_text:31961:1826:2191\ncatalog:variable_text:31963:1826:2191\ncatalog:variable_text:31964:1826:2191"
