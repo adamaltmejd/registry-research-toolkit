@@ -1,0 +1,3 @@
+{
+  "refused": "registers/demo/wave/curation.toml:7: ambiguous: this subject takes no `where` guard"
+}

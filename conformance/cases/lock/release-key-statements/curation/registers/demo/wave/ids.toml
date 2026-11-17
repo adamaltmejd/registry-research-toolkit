@@ -1,0 +1,6 @@
+[tables]
+t = "t"
+
+[variables]
+x = ["t: X"]
+y = ["t: Y"]
