@@ -89,8 +89,12 @@ ask.
 - Set membership and the axis bar follow `crates/DESIGN.md`, "Sets and tags": a set is
   closely related variables of one register, not necessarily one measure; inputs stay
   out. When a variable is split by level of aggregation, each resulting variable stays
-  in the set. Axes are optional: curate them only for a set of more than two members
-  where some axis value is shared by several members.
+  in the set. Axes are optional and have two uses: a dimension, for a set of more
+  than two members where some axis value is shared by several members; or an ordering,
+  for a set whose number-aware name order is wrong (ranks in words, months,
+  low/medium/high), with the rank as the facet value and the word as its label. A
+  single-value axis is only ever an ordering: numbered names ("Kod 1" to "Kod 12") need
+  none.
 - After any membership change check set sizes. A set left with one member fails the
   build (`set-too-small`); `reg-build lock` does not catch it.
 - New ledger ids follow the conventions in the register's `ids.toml`.

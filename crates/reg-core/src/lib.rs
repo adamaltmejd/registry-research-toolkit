@@ -27,6 +27,7 @@ mod grammar;
 mod interval;
 pub mod issue;
 pub mod manifest;
+mod natural;
 pub mod project;
 mod structural;
 mod validation;
@@ -39,6 +40,7 @@ pub use grammar::{
     next_iso_day, period_token_for_bounds, prev_iso_day,
 };
 pub use interval::{Interval, days, gaps, hull, intersect, merge, overlap, render};
+pub use natural::natural_cmp;
 pub use structural::{q as quote, validate_structural};
 use unicode_properties::{GeneralCategoryGroup, UnicodeGeneralCategory};
 pub use validation::{IssueLevel, ValidationIssue, ValidationResult};

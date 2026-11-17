@@ -3027,9 +3027,17 @@ blank label or description refuses. A set without a curated label is named by it
 descriptions occupy `var_set.name_text` and `description_text`; ordered axes occupy
 `var_set_axis`. A variable's `facets = {axis = {value, label}}` supplies its coordinate
 in its one set, in `var_set_member_facet`; omitted labels default to the value. Axes are
-optional (maintainer 2026-11-13): curated only where they help a reader filter or group
-a set of more than two members in which some axis value is shared by several members.
-Otherwise the members' labels and descriptions are enough. A set's description says
+optional (maintainer 2026-11-13) and have two uses (maintainer 2026-11-17):
+
+- A dimension the members vary along, curated where it helps a reader filter or group a
+  set of more than two members in which some axis value is shared by several members.
+- An ordering, for a set whose order the members' names cannot give: ranks or orders
+  stated in words ("största, näst största, tredje största förvärvskälla"), months,
+  low/medium/high. The facet value is the rank, the facet label the word shown.
+
+An axis whose every value belongs to one member is allowed only as an ordering, and only
+where number-aware name order would be wrong: "Diagnoskod 1" to "Diagnoskod 12" need no
+axis. Otherwise the members' labels and descriptions are enough. A set's description says
 what ties its members together, naming axes only when the set has them. An
 undeclared axis or a variable outside the set refuses at its statement location. These
 tables are part of catalog schema 6.
@@ -3048,7 +3056,10 @@ serves for it, unpaged, in that order and shape, without evidence) and `facets` 
 `description` is its curated one; without one, a description every member states alike
 is sent once as the set's (maintainer 2026-11-04). A member carries its own
 `description` only where it differs from the set's. Members sort by facet value in axis
-order (missing coordinates first), then by name and public id. `tags` is the union of
+order (missing coordinates first), then by name and public id. Values and names compare
+number-aware (`reg_core::natural_cmp`): a run of ASCII digits compares as a number, so
+"2" sorts before "10" and "Yrke 2" before "Yrke 10", and the rest compares as text. This
+is the one member order: the SPA's group page draws the members as `show` lists them. `tags` is the union of
 the members' tags in public-id order. The summary contains curated presentation data;
 source evidence remains on the individual variables.
 

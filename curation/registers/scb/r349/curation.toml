@@ -919,19 +919,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 [[statement]]
 kind = "set"
 subject = "set:personnrf"
-fields = { "label" = "Personnummer förälder", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/flergenreg.toml:8; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:personnummer-foralder-1"
-fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/flergenreg.toml:8; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:personnummer-foralder-2"
-fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+fields = { "label" = "Personnummer förälder" }
 evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/flergenreg.toml:8; existing set membership and current id ledger determine the targets."
 
 [[statement]]

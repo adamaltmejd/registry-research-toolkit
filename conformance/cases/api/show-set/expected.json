@@ -255,5 +255,13 @@
       "/data/kind": "variable",
       "/data/fqid": "demo/bas/set"
     }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/members/0/fqid": "demo/bas/yrke-2",
+      "/data/members/1/fqid": "demo/bas/yrke-10",
+      "/data/members/2/fqid": "demo/bas/yrke-1"
+    }
   }
 ]

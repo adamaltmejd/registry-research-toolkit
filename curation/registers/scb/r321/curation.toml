@@ -6488,7 +6488,7 @@ evidence = "Maintainer-approved Opus audit correction: Old pattern 1 persists, s
 [[statement]]
 kind = "set"
 subject = "set:allmanhetens-fragestund"
-fields = { "label" = "Allmänhetens frågestund", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Allmänhetens frågestund" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -6500,7 +6500,7 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "set:ansvar-for-fortroendevaldas-trygghet"
-fields = { "label" = "Ansvar för förtroendevaldas trygghet", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Ansvar för förtroendevaldas trygghet" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -6518,7 +6518,7 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 [[statement]]
 kind = "set"
 subject = "set:beslut-om-foraldraledighet"
-fields = { "label" = "Beslut om föräldraledighet", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Beslut om föräldraledighet" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -6542,13 +6542,13 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "set:debattforum-pa-webbplats"
-fields = { "label" = "Debattforum på webbplats", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Debattforum på webbplats" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
 
 [[statement]]
 kind = "set"
 subject = "set:delagda-bolag"
-fields = { "label" = "Delägda bolag", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Delägda bolag" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -6572,13 +6572,13 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 [[statement]]
 kind = "set"
 subject = "set:forekomst-av-bolag"
-fields = { "label" = "Förekomst av bolag", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Förekomst av bolag" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:forekomst-av-namndsammantraden"
-fields = { "label" = "Förekomst av nämndsammanträden", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Förekomst av nämndsammanträden" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -6596,13 +6596,13 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 [[statement]]
 kind = "set"
 subject = "set:fullmaktigesammantradens-webbtillganglighet"
-fields = { "label" = "Fullmäktigesammanträdens webbtillgänglighet", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Fullmäktigesammanträdens webbtillgänglighet" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
 
 [[statement]]
 kind = "set"
 subject = "set:funktion-for-hot-hat-och-vald-mot-fortroendevalda"
-fields = { "label" = "Funktion för hot, hat och våld mot förtroendevalda", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Funktion för hot, hat och våld mot förtroendevalda" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (commas)."
 
 [[statement]]
@@ -6614,13 +6614,13 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 [[statement]]
 kind = "set"
 subject = "set:helagda-bolag"
-fields = { "label" = "Helägda bolag", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Helägda bolag" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:ideburet-offentligt-partnerskap"
-fields = { "label" = "Idéburet offentligt partnerskap", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Idéburet offentligt partnerskap" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -6662,7 +6662,7 @@ evidence = "#2100 group name: slug words restored from the member and register l
 [[statement]]
 kind = "set"
 subject = "set:medborgardialog-via-webbplats"
-fields = { "label" = "Medborgardialog via webbplats", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Medborgardialog via webbplats" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
 
 [[statement]]
@@ -6710,7 +6710,7 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 [[statement]]
 kind = "set"
 subject = "set:moteshandlingar-pa-webbplats"
-fields = { "label" = "Möteshandlingar på webbplats", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Möteshandlingar på webbplats" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
 
 [[statement]]
@@ -6794,19 +6794,19 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 [[statement]]
 kind = "set"
 subject = "set:revisorer-med-undantag-fran-granskning"
-fields = { "label" = "Revisorer med undantag från granskning", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Revisorer med undantag från granskning" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:sammantradeskalendarium-pa-webbplats"
-fields = { "label" = "Sammanträdeskalendarium på webbplats", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Sammanträdeskalendarium på webbplats" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
 
 [[statement]]
 kind = "set"
 subject = "set:sammantradesprotokoll-pa-webbplats"
-fields = { "label" = "Sammanträdesprotokoll på webbplats", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Sammanträdesprotokoll på webbplats" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
 
 [[statement]]
@@ -6830,7 +6830,7 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 [[statement]]
 kind = "set"
 subject = "set:stod-for-e-forslag"
-fields = { "label" = "Stöd för e-förslag", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Stöd för e-förslag" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -6848,13 +6848,13 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 [[statement]]
 kind = "set"
 subject = "set:tidpunkt-for-mojlighet-att-lamna-e-forslag"
-fields = { "label" = "Tidpunkt för möjlighet att lämna e-förslag", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Tidpunkt för möjlighet att lämna e-förslag" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
 subject = "set:tidpunkt-for-mojlighet-att-lamna-medborgarforslag"
-fields = { "label" = "Tidpunkt för möjlighet att lämna medborgarförslag", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Tidpunkt för möjlighet att lämna medborgarförslag" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -8474,26 +8474,8 @@ evidence = "#2102 same-label cluster 'Användande av sociala medier' (23 variabl
 [[statement]]
 kind = "set"
 subject = "set:beslut-om-medborgardialoger"
-fields = { "label" = "Beslut om medborgardialoger", "axes" = [{ "id" = "population", "label" = "Population" }] }
+fields = { "label" = "Beslut om medborgardialoger" }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold."
-
-[[statement]]
-kind = "set"
-subject = "var:allmanhetens-fragestund"
-fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:allmanhetens-fragestund-fr20"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:allmanhetens-fragestund-fr23"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
 [[statement]]
 kind = "set"
@@ -8517,30 +8499,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 kind = "set"
 subject = "var:antal-anstallda-politiska-sekreterare-fr8-text"
 fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:beslut-om-foraldraledighet"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:beslut-om-foraldraledighet-fr7"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:beslut-om-medborgardialoger"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:beslut-om-medborgardialoger-fr27"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
 [[statement]]
@@ -8587,36 +8545,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:delagda-bolag"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:delagda-bolag-fr36c"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:delta-i-medborgardialoger-via-webbplats"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:delta-i-medborgardialoger-via-webbplats-fr26b"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr37"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:deltar-i-offentlig-privat-samverkan-ops-fr34"
 fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
@@ -8647,43 +8575,7 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:e-forslag-mojlighet-tidpunkt"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:fokusgrupp"
-fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:forekomst-av-bolag"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:forekomst-av-bolag-fr36a"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:forekomst-av-namndsammantraden"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:forekomst-av-namndsammantraden-fr23a"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fortroendevaldas-trygghet-ansvar"
 fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
@@ -8839,12 +8731,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:fullmaktigesammantraden-webb-tillgang"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:genomford-medborgarundersokning"
 fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
@@ -8881,30 +8767,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:helagda-bolag"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:helagda-bolag-fr36b"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:hot-hat-vald-mot-fortroendevalda"
-fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:ideburet-offentligt-partnerskap-iop"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:ingen-strategi-samarbete-verksamhetsutveckling"
 fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
@@ -8936,12 +8798,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 [[statement]]
 kind = "set"
 subject = "var:medborgarforslag-mojlighet-borttagen"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:medborgarforslag-mojlighet-tidpunkt"
 fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
@@ -9493,24 +9349,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:revisorer-vald-med-undantag-for-granskning-fr33"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:revisorer-vald-med-undantag-for-granskning-fr36"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:revisorer-vald-med-undantag-granskning"
-fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:samarbete-verksamhetsutveckling-fr40"
 fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
@@ -9543,24 +9381,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 kind = "set"
 subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-samlbolag"
 fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:stod-for-e-forslag"
-fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:stod-for-e-forslag-fr15"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:stod-for-e-forslag-fr18"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
 [[statement]]
@@ -9601,24 +9421,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:tidpunkt-for-mojlighet-att-lamna-e-forslag-fr15b"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:tidpunkt-for-mojlighet-att-lamna-medborgarforslag-fr11b"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:tillanglighet-pa-webb-fullmaktigesammantradena-fr22b"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:tjanstegarantier-servicedeklarationer"
 fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
@@ -9649,68 +9451,8 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:utokat-ansvar-for-fortroendevaldas-trygghet-fr30"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:utokat-ansvar-for-fortroendevaldas-trygghet-fr33"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:utpekad-funktion-som-handhar-hot-hat-och-vald-mot-fr31"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:utpekad-funktion-som-handhar-hot-hat-och-vald-mot-fr34"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:webb-diarie-arendesystem"
 fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webb-kalendarium"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webb-moteshandlingar"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webb-protokoll-sammantraden"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-med-debattforum"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-med-debattforum-fr30-6"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-med-debattforum-webbdebatt"
-fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
 [[statement]]
@@ -9740,42 +9482,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 [[statement]]
 kind = "set"
 subject = "var:webbplats-med-digitalt-diarie-arendesystem-webbdiarie"
-fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-med-kalendarium-for-sammantraden-fr30-1"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-med-kalendarium-for-sammantraden-webbkal"
-fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-med-moteshandlingar-for-sammantraden-fr30-2"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-med-moteshandlingar-for-sammantraden-webbhandl"
-fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-med-protokoll-fran-sammantraden-fr30-4"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-med-protokoll-fran-sammantraden-webbprot"
 fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
@@ -11110,6 +10816,168 @@ kind = "set"
 subject = "regioner: VARDAVTALPRIV"
 fields = { "variable" = "vardavtalpriv" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28608) in one table, renamed between survey rounds and never delivered together, so they are one variable: PRIVSJUKH 2003-01-01..2008-12-31; VARDAVTALPRIV 2012-01-01..2012-12-31."
+
+[[statement]]
+kind = "set"
+subject = "var:allmanhetens-fragestund"
+fields = { "label" = "Allmänhetens frågestund (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:allmanhetens-fragestund-fr20"
+fields = { "label" = "Allmänhetens frågestund (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:allmanhetens-fragestund-fr23"
+fields = { "label" = "Allmänhetens frågestund (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fortroendevaldas-trygghet-ansvar"
+fields = { "label" = "Utökat ansvar för förtroendevaldas trygghet (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hot-hat-vald-mot-fortroendevalda"
+fields = { "label" = "Utpekad funktion som handhar hot, hat och våld mot förtroendevalda (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:revisorer-vald-med-undantag-for-granskning-fr33"
+fields = { "label" = "Revisorer vald med undantag för granskning (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:revisorer-vald-med-undantag-for-granskning-fr36"
+fields = { "label" = "Revisorer vald med undantag för granskning (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:revisorer-vald-med-undantag-granskning"
+fields = { "label" = "Revisorer vald med undantag för granskning (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:stod-for-e-forslag"
+fields = { "label" = "Stöd för e-förslag (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:stod-for-e-forslag-fr15"
+fields = { "label" = "Stöd för e-förslag (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:stod-for-e-forslag-fr18"
+fields = { "label" = "Stöd för e-förslag (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utokat-ansvar-for-fortroendevaldas-trygghet-fr30"
+fields = { "label" = "Utökat ansvar för förtroendevaldas trygghet (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utokat-ansvar-for-fortroendevaldas-trygghet-fr33"
+fields = { "label" = "Utökat ansvar för förtroendevaldas trygghet (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utpekad-funktion-som-handhar-hot-hat-och-vald-mot-fr31"
+fields = { "label" = "Utpekad funktion som handhar hot, hat och våld mot förtroendevalda (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utpekad-funktion-som-handhar-hot-hat-och-vald-mot-fr34"
+fields = { "label" = "Utpekad funktion som handhar hot, hat och våld mot förtroendevalda (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webb-kalendarium"
+fields = { "label" = "Webbplats med kalendarium för sammanträden (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webb-moteshandlingar"
+fields = { "label" = "Webbplats med möteshandlingar för sammanträden (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webb-protokoll-sammantraden"
+fields = { "label" = "Webbplats med protokoll från sammanträden (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-debattforum"
+fields = { "label" = "Webbplats med debattforum (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-debattforum-fr30-6"
+fields = { "label" = "Webbplats med debattforum (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-debattforum-webbdebatt"
+fields = { "label" = "Webbplats med debattforum (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-kalendarium-for-sammantraden-fr30-1"
+fields = { "label" = "Webbplats med kalendarium för sammanträden (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-kalendarium-for-sammantraden-webbkal"
+fields = { "label" = "Webbplats med kalendarium för sammanträden (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-moteshandlingar-for-sammantraden-fr30-2"
+fields = { "label" = "Webbplats med möteshandlingar för sammanträden (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-moteshandlingar-for-sammantraden-webbhandl"
+fields = { "label" = "Webbplats med möteshandlingar för sammanträden (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-protokoll-fran-sammantraden-fr30-4"
+fields = { "label" = "Webbplats med protokoll från sammanträden (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-protokoll-fran-sammantraden-webbprot"
+fields = { "label" = "Webbplats med protokoll från sammanträden (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
 
 [[statement]]
 kind = "set"

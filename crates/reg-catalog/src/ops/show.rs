@@ -1417,20 +1417,23 @@ fn memberships(conn: &Connection, variable: i64, kind: &str) -> Result<Vec<ShowM
     )?)
 }
 
-/// Members by their facet values in axis order, then name, then fqid.
+/// Members by their facet values in axis order, then name, then fqid; values and
+/// names number-aware (`reg_core::natural_cmp`), so "2" comes before "10".
 fn by_axes(axes: &[ShowSetAxis], a: &ShowSetMember, b: &ShowSetMember) -> std::cmp::Ordering {
+    fn value<'m>(member: &'m ShowSetMember, axis: &str) -> Option<&'m str> {
+        member
+            .facets
+            .iter()
+            .find(|f| f.axis == axis)
+            .map(|f| f.value.as_str())
+    }
     axes.iter()
-        .map(|axis| {
-            let value = |m: &ShowSetMember| {
-                m.facets
-                    .iter()
-                    .find(|f| f.axis == axis.id)
-                    .map(|f| f.value.clone())
-            };
-            value(a).cmp(&value(b))
+        .map(|axis| match (value(a, &axis.id), value(b, &axis.id)) {
+            (Some(x), Some(y)) => reg_core::natural_cmp(x, y),
+            (x, y) => x.cmp(&y),
         })
         .find(|order| !order.is_eq())
-        .unwrap_or_else(|| a.name.cmp(&b.name))
+        .unwrap_or_else(|| reg_core::natural_cmp(&a.name, &b.name))
         .then_with(|| a.fqid.cmp(&b.fqid))
 }
 

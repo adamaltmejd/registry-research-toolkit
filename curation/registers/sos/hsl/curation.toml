@@ -365,37 +365,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npyth
 [[statement]]
 kind = "set"
 subject = "set:yrkesbeteckning"
-fields = { "label" = "Kod för yrkesbeteckning", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesbeteckning-1"
-fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesbeteckning-2"
-fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesbeteckning-3"
-fields = { "facets" = { "ordinal" = { "value" = "3", "label" = "3" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesbeteckning-4"
-fields = { "facets" = { "ordinal" = { "value" = "4", "label" = "4" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesbeteckning-5"
-fields = { "facets" = { "ordinal" = { "value" = "5", "label" = "5" } } }
+fields = { "label" = "Kod för yrkesbeteckning" }
 evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/sos/hsl.toml:9; existing set membership and current id ledger determine the targets."
 
 [[statement]]
