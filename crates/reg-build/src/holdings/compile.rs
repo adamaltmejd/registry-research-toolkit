@@ -774,7 +774,7 @@ pub(super) fn write(
         return Err("holdings_accounting_invalid: authored tables differ from census".into());
     }
     let starts = super::cumulative::starts(base, db)?;
-    super::cumulative::resolve(&mut authored, &census, spaces, &starts)?;
+    super::cumulative::resolve(&mut authored, &census, spaces, &starts, &primaries)?;
     let count_tables = census.len();
     let tx = db.transaction()?;
     let mut count_columns = 0usize;

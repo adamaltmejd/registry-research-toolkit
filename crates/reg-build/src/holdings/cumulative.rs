@@ -44,6 +44,7 @@ pub(super) fn resolve(
     census: &[census::Table],
     spaces: &super::spaces::Spaces,
     starts: &Starts,
+    primaries: &compile::Primaries,
 ) -> Result<()> {
     let space: BTreeMap<Identity, &str> = census
         .iter()
@@ -82,7 +83,8 @@ pub(super) fn resolve(
             continue; // Accounting refuses a table the census lacks.
         };
         groups
-            .entry((space, routes, table.release.clone()))
+            // The resolved release, so two spellings of one release are one group.
+            .entry((space, routes, compile::stated_release(primaries, table)?))
             .or_default()
             .push((own, identity.clone()));
     }

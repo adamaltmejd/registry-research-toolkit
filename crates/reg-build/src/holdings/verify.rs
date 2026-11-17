@@ -84,7 +84,7 @@ fn sources(
         .drain(..)
         .map(|t| (compile::authored_identity(&t, keyed), t))
         .collect();
-    super::cumulative::resolve(&mut effective, &census.tables, &spaces, starts)?;
+    super::cumulative::resolve(&mut effective, &census.tables, &spaces, starts, primaries)?;
     topology.table = effective.into_values().collect();
     // Each authored table with its delivery and coverage, parsed for every table before
     // any is compared.
