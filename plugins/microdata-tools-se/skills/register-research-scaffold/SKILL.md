@@ -30,10 +30,11 @@ how a MONA project calls it. Read [mona.md](references/mona.md) for a project on
 
 No agent runs on MONA, and row-level data never leaves it: only aggregates the export
 gate passed and a human reviewed. The agent works locally on code, catalog metadata and
-mock data. A project whose data a steward (SWECOV, say) delivers runs in this order
+mock data. A project whose data a data steward delivers runs in this order
 ([mona.md](references/mona.md) has who does what):
 
-1. Point the plugin at the steward's catalog (plugin README, "Steward catalogs").
+1. Point the plugin at the steward's catalog (`register-metadata-search` skill,
+   `references/data-stewards.md`).
 2. Draft and validate `project_data.json` with the `register-project` skill.
 3. Generate mock inputs from it with the `register-mock-data` skill (`reg-mock`).
 4. Build and run the pipeline locally on the mocks, ending with `export_gate.R`.

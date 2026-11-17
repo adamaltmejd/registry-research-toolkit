@@ -33,11 +33,11 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 then install `microdata-tools-se` from the plugin marketplace UI.
 
 The plugin connects to the hosted catalog MCP server at `https://reg-meta.vqv.uk/mcp`
-(or SWECOV's, `https://data.swecov.se/mcp`, as a setting) and bundles four skills:
+(or a data steward's catalog, as a setting) and bundles four skills:
 `register-metadata-search`, which documents its tools, `register-project`, for drafting
 a `project_data.json`, `register-mock-data`, for local mock data, and
 `register-research-scaffold`, for a research project that runs on MONA. The plugin
-README says when to use a steward's catalog.
+README's "Data stewards" section says when and how to use a steward's catalog.
 
 ## Quick start
 

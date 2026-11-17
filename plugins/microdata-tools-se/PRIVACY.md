@@ -10,8 +10,7 @@ catalog at `https://reg-meta.vqv.uk/mcp`.
   arguments are sent to the hosted server: search terms, register and variable names,
   column names passed to `resolve`, and any `project_data.json` document passed to
   `order`. Do not put personal data or confidential material in these arguments. If you
-  set the plugin's catalog URL to a steward's catalog, they go to that server instead
-  (SWECOV's is covered below).
+  set the plugin's catalog URL to a steward's catalog, they go to that server instead.
 - The server answers from register metadata only (schemas, value codes, documentation),
   not microdata.
 - **Usage statistics.** The hosted catalogs (`https://reg-meta.vqv.uk/mcp`, and

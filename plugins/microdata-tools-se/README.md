@@ -6,7 +6,7 @@ bundles four skills:
 
   | Component                    | Purpose                                                                                                                                             |
   | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `catalog` MCP server         | The hosted register metadata catalog: the global catalog `https://reg-meta.vqv.uk/mcp` by default, or a steward's catalog (below).                  |
+  | `catalog` MCP server         | The hosted register metadata catalog: the global catalog `https://reg-meta.vqv.uk/mcp` by default, or a data steward's catalog (below).             |
   | `register-metadata-search`   | Skill: how to query variables, value codes and schemas with the catalog tools.                                                                      |
   | `register-project`           | Skill: drafting and validating a `project_data.json` data order, and answering questions about a project.                                           |
   | `register-mock-data`         | Skill: local mock data shaped like the project's delivery, with `reg-mock`.                                                                         |
@@ -40,43 +40,36 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 Then open the Codex plugin marketplace, find `microdata-tools-se` under
 `registry-research-toolkit`, and install it.
 
-## Steward catalogs
+## Data stewards
 
-The global catalog documents what the data holders (SCB, Socialstyrelsen and others)
-deliver. A steward, such as SWECOV, holds an extract of that data in MONA and runs its
-own catalog: `https://data.swecov.se/mcp` for SWECOV. Point the plugin at your steward's
-catalog when your project's data comes from the steward's holdings. Only a steward's
-catalog:
+The default catalog is the global one, `https://reg-meta.vqv.uk/mcp`: what the data
+holders deliver. A data steward holds an extract of that data in MONA and runs its own
+deployment of the catalog at `https://<steward-host>/mcp`. Its catalog adds the
+steward's holdings (the tables, years and columns it holds, under its own file names)
+and writes the MONA order file for a project (`materialize_order`). Point the plugin at
+a steward's catalog when your project's data comes from that steward.
 
-- answers from the steward's holdings: the tables, years and columns it holds, under its
-  own file and column names;
-- writes the MONA order file (`order` with `operation: "materialize_order"`; the global
-  catalog answers `holdings_unavailable`), which the steward's extract runner reads;
-- gives `reg-mock` the delivery's own file names (`register-mock-data` skill).
+The simplest way is to tell the agent, for example "use the plugin with the
+`<steward-host>` steward". The `register-metadata-search` skill's
+[data-stewards reference](skills/register-metadata-search/references/data-stewards.md)
+has the steps it follows:
 
-A steward's catalog runs the toolkit release the steward pins, which can be older than
-the global catalog's. The skills read the release from `meta.catalog_version` in each
-tool response; use that release for the project's `reg_meta_version`, `reg-mock`,
-`extract.R` and the export gate.
+1. Check that `https://<steward-host>/api/context` answers JSON naming the steward
+   (`data.steward_config.presentation`) and its release (`data.reg_meta_version`).
+2. Set the plugin option `catalog_url` to `https://<steward-host>/mcp`: in Claude Code,
+   `/plugin configure microdata-tools-se@microdata-tools-se`, then restart. In Codex,
+   add the URL as your own server in `~/.codex/config.toml`
+   (`[mcp_servers.steward_catalog]`, `url = "https://<steward-host>/mcp"`).
+3. Confirm: a catalog tool's `meta.catalog_version` matches the release `/api/context`
+   reported, and `materialize_order` no longer answers `holdings_unavailable`.
 
-**Claude Code.** The catalog URL is the plugin option `catalog_url`. Set it when the
-install dialog asks, or later with `/plugin configure microdata-tools-se@microdata-tools-se`
-(or the plugin's Configure entry on the Installed tab of `/plugin`), then restart Claude
-Code. Claude Code stores it in your user settings under
-`pluginConfigs["microdata-tools-se@microdata-tools-se"].options.catalog_url`.
+A steward runs the toolkit release it pins, which can be older than the global
+catalog's; the project, `reg-mock`, `extract.R` and the export gate follow that release.
 
-**Codex.** The Codex plugin always connects to the global catalog. Add the steward's
-catalog as your own MCP server in `~/.codex/config.toml`, under a different name:
-
-```toml
-[mcp_servers.swecov_catalog]
-url = "https://data.swecov.se/mcp"
-```
-
-Its tools are the same; tell the agent which server to use.
-
-Some steward catalogs are not public and sit behind a sign-in. A URL setting alone does
-not reach those; ask your steward how to connect.
+Some stewards sit behind Cloudflare Access: `/api/context` then redirects to a sign-in
+page or answers `403`. The plugin option cannot reach those. Ask the steward for a
+service token and add the catalog as your own MCP server with its headers (the reference
+has the command).
 
 ## Scope
 

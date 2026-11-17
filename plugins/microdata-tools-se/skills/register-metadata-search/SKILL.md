@@ -3,16 +3,17 @@ name: register-metadata-search
 description: Query Swedish register metadata (SCB, Socialstyrelsen and other holders)
   through the catalog MCP tools. Use when answering questions about Swedish register
   data — variable definitions, value codes, register schemas, column names, or how data
-  is structured across registers and years.
+  is structured across registers and years, or when the user asks to use the plugin
+  with a data steward's catalog.
 ---
 
 # Register metadata queries
 
 The plugin's `catalog` MCP server answers questions about Swedish administrative
 registers. By default it serves the published global catalog
-(`https://reg-meta.vqv.uk/mcp`); the user can point it at a steward's catalog instead
-(SWECOV: `https://data.swecov.se/mcp`), which also answers from the steward's holdings
-(plugin README, "Steward catalogs"). `show` with no `ref` lists its providers. It holds
+(`https://reg-meta.vqv.uk/mcp`); the user can point it at a data steward's catalog
+instead, which also answers from the steward's holdings. To set that up, or to check
+which catalog is configured, read [data-stewards.md](references/data-stewards.md). `show` with no `ref` lists its providers. It holds
 structural metadata — registers, tables, variables, value codes, documentation — not
 microdata.
 

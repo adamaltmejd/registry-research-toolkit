@@ -5,13 +5,13 @@ on MONA, and row-level data never leaves it: only aggregates checked by the expo
 do, after a human has reviewed them. The agent works on the researcher's machine, from
 code, catalog metadata and mock data.
 
-This is the order of work for a project whose data a steward (SWECOV, for example)
+This is the order of work for a project whose data a data steward
 delivers into MONA from its holdings. Each step names who does it.
 
 ## 1. The catalog (researcher, once)
 
-Point the plugin at the steward's catalog, not the global one: the plugin README,
-"Steward catalogs". Only a steward's catalog knows its holdings, delivers its own file
+Point the plugin at the steward's catalog, not the global one: the
+`register-metadata-search` skill's `references/data-stewards.md`. Only a steward's catalog knows its holdings, delivers its own file
 and column names, and writes MONA order files. Every `meta.catalog_version` the tools
 return is that steward's release, which can lag the global catalog. Use that release for
 everything below: the project's `reg_meta_version`, the `reg-mock` binary, `extract.R`

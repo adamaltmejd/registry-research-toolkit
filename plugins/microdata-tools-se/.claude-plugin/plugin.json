@@ -14,7 +14,7 @@
     "catalog_url": {
       "type": "string",
       "title": "Catalog MCP URL",
-      "description": "The catalog MCP server the agent answers from: the global catalog (https://reg-meta.vqv.uk/mcp), or your steward's catalog when your data comes from its holdings (SWECOV: https://data.swecov.se/mcp). Restart Claude Code after changing it.",
+      "description": "The catalog MCP server the agent answers from: the global catalog (https://reg-meta.vqv.uk/mcp), or a data steward's catalog, https://<steward-host>/mcp, when your data comes from its holdings. Restart Claude Code after changing it.",
       "default": "https://reg-meta.vqv.uk/mcp",
       "required": false
     }

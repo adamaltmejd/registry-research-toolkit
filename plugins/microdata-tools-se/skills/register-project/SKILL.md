@@ -24,8 +24,9 @@ the `register-metadata-search` skill.
    `unsupported_schema_version`, whose message names the version that server reads. Use
    that version, and leave out fields newer than it (`releases`, below, is 6.3.0). Order
    from the catalog the data comes from: a steward's catalog for the steward's holdings
-   (plugin README, "Steward catalogs"). Set `reg_meta_version` (required)
-   to the serving catalog's release tag, `reg_meta/vX.Y.Z`. Read `meta.catalog_version`
+   (`register-metadata-search` skill, `references/data-stewards.md`). Set
+   `reg_meta_version` (required) to the serving catalog's release tag, `reg_meta/vX.Y.Z`.
+   Read `meta.catalog_version`
    from a catalog tool response and format its release version `X.Y.Z` as that tag. If
    it is not a release version (for example, `dev`), ask which catalog release to use.
    Never infer it from the local executable or from memory.
