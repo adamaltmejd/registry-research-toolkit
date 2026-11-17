@@ -3803,8 +3803,8 @@ evidence = "Row key: personnr is the table's only identifier and names its unit 
 [[statement]]
 kind = "set"
 subject = "set:dodsorsak"
-fields = { "description" = "Dödsorsaker. De numrerade variablerna anger var sin ICD-klassificerad multipel dödsorsak, som läkaren har skrivit ner på dödsorsaksintyget, efter ordningsnummer. Övriga variabler är den underliggande dödsorsaken, alla klassificerade dödsorsaker samlade i en ICD-sträng och två förkortade dödsorsakslistor: en för översiktlig redovisning i ICD-9 och en nordisk." }
-evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är ICD-klassificerade dödsorsaker; de numrerade följer ordning, övriga är sammanställningar.\ncatalog:variable_text:63006:-3653:2932897\ncatalog:variable_text:63121:18262:2932897\ncatalog:variable_text:63198:-6575:2932897\ncatalog:variable_text:63116:6209:9862\ncatalog:variable_text:63131:6209:9862"
+fields = { "description" = "Multipla dödsorsaker. De numrerade variablerna anger var sin ICD-klassificerad dödsorsak, som läkaren har skrivit ner på dödsorsaksintyget, efter ordningsnummer. Dessutom finns alla klassificerade dödsorsaker samlade i en ICD-sträng." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är ICD-klassificerade dödsorsaker; de numrerade följer ordning, övriga är sammanställningar. Skrivs om efter #2513-uppdelningen (Operator 2026-11-17, Q2): den underliggande dödsorsaken och de förkortade listorna ligger nu i underliggande-dodsorsak.\ncatalog:variable_text:63006:-3653:2932897\ncatalog:variable_text:63121:18262:2932897\ncatalog:variable_text:63198:-6575:2932897\ncatalog:variable_text:63116:6209:9862\ncatalog:variable_text:63131:6209:9862"
 
 [[statement]]
 kind = "set"
@@ -3829,3 +3829,9 @@ kind = "set"
 subject = "set:underliggande-dodsorsak"
 fields = { "label" = "Underliggande dödsorsak" }
 evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nNy mängd för de medlemmar som bröts ut ur dodsorsak."
+
+[[statement]]
+kind = "set"
+subject = "set:underliggande-dodsorsak"
+fields = { "description" = "Den underliggande dödsorsaken, det vill säga den sjukdom eller skada som inledde kedjan av händelser som slutligen ledde fram till döden, och två förkortade dödsorsakslistor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description. Set rewritten after the #2513 set-fault fixes (Operator 2026-11-17).\n\nAlla variabler gäller underliggande dödsorsak, direkt eller indelad i förkortade listor.\ncatalog:variable_text:63198:-6575:2932897\ncatalog:variable_text:63116:6209:9862\ncatalog:variable_text:63131:6209:9862"

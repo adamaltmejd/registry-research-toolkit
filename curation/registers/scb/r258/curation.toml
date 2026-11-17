@@ -20495,3 +20495,15 @@ kind = "set"
 subject = "set:befolkningens-anvandning-av-sociala-medier"
 fields = { "label" = "Befolkningens användning av sociala medier" }
 evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nNy mängd för de medlemmar som bröts ut ur anvandning-av-sociala-medier."
+
+[[statement]]
+kind = "set"
+subject = "set:anvandning-av-sociala-medier"
+fields = { "description" = "Om företaget använder sociala medier, dels av en viss typ (sociala nätverk, bloggar eller microbloggar, webbplatser för att dela multimedia, wiki-verktyg), dels för ett visst syfte (till exempel rekrytering, marknadsföring eller samarbete med affärspartners). Med att använda sociala medier menas att företaget har en användarprofil eller ett konto, beroende på vad som krävs för den aktuella typen av sociala medier." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description. Set rewritten after the #2513 set-fault fixes (Operator 2026-11-17).\n\nAlla variabler gäller företagets användning av sociala medier; definitionen av att använda gäller samtliga frågor, utom den allmänna frågan från 2025 som endast har etikett.\ncatalog:variable_text:39684:15706:16801\ncatalog:variable_text:40210:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:befolkningens-anvandning-av-sociala-medier"
+fields = { "description" = "Personers användning av sociala medier och sociala nätverk, till exempel att delta på sociala nätverkssajter som Facebook och Twitter, hur ofta de är aktiva där och om de använder sociala medier i arbetet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description. Set rewritten after the #2513 set-fault fixes (Operator 2026-11-17).\n\nVariablerna gäller individers internetanvändning och är frågor till urvalspersoner; formuleringen är hållen allmän eftersom frågorna skiljer sig åt mellan åren.\ncatalog:variable_text:40043:14975:15340\ncatalog:variable_text:40328:16436:16801\ncatalog:variable_text:39720:17532:17897\ncatalog:variable_text:40673:15340:15706"

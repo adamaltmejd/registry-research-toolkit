@@ -7190,12 +7190,6 @@ evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one c
 
 [[statement]]
 kind = "set"
-subject = "set:laxhjalp"
-fields = { "description" = "Om och av vem barnet får hjälp med läxorna. Frågan om vem som hjälper har en variabel per svarsalternativ (till exempel mamma, pappa, syskon, kompis, läxhjälp i skolan eller ingen). Andra variabler anger om eller hur ofta barnet får hjälp med läxorna när det behöver det." }
-evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är dels svarsalternativ i frågan om vem som hjälper, dels frågan om barnet får hjälp.\ncatalog:variable_text:13137:13879:14245\ncatalog:variable_text:13164:13879:14245\ncatalog:variable_text:13166:13879:14245\ncatalog:variable_text:13168:13879:14245\ncatalog:variable_text:13277:19358:19723\ncatalog:variable_text:13286:13879:18262"
-
-[[statement]]
-kind = "set"
 subject = "set:laxtid"
 fields = { "description" = "Hur många timmar per vecka barnet gör läxor eller läser inför prov. En av variablerna är grupperad i intervall." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma mått i alla versioner; gruppering enligt texten för en medlem.\ncatalog:variable_text:13138:13879:16801\ncatalog:variable_text:13140:16801:18262\ncatalog:variable_text:13278:19358:19723"
@@ -7253,3 +7247,15 @@ kind = "set"
 subject = "set:hjalp-med-laxorna-vid-behov"
 fields = { "label" = "Hjälp med läxorna vid behov" }
 evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nNy mängd för de medlemmar som bröts ut ur laxhjalp."
+
+[[statement]]
+kind = "set"
+subject = "set:laxhjalp"
+fields = { "description" = "Vem eller vilka barnet brukar få hjälp med läxorna av. Varje variabel är ett svarsalternativ, till exempel mamma, pappa, syskon, kompis, läxhjälp i skolan eller ingen hjälp." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description. Set rewritten after the #2513 set-fault fixes (Operator 2026-11-17).\n\nAlla elva varianter är svarsalternativ på samma enkätfråga om vem som hjälper barnet med läxorna.\ncatalog:variable_text:13137:13879:14245\ncatalog:variable_text:13164:13879:14245\ncatalog:variable_text:13165:13879:14245\ncatalog:variable_text:13166:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:hjalp-med-laxorna-vid-behov"
+fields = { "description" = "Om och hur ofta barnet får hjälp med läxorna när han eller hon behöver det." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description. Set rewritten after the #2513 set-fault fixes (Operator 2026-11-17).\n\nBåda variablerna avser hjälp med läxor vid behov; en frågar efter hur ofta, den andra har ändrat form från ja/nej till frekvens, så bara det gemensamma anges.\ncatalog:variable_text:13277:19358:19723\ncatalog:variable_text:13286:13879:18262"

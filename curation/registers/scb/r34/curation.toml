@@ -27835,8 +27835,8 @@ evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one c
 [[statement]]
 kind = "set"
 subject = "set:lone-eller-foretagarinkomst"
-fields = { "description" = "Bruttolön för anställning och företagarinkomst (nettoinkomst av näringsverksamhet) för egenföretagare. Variablerna avser personer, företag eller arbetsställen. För personer finns årssumman för största, näst största respektive tredje största förvärvskälla under året, och belopp för enskilda månader, antingen för huvudsakligt jobb eller för respektive förvärvskälla." }
-evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam är inkomsttypen (lön och företagarinkomst); enhet, period och förvärvskälla varierar. Metodtexter om månadsberäkning och inkluderade poster gäller bara en del av medlemmarna och står kvar i lagrad text; bara KU-årsvariablerna täcks fullt av beskrivningen.\ncatalog:variable_text:44550:18993:20089\ncatalog:variable_text:44552:17897:18993\ncatalog:variable_text:44552:18993:20089\ncatalog:variable_text:44973:7305:17167\ncatalog:variable_text:45019:19723:20089\ncatalog:variable_text:45020:17897:18993\ncatalog:variable_text:45352:19723:20089"
+fields = { "description" = "En persons kontanta bruttolön för anställning eller nettoinkomst av näringsverksamhet för egenföretagare. Årssumman finns för största, näst största respektive tredje största förvärvskälla under året, enligt kontrolluppgift eller arbetsgivardeklaration, och belopp för enskilda månader, antingen för huvudsakligt jobb eller för respektive förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam är inkomsttypen (lön och företagarinkomst); enhet, period och förvärvskälla varierar. Metodtexter om månadsberäkning och inkluderade poster gäller bara en del av medlemmarna och står kvar i lagrad text; bara KU-årsvariablerna täcks fullt av beskrivningen. Skrivs om efter #2513-uppdelningen (Operator 2026-11-17, Q2): summorna för företag och arbetsställe ligger nu i summerad-lone-eller-foretagarinkomst, och mängden har axlar för månad, förvärvskälla och källa.\ncatalog:variable_text:44550:18993:20089\ncatalog:variable_text:44552:17897:18993\ncatalog:variable_text:44552:18993:20089\ncatalog:variable_text:44973:7305:17167\ncatalog:variable_text:45019:19723:20089\ncatalog:variable_text:45020:17897:18993\ncatalog:variable_text:45352:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -28209,3 +28209,9 @@ kind = "set"
 subject = "set:summerad-lone-eller-foretagarinkomst"
 fields = { "label" = "Summerad löne- eller företagarinkomst" }
 evidence = "Set fault from the #2513 set-description sweep, Operator ruling 2026-11-17 (Q2: split into a new set; Q3: the separate survey questions leave the set).\n\nNy mängd för de medlemmar som bröts ut ur lone-eller-foretagarinkomst."
+
+[[statement]]
+kind = "set"
+subject = "set:summerad-lone-eller-foretagarinkomst"
+fields = { "description" = "Summerad kontant bruttolön för anställning och nettoinkomst av näringsverksamhet för egenföretagare under året, för ett företag respektive ett arbetsställe." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description. Set rewritten after the #2513 set-fault fixes (Operator 2026-11-17).\n\nBåda variablerna summerar samma inkomstslag, på företags- respektive arbetsställsnivå; K10-ändringen från 2024 gäller båda.\ncatalog:variable_text:45019:7305:18993\ncatalog:variable_text:45352:7305:18993\ncatalog:variable_text:45352:19723:20089"
