@@ -89,14 +89,17 @@ only the category code (`setup`, `inventory`, `structure`, `disclosure`, `backst
 
 The gate checks the export against a schema (which files and columns may leave) and a
 policy (the disclosure thresholds). The toolkit ships its pairs in
-`reg_export_gate/schemas/`. `trial` (person counts by year and group, and a per-year mean,
-counts at least 5) is for trials; it does not declare a research project's outputs. A real
-project needs a schema that declares its outputs and
-a policy that a human has reviewed against the data holder's disclosure rules. Both are
-toolkit files, not project code: the agent may list the files and columns the analysis
-needs, but it never writes, edits or loosens a schema or a policy.
+`reg_export_gate/schemas/`. The default for a project's results is `aggregates` with the
+policy `aggregates-min5`: long-form counts, means, quantiles and regression
+coefficients by groups. Shape the pipeline's outputs to it, a first batch included, so
+the whole flow, gate included, runs end to end on mocks. A file the project does not use
+is written with zero rows. `trial` and `mock-stats` are not for a project's outputs.
 
-Until the researcher has chosen a reviewed pair, a first batch can shape its outputs to
-the `trial` schema, so the whole flow, gate included, runs end to end on mocks. Keep real
-release disabled: exporting real results under `trial` is the researcher's explicit
-decision, not a default.
+The gate only checks; the pipeline suppresses, rounds and perturbs. The default policy
+is a motivated, cited set (a floor of 5, cell-key perturbation of counts, 4 significant
+digits, a regression small-group check, no dominance check), and every parameter is
+configurable per project. [export-gate.md](export-gate.md), "The disclosure policy",
+lists them and says where a project sets its own. The agent lists the files and columns
+the analysis needs and shapes outputs to the schema; it changes a policy only when the
+researcher asks, and never to make a failing run pass. A policy or schema outside the
+toolkit's shipped files is the researcher's to review before real release.

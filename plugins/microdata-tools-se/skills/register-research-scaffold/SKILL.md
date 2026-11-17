@@ -129,8 +129,8 @@ Keep these jobs separate:
   with the project's chosen schema and policy (see
   [export-gate.md](references/export-gate.md)). This is mandatory on MONA and other
   servers; see the release contract. The same call runs last in every local mock run.
-  Keep real release disabled while no toolkit schema and policy declare the project's
-  outputs. Local success does not establish real coverage, findings, performance or
+  Keep real release disabled until the project's outputs are shaped to the chosen
+  schema and policy. Local success does not establish real coverage, findings, performance or
   disclosure clearance.
 
 Use relevant tests/targets while iterating; run the complete small suite and full mock
