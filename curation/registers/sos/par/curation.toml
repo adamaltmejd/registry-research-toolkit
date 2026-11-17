@@ -1771,3 +1771,77 @@ kind = "assert"
 subject = "par-ov-lakemedel: IDNR @2025.. where key = 'n:idnr'"
 fact = { entity = "occurrence", fields = { label = "Löpnummer för öppenvårdskontakt", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
 evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_OV row 38 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_OV flerfil row carries it. Same source key n:idnr as the flat-file listing, so it is the same variable (lopnr-oppenvardskontakt). The period is the par-ov-lakemedel table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 38."
+
+# Row keys of the flerfil tables: IDNR plus the file's sequence number (COS 2026-11-17).
+
+[[statement]]
+kind = "set"
+subject = "par-sv-diagnoser: var:lopnr-oppenvardskontakt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnosiss within it (PAR_SV row 168: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 168."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-diagnoser: var:sekvensnr-dia"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnosiss within it (PAR_SV row 168: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 168."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-atgarder: var:lopnr-oppenvardskontakt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-atgarder row is one action of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_ATG numbers the actions within it (PAR_SV row 167: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 167."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-atgarder: var:sekvensnr-atg"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-atgarder row is one action of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_ATG numbers the actions within it (PAR_SV row 167: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 167."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-lakemedel: var:lopnr-oppenvardskontakt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-lakemedel row is one drug administration of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_LT numbers the drug administrations within it (PAR_SV row 169: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 169."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-lakemedel: var:sekvensnr-lt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-lakemedel row is one drug administration of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_LT numbers the drug administrations within it (PAR_SV row 169: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 169."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-diagnoser: var:lopnr-oppenvardskontakt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnosiss within it (PAR_OV row 65: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 65."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-diagnoser: var:sekvensnr-dia"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnosiss within it (PAR_OV row 65: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 65."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-atgarder: var:lopnr-oppenvardskontakt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-atgarder row is one action of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_ATG numbers the actions within it (PAR_OV row 64: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 64."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-atgarder: var:sekvensnr-atg"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-atgarder row is one action of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_ATG numbers the actions within it (PAR_OV row 64: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 64."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-lakemedel: var:lopnr-oppenvardskontakt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-lakemedel row is one drug administration of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_LT numbers the drug administrations within it (PAR_OV row 66: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 66."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-lakemedel: var:sekvensnr-lt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-lakemedel row is one drug administration of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_LT numbers the drug administrations within it (PAR_OV row 66: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 66."
