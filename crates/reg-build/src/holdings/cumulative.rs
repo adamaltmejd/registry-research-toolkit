@@ -96,16 +96,17 @@ pub(super) fn resolve(
             .find(|(own, _)| *own == newest)
             .map(|(_, identity)| identity.clone())
             .expect("the newest member");
+        // Every extract's own date, superseded ones included, must fall after the start.
+        if let Some((_, identity)) = members.iter().find(|(own, _)| start >= *own) {
+            return Err(format!(
+                "locator={}: holdings_cumulative_invalid: the extract's own date is before its table's start",
+                authored[identity].locator
+            )
+            .into());
+        }
         for (own, identity) in members {
             let table = authored.get_mut(&identity).expect("a grouped table");
             if own == newest {
-                if start >= own {
-                    return Err(format!(
-                        "locator={}: holdings_cumulative_invalid: the extract's own date is before its table's start",
-                        table.locator
-                    )
-                    .into());
-                }
                 table.delivery = Some(reg_core::render(&[(
                     reg_core::issue::iso_day(start),
                     reg_core::issue::iso_day(own - 1),
