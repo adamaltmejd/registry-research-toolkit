@@ -1626,3 +1626,21 @@ kind = "set"
 subject = "lonestrukturstatistik-regioner: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the employee; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Klassificering av inriktningen för en persons genomförda utbildning enligt Svensk utbildningsnomenklatur (SUN), en standard för klassificering av enskilda utbildningar som även aggregerar dem till större grupper. Variablerna skiljer sig åt i SUN-version (äldre SUN, SUN 96, SUN 2000 och SUN 2020) och i om koden är ensiffrig." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; version och detaljnivå skiljer.\ncatalog:variable_text:50156:11323:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsklassificering"
+fields = { "description" = "Utbildningskod för en persons högsta genomförda utbildning enligt SUN, på fem- eller tresiffernivå, samt utbildningsgrupp. Tresiffernivån är skapad från koden på femsiffernivå." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre medlemmar klassificerar högsta utbildning; utbildningsgrupp har bara etiketten som text.\ncatalog:variable_text:50155:9496:10592\ncatalog:variable_text:50178:10592:11323\ncatalog:variable_text:50177:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:yrke"
+fields = { "description" = "Klassificering av en persons yrke enligt Standard för svensk yrkesklassificering (SSYK) eller International Standard Classification of Occupations (ISCO), samt tjänstebeteckning under mätmånaden." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna anger yrke i olika klassifikationer eller tjänstebeteckning.\ncatalog:variable_text:50154:9862:16801\ncatalog:variable_text:50181:9496:10592\ncatalog:variable_text:50168:9496:15706"

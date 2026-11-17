@@ -2048,3 +2048,27 @@ kind = "set"
 subject = "sjukfranvaro-sjukloneperioden: var:referensmanad"
 fields.row_key = true
 evidence = "Row key: referensmanad (manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:ersattningsdagar"
+fields = { "description" = "Antal ersättningsdagar, det vill säga dagar i ett sjukfall som ersätts med sjuklön. Antalet anges totalt eller för kvinna respektive man (0 för det andra könet), som viktade eller oviktade dagar. De viktade antalen beräknas som summan av Helantdag och Delantdag." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensamt är ersättningsdagar; kön och viktning skiljer. De lagrade texterna anger viktade och behålls eftersom etiketterna inte säger det.\ncatalog:variable_text:42169:15065:19358\ncatalog:variable_text:42170:15065:18993\ncatalog:variable_text:42149:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-objekt-per-stratum"
+fields = { "description" = "Antalet objekt i ett stratum enligt Företagsdatabasen (FDB)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:42154:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-storleksklass"
+fields = { "description" = "Arbetsställets storleksklass efter antalet anställda enligt Företagsdatabasen (FDB)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:42162:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "description" = "Produktionsenhetens näringsgren eller bransch, i olika indelningar och detaljnivåer. Variablerna anger näringsgren i olika grupperingar, bland annat enligt SNI, eller en grov uppdelning i produktionsnäringar och servicenäringar (näringsgrupp)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nDe flesta medlemmar klassificerar produktionsenhetens näringsgren; näringsgrupp är en grövre uppdelning.\ncatalog:variable_text:42198:13879:14245\ncatalog:variable_text:42165:13149:15065\ncatalog:variable_text:42216:13149:14610"

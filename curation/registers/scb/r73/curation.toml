@@ -2242,3 +2242,57 @@ kind = "set"
 subject = "priser-for-nyproducerade-bostader: var:orgnr-foretaget"
 fields.row_key = true
 evidence = "Row key: orgnr-foretaget and husbeteckning identify a row: the builder firm and its house or stage designation identify the new-build project a row prices (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-husblanketter"
+fields = { "description" = "Totalt antal husblanketter (hustypsblanketter) inom byggprojektet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:47885:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:byggherrens-adress"
+fields = { "description" = "Adressuppgifter för byggherren: adress, postadress och postnummer." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre är delar av byggherrens adress.\ncatalog:variable_text:47859:13514:20089\ncatalog:variable_text:47860:13514:20089\ncatalog:variable_text:47861:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:byggnadskostnad"
+fields = { "description" = "Projektets pris för byggnads- och byggherrekostnader. Variablerna anger kostnaden exklusive mervärdesskatt samt de härledda brutto- och nettokostnaderna, som är byggnadskostnaden indexjusterad till påbörjandetidpunkten inklusive mervärdesskatt, netto även med avdrag för bidrag." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam kostnadsdefinition; moms, bidrag och härledning skiljer.\ncatalog:variable_text:47863:13514:20089\ncatalog:variable_text:47864:13514:20089\ncatalog:variable_text:47865:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:hustyp"
+fields = { "description" = "Hustyp i projektet: småhus eller flerbostadshus. Småhus är en sammanfattande benämning på enbostadshus (friliggande samt rad- och kedjehus) och friliggande tvåbostadshus. Flerbostadshus är ett bostadshus med tre eller flera bostadslägenheter. Variablerna skiljer sig åt i hur hustypen anges för projekt med flera hustyper; den härledda variabeln anger den hustyp som har flest lägenheter i projektet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition av hustyp; härledningen av projektets hustyp skiljer.\ncatalog:variable_text:47889:13514:20089\ncatalog:variable_text:47890:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:ljudklass"
+fields = { "description" = "Förekomst av ljudklass A respektive B. Variablerna finns som ursprungliga och som härledda uppgifter. En härledd uppgift sätts till 1 om de flesta lägenheterna i projektet har ljudklassen, annars 0." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam förekomst av ljudklass; ursprunglig eller härledd skiljer.\ncatalog:variable_text:47910:13514:20089\ncatalog:variable_text:47912:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:luftbehandlingsinstallation"
+fields = { "description" = "Luftbehandlingsinstallationen i hustypen. Variablerna finns som ursprunglig och som härledd variabel." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:47846:13514:20089\ncatalog:variable_text:47915:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:markkostnad"
+fields = { "description" = "Projektets pris för marken. Variablerna anger markkostnaden exklusive mervärdesskatt samt de härledda brutto- och nettokostnaderna, som är den till påbörjandetidpunkten indexjusterade markkostnaden plus kapitaliserad tomträttsavgäld." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition av markkostnad; härledning skiljer.\ncatalog:variable_text:47917:13514:20089\ncatalog:variable_text:47944:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:stommens-fortillverkningsgrad"
+fields = { "description" = "Förtillverkningsgraden hos stommen i hustypen. Variablerna finns som ursprunglig och som härledd variabel." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:47847:13514:20089\ncatalog:variable_text:47937:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:total-produktionskostnad"
+fields = { "description" = "Projektets försäljnings- eller slutpris inklusive mervärdesskatt. De härledda variablerna brutto och netto beräknas som summan av markkostnad och byggnadskostnad, netto med avdrag för bidrag." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; brutto och netto är härledda summor.\ncatalog:variable_text:47931:13514:20089\ncatalog:variable_text:47946:13514:20089\ncatalog:variable_text:47947:13514:20089"

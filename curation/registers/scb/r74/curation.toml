@@ -1182,3 +1182,27 @@ kind = "set"
 subject = "energi-i-smahus: var:identitet"
 fields.row_key = true
 evidence = "Row key: identitet identify a row: a house survey keyed on the surveyed object id, which covers all years; the owner person-orgnr is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:biutrymmesyta"
+fields = { "description" = "Småhusets biutrymmesyta, som total yta och indelad i klasser. Som uppvärmd yta räknas yta som är uppvärmd till minst 10 °C." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition av uppvärmd yta; totalen och klassindelningen framgår av etiketterna.\ncatalog:variable_text:15267:10957:14245\ncatalog:variable_text:15268:10957:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsyta"
+fields = { "description" = "Småhusets bostadsyta, dels som total yta (för taxeringsenheten respektive för alla taxeringsenheter av typ 120, 220, 222 och 223 som hör till fastigheten), dels indelad i klasser. Som uppvärmd yta räknas yta som är uppvärmd till minst 10 °C." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition av uppvärmd yta; omfattningen (taxeringsenhet eller fastighet) skiljer mellan medlemmarna.\ncatalog:variable_text:15270:10957:14245\ncatalog:variable_text:15271:10957:11323\ncatalog:variable_text:15310:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:byggnadens-ibruktagandear"
+fields = { "description" = "Det kalenderår då övervägande delen av byggnaden på värderingsenheten togs eller kunde ha tagits i bruk." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:15272:10957:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:elanvandning"
+fields = { "description" = "Husets totala elanvändning och elanvändningen per kvadratmeter, beräknad som husets totala elanvändning dividerad med husets totala uppvärmda yta, vardera även i klassindelad form." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFyra medlemmar: total elanvändning och elanvändning per kvadratmeter, vardera i fortlöpande och klassindelad form.\ncatalog:variable_text:15277:10957:14245\ncatalog:variable_text:15278:10957:11323\ncatalog:variable_text:15279:10957:11323"

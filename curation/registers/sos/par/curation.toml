@@ -1249,12 +1249,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npyth
 
 [[statement]]
 kind = "set"
-subject = "var:yttre-orsakskod-eller-atc"
-fields = { "description" = "Yttre orsak till skador och förgiftningar. Kod för yttre orsak ska finnas för vårdkontakter där diagnoskod innebär skada eller förgiftning. Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:414\n\nHard line breaks only. Original rows row:73 and row:181 provide the positive peer wording; preserve originals, periods, coding and all other fields."
-
-[[statement]]
-kind = "set"
 subject = "var:yttre-orsakskoder"
 fields = { "description" = "Samtliga rapporterade yttre orsakskoder för vårdkontakten, flera koder i en sträng" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:438\n\nExplicitly state multiple external-cause codes already supplied by both originals; retain the distinct TV single-code/ATC construct. Original rows row:21 and row:94 provide the positive peer wording; preserve originals, periods, coding and all other fields."
@@ -1767,3 +1761,27 @@ kind = "set"
 subject = "var:slutdatum-for-psykiatrisk-vardform"
 fields = { "description" = "Slutdatum för psykiatrisk vårdform. I tvångsvården 2010–2014 anger variabeln i stället slutdatum för permission eller avvikning när raden avser en sådan period." }
 evidence = "SLUT is the care-form end date: in PAR slutenvård (2015-2023) a row is a whole stay and SLUT is only the care-form end. PAR tvångsvård 2010-2014 documents the same column also as the end of a leave and of an absconding, which it is on rows that record such a period (maintainer HREG ruling on one column with several documented meanings; COS ruling on #2479, 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:atgardskod"
+fields = { "description" = "Åtgärd eller åtgärder som har utförts under vårdkontakten, angivna som åtgärdskoder. Variablerna anger antingen en åtgärdskod, där värdet vid läkemedelstillförsel kan vara en ATC-kod för läkemedlet, eller flera åtgärdskoder i en sträng." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensamt är åtgärder under vårdkontakten; enstaka kod eller sträng skiljer.\ncatalog:variable_text:64438:16436:2932897\ncatalog:variable_text:64440:-2192:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:senaste-invandring"
+fields = { "description" = "Tidpunkt för personens senaste invandring, angiven som år och månad eller som år, månad och dag." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma text.\ncatalog:variable_text:64496:9862:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:yttre-orsakskod"
+fields = { "description" = "Kod för yttre orsak till skada eller förgiftning. Koden ska finnas för vårdkontakter där diagnoskoden innebär skada eller förgiftning. Variablerna anger första till sjunde rapporterade koden för vårdkontakten, alla rapporterade koder i en sträng, och en variant där värdet även kan vara en ATC-kod." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; ordning, sträng och ATC-variant skiljer. Lagrad text för ATC-varianten förenklas, den för strängen behålls.\ncatalog:variable_text:64516:-2192:2932897\ncatalog:variable_text:64523:16436:2932897\ncatalog:variable_text:64524:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-eller-atc"
+fields = { "description" = "Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:64523:16436:2932897"

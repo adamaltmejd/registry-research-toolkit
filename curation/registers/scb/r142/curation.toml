@@ -1007,3 +1007,9 @@ kind = "set"
 subject = "register-over-manatlig-elstatistik: var:redovisningsmanad"
 fields.row_key = true
 evidence = "Row key: redovisningsmanad (Period) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:elleverantorsbyten"
+fields = { "description" = "Administrerade byten av elleverantör under månaden, för hushåll respektive kunder som inte är hushåll, dels som antal byten, dels som volym. Antalet omfattar byten som kunden gör genom ett aktivt val av ny elleverantör på befintlig adress, där varje elanläggning som får ny leverantör räknas som ett byte. Volymen är summan av beräknad årsvolym i MWh för de rapporterade byten." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFyra medlemmar: antal och volym, uppdelat på hushåll och icke-hushåll.\ncatalog:variable_text:46392:13149:20454\ncatalog:variable_text:46393:13149:20454"

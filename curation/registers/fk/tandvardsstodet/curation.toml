@@ -1248,3 +1248,33 @@ kind = "set"
 subject = "abonnemang: var:manad"
 fields.row_key = true
 evidence = "Row key: manad (MANAD) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:hogkostnadsintervall"
+fields = { "description" = "Intervall för det ersättningsgrundande belopp som patienten har tjänat in under ersättningsperioden, som beskrivning respektive kod." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition och skiljer sig bara i beskrivning mot kod.\ncatalog:variable_text:592:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:hogkostnadsskyddets-intervallkvantiteter"
+fields = { "description" = "Den del av tandvårdsersättningen som ska betalas till mottagningen och som grundas på den del av det ersättningsgrundande beloppet i besöket, inom ersättningsperioden, som ligger i ett visst intervall: under 3 000 kr, mellan 3 000 och 15 000 kr respektive över 15 000 kr. Fältet stämmer inte alltid för korrigeringsärenden, särskilt där manuell korrigering gjorts." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre intervall med gemensam definition och gemensam förbehållsmening; gränserna framgår av texterna.\ncatalog:variable_text:643:13879:2932897\ncatalog:variable_text:644:13879:2932897\ncatalog:variable_text:645:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:land-for-fordragsvard"
+fields = { "description" = "Det land där patienten fått vård i ärenden av typ EG-fördragsvård (ZRV1)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; tillägget om ej tillämpligt gäller bara en medlem och utelämnas.\ncatalog:variable_text:613:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:mottagningens-lan"
+fields = { "description" = "Det län där mottagningen geografiskt hör hemma, som kod eller beskrivning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger mottagningens län; tidpunkten för bestämningen skiljer mellan texterna och utelämnas.\ncatalog:variable_text:608:13879:2932897\ncatalog:variable_text:609:13879:2932897\ncatalog:variable_text:627:13879:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:patientens-lan"
+fields = { "description" = "Det län där patienten är folkbokförd, som kod eller beskrivning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger patientens län enligt folkbokföringen; referenstidpunkten skiljer mellan texterna och utelämnas.\ncatalog:variable_text:610:13879:2932897\ncatalog:variable_text:611:13879:2932897"

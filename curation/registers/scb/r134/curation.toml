@@ -636,3 +636,33 @@ kind = "set"
 subject = "kortperiodisk-sysselsattningsstatistik-ks: var:manad"
 fields.row_key = true
 evidence = "Row key: manad (Manad, MatManad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-foretagare"
+fields = { "description" = "Antalet verksamma företagare på arbetsstället i enskild firma, enkelt bolag, HB eller KB. Här ingår även medhjälpande familjemedlemmar som arbetar vid arbetsstället utan att vara anställda. Uppdelat på kvinnor och män." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; könet skiljer.\ncatalog:variable_text:42118:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:ovrig-franvaro"
+fields = { "description" = "Antalet anställda som är frånvarande av annan orsak än sjukdom eller semester. Endast anställda som varit heldagsfrånvarande räknas. Uppdelat på kvinnor och män." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; könet skiljer.\ncatalog:variable_text:42129:11323:16436\ncatalog:variable_text:42130:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:semesterfranvaro"
+fields = { "description" = "Antalet anställda på arbetsstället som är frånvarande på grund av semester. Endast anställda som varit heldagsfrånvarande räknas. Uppdelat på kvinnor och män." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; könet skiljer.\ncatalog:variable_text:42132:11323:19358\ncatalog:variable_text:42133:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:sjukfranvaro"
+fields = { "description" = "Antalet sjukfrånvarande anställda på arbetsstället. Endast anställda som varit heldagsfrånvarande räknas. Uppdelat på kvinnor och män." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; könet skiljer.\ncatalog:variable_text:42134:11323:19358\ncatalog:variable_text:42135:11323:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:utvalda-arbetsstallen"
+fields = { "description" = "Antalet utvalda arbetsställen i ett stratum, för kort respektive lång blankett." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; blankettyp skiljer.\ncatalog:variable_text:42107:11323:19358\ncatalog:variable_text:42108:11323:19358"

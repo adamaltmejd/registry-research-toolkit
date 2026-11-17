@@ -1312,3 +1312,9 @@ kind = "set"
 subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: var:sandningens-identifikationsnummer"
 fields.row_key = true
 evidence = "Row key: lastbilens-identifikationsnummer and korningens-identifikationsnummer and blsandnnr and sandningens-identifikationsnummer identify a row: rows are shipments, identified by the truck, the trip and the shipment number; owner, organisation and trailer ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:paminnelsedatum"
+fields = { "description" = "Datum då en första respektive andra påminnelse ska skickas ut eller har skickats ut." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är datum för påminnelse 1 och 2 med samma formulering.\ncatalog:variable_text:42889:10957:14245\ncatalog:variable_text:42890:10957:14245"

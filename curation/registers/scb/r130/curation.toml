@@ -1393,3 +1393,21 @@ kind = "set"
 subject = "lonestrukturstatistik-kommuner: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the employee; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Klassificering av inriktningen för en persons genomförda utbildning enligt Svensk utbildningsnomenklatur (SUN), en standard för klassificering av enskilda utbildningar som också aggregerar utbildningar till större grupper." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition i båda medlemmarna; SUN-versionen framgår av etiketterna.\ncatalog:variable_text:50043:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "description" = "Nivån på en persons genomförda utbildning enligt Svensk utbildningsnomenklatur (SUN), eller aggregerad till sju nivåer anpassade till det svenska utbildningssystemet och jämförbara med äldre nivåer före år 2000." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nEn medlem är SUN-nivån och den andra aggregatet i sju nivåer; båda beskrivs i texterna.\ncatalog:variable_text:50032:12784:16801\ncatalog:variable_text:50047:9496:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:yrke"
+fields = { "description" = "Klassificering av yrke enligt Standard för svensk yrkesklassificering (SSYK)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna klassificerar yrke enligt SSYK.\ncatalog:variable_text:50031:9862:16436\ncatalog:variable_text:50051:16801:20089"

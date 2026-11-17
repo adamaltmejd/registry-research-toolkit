@@ -2725,81 +2725,15 @@ fields = { "description" = "Barnets huvudomfång i cm" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:495\n\nBoth names explicitly state child head circumference in centimetres; retain differing original data types. Original rows row:103 and row:262 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-barnet-10"
-fields = { "description" = "Barnets diagnoskod 10 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:411\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:16 and row:222 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-barnet-11"
-fields = { "description" = "Barnets diagnoskod 11 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:423\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:17 and row:223 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-barnet-12"
-fields = { "description" = "Barnets diagnoskod 12 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:435\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:18 and row:224 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-barnet-2"
-fields = { "description" = "Barnets diagnoskod 2 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:315\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:19 and row:232 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-barnet-3"
-fields = { "description" = "Barnets diagnoskod 3 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:327\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:20 and row:234 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
-
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-barnet-4"
-fields = { "description" = "Barnets diagnoskod 4 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:339\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:21 and row:235 provide the positive peer wording; preserve originals, periods, coding and all other fields."
-
-
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-barnet-5"
-fields = { "description" = "Barnets diagnoskod 5 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:351\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:22 and row:236 provide the positive peer wording; preserve originals, periods, coding and all other fields."
-
-
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-barnet-6"
-fields = { "description" = "Barnets diagnoskod 6 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:363\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:23 and row:237 provide the positive peer wording; preserve originals, periods, coding and all other fields."
-
-
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-barnet-7"
-fields = { "description" = "Barnets diagnoskod 7 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:375\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:24 and row:238 provide the positive peer wording; preserve originals, periods, coding and all other fields."
-
-
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-barnet-8"
-fields = { "description" = "Barnets diagnoskod 8 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:387\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:25 and row:239 provide the positive peer wording; preserve originals, periods, coding and all other fields."
-
-
-[[statement]]
-kind = "set"
-subject = "var:diagnoskod-barnet-9"
-fields = { "description" = "Barnets diagnoskod 9 enligt  svenska versionen av ICD" }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/mfr.toml:399\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:26 and row:240 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
 
 [[statement]]
@@ -3594,3 +3528,63 @@ kind = "set"
 subject = "var:borduppgift-f2"
 fields = { "label" = "Börduppgift (Medicinska födelseregistret)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Medicinska födelseregistret\"."
+
+[[statement]]
+kind = "set"
+subject = "set:diagnoskod-barnet"
+fields = { "description" = "Barnets diagnoskoder enligt den svenska versionen av ICD. Varje variabel innehåller en kod (nr 1–20); en variabel samlar koderna 1–12 i en sträng." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nDen lagrade texten för nr 2–12 anger bara ICD och numret, vilket beskrivningen täcker; strängvariabeln skiljer sig och behålls.\ncatalog:variable_text:64224:-1826:2932897\ncatalog:variable_text:64225:10592:2932897\ncatalog:variable_text:64207:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:apgarpoang"
+fields = { "description" = "Apgarbedömning vid 1, 5 respektive 10 minuter. Poängen är en summa av poäng för bedömning av hjärtfrekvens, andning, hudfärg, muskeltonus och retbarhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; tidpunkten skiljer.\ncatalog:variable_text:64162:1096:2932897\ncatalog:variable_text:64163:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:atgardskod-forlosta"
+fields = { "description" = "Den förlöstas åtgärdskoder under och efter förlossningen, enligt Socialstyrelsens klassifikation av vårdåtgärder (KVÅ). Varje variabel innehåller en kod (nr 1–12); en variabel samlar koderna 1–12 i en sträng." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nLagrad medlemstext anger KVÅ och strängvarianten; numrerade följer ordning.\ncatalog:variable_text:64182:1096:2932897\ncatalog:variable_text:64183:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:barnets-diagnoskod-bk"
+fields = { "description" = "Barnets diagnoskoder enligt professor Bengt Källéns klassificering (BK). Varje variabel innehåller en kod, numrerade 1–8." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma text och skiljer bara i ordningsnummer.\ncatalog:variable_text:64196:-1826:10592"
+
+[[statement]]
+kind = "set"
+subject = "set:bordordning"
+fields = { "description" = "Bördordning och antal i börd vid flerbörd. Uppgiften finns i både Fosterskador och kromosomavvikelser och Medicinska födelseregistret." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma text; etiketterna anger vilket register.\ncatalog:variable_text:64214:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:diagnoskod-forlosta"
+fields = { "description" = "Den förlöstas diagnoskoder under och efter förlossningen, enligt den svenska versionen av ICD. Varje variabel innehåller en kod (nr 1–12); en variabel samlar koderna 1–12 i en sträng." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nLagrad medlemstext anger ICD och strängvarianten; numrerade följer ordning.\ncatalog:variable_text:64223:1096:2932897\ncatalog:variable_text:64244:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelsestorlek-for-graviditetslangd"
+fields = { "description" = "Barnets födelsestorlek i förhållande till graviditetslängden: lätt för tiden (small for gestational age, SGA) respektive tung för tiden (large for gestational age, LGA). Skattningen bygger på Marsal m.fl.:s metod och gäller endast enkelbörder." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma metod och begränsning; variablerna är motpoler.\ncatalog:variable_text:64317:1096:2932897\ncatalog:variable_text:64382:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:forlossningsbristningar"
+fields = { "description" = "Bristning i samband med förlossningen, en variabel per kroppsdel (cervix, klitoris, perineum, rektum, sfinkter, vagina). Uppgiften anges i en kryssruta i journalen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma text för alla utom kroppsdelen.\ncatalog:variable_text:64218:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:personnummerkvalitet"
+fields = { "description" = "Kvaliteten (pålitligheten) på ett personnummer enligt förutbestämda regler. Variablerna gäller personnumret för barnet, för barn i flerbörd respektive för den gravida eller förlösta personen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma kvalitetsmått; skiljer i vems personnummer.\ncatalog:variable_text:64342:1096:2932897\ncatalog:variable_text:64343:13514:2932897\ncatalog:variable_text:64344:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:tidigare-kejsarsnitt"
+fields = { "description" = "Tidigare kejsarsnitt hos den förlösta: om hon har haft ett eller flera, och året för det senaste. Beräknas med hjälp av moderns tidigare förlossningar i MFR samt uppgift i förlossningsjournal 1 (FV1)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda beräknas på samma underlag.\ncatalog:variable_text:64289:1096:2932897\ncatalog:variable_text:64381:1096:2932897"

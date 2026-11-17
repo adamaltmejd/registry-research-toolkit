@@ -3030,3 +3030,15 @@ kind = "set"
 subject = "lova-ekonomi-arbetsmarknad: var:ar"
 fields.row_key = true
 evidence = "Row key: ar (AR) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsmarknadsstatus"
+fields = { "description" = "Individens arbetsmarknadsstatus, till exempel yrkesaktiv, ej yrkesaktiv, ej sysselsatt eller pensionerad, som kod och som klartext." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger arbetsmarknadsstatus; kod mot klartext framgår av texterna.\ncatalog:variable_text:63920:9131:19358\ncatalog:variable_text:63922:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:provotidsperiod"
+fields = { "description" = "Början respektive slut på en treårig prövotid som HSAN kan besluta om för en legitimerad yrkesutövare." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nDe två medlemmarna är start- och slutdatum för samma prövotid.\ncatalog:variable_text:64012:9131:2932897\ncatalog:variable_text:64013:9131:2932897"

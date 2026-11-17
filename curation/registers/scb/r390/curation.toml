@@ -1748,3 +1748,33 @@ kind = "set"
 subject = "fritidsfiske: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: survey of persons keys on the sampled person; the survey löpnummer and round ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-burar-och-tinor"
+fields = { "description" = "Antal burar eller tinor som personen fiskade med, förlorade i vattnet, slängde eller köpte under tertialet. Varje variabel anger antalet för en av dessa fyra kategorier." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; kategorin framgår av etikett.\ncatalog:variable_text:28454:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-fiskedagar"
+fields = { "description" = "Antalet dagar en person har fiskat. Hit räknas allt fritidsfiske med spö, nät, bur med mera som sker utan yrkesfiskelicens. En fiskedag är en dag då personen har fiskat, oavsett hur länge eller om hen har fått någon fångst. Variablerna avser antingen hela enkätomgången eller en enskild månad i den." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition av fiskedag; omgång eller månad skiljer.\ncatalog:variable_text:28458:17897:18628\ncatalog:variable_text:28483:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:barn-som-fritidsfiskat"
+fields = { "description" = "Barn under 16 år i personens hushåll som har fritidsfiskat under omgången. Variablerna anger antalet barn respektive om det finns sådana barn (ja eller nej)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; antal eller ja/nej skiljer.\ncatalog:variable_text:28453:16801:17532\ncatalog:variable_text:28488:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:langd-fiskenat"
+fields = { "description" = "Antal meter nät som personen fiskade med, förlorade i vattnet, slängde eller köpte under tertialet. Varje variabel anger antalet meter för en av dessa fyra kategorier." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; kategorin framgår av etikett.\ncatalog:variable_text:28464:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:stora-n"
+fields = { "description" = "Antal enheter i aktuellt stratum i populationen. Fas 1 avser första gången urvalspersonen är med i undersökningen, fas 2 den panelgrupp som urvalspersonen tillhör." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; fasen skiljer.\ncatalog:variable_text:28535:16801:19723\ncatalog:variable_text:28536:16801:19723"

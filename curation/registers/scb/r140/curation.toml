@@ -689,3 +689,9 @@ kind = "set"
 subject = "energistatistik-for-lokaler: var:taxeringsid"
 fields.row_key = true
 evidence = "Row key: taxeringsid identify a row: a property table keyed on the tax assessment unit id; designation, owner orgnr and survey ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:graddagar"
+fields = { "description" = "Antal graddagar för aktuellt år respektive för ett normalår. Graddagarna beräknas av SMHI som skillnaden mellan +17 °C och dygnsmedeltemperaturen, summerad över januari till mars och november till december samt de dygn i april till oktober då dygnsmedeltemperaturen understiger ett gränsvärde för månaden (12 °C i april och september, 10 °C i maj till juli, 11 °C i augusti och 13 °C i oktober)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma beräkningsregel i båda medlemmarna; aktuellt år mot normalår framgår av etiketterna.\ncatalog:variable_text:15226:13514:14245"

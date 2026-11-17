@@ -2323,3 +2323,15 @@ kind = "set"
 subject = "privatagda-flerbostadshus: var:fastighetsbeteckning"
 fields.row_key = true
 evidence = "Row key: fastighetsbeteckning identify a row: one row per privately owned multi-dwelling property, keyed on the property designation (unique only together with kommun) (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-efter-avdrag"
+fields = { "description" = "Intäkter efter avdrag för bortfall: hyresintäkter efter hyresbortfall samt summa intäkter efter avdrag av avgifts- och hyresbortfall." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är intäktsmått efter avdrag; summavarianterna har samma definition.\ncatalog:variable_text:34910:14245:16071\ncatalog:variable_text:34913:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:vardear"
+fields = { "description" = "Nybyggnadsåret justerat för byggnadens sannolika återstående livslängd." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk definition.\ncatalog:variable_text:34989:13514:13879"

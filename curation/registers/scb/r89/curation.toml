@@ -786,3 +786,15 @@ kind = "set"
 subject = "konjunkturstatistik-loner-for-kommuner: var:manad-man"
 fields.row_key = true
 evidence = "Row key: manad-man (Man) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-timanstallda"
+fields = { "description" = "Antal timanställda, totalt och uppdelat på kvinnor och män." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTotalen och uppdelningen på kön framgår av etiketterna; definitionen av timanställd gäller alla.\ncatalog:variable_text:41251:13879:20454\ncatalog:variable_text:41281:10592:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:rorliga-lonetillagg"
+fields = { "description" = "Summa rörliga lönetillägg i kronor under mätmånaden, för månadsavlönade respektive timavlönade." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk definition.\ncatalog:variable_text:41275:13879:20454"

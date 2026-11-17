@@ -782,3 +782,15 @@ kind = "set"
 subject = "bostadsbestand: var:lagenhetsnyckel"
 fields.row_key = true
 evidence = "Row key: lagenhetsnyckel identify a row: a dwelling table keyed on the dwelling key; property, building, entrance and address ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:distriktstillhorighet"
+fields = { "description" = "Distrikt, som kod respektive namn. Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk definition; kod mot namn framgår av etiketterna.\ncatalog:variable_text:13981:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:tatortstillhorighet"
+fields = { "description" = "Regional indelning i tätorter, det vill säga sammanhängande bebyggelse med minst 200 invånare." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar tätortsdefinitionen; varianterna efter definitionsår framgår av etiketterna.\ncatalog:variable_text:14006:18628:20089\ncatalog:variable_text:14008:15706:16801"

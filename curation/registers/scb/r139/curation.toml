@@ -1202,3 +1202,9 @@ kind = "set"
 subject = "varmeverkens-energi: var:kvartal"
 fields.row_key = true
 evidence = "Row key: kvartal (Kvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:bransleslagets-gransvarden"
+fields = { "description" = "Bränsleslagets absoluta högsta respektive lägsta värde i den kvartalsvisa bränslestatistiken." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTexterna ger bara att det är högsta och lägsta värde i Kvartalsvis bränslestatistik; mer går inte att säga.\ncatalog:variable_text:14049:13149:13514\ncatalog:variable_text:14051:13149:13514"

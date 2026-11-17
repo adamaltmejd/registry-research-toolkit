@@ -276,3 +276,9 @@ kind = "set"
 subject = "utrikes-och-inrikes-trafik-med-fartyg: var:redovisningsmanad"
 fields.row_key = true
 evidence = "Row key: redovisningsmanad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:hamn"
+fields = { "description" = "Hamn för fartygs ankomst eller avgång: dels den hamn som fartyget närmast ankom från eller avgår till, dels den hamn där godset lastats eller ska lossas. Hamnar inom EES inklusive kandidatländer till EU anges med UN/LOCODE (FN:s ortskod) tillsammans med koder från Eurostat; hamnar utanför EES anges med en femställig kod av tvåställig ISO-landskod följd av tre åttor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är hamnkoder med samma kodsystem.\ncatalog:variable_text:31017:12053:15706\ncatalog:variable_text:31022:12053:14245"

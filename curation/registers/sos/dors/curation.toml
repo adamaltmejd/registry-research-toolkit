@@ -3799,3 +3799,27 @@ kind = "set"
 subject = "dors-avi: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:dodsorsak"
+fields = { "description" = "Dödsorsaker. De numrerade variablerna anger var sin ICD-klassificerad multipel dödsorsak, som läkaren har skrivit ner på dödsorsaksintyget, efter ordningsnummer. Övriga variabler är den underliggande dödsorsaken, alla klassificerade dödsorsaker samlade i en ICD-sträng och två förkortade dödsorsakslistor: en för översiktlig redovisning i ICD-9 och en nordisk." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är ICD-klassificerade dödsorsaker; de numrerade följer ordning, övriga är sammanställningar.\ncatalog:variable_text:63006:-3653:2932897\ncatalog:variable_text:63121:18262:2932897\ncatalog:variable_text:63198:-6575:2932897\ncatalog:variable_text:63116:6209:9862\ncatalog:variable_text:63131:6209:9862"
+
+[[statement]]
+kind = "set"
+subject = "set:dodsorsak-position"
+fields = { "description" = "Anger var på dödsorsaksintyget (rad och plats) en multipel dödsorsak stod. Varje variabel gäller den dödsorsak som har samma ordningsnummer." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger position på intyget för dödsorsak med samma nummer.\ncatalog:variable_text:63055:6209:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:operationsdatum"
+fields = { "description" = "Datum för operation som utfördes inom fyra veckor före döden. Uppgiften finns även som SAS-datum." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma text; en är SAS-datum enligt etiketten.\ncatalog:variable_text:63133:6209:2932897\ncatalog:variable_text:63134:18262:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:substans"
+fields = { "description" = "Substans i fritext från dödsorsaksintyget. Varje variabel innehåller en substans, numrerade 1–48." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma text och skiljer sig bara i ordningsnummer.\ncatalog:variable_text:63150:15340:2932897"

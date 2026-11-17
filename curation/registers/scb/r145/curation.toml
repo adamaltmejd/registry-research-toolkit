@@ -627,3 +627,15 @@ kind = "set"
 subject = "hostsadda-arealer: var:addid"
 fields.row_key = true
 evidence = "Row key: addid identify a row: farm table keys on the LBR farm id addid; the firm name is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsomradestillhorighet"
+fields = { "description" = "Produktionsområde enligt SCB:s indelning av Sverige i produktionsområden, Po8 eller Po18, för brukningscentrum respektive för det område där arealen finns." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger produktionsområde i Po8 eller Po18; vilket område som avses framgår av etiketterna.\ncatalog:variable_text:33634:16801:20089\ncatalog:variable_text:33635:16801:20089\ncatalog:variable_text:33636:16801:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:skordeomradestillhorighet"
+fields = { "description" = "Skördeområde (0111 till 2521) enligt indelningen i LBR, för det område där arealen finns respektive för brukningscentrum. De två första siffrorna anger huvudsakligt län, den tredje hur många län som skär skördeområdet och den fjärde är ett löpnummer inom länet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma kodbeskrivning; vilket område som avses framgår av etiketterna.\ncatalog:variable_text:33638:16801:20089\ncatalog:variable_text:33639:16801:20089"

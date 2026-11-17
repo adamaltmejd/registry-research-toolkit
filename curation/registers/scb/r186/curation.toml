@@ -770,3 +770,9 @@ kind = "set"
 subject = "lonestrukturstatistik-hela-ekonomin: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the employee; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:yrke"
+fields = { "description" = "Klassificering av yrke enligt Standard för svensk yrkesklassificering (SSYK), på tresiffrig respektive fyrsiffrig nivå." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är yrkeskoder enligt SSYK på tre och fyra siffror; SSYK-version framgår av etiketterna.\ncatalog:variable_text:49951:16801:20089\ncatalog:variable_text:49953:12784:16801\ncatalog:variable_text:49954:12784:16801"

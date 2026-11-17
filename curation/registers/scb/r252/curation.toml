@@ -1247,12 +1247,6 @@ subject = "var:starkelsepotatisskord-per-skordad-hektar"
 fields = { "sets" = ["hektarskord-av-potatis"] }
 evidence = "r180 defines starch-potato yield per harvested hectare in kg/hectare, within the fixed scope (r181).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42010\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42154\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/skord-potatis/hektarskord-av-potatis"
 
-[[statement]]
-kind = "set"
-subject = "var:eptf-hektarskordkg"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar. Uppgiften avser certifierad ekologisk odling." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42089:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:437387:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -1260,12 +1254,6 @@ subject = "var:eptf-totalskordton"
 fields = { "description" = "Total ekologisk färskpotatisskörd. Uppgiften avser certifierad ekologisk odling." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42094:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:437392:opdef_text. One variable, one description."
 
-
-[[statement]]
-kind = "set"
-subject = "var:ovrf-hektarskordkg"
-fields = { "description" = "Ekologisk färskpotatisskörd per skördad hektar. Uppgiften avser odling under omställning till ekologisk odling." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42122:19723:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:437421:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -1954,3 +1942,21 @@ kind = "set"
 subject = "skord-av-potatis: var:foretagsidentitet"
 fields.row_key = true
 evidence = "Row key: foretagsidentitet identify a row: the survey firm id identifies the surveyed farm (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:hektarskord-av-potatis"
+fields = { "description" = "Skörd per skördad hektar av färskpotatis, höst-/vinterpotatis och stärkelsepotatis. För färskpotatis och höst-/vinterpotatis anges även den ekologiska delen av skörden, som används för att beräkna den konventionella skörden, samt skörden från certifierad ekologisk odling och från odling under omställning till ekologisk odling." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensamt är hektarskörd av potatis; potatistyp och ekologisk status framgår av etikett. De lagrade texterna för certifierad respektive omställning är därmed täckta.\ncatalog:variable_text:49229:16801:19358\ncatalog:variable_text:49245:16801:19358\ncatalog:variable_text:49303:16801:19358\ncatalog:variable_text:49323:16801:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:lilla-n"
+fields = { "description" = "Antal företag som är utvalda i det aktuella företagets stratum. Variablerna avser matpotatisurvalet, det ekologiska matpotatisurvalet respektive stärkelsepotatisurvalet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; urvalet framgår av etikett och operationell text.\ncatalog:variable_text:49247:16801:19358\ncatalog:variable_text:49280:16801:19358\ncatalog:variable_text:49320:16801:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:skordeomrade"
+fields = { "description" = "Skördeområde enligt indelningen i LBR (koderna 0111–2521). De två första siffrorna anger huvudsakligt län, den tredje hur många län som skär skördeområdet och den fjärde är ett löpnummer inom länet. Variablerna anger skördeområdet där odlingen finns för matpotatis, ekologisk matpotatis och stärkelsepotatis, samt det område där arealen finns och som används vid skattningarna." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition av skördeområdeskoden; skillnaden är gröda och användning.\ncatalog:variable_text:49251:16801:19358\ncatalog:variable_text:49317:16801:19358"
