@@ -1430,8 +1430,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:lopnr-oppenvardskontakt"
-fields = { "description" = "Unikt internt löpnummer för varje vårdkontakt (i tvångsvården för varje period med psykiatrisk vårdform). Externa beställare kan vid behov få variabeln pseudonymiserad med en ärendeunik nyckel." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma löpnummerkolumn IDNR; vad som numreras följer delregistret.\ncatalog:variable_text:64057:-2192:9862\ncatalog:variable_text:64057:19723:2932897"
+fields = { "description" = "Unikt internt löpnummer för varje öppenvårdskontakt. Det kopplar ihop raderna i öppenvårdens flerfiler med varandra och med öppenvårdens plattfil, men bara inom samma version av leveransen. Det går inte att koppla till slutenvårdens löpnummer. Externa beställare kan vid behov få variabeln pseudonymiserad med en ärendeunik nyckel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. COS ruling 2026-11-17 (Codex P2 on #2545): IDNR in sluten and öppen vård are different variables, and the version limit belongs in the description.\n\nThe outpatient IDNR numbers visits; PAR_OV row 38 states that it links the flerfil files to each other and to the flat file only within the same version and not between SV and OV.\ncatalog:variable_text:64057:-2192:9862\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 38."
 
 [[statement]]
 kind = "set"
@@ -1740,19 +1740,19 @@ evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) a
 kind = "assert"
 subject = "par-sv-diagnoser: IDNR @2015.. where key = 'n:idnr'"
 fact = { entity = "occurrence", fields = { label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
-evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. Same source key n:idnr as the flat-file listing, so it is the same variable (lopnr-oppenvardskontakt). The period is the par-sv-diagnoser table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. It is the same variable as the PAR_SV flat-file IDNR (lopnr-slutenvardstillfalle; split from the outpatient IDNR below). The period is the par-sv-diagnoser table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
 
 [[statement]]
 kind = "assert"
 subject = "par-sv-atgarder: IDNR @2015.. where key = 'n:idnr'"
 fact = { entity = "occurrence", fields = { label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
-evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. Same source key n:idnr as the flat-file listing, so it is the same variable (lopnr-oppenvardskontakt). The period is the par-sv-atgarder table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. It is the same variable as the PAR_SV flat-file IDNR (lopnr-slutenvardstillfalle; split from the outpatient IDNR below). The period is the par-sv-atgarder table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
 
 [[statement]]
 kind = "assert"
 subject = "par-sv-lakemedel: IDNR @2025.. where key = 'n:idnr'"
 fact = { entity = "occurrence", fields = { label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
-evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. Same source key n:idnr as the flat-file listing, so it is the same variable (lopnr-oppenvardskontakt). The period is the par-sv-lakemedel table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. It is the same variable as the PAR_SV flat-file IDNR (lopnr-slutenvardstillfalle; split from the outpatient IDNR below). The period is the par-sv-lakemedel table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
 
 [[statement]]
 kind = "assert"
@@ -1772,11 +1772,51 @@ subject = "par-ov-lakemedel: IDNR @2025.. where key = 'n:idnr'"
 fact = { entity = "occurrence", fields = { label = "Löpnummer för öppenvårdskontakt", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
 evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_OV row 38 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_OV flerfil row carries it. Same source key n:idnr as the flat-file listing, so it is the same variable (lopnr-oppenvardskontakt). The period is the par-ov-lakemedel table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 38."
 
+# IDNR numbers a different unit in each part of PAR: an inpatient episode (SV), an
+# outpatient visit (OV) and a psychiatric care-form period (TV). One variable each
+# (Codex P2 on #2545, COS 2026-11-17).
+
+[[statement]]
+kind = "set"
+subject = "par-sv: IDNR"
+fields = { "variable" = "lopnr-slutenvardstillfalle" }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): split the inpatient IDNR from the outpatient one. PAR_SV IDNR is labelled 'Löpnummer för slutenvårdstillfälle' and numbers inpatient episodes; PAR_OV IDNR numbers outpatient visits, and the workbook states the two cannot be linked ('Kan ej koppla mellan SV och OV'). They shared a variable only through the common source key n:idnr.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 109."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: IDNR"
+fields = { "variable" = "lopnr-tvangsvardsform" }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545), same class as the inpatient split: PAR_TV IDNR is labelled 'Löpnummer för tvångsvårdsform' and numbers psychiatric care-form periods ('Ett unikt löpnummer för varje psykiatrisk vårdformsperiod'), neither a visit nor an inpatient episode. It shared the outpatient variable only through the common source key n:idnr.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 200."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-diagnoser: IDNR"
+fields = { "variable" = "lopnr-slutenvardstillfalle" }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil IDNR is the same variable as the PAR_SV flat-file IDNR (it links the two).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-atgarder: IDNR"
+fields = { "variable" = "lopnr-slutenvardstillfalle" }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil IDNR is the same variable as the PAR_SV flat-file IDNR (it links the two).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-lakemedel: IDNR"
+fields = { "variable" = "lopnr-slutenvardstillfalle" }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil IDNR is the same variable as the PAR_SV flat-file IDNR (it links the two).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnr-slutenvardstillfalle"
+fields = { "description" = "Unikt internt löpnummer för varje slutenvårdstillfälle. Det kopplar ihop raderna i slutenvårdens flerfiler med varandra och med slutenvårdens plattfil, men bara inom samma version av leveransen. Det går inte att koppla till öppenvårdens löpnummer. Externa beställare kan vid behov få variabeln pseudonymiserad med en ärendeunik nyckel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. COS ruling 2026-11-17 (Codex P2 on #2545): the version limit belongs in the description.\n\nThe inpatient IDNR numbers episodes (label 'Löpnummer för slutenvårdstillfälle'); PAR_SV row 109 states that it links the flerfil files to each other and to the flat file only within the same version and not between SV and OV.\ncatalog:variable_text:64057:-2192:9862\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+
 # Row keys of the flerfil tables: IDNR plus the file's sequence number (COS 2026-11-17).
 
 [[statement]]
 kind = "set"
-subject = "par-sv-diagnoser: var:lopnr-oppenvardskontakt"
+subject = "par-sv-diagnoser: var:lopnr-slutenvardstillfalle"
 fields.row_key = true
 evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnoses within it (PAR_SV row 168: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 168."
 
@@ -1788,7 +1828,7 @@ evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-diagnoser
 
 [[statement]]
 kind = "set"
-subject = "par-sv-atgarder: var:lopnr-oppenvardskontakt"
+subject = "par-sv-atgarder: var:lopnr-slutenvardstillfalle"
 fields.row_key = true
 evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-atgarder row is one action of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_ATG numbers the actions within it (PAR_SV row 167: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 167."
 
@@ -1800,7 +1840,7 @@ evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-atgarder 
 
 [[statement]]
 kind = "set"
-subject = "par-sv-lakemedel: var:lopnr-oppenvardskontakt"
+subject = "par-sv-lakemedel: var:lopnr-slutenvardstillfalle"
 fields.row_key = true
 evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-lakemedel row is one drug administration of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_LT numbers the drug administrations within it (PAR_SV row 169: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 169."
 
