@@ -950,3 +950,33 @@ kind = "set"
 subject = "valdeltagande: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per person in the turnout sample; uenr is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:alder-och-kon"
+fields = { "description" = "Härledd gruppering av ålder och kön som används vid kalibrering av valdeltagandet i folkomröstningen. Motsvarar den gruppering som används för riksdagsval." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är härledda ålders- och könsgrupperingar för kalibrering; populationen skiljer sig men anges i medlemmens egen text.\ncatalog:variable_text:19346:12053:12418\ncatalog:variable_text:19347:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "description" = "Personens födelseland, kompletterat med uppgifter från Flergenerationsregistret så att så många poster som möjligt får ett värde. Finns både som födelseland och grupperat i världsdelar eller landgrupper, som kod respektive namn." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar bygger på födelseland med samma komplettering från Flergenerationsregistret; gruppering och kod/namn framgår av etiketterna.\ncatalog:variable_text:19362:12053:12418\ncatalog:variable_text:19363:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:forstagangsvaljare"
+fields = { "description" = "Anger om uppgiftspersonen är förstagångsväljare, det vill säga har hunnit fylla 18 år sedan det senaste valet. Förstagångsväljare definieras efter ålder. Variablerna skiljer sig i vilket val som är utgångspunkt: allmänna val eller val till Europaparlamentet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition av förstagångsväljare, med olika referensval.\ncatalog:variable_text:19366:12053:12418\ncatalog:variable_text:19367:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:kommungrupp"
+fields = { "description" = "Kommungruppsindelning enligt Sveriges Kommuner och Regioner (2005 års version): kommunerna indelade i nio grupper efter strukturella egenskaper som befolkningsstorlek, pendlingsmönster och näringslivsstruktur. Avser den kommun där urvalspersonen är röstberättigad enligt den röstlängd som fastställs 30 dagar före valdagen. Anges som kod respektive namn." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk definition; skillnaden är kod eller namn.\ncatalog:variable_text:19376:12053:12418\ncatalog:variable_text:19377:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:medborgarskapsland"
+fields = { "description" = "Personens medborgarskap: prioriterat medborgarskapsland, medborgarskapsländerna grupperade i världsdelar eller landgrupper (som kod och namn) samt om personen är svensk eller utländsk medborgare." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna beskriver olika sidor av medborgarskap; bindningen är svag men etiketter och texter stöder beskrivningen.\ncatalog:variable_text:19380:12053:12418\ncatalog:variable_text:19383:12053:12418\ncatalog:variable_text:19403:12053:12418"

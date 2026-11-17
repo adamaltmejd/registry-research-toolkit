@@ -1096,3 +1096,9 @@ kind = "set"
 subject = "rostberattigade: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Klassificering av inriktningen för en persons genomförda utbildning enligt Svensk utbildningsnomenklatur (SUN), en standard för att klassificera enskilda utbildningar och aggregera dem till större grupper. Finns som kod och text enligt SUN 2000 och SUN 2020." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma text; de skiljer sig åt i SUN-version och kod respektive text.\ncatalog:variable_text:15589:12418:12784"

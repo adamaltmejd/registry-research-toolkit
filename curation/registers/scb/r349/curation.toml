@@ -1175,3 +1175,75 @@ kind = "set"
 subject = "personakter-avlidna: var:personnr-avliden"
 fields.row_key = true
 evidence = "Row key: personnr-avliden identify a row: one row per deceased person; parents personnr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:adoptionsdatum"
+fields = { "description" = "Datum då personens adoptivfar respektive adoptivmor blev adoptivförälder. Uppgift om tidpunkt för adoption finns huvudsakligen från och med 1991." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma struktur; far och mor framgår av etiketterna.\ncatalog:variable_text:18625:-3287:20454\ncatalog:variable_text:18626:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:adoptivrelationens-slutdatum"
+fields = { "description" = "Datum då adoptivfaderns respektive adoptivmoderns adoption upphör. För adoptioner som inte är avslutade är värdet 99999999. Uppgift om sluttidpunkt kan saknas." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma struktur; far och mor framgår av etiketterna.\ncatalog:variable_text:18623:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:ateranvant-personnummer"
+fields = { "description" = "Markering för om mer än en person har haft personnumret, det vill säga om personnumret är återanvänt. Det finns för personen själv och för biologisk far, biologisk mor, adoptivfar och adoptivmor. Personer som invandrar till Sverige och tilldelas ett personnummer kan i vissa fall få ett personnummer som en annan person haft tidigare, främst en avliden persons." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar markerar återanvänt personnummer; personen eller föräldern framgår av etiketterna.\ncatalog:variable_text:18616:-3287:20454\ncatalog:variable_text:18619:-3287:20454\ncatalog:variable_text:18617:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:dodsplats"
+fields = { "description" = "Var dödsfallet inträffade, dels som län eller land, dels som plats." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna anger plats för dödsfallet; detaljnivån skiljer.\ncatalog:variable_text:18628:-8401:-731\ncatalog:variable_text:18630:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "set:efternamn"
+fields = { "description" = "Efternamn (släktnamn) för den avlidne personen samt för personens barn, maka eller make, far, mor och den andre föräldern som inte är den person som personakten avser." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är efternamn; personen eller släktingen framgår av etiketterna.\ncatalog:variable_text:18632:-8401:-731\ncatalog:variable_text:18633:-8401:-731\ncatalog:variable_text:18636:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelsedatum"
+fields = { "description" = "Födelsedatum för personens adoptivfar, adoptivmor, biologiska far och biologiska mor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är födelsedatum för en förälder; vilken förälder framgår av etiketterna.\ncatalog:variable_text:18653:-3287:20454\ncatalog:variable_text:18655:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:fornamn"
+fields = { "description" = "Förnamn för den avlidne personen samt för personens barn, maka eller make, far, mor och den andre föräldern som inte är den person som personakten avser." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är förnamn; personen eller släktingen framgår av etiketterna.\ncatalog:variable_text:18657:-8401:-731\ncatalog:variable_text:18658:-8401:-731\ncatalog:variable_text:18661:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "set:kalla-for-adoptionsdatum"
+fields = { "description" = "Från vilket register uppgiften om adoptionsdatum för adoptivfar respektive adoptivmor har hämtats." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är källa för adoptionsdatum; far och mor framgår av etiketterna.\ncatalog:variable_text:18666:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:kalla-for-adoptivrelationens-slutdatum"
+fields = { "description" = "Från vilket register uppgiften om slutdatum för adoptivfaderns respektive adoptivmoderns adoption har hämtats." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är källa för slutdatum; far och mor framgår av etiketterna.\ncatalog:variable_text:18669:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:kalla-for-fodelseland"
+fields = { "description" = "Från vilket register uppgiften om födelseland har hämtats, för personen själv och för adoptivfar, adoptivmor, biologisk far och biologisk mor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är källa för födelseland; personen eller föräldern framgår av etiketterna.\ncatalog:variable_text:18671:-3287:20454\ncatalog:variable_text:18674:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:kalla-for-fodelsetid"
+fields = { "description" = "Från vilket register uppgiften om födelsetid har hämtats, för adoptivfar, adoptivmor, biologisk far och biologisk mor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är källa för födelsetid; föräldern framgår av etiketterna.\ncatalog:variable_text:18676:-3287:20454\ncatalog:variable_text:18678:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:kalla-for-personnummer"
+fields = { "description" = "Från vilket register personnumret har hämtats, för personen själv och för adoptivfar, adoptivmor, biologisk far och biologisk mor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är källa för personnummer; personen eller föräldern framgår av etiketterna.\ncatalog:variable_text:18680:-3287:20454\ncatalog:variable_text:18683:-3287:20454"

@@ -6404,3 +6404,27 @@ kind = "set"
 subject = "vy-fob: LopNrLgh_1990"
 fields = { "variable" = "lagenhetslopnummer-lopnrlgh-1990" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v41499), never delivered together in one table, so they are one variable renamed between releases: LopNrLgh_1960 1960-01-01..1960-12-31; LopNrLgh_1965 1965-01-01..1965-12-31; LopNrLgh_1970 1970-01-01..1970-12-31; LopNrLgh_1975 1975-01-01..1975-12-31; LopNrLgh_1980 1980-01-01..1980-12-31; LopNrLgh_1985 1985-01-01..1985-12-31; LopNrLgh_1990 1990-01-01..1990-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:a-och-b-skatt"
+fields = { "description" = "Preliminär A- och B-skatt som har dragits från inkomsten. Variablerna avser bostadsföreståndaren (hushållsföreståndaren), makan, maken eller makarna tillsammans." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger preliminär A- och B-skatt avdragen från inkomsten; labeln visar vem den avser.\ncatalog:variable_text:18706:0:365\ncatalog:variable_text:18989:0:365\ncatalog:variable_text:18993:0:365\ncatalog:variable_text:18997:0:365\ncatalog:variable_text:19036:0:365\ncatalog:variable_text:19037:0:365"
+
+[[statement]]
+kind = "set"
+subject = "set:familjeantal"
+fields = { "description" = "Antal familjer i hushållet, totalt och uppdelat på ensamstående med barn respektive gifta eller sammanboende. En familj är gifta eller sammanboende med eller utan hemmavarande barn 0–17 år, eller en ensamstående förälder med hemmavarande barn 0–17 år. Variablerna härleds från uppgifter på FoB-blanketten och länsdatakontorens kameralband." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre medlemmar delar familjedefinitionen och härledningen; labeln visar uppdelningen.\ncatalog:variable_text:18801:0:365\ncatalog:variable_text:18802:0:365\ncatalog:variable_text:18803:0:365"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelsear"
+fields = { "description" = "Födelseår för bostadsföreståndaren respektive bostadsföreståndarens maka. Bostadsföreståndaren (hushållsföreståndaren) är den person som hyr, äger eller på annat sätt förfogar över lägenheten i dess helhet; i bestående äktenskap har mannen generellt räknats som bostadsföreståndare. Härleds från uppgifter på FoB-blanketten och mantalslängden." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är födelseår och delar definitionen av bostadsföreståndare och härledningen.\ncatalog:variable_text:18910:-3653:-3287\ncatalog:variable_text:18911:-3653:-3287"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomst-av-tjanst"
+fields = { "description" = "Inkomst av tjänst m m, det vill säga inkomst av tjänst, inkomst av jordbruksfastighet, inkomst av rörelse och inkomst såsom delägare i handelsbolag, enkelt bolag m m. Variablerna avser bostadsföreståndaren (hushållsföreståndaren), makan, maken eller makarna sammanlagt." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar den sammansatta inkomstdefinitionen; labeln visar vem den avser.\ncatalog:variable_text:18953:0:365\ncatalog:variable_text:18954:0:365\ncatalog:variable_text:18986:0:365\ncatalog:variable_text:18990:0:365\ncatalog:variable_text:18994:0:365"

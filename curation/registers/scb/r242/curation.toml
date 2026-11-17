@@ -2318,3 +2318,33 @@ kind = "set"
 subject = "valdeltagande: ll"
 fields = { "variable" = "ll" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v49), never delivered together in one table, so they are one variable renamed between releases: lan 1991-01-01..2014-12-31; ll 2018-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:kommunstillhorighet"
+fields = { "description" = "Regional indelning i kommuner. Kommunkoden anger den kommun där urvalspersonen är röstberättigad enligt den röstlängd som fastställs 30 dagar före valdagen, för ordinarie val och för omvalen 2011. Kommunens namn anges i klartext." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKodvariablerna delar definitionen; namnvariabeln ger samma kommun i klartext.\ncatalog:variable_text:11069:7670:8035\ncatalog:variable_text:11070:14975:15340\ncatalog:variable_text:11075:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-och-utlandsk-bakgrund"
+fields = { "description" = "Anger om en person har utländsk eller svensk bakgrund. Finns som kod, som text och i en alternativ indelning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger utländsk eller svensk bakgrund; de skiljer sig åt i form och indelning.\ncatalog:variable_text:11151:7670:8035\ncatalog:variable_text:11152:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:sweref-koordinater"
+fields = { "description" = "Geografisk koordinatpunkt för en adress i koordinatsystemet SWEREF 99 TM, som nordlig respektive östlig koordinat." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma text; de skiljer sig åt i riktning.\ncatalog:variable_text:11100:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Klassificering av inriktningen för en persons genomförda utbildning enligt Svensk utbildningsnomenklatur (SUN), en standard för att klassificera enskilda utbildningar och aggregera dem till större grupper. Finns som kod och text enligt SUN 2000 och SUN 2020." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma text; de skiljer sig åt i SUN-version och i kod respektive text.\ncatalog:variable_text:11134:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "description" = "Klassificering av nivån för en persons genomförda utbildning enligt Svensk utbildningsnomenklatur (SUN). Finns som kod och text enligt SUN 2000 och SUN 2020 samt aggregerad till grövre nivåer enligt SUN 2000." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna avser utbildningsnivå enligt SUN och skiljer sig åt i version, kod eller text och i detaljnivå.\ncatalog:variable_text:11136:7670:8035\ncatalog:variable_text:11149:7670:8035\ncatalog:variable_text:11150:17532:17897"

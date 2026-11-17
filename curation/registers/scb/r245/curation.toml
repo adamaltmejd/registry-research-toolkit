@@ -1499,3 +1499,9 @@ kind = "set"
 subject = "valdeltagande: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per person in the turnout sample; uenr is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:sweref-koordinater"
+fields = { "description" = "Geografisk koordinatpunkt i koordinatsystemet SWEREF 99 TM, som nordlig respektive östlig koordinat. Koordinater finns tillgängliga för adresser." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition; nordlig och östlig koordinat framgår av etiketterna.\ncatalog:variable_text:15474:17897:18262"

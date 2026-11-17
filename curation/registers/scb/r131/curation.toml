@@ -941,3 +941,15 @@ kind = "set"
 subject = "kvartalsomsattning-tjanstesektorn: var:leveransperiod"
 fields.row_key = true
 evidence = "Row key: leveransperiod (period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:blankettyp"
+fields = { "description" = "Anger vilka typer av uppgifter företaget ska lämna (blankettyp), för kvartalsomsättning i tjänstesektorn respektive lagerstatistik." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna delar definitionen av blankettyp; undersökningen framgår av etiketten.\ncatalog:variable_text:39369:13149:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:momsbelopp"
+fields = { "description" = "Momsvärde enligt momsuppgifter från Skatteverket." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla sju medlemmar har samma text; skillnaden mellan dem (Period_1 m.fl.) förklaras inte i texterna.\ncatalog:variable_text:39399:13514:13879"

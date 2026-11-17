@@ -6035,3 +6035,81 @@ kind = "set"
 subject = "stativ: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the person; relatives, family, employer and workplace ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsinkomst"
+fields = { "description" = "Summan av lön, företagarinkomst, sjukpenning, föräldrapenning och ersättning i samband med militärtjänstgöring. Variablerna skiljer sig i enhet: hela kronor eller hundratal kronor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition i båda medlemmarna; enheten skiljer.\ncatalog:variable_text:51384:18993:19723\ncatalog:variable_text:51385:16801:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsmarknadsstatus"
+fields = { "description" = "Klassificering av personer utifrån deras situation på arbetsmarknaden, för personen själv och för personens far och mor, i detaljerad eller grov gruppering." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar klassificerar arbetsmarknadsstatus; person eller förälder och detaljnivå framgår av etiketterna. Hierarkin anges bara för personens egen status.\ncatalog:variable_text:51386:18993:19723\ncatalog:variable_text:51388:18993:19723\ncatalog:variable_text:51387:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:beslutstyp-for-mottagningsgrundande-uppehallstillstand"
+fields = { "description" = "Beslutstypen för det beslut om uppehållstillstånd som föranledde mottagning i kommunen, det vill säga om beslutet är permanent eller tidsbegränsat." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition i båda medlemmarna.\ncatalog:variable_text:51422:13879:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:etableringstillagg"
+fields = { "description" = "Utbetalt belopp av etableringstillägg under året. Personer som är nya i Sverige kan utöver etableringsersättning få etableringstillägg från Försäkringskassan." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är årsbelopp av etableringstillägg.\ncatalog:variable_text:51470:14975:18993\ncatalog:variable_text:51472:14975:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:huvudsaklig-naringsgren"
+fields = { "description" = "Huvudsaklig näringsgren enligt Svensk näringsgrensindelning (SNI), satt för statistiska ändamål. Variablerna avser olika versioner av SNI: SNI 92, SNI 2002 (även med ny metod) och SNI 2007." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition; SNI-versionen framgår av etiketten.\ncatalog:variable_text:51564:11688:12053\ncatalog:variable_text:51401:13879:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomst-foranledd-av-arbetsloshet"
+fields = { "description" = "Den under året summerade inkomsten föranledd av arbetslöshet, för personen själv och för personens far respektive mor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; person eller förälder framgår av etiketterna.\ncatalog:variable_text:51526:9862:19723\ncatalog:variable_text:51396:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:studier-i-svenska-inom-etablering"
+fields = { "description" = "Studier i svenska inom etableringsplan (EPA) eller etableringsprogram: om personen har haft aktiviteten, summerat antal timmar per vecka i senast fastställd plan och startdatum för studierna." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller studier i svenska (SFI) inom etablering; aktivitet, timmar och startdatum framgår av etiketterna.\ncatalog:variable_text:51381:14610:15706\ncatalog:variable_text:51448:14610:18262\ncatalog:variable_text:51464:17532:19723\ncatalog:variable_text:51638:14610:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:tid-med-etableringsplan"
+fields = { "description" = "Antal månader med beslut om rätt till etableringsplan (EPA-beslut) från första beslut, som exakt antal eller i grupperad form." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition; den ena är grupperad.\ncatalog:variable_text:51449:14610:15706\ncatalog:variable_text:51450:14610:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:typ-av-ekonomiskt-bistand"
+fields = { "description" = "Vilken typ av bidrag, ekonomiskt bistånd, som individen erhåller, för personen själv och för personens far och mor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger bidragstyp; person eller förälder framgår av etiketterna.\ncatalog:variable_text:51446:18993:19723\ncatalog:variable_text:51628:16801:18993\ncatalog:variable_text:51424:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsgrupp"
+fields = { "description" = "Gruppering av SUN-koder avseende personens högsta utbildning, i olika versioner av SUN (SUN 2000 och SUN 2020)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar grupperar SUN-koder; versionen framgår av etiketten.\ncatalog:variable_text:51657:18262:19723\ncatalog:variable_text:51679:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:utvecklingsersattning"
+fields = { "description" = "Utbetalt belopp av utvecklingsersättning under året, i en bearbetad och en obearbetad version." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna anger utbetalt årsbelopp; etiketten skiljer bearbetad och obearbetad.\ncatalog:variable_text:51686:18993:19723\ncatalog:variable_text:51687:10227:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:yrke-i-huvudsaklig-sysselsattning"
+fields = { "description" = "Yrkesuppgift för personens huvudsakliga sysselsättning: personens eget yrke på 3- eller 4-siffernivå, för den huvudsakliga sysselsättningen under november, samt faderns och moderns yrke. Faderns och moderns yrke klassificeras enligt Standard för svensk yrkesklassificering (SSYK)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller yrke; SSYK anges bara för föräldrarnas yrke i texterna.\ncatalog:variable_text:51692:11323:18993\ncatalog:variable_text:51475:11323:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesstallning"
+fields = { "description" = "Personens yrkesställning, definierad utifrån det arbetsställe vid vilket personen bedöms ha bedrivit sin huvudsakliga verksamhet, i detaljerad eller grov nivå." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma grunddefinition.\ncatalog:variable_text:51695:9862:12053\ncatalog:variable_text:51696:18993:19723"

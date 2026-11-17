@@ -874,3 +874,27 @@ kind = "set"
 subject = "riksdagsval: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Regional indelning i kommuner för nominerade i allmänna val, angiven som kommunkod respektive kommunnamn." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma text om regional indelning i kommuner; labeln visar kod eller namn.\ncatalog:variable_text:10988:7670:8035\ncatalog:variable_text:10988:10227:10592\ncatalog:variable_text:10989:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:landstingsvalkrets"
+fields = { "description" = "Regional indelning i landstingsvalkrets, angiven som valkretsens nummer (kod) respektive valkretsens namn." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna delar texten om regional indelning i landstingsvalkrets; koden är nummer, namnet klartext.\ncatalog:variable_text:10997:7670:8035\ncatalog:variable_text:10998:7670:8035\ncatalog:variable_text:10998:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:parti"
+fields = { "description" = "Politiskt parti som kandidaten nominerats för, angivet som kod, namn, kortnamn respektive riksdagspartikod. Personer kan nomineras för olika partier. I tabeller där samma person bara förekommer en gång väljs för valda det parti som kandidaten har fått mandat för (efter dubbelvalsavveckling), och för ej valda parti enligt vissa kriterier." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra medlemmar har samma text om politiskt parti och regeln för val av parti; labeln visar kodningen.\ncatalog:variable_text:11005:10227:10592\ncatalog:variable_text:11006:7670:8035\ncatalog:variable_text:11007:7670:8035\ncatalog:variable_text:11013:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "set:riksdagsvalkrets"
+fields = { "description" = "Regional indelning i riksdagsvalkrets, den indelning som ledamöter och ersättare utses för vid riksdagsval, angiven som kod respektive namn." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar definitionen av riksdagsvalkrets; labeln visar kod eller namn.\ncatalog:variable_text:11010:7670:8035\ncatalog:variable_text:11011:7670:8035\ncatalog:variable_text:11012:10227:10592"

@@ -5417,3 +5417,51 @@ kind = "set"
 subject = "familjer: alderbomor"
 fields = { "variable" = "alder-31-12-bomor" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. SCB Registerinformation documents alderbomor (2001-12-31 to 2014-12-31) and AlderSlutBoMor (2014-12-31 enligt ny definition to 2024-12-31) under one source variable (v15163) with one definition: \"Beräknad ålder i år vid årets slut för bomor. Bomor är den \"mor\" som är folkbokförd tillsammans med barnet och har en direkt eller en indirekt relation till barnet.\" The two spellings meet only on 2014-12-31, which SCB delivered twice, the second \"enligt ny definition\"; they are in different releases."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsmarknadsstatus"
+fields = { "description" = "Klassificering av bofäder och bomödrar efter deras situation på arbetsmarknaden. Klassificeringen är hierarkisk: sysselsatt har högst prioritet, därefter kommer arbetslös, studerande, pensionär och sjuk. En person som klassificerats som sysselsatt kan alltså inte få någon annan status, och på motsvarande sätt för de övriga statusarna. Finns för bofar och bomor, vardera även som uppföljning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra medlemmar delar klassificeringen och prioriteringsordningen; labeln visar bofar/bomor och uppföljning.\ncatalog:variable_text:14160:18627:18628\ncatalog:variable_text:14162:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:civilstandsdatum"
+fields = { "description" = "Datum från vilket det angivna civilståndet gäller. Variablerna avser bofar eller bomor och det civilstånd som gällde 1999-12-31 eller 2000-06-30." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna delar definitionen av civilståndsdatum; labeln visar förälder och stickdatum.\ncatalog:variable_text:14182:10591:10592\ncatalog:variable_text:14184:10591:10592"
+
+[[statement]]
+kind = "set"
+subject = "set:emigrations-dodsdatum-boforalder"
+fields = { "description" = "Datum då bofadern respektive bomodern har emigrerat eller avlidit sedan första mättidpunkten, angivet som ÅÅÅÅMMDD." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna delar definitionen; labeln visar fader eller moder.\ncatalog:variable_text:14194:10591:10592\ncatalog:variable_text:14195:10591:10592"
+
+[[statement]]
+kind = "set"
+subject = "set:grund-for-bosattning"
+fields = { "description" = "Migrationsverkets klassningskod för grund för bosättning, för barnet, fadern och modern, både bo- och biologiska föräldrar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar Migrationsverkets klassningskod; labeln och texten visar vem det avser.\ncatalog:variable_text:14252:12417:12418\ncatalog:variable_text:14253:12417:12418\ncatalog:variable_text:14254:12417:12418\ncatalog:variable_text:14256:12417:12418\ncatalog:variable_text:14257:12417:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:kommungrupp"
+fields = { "description" = "Kommunens indelning i kommungrupp, som kod eller klartext och enligt 2017 respektive 2023 års kommungruppsindelning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nÄldsta medlemmen har bara texten 'Kommungrupp'; de övriga är Sveriges Kommuner och Regioners indelning i nio grupper, så endast det gemensamma är angivet.\ncatalog:variable_text:14272:10956:10957\ncatalog:variable_text:14273:16435:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:personnrvard"
+fields = { "description" = "Personnummer för barnets vårdnadshavare. Vårdnadshavare 1 är den äldste av vårdnadshavarna och vårdnadshavare 2 den yngste. Uppgiften finns också för 15 månader senare." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är personnummer för vårdnadshavare 1 och 2 (axeln Ordning), med och utan 15 månader senare.\ncatalog:variable_text:14300:10591:10592\ncatalog:variable_text:14301:10591:10592\ncatalog:variable_text:14302:10591:10592\ncatalog:variable_text:14303:10591:10592"
+
+[[statement]]
+kind = "set"
+subject = "set:tid-i-sverige"
+fields = { "description" = "Tid i Sverige i ettårsklasser, för barnet och för dess föräldrar (biologiska föräldrar, adoptivföräldrar och boföräldrar). Härledd variabel som beräknas för utrikes födda personer utifrån senaste invandringsår. Saknas uppgift är personen född i Sverige eller saknar invandringsdatum." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tio medlemmar har samma härledningstext; labeln visar vem tiden avser.\ncatalog:variable_text:14154:10591:10592\ncatalog:variable_text:14321:16435:16436\ncatalog:variable_text:14325:12417:12418\ncatalog:variable_text:14326:12783:12784\ncatalog:variable_text:14327:12783:12784\ncatalog:variable_text:14328:12783:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Utbildningens inriktning enligt Svensk utbildningsnomenklatur (SUN 2000), den första positionen av fyra möjliga i koden, för adoptivfar, adoptivmor, biologisk far, biologisk mor, bofar och bomor." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla sex medlemmar har identisk text; labeln visar förälderrollen.\ncatalog:variable_text:14338:10956:10957"

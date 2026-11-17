@@ -1057,3 +1057,21 @@ kind = "set"
 subject = "bistandsmottagare: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per recipient; the collection round is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-barn-i-bistandshushallet"
+fields = { "description" = "Antal barn i biståndshushållet, uppdelat efter ålder: för varje ålder 0 till 15 år, för alla barn 0–15 år och för barn 16–17 år. Barn under 16 år avser hemmaboende barn." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är åldersgrupper av barn i samma hushåll; åldersindelningen framgår av etiketterna.\ncatalog:variable_text:14939:13149:13514\ncatalog:variable_text:14940:13149:13514\ncatalog:variable_text:14948:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:introduktionsersattningsbelopp"
+fields = { "description" = "Utbetalt belopp av introduktionsersättning till hushållet, dels totalt under året som summan av månadsbeloppen, dels för varje kalendermånad." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nÅrsbeloppet är summan av månadsbeloppen; månadsvariablerna anger belopp under den levererade månaden.\ncatalog:variable_text:14986:13149:13514\ncatalog:variable_text:14987:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:socialbidragsbelopp"
+fields = { "description" = "Utbetalt belopp av socialbidrag (ekonomiskt bistånd) till hushållet, dels totalt under året som summan av månadsbeloppen, dels för varje kalendermånad." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nÅrsbeloppet är summan av månadsbeloppen; månadsvariablerna anger belopp under den levererade månaden.\ncatalog:variable_text:15029:13149:13514\ncatalog:variable_text:15017:13149:13514"
