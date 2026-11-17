@@ -960,9 +960,9 @@ Time is the axis every relation is drawn on.
   `PersId` in one table are one column, never a rename, and the merged column shows its
   latest delivery's spelling (the latest end, then the latest start, a tie taking the
   first in code-point order), across a table's releases too, so SCB's yearly releases
-  of `AntalBarn0` and `antalbarn0` are one run (maintainer finding on IFAU pages,
-  2026-11-17, in the Operator's brief: lanes split by spelling case; the spelling rule
-  is proposed by the implementer). A steward's yearly
+  of `AntalBarn0` and `antalbarn0` are one run. The maintainer asked, 2026-11-17:
+  "why is Persid spread out over two rows per database?" The spelling rule and the
+  fold across releases are proposed by the implementer. A steward's yearly
   files of one table are the same column delivered in several files, one box over their
   years with a gap where a year is not delivered (maintainer 2026-11-04). Spans are
   drawn at their real half-open dates, so school years abut instead of sharing a year
@@ -972,13 +972,17 @@ Time is the axis every relation is drawn on.
   delivered in a file a year reads as one run. Where a row joins several spellings,
   each name sits in its own widest part, its other parts bare bars (new rules, proposed
   by the implementer). The spellings sharing the row say the rename; it has no mark and
-  no sentence: "No renames on the same row are just explained by them being on the same row. No need for dashed lines or additional explanations." (maintainer, 2026-11-17, to the Operator).
-  A span's column name sits inside the box: "icon and name inside the box, with
-  ellipsis and a tooltip" (maintainer, 2026-11-17, to the Operator, after seeing names
-  set outside the pill without their icon, clipped and repeated). This overturns the
-  "never cut" rule of 2026-11-04. That the name sits in its widest delivered part, and
-  that a part too narrow for three letters and the ellipsis is a bare bar, since a stub
-  such as "a…" names nothing, are proposed by the implementer. No list of the
+  no sentence: "No renames on the same row are just explained by them being on the same
+  row. No need for dashed lines or additional explanations." (maintainer, 2026-11-17).
+  A span's column name sits inside the box with its glyph, cut with an ellipsis: "A
+  better design is probably to put the column icon and name inside the box with ...
+  truncation and a tooltip on hover?" (maintainer, 2026-11-17), after "When the column
+  name is outside the pill it is not showing the column icon?" This overturns the
+  "never cut" rule of 2026-11-04. That the name sits in its widest delivered part; that
+  a part too narrow for three letters and the ellipsis is a bare bar, since a stub such
+  as "a…" names nothing; and that a bare bar wide enough for the glyph (26 px) keeps
+  it, so it still reads as a column, while a narrower one is empty, are proposed by the
+  implementer. No list of the
   files a column is delivered in: the lane already names the table (maintainer, dogfood
   2026-11-05, #2321). A span is the column pill stretched over its years: the pill's height,
   padding, font and column glyph, the column name only; the axis gives the years, which
@@ -986,9 +990,10 @@ Time is the axis every relation is drawn on.
   keeps the target height; the 21 px pill sits centred in it. No text is drawn outside
   a span's box; only a staged change's "+" or "−", or a blocked span's ✕, leads it, in
   the gap before it. The graph is never wider than its column and never scrolls
-  sideways: a span too narrow for its name is a bare bar (new rule, proposed by the
-  implementer: the maintainer reported the graph's sideways scroll as a bug,
-  2026-11-17). Beside the track the names take a compact
+  sideways: a span too narrow for its name is a bare bar. The maintainer, 2026-11-17:
+  "there is clipping/scrolling inside the timeline view, instead of it fitting on the
+  page." Keeping the stacked track at the column's width is proposed by the
+  implementer. Beside the track the names take a compact
   gutter that narrows with the graph: 27 % of its width between 120 and 230 px, then a
   gap of 2 % between 8 and 16 px, so the 493 px graph of a pane at 961 px keeps a 350 px
   track (#2407, maintainer decisions 2026-11-11). Under a 320 px track, a graph under
@@ -1008,9 +1013,9 @@ Time is the axis every relation is drawn on.
   shows a RAC `Tooltip` with no delay only where the span's own text is cut off
   (maintainer, dogfood 2026-11-05, #2321; the strict reading, maintainer ruling,
   2026-11-10): on a column span where the pill cuts a name, with the whole name and its
-  years. The maintainer reported "the hover tooltip shows with no additional info" as
-  a bug (2026-11-17, to the Operator), so a whole name with only its years, which the
-  axis already gives, opens none. Under the pointer, only a part whose own name is cut
+  years. A whole name with only its years, which the axis already gives, opens none:
+  "hover still shows tooltip even though tooltip has no additional info" (maintainer,
+  2026-11-17). Under the pointer, only a part whose own name is cut
   opens it, with that name and its years; focus opens it with every cut name of the
   span. A read-only span is a tab stop only where it cuts a name, so a keyboard reaches
   that tooltip; a whole name adds no tab stop (new rules, proposed by the

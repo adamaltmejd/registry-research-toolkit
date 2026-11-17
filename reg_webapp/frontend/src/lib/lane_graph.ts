@@ -82,6 +82,9 @@ interface PlacedSegment {
   label: string;
   /** The label is wider than the part, so the pill cuts it. */
   cut: boolean;
+  /** The column glyph is drawn: with a label, or in a bare bar wide enough
+   * to hold it, so the bar still reads as a column. */
+  glyph: boolean;
   /** Relative to the span's own left edge. */
   x: number;
   width: number;
@@ -173,6 +176,8 @@ const COLUMN_CHAR = 7.2;
 // The column pill around the name: 6 px padding and a 1 px border each side,
 // then its 12 px glyph and the 4 px gap after it.
 const LABEL_PAD = 14 + 12 + 4;
+// A bare bar holds the glyph alone from its padding, border and glyph.
+const GLYPH_WIDTH = 14 + 12;
 const PACK_GAP = 6;
 const MIN_SPAN = 6;
 // Under a finger, a graph whose shortest span would be under WCAG 2.2's 24 px
@@ -249,6 +254,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
           name: segment.name,
           label: "",
           cut: false,
+          glyph: false,
           x: segLeft,
           width: Math.max(x(segment.to) - left - segLeft, MIN_SPAN),
         };
@@ -269,6 +275,11 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         // as the name's other parts are: a stub such as "a…" says nothing.
         segment.label =
           segment.cut && segment.width < labelWidth("xxx…") ? "" : name;
+      }
+      for (const segment of segments) {
+        segment.glyph =
+          !!(segment.name ?? span.name) &&
+          (segment.label !== "" || segment.width >= GLYPH_WIDTH);
       }
       // A span with no name (a classification version, named in its tooltip)
       // may touch its neighbour: a yearly series stays on one row.

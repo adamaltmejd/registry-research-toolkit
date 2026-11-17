@@ -29,6 +29,7 @@ export function EntityPill({
   state,
   className,
   cutTitle,
+  glyph: withGlyph = true,
 }: {
   entity: Entity;
   /** Empty for a lane span too narrow to hold it; a count's number with its
@@ -43,12 +44,15 @@ export function EntityPill({
   className?: string;
   /** False where the caller's own tooltip gives a cut name (a lane span). */
   cutTitle?: boolean;
+  /** False for a lane span's bar too narrow for the glyph, or a nameless
+   * span (a classification version). */
+  glyph?: boolean;
 }) {
   const { tone, glyph } = ENTITIES[entity];
   return (
     <Pill
       tone={tone}
-      glyph={glyph}
+      glyph={withGlyph ? glyph : undefined}
       href={href}
       years={years}
       state={state}

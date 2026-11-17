@@ -56,8 +56,7 @@ export function Pill({
 }) {
   const body = (
     <>
-      {/* A nameless pill (a span's bare bar) has no glyph either. */}
-      {glyph && children !== "" && (
+      {glyph && (
         <svg
           className={styles.glyph}
           viewBox="0 0 14 14"

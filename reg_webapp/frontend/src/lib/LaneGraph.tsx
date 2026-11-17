@@ -1050,6 +1050,7 @@ function Span({
         name={name}
         years={showYears ? span.years : undefined}
         state={span.segments?.[i]?.state ?? span.state}
+        glyph={segment.glyph}
         className={styles.face}
         // The span's own tooltip gives a cut name; no second, native one.
         cutTitle={false}
