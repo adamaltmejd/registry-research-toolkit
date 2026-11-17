@@ -5,5 +5,5 @@
   "gh": null,
   "exit": 3,
   "stdout": "",
-  "stderr_contains": "not maintainer-authored"
+  "stderr_contains": "not authored by a trusted login"
 }

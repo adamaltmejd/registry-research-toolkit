@@ -113,7 +113,8 @@ reg-meta serve: HTTP API + /mcp (hosted)
   reads catalog answers saved from the MCP, never a catalog file or the network. Its
   design is [reg-mock/DESIGN.md](reg-mock/DESIGN.md).
 - `xtask`: repository tooling, not shipped. `cargo xtask gh-issue` is the
-  maintainer-author trust gate for issue reads; its tests hold the repo-policy lints.
+  trust gate for issue reads (maintainer or the agent account only); its tests hold the
+  repo-policy lints.
   The release skill runs `release-base-reuse` (step 8a). The holdings asset's content
   gate is part of the pair verifier (`reg-build/src/holdings/scope.rs`), not here: a
   steward repository verifies its pair with the released `reg-build` alone.

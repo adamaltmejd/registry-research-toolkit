@@ -1,19 +1,20 @@
-//! Maintainer-author trust gate for the automation ingestion path.
+//! Trusted-author gate for the automation ingestion path.
 //!
 //! This repo is PUBLIC. A stranger can open an issue, comment on one, or file a fork PR,
 //! and that free text is untrusted: an agent or skill that reads it into a model opens a
 //! prompt-injection surface. This command is the choke point: it only ever surfaces issue
-//! text authored by the single trusted maintainer (repo owner, or
-//! `REGISTRY_MAINTAINER_LOGIN`), so a non-maintainer's content is never read by a model.
+//! text authored by the maintainer (repo owner, or `REGISTRY_MAINTAINER_LOGIN`) or the
+//! agent account in [`TRUSTED_AGENT_LOGINS`], so a stranger's content is never read by a
+//! model.
 //!
 //! It is deliberately an **allowlist helper, not a transparent `gh` shim.** A shim that
 //! forwarded arbitrary `gh` invocations could not soundly filter: `gh api`, `gh search`,
 //! GraphQL and future subcommands return author-bearing payloads in shapes this gate
 //! can't enumerate. Instead it exposes exactly the one ingestion read the automation
-//! needs (`view <n> [--comments]`, a single issue), gated on maintainer authorship.
+//! needs (`view <n> [--comments]`, a single issue), gated on trusted authorship.
 //!
 //! **Fail-closed** everywhere: an issue or comment with a missing, null, empty or
-//! non-maintainer author login is DROPPED, never surfaced. A refusal is reported on
+//! untrusted author login is DROPPED, never surfaced. A refusal is reported on
 //! stderr (the gate never discards silently), but the untrusted content is never
 //! printed.
 //!
@@ -28,6 +29,10 @@ use crate::json::Json;
 const EXIT_OK: u8 = 0;
 pub const EXIT_USAGE: u8 = 2;
 const EXIT_REFUSED: u8 = 3;
+
+/// Agent accounts trusted beside the maintainer (ruled 2026-11-17). A constant, not an
+/// env var, so widening trust shows up in a reviewed diff.
+const TRUSTED_AGENT_LOGINS: &[&str] = &["aa-agent"];
 
 /// `gh-issue view <n> [--comments]`; prints the gated JSON or refuses.
 #[must_use]
@@ -48,7 +53,7 @@ pub fn main(args: &[String]) -> u8 {
     };
     let Some(out) = gate(payload.as_ref(), &maintainer, comments) else {
         eprintln!(
-            "gh_issue: issue #{number} is not maintainer-authored; \
+            "gh_issue: issue #{number} is not authored by a trusted login; \
              refusing to surface untrusted content"
         );
         return EXIT_REFUSED;
@@ -77,7 +82,7 @@ fn parse(args: &[String]) -> Option<(i64, bool)> {
     Some((number?, comments))
 }
 
-/// The single trusted author: `REGISTRY_MAINTAINER_LOGIN`, else the repo owner.
+/// The maintainer login: `REGISTRY_MAINTAINER_LOGIN`, else the repo owner.
 ///
 /// The override lets a test or a fork name a different owner without a live
 /// `gh repo view`. An empty override is not a login, so it falls back.
@@ -145,11 +150,12 @@ fn parse_json(argv: &[&str], stdout: &[u8]) -> Result<Json, String> {
 
 /// The gated output object, or `None` to refuse.
 ///
-/// Refuses when the payload is missing or not maintainer-authored. Otherwise returns
-/// `{number,title,state,body[,comments]}`, with `comments` (only when requested) filtered
-/// to maintainer-authored entries, each passed through unchanged.
+/// Refuses when the payload is missing or not authored by a trusted login. Otherwise
+/// returns `{number,title,state,body[,comments]}`, with `comments` (only when requested)
+/// filtered to trusted-authored entries, each passed through unchanged. Each entry is
+/// judged on its own author: a trusted issue does not make a stranger's comment trusted.
 fn gate(payload: Option<&Json>, maintainer: &str, comments: bool) -> Option<Json> {
-    let data = payload.filter(|d| is_maintainer(d, maintainer))?;
+    let data = payload.filter(|d| is_trusted(d, maintainer))?;
     let mut out: Vec<(String, Json)> = ["number", "title", "state", "body"]
         .into_iter()
         .map(|key| (key.to_owned(), data.get(key).cloned().unwrap_or(Json::Null)))
@@ -158,7 +164,7 @@ fn gate(payload: Option<&Json>, maintainer: &str, comments: bool) -> Option<Json
         let kept = match data.get("comments") {
             Some(Json::Array(raw)) => raw
                 .iter()
-                .filter(|c| is_maintainer(c, maintainer))
+                .filter(|c| is_trusted(c, maintainer))
                 .cloned()
                 .collect(),
             _ => Vec::new(),
@@ -178,6 +184,11 @@ fn login_of(obj: &Json) -> Option<&str> {
 }
 
 /// GitHub logins are ASCII, so an ASCII case-insensitive match is the whole comparison.
-fn is_maintainer(obj: &Json, maintainer: &str) -> bool {
-    login_of(obj).is_some_and(|login| login.eq_ignore_ascii_case(maintainer))
+fn is_trusted(obj: &Json, maintainer: &str) -> bool {
+    login_of(obj).is_some_and(|login| {
+        login.eq_ignore_ascii_case(maintainer)
+            || TRUSTED_AGENT_LOGINS
+                .iter()
+                .any(|agent| login.eq_ignore_ascii_case(agent))
+    })
 }

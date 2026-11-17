@@ -231,8 +231,8 @@ builder, `reg_webapp`) or `cross-package` — plus a **type**: `enhancement`, `b
 `documentation`.
 
 **Ingestion trust gate** — this repo is public, so automation reads issue/PR content
-**only** through `cargo xtask gh-issue`, a fail-closed maintainer-author trust gate:
-issues/comments not authored by the maintainer are dropped rather than surfaced to a
+**only** through `cargo xtask gh-issue`, a fail-closed trust gate: issues/comments not authored by the
+maintainer or the agent account (`aa-agent`) are dropped rather than surfaced to a
 model. Raw `gh issue view` / `gh issue list` without `--search` (and
 `gh api .../issues`, `gh search issues`) model-reads in skill files are forbidden,
 enforced by `crates/xtask/tests/skill_gh_reads.rs`.
