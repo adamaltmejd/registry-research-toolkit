@@ -6325,12 +6325,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 
 [[statement]]
 kind = "set"
-subject = "var:kommunala-bolag-under-moderbolag"
-fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382635"
-
-[[statement]]
-kind = "set"
 subject = "var:polsekrant"
 fields = { "description" = "Antal anställda politiska sekreterare." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:383094"
@@ -6352,24 +6346,6 @@ kind = "set"
 subject = "var:privvardcant"
 fields = { "description" = "Antal vårdcentraler i privat regi som landstinget har vårdavtal med. Räknar vårdgivare." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förekomst men variabeln mäter antal.\ncatalog:occurrence:382951\ncatalog:occurrence:383014\n\nIdentity review: SCB 2007 questionnaire, lokal-demokrati/text/ba091a4fe38bbdf8f41180869c8c98cc380ee0f9a3762772e0f222d0afda2f34.json, page 20, questions 10-12: Hur många vårdcentraler?; rel070-base/reg_meta.db 2003 and 2008 privvardcant occurrences."
-
-[[statement]]
-kind = "set"
-subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-fr38"
-fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382736"
-
-[[statement]]
-kind = "set"
-subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-fr40"
-fields = { "description" = "Samlat kommunens bolag under ett moderbolag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKälltabellen gäller kommuner och den operationella definitionen anger kommunala bolag.\ncatalog:occurrence:382860"
-
-[[statement]]
-kind = "set"
-subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-samlbolag"
-fields = { "description" = "Samlat kommunens eller landstingets bolag under ett moderbolag." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln omfattar både kommuner och regioner.\ncatalog:occurrence:382582\ncatalog:variable_text:38842:15340:15706"
 
 [[statement]]
 kind = "set"
@@ -11134,3 +11110,9 @@ kind = "set"
 subject = "regioner: VARDAVTALPRIV"
 fields = { "variable" = "vardavtalpriv" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28608) in one table, renamed between survey rounds and never delivered together, so they are one variable: PRIVSJUKH 2003-01-01..2008-12-31; VARDAVTALPRIV 2012-01-01..2012-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:bolag-under-moderbolag"
+fields = { "description" = "Om kommunens eller landstingets (regionens) bolag har samlats under ett moderbolag." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition; kommuner, regioner eller båda skiljer dem åt, och det visar etiketten och facetten.\ncatalog:variable_text:45806:16801:17167"

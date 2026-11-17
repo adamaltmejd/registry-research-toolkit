@@ -18571,24 +18571,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBesk
 
 [[statement]]
 kind = "set"
-subject = "var:antal-distansmoten-internet-okade-delvis-covid-19"
-fields = { "description" = "Företaget har riktlinjer som främjar digitala möten framför tjänsteresor." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292890\ncatalog:valueset:10571\ncatalog:variable_text:32877:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-distansmoten-internet-okade-helt-covid-19"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292889\ncatalog:valueset:7895\ncatalog:variable_text:32876:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:antalet-distansmoten-over-internet-okade-inte-alls-pa-grund"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger en andel företag, men svaren avser om företaget har riktlinjer.\ncatalog:occurrence:292891\ncatalog:valueset:10571\ncatalog:variable_text:32878:18628:18993"
-
-[[statement]]
-kind = "set"
 subject = "var:datd8"
 fields = { "description" = "Problem vid köp eller beställning via internet under de senaste 12 månaderna." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavning och förtydligar den avbrutna tidsangivelsen med stöd av frågan.\ncatalog:occurrence:289418\ncatalog:variable_text:32753:14245:14610"
@@ -18616,18 +18598,6 @@ kind = "set"
 subject = "var:har-sakerhetsriktlinjer-for-distansmoten"
 fields = { "description" = "Företaget har säkerhetsriktlinjer för distansmöten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:293000\ncatalog:valueset:7898\ncatalog:variable_text:33581:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:har-sakerhetsriktlinjer-for-fjarranslutning"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för fjärranslutning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:292180\ncatalog:valueset:7898\ncatalog:variable_text:33441:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:ra-sg"
-fields = { "description" = "Företaget har säkerhetsriktlinjer för fjärranslutning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en andel företag, men variabeln anger om företaget har riktlinjer.\ncatalog:occurrence:292988\ncatalog:valueset:7898\ncatalog:variable_text:33548:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -20279,3 +20249,15 @@ kind = "set"
 subject = "var:stratum-befolkning"
 fields = { "label" = "Stratum (Befolkningens IT-användning)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Befolkningens IT-användning\"."
+
+[[statement]]
+kind = "set"
+subject = "set:pandemiforandring-av-distansmoten"
+fields = { "description" = "Om antalet distansmöten över internet ökade under 2020 oavsett orsak, och i vilken grad ökningen berodde på covid-19: helt, delvis eller inte alls." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är graderingar av samma fråga om ökning av distansmöten; de lagrade medlemstexterna handlar om riktlinjer och stämmer inte med medlemmarnas provider-text och etikett, så de tas bort.\ncatalog:variable_text:39646:18628:18993\ncatalog:variable_text:39647:18628:18993\ncatalog:variable_text:39657:18628:18993\ncatalog:variable_text:39658:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:sakerhetsriktlinjer-for-fjarranslutning"
+fields = { "description" = "Om företaget har säkerhetsriktlinjer för fjärranslutning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är samma indikator i olika årsomgångar; den lagrade texten är identisk med setbeskrivningen.\ncatalog:variable_text:40301:16071:16436\ncatalog:variable_text:40821:18993:19358"
