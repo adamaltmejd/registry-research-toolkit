@@ -9,11 +9,6 @@
   min-width: 0;
 }
 
-.graph[data-scroll] {
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
 /* ── Marks (one decorative SVG under the lanes) ─────────────────────────── */
 
 .marks {
@@ -56,17 +51,9 @@
 
 .edge {
   fill: none;
+  stroke: var(--viz-edge-succession);
   stroke-width: 1.2;
   transition: stroke-width var(--duration-quick) var(--ease-standard);
-}
-
-.succession {
-  stroke: var(--viz-edge-succession);
-}
-
-.rename {
-  stroke: var(--viz-edge-rename);
-  stroke-dasharray: 3 3;
 }
 
 .edgeActive {
@@ -92,8 +79,7 @@
   border-top: 1px solid var(--border);
 }
 
-/* As wide as the drawing (its width is set inline), so a lane's name and
-   below block can stay pinned while a grown track scrolls. */
+/* As wide as the graph (its width is set inline). */
 .lane {
   /* Its height, set inline: a stacked table row's guide line runs it. */
   --lane-guide: 0px;
@@ -189,14 +175,6 @@
 .graph[data-stacked] .name {
   min-height: 0;
   justify-content: flex-start;
-}
-
-/* Pinned to the graph's left edge while a grown track scrolls (#2310). */
-.pinned,
-.graph[data-stacked] .lane > .name,
-.graph[data-stacked] .lane > .nameRow {
-  position: sticky;
-  left: 0;
 }
 
 .nameText {
@@ -339,7 +317,7 @@ a.nameText {
 
 /* Inside the face, so focus after a press draws no ring past the span's box
    (#2321); a blocked span keeps its error border. */
-.span[data-focus-visible] .face {
+.span:is([data-focus-visible], :focus-visible) .face {
   box-shadow: var(--focus-ring-inset);
 }
 
@@ -357,21 +335,6 @@ a.nameText {
 
 .span[data-blocked] .glyph {
   color: var(--err);
-}
-
-.outside {
-  position: absolute;
-  top: 50%;
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: var(--text-column);
-  font-weight: var(--column-weight);
-  white-space: nowrap;
-  transform: translateY(-50%);
-}
-
-.span[data-state="out"] .outside {
-  color: var(--text-muted);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -445,12 +408,6 @@ a.nameText {
   display: block;
 }
 
-/* A scroll box with no span to tab to takes focus itself. */
-.graph[data-scroll]:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring-inset);
-}
-
 /* ── Stacked (phones): variant C, #2408 ─────────────────────────────────────
    A variable's heading in the h3 size under its rule; each table a block
    with a moss guide line, its pill and years on one line and its spans full
@@ -504,30 +461,11 @@ a.nameText {
   font-variant-numeric: tabular-nums;
 }
 
-/* On the name block, which stays pinned while a grown track scrolls; the
-   lane sets its height. The line is the table pill's border mix. Under it a
-   strip of the inset keeps scrolled spans from running past the line (#2408):
-   the name block paints over its lane's spans. */
-.graph[data-stacked] .name[data-row="table"] {
-  z-index: 1;
-}
-
-.graph[data-stacked] .name[data-row="table"]::before,
-.graph[data-stacked] .name[data-row="table"]::after {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: var(--lane-guide);
-  content: "";
-}
-
-.graph[data-stacked] .name[data-row="table"]::after {
-  z-index: -1;
-  width: var(--space-4);
-  background: var(--surface);
-}
-
+/* On the name block; the lane sets its height. The line is the table pill's
+   border mix (#2408). */
 .graph[data-stacked] .name[data-row="table"]::before {
+  position: absolute;
+  content: "";
   top: var(--space-1);
   left: var(--space-1);
   height: calc(var(--lane-guide) - var(--space-1) - var(--space-2));
