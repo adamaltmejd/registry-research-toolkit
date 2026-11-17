@@ -13583,3 +13583,69 @@ kind = "set"
 subject = "set:fodelsedatum"
 fields = { "description" = "Födelseår och födelsemånad (ååååmm) för personerna i hushållet, en variabel per person (person 1–8)." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är samma uppgift för olika personer; personen anges av etiketten.\ncatalog:variable_text:34052:10957:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsuppgifter"
+fields = { "description" = "Vad personen har för huvudsakliga arbetsuppgifter, en beskrivning av själva arbetet, för urvalspersonen och för person 2–8 i hushållet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition; de skiljer sig i vilken person i hushållet de avser.\ncatalog:variable_text:34257:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:h-region"
+fields = { "description" = "Hushållets H-region, en indelning av kommunerna i icke geografiskt sammanhängande områden med homogent befolkningsunderlag. Variablerna skiljer sig i indelning och gruppering." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar definitionen av H-region; indelningen varierar.\ncatalog:variable_text:34063:12053:14610\ncatalog:variable_text:34064:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomstgrupper"
+fields = { "description" = "Indelning av hushållen i inkomstgrupper efter kosthushållets disponibla inkomst: decilgrupper, kvartilgrupper (även per hushållstyp) och kvintilgrupper." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar basen (kosthushållets disponibla inkomst) och skiljer sig i gruppstorlek.\ncatalog:variable_text:34023:12053:14610\ncatalog:variable_text:34247:12053:14610\ncatalog:variable_text:34250:12053:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:insamlingsdel"
+fields = { "description" = "Anger vilken del av insamlingen som hushållet har lämnat uppgifter för." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk text.\ncatalog:variable_text:34083:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:relation-inom-hushallet"
+fields = { "description" = "Relationer mellan personer i hushållet: hushållsmedlemmens relation till hushållsföreståndaren och till urvalspersonen samt samhörigheten mellan hushållets personer (person 2–8 och urvalspersonen)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna beskriver relation eller samhörighet mellan hushållets personer; vilken relation och person skiljer dem åt.\ncatalog:variable_text:34035:18628:18993\ncatalog:variable_text:34298:18628:18993\ncatalog:variable_text:34301:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:socioekonomisk-grupp"
+fields = { "description" = "Socioekonomisk grupp, det vill säga position på arbetsmarknaden. Finns dels som hushållets kod i grupperad form, dels för enskilda personer i hushållet (urvalspersonen, person 2–8 och eventuell sambo)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition; person eller hushåll och kodning skiljer dem åt.\ncatalog:variable_text:34322:10592:11688\ncatalog:variable_text:34327:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsattningstyp"
+fields = { "description" = "Typ av sysselsättning för personer i hushållet: individen, urvalspersonen och person 2–8." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition; vilken person skiljer dem åt.\ncatalog:variable_text:34339:12053:14610\ncatalog:variable_text:34340:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "description" = "Nivån på en persons genomförda utbildning enligt Svensk utbildningsnomenklatur (SUN). Finns för urvalspersonen och för person 2–8 i hushållet, och som första positionen i nivåkoden enligt SUN 2000." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är SUN-nivå och skiljer sig i vilken person de avser.\ncatalog:variable_text:34392:12053:14610\ncatalog:variable_text:34393:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:utgift-alkoholhaltig-dryck"
+fields = { "description" = "Hushållets utgift för alkoholhaltiga drycker (sprit, vin och starköl)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna anger samma utgiftspost under olika namn.\ncatalog:variable_text:34293:10592:10957\ncatalog:variable_text:34407:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:utgift-ovriga-tjanster"
+fields = { "description" = "Hushållets utgift för övriga tjänster, varav en variabel som bruttoutgift." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna anger samma utgiftspost; en är brutto.\ncatalog:variable_text:34290:10592:10957\ncatalog:variable_text:34664:10592:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:utgift-reparation-hyra-och-tillbehor"
+fields = { "description" = "Hushållets utgift för reparation, hyra och tillbehör." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna har identisk text.\ncatalog:variable_text:34831:10592:10957"

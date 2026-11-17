@@ -2848,3 +2848,51 @@ kind = "set"
 subject = "individ: FKUVPR"
 fields = { "variable" = "obligationer-fordran-fkuvpr" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v15525), never delivered together in one table, so they are one variable renamed between releases: FKUVP 1999-12-31..1999-12-31; FKUVPR 2000-12-31..2007-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsrattens-transaktionsandel"
+fields = { "description" = "Andel (i procent) av en bostadsrätt som förvärvats respektive överlåtits. Om flera överlåtelser gjorts avser uppgiften bara en av dem, som väljs osystematiskt från Skatteverkets grunddata." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna anger transaktionsandel och har samma urvalsregel vid flera överlåtelser.\ncatalog:variable_text:20252:10956:10957\ncatalog:variable_text:20259:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomstranta"
+fields = { "description" = "Ränteinkomster uppdelade efter vad räntan kommer från: bankkonto, annat än konto i bank (till exempel lån från en delägare i ett fåmansbolag) och obligationer och vissa andra värdepapper." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är tre slag av ränteinkomst; skillnaden anges i beskrivningen.\ncatalog:variable_text:20296:10956:10957\ncatalog:variable_text:20297:12052:12053\ncatalog:variable_text:20418:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:kapitalforlust-pa-fonder"
+fields = { "description" = "Kapitalförlust vid avyttring av andelar i investeringsfonder, totalt och uppdelad efter fondtyp: aktiefond, blandfond, räntefond och annan fond än räntefond." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är kapitalförlust vid avyttring av fondandelar; de skiljer sig bara i fondtyp.\ncatalog:variable_text:20300:10956:10957\ncatalog:variable_text:20301:11687:11688\ncatalog:variable_text:20302:10956:10957\ncatalog:variable_text:20303:10956:10957\ncatalog:variable_text:20304:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:kapitalvinst-pa-fonder"
+fields = { "description" = "Kapitalvinst vid avyttring av andelar i investeringsfonder, totalt och uppdelad efter fondtyp: aktiefond, blandfond, räntefond och annan fond än räntefond." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är kapitalvinst vid avyttring av fondandelar; de skiljer sig bara i fondtyp.\ncatalog:variable_text:20305:10956:10957\ncatalog:variable_text:20306:11687:11688\ncatalog:variable_text:20307:10956:10957\ncatalog:variable_text:20308:10956:10957\ncatalog:variable_text:20309:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:rantebidrag"
+fields = { "description" = "Räntebidrag på statliga lån för bostäder, uppdelat efter bostadstyp: flerfamiljshus, småhus samt småhus och hyresfastigheter tillsammans." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är räntebidrag på statliga bostadslån och skiljer sig i bostadstyp.\ncatalog:variable_text:20341:10956:10957\ncatalog:variable_text:20342:10956:10957\ncatalog:variable_text:20343:11687:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:skatt-pa-utdelning"
+fields = { "description" = "Skatt på utdelning av delägarrätter (aktier), dels skatt på utdelning, dels utländsk skatt på utdelning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är skatt på aktieutdelning; den ena avser utländsk skatt. Provider-stavfel rättade.\ncatalog:variable_text:20353:10956:10957\ncatalog:variable_text:20407:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-fastighetsskatt"
+fields = { "description" = "Taxeringsunderlag för ägd andel av fastighet som fastighetsskatten beräknas på, uppdelat efter fastighetstyp (hyreshus, hyreshuslokal, industri, småhus och småhus i utlandet) och i förekommande fall skattesats." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma underlagsdefinition; de skiljer sig i fastighetstyp och skattesats.\ncatalog:variable_text:20217:11322:11323\ncatalog:variable_text:20240:10956:10957\ncatalog:variable_text:20392:11687:11688\ncatalog:variable_text:20394:10956:10957\ncatalog:variable_text:20395:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:utdelning-fran-samfallighet"
+fields = { "description" = "Utdelning till delägare i samfälligheter, uppdelad efter samfällighetens slag: marksamfälligheter och regleringssamfälligheter som utgör särskild taxeringsenhet (varav den del som kommer från intäkt av skogsbruk särskilt) samt samfälligheter av annat slag, där uppgiften avser delägarens skattepliktiga andel i inkomster som är avkastning på kapital." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är utdelning från olika slag av samfälligheter; typen skiljer dem åt. Stavfel (texeringsenhet) rättat.\ncatalog:variable_text:20400:11687:11688\ncatalog:variable_text:20401:11687:11688\ncatalog:variable_text:20402:11687:11688"
