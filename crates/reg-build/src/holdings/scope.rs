@@ -16,7 +16,8 @@
 //! - Size: every TEXT, BLOB or untyped column of every table stays under its bound, so a
 //!   raw payload in an allowed column is caught.
 //! - Text: no `text` body names a steward working file (`*.json`, `*.jsonl`, `*.toml`)
-//!   or a storage export row (`storage_export:row=`). The reader serves these bodies as labels,
+//!   or a source row (`storage_export:row=`, or `census:row=` as steward locators
+//!   still write it). The reader serves these bodies as labels,
 //!   definitions and notes, so a provenance suffix in a transcription cell reaches the
 //!   public site (0.72.0: "Evidence: reference-occurrence-evidence.jsonl;
 //!   census:row=489; ...").
@@ -261,8 +262,8 @@ fn is_word(c: char) -> bool {
     c.is_alphanumeric() || c == '_'
 }
 /// The first steward working-file name (`[\w./-]+\.(jsonl?|toml)\b`) or export row
-/// locator (`storage_export:row=`) in `body`, as the reported kind: `json`, `jsonl`,
-/// `toml` or `storage_export:row`. Leftmost match first; at one start, the file name wins and its last
+/// locator (`storage_export:row=` or `census:row=`) in `body`, as the reported kind:
+/// `json`, `jsonl`, `toml`, `storage_export:row` or `census:row`. Leftmost match first; at one start, the file name wins and its last
 /// valid extension counts, as a backtracking regex would pick them.
 fn working_reference(body: &str) -> Option<&'static str> {
     let chars: Vec<char> = body.chars().collect();
@@ -276,7 +277,11 @@ fn working_reference(body: &str) -> Option<&'static str> {
                 && chars.get(end).is_none_or(|c| !is_word(*c))
         })
     };
-    let locator: Vec<char> = "storage_export:row=".chars().collect();
+    // Steward locators still carry the retired census's row form.
+    let locators: Vec<(Vec<char>, &str)> = ["storage_export:row", "census:row"]
+        .into_iter()
+        .map(|kind| (format!("{kind}=").chars().collect(), kind))
+        .collect();
     // A name run that held no file name at its first character holds none later on.
     let mut run_end = 0;
     for start in 0..chars.len() {
@@ -294,8 +299,11 @@ fn working_reference(body: &str) -> Option<&'static str> {
                 return Some(ext);
             }
         }
-        if chars[start..].starts_with(&locator) {
-            return Some("storage_export:row");
+        if let Some((_, kind)) = locators
+            .iter()
+            .find(|(locator, _)| chars[start..].starts_with(locator))
+        {
+            return Some(kind);
         }
     }
     None
