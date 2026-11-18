@@ -31,7 +31,7 @@
         }
       ]
     },
-    "keys": {"/meta": ["catalog_version", "contract_version", "generation"]}
+    "keys": {"/meta": ["api_version", "catalog_version", "generation", "project_schema_version"]}
   },
   {
     "status": 200,

@@ -41,7 +41,7 @@
 # cursor encodes (generation_id, last key), so a cursor from another generation is
 # `stale_cursor`.
 
-contract_version = "6.4.0"
+api_version = "7.0.0"
 
 [[operation]]
 name = "search"
@@ -301,7 +301,8 @@ note = "A `pdf` document's bytes by content hash (`doc.content`). Served inline.
 
 [shape.Meta]
 steward = "paired mode only: {owner, catalog_generation, holdings_generation, schema_version}"
-contract_version = "string; contract_version above"
+api_version = "string; api_version above"
+project_schema_version = "string; the project_data.json schema_version validate and order admit"
 generation = "string; the catalog's generation_id (64 hex)"
 catalog_version = "string; meta catalog_version"
 

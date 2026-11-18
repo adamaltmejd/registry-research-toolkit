@@ -19,11 +19,13 @@ the `register-metadata-search` skill.
 
 ## Drafting a project
 
-1. Set the document's `schema_version` to `"6.3.0"`. A steward's catalog can run an older
-   release that reads an older version: `validate` then returns
-   `unsupported_schema_version`, whose message names the version that server reads. Use
-   that version, and leave out fields newer than it (`releases`, below, is 6.3.0). Order
-   from the catalog the data comes from: a steward's catalog for the steward's holdings
+1. Set the document's `schema_version` to `meta.project_schema_version` from a response
+   of the catalog you order from: each server admits exactly that version, and a steward's
+   catalog can run an older release than the public one. Leave out fields newer than it
+   (`releases`, below, is 6.3.0). On an older server whose `meta` lacks the field, call
+   `order` with `operation: "validate"` and `project` `{"schema_version": "0.0.0"}`: the
+   one `unsupported_schema_version` issue it returns names the version that server reads.
+   Order from the catalog the data comes from: a steward's catalog for the steward's holdings
    (`register-metadata-search` skill, `references/data-stewards.md`). Set
    `reg_meta_version` (required) to the serving catalog's release tag, `reg_meta/vX.Y.Z`.
    Read `meta.catalog_version`
@@ -111,7 +113,8 @@ ordinary variables: `scb/flergenreg/ateranvant-personnr` and the per-parent
 `aterpnrfar`, `aterpnrmor` and adoptive variants, code `1` for a reused personnummer and
 `0` for not. Bind them when needed. `SenPNr` is only in `sos/lova`.
 
-A minimal document, checked against catalog 0.87.1 (set `reg_meta_version` as in step
+A minimal document, checked against catalog 0.87.1 (set `schema_version` and
+`reg_meta_version` as in step
 1). `sources` is a list, each source holds its own `bindings`, and `period` is a range in
 one source and a year list in the other:
 

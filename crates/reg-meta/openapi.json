@@ -2448,19 +2448,24 @@
       "Meta": {
         "type": "object",
         "required": [
-          "contract_version",
+          "api_version",
+          "project_schema_version",
           "generation",
           "catalog_version"
         ],
         "properties": {
-          "catalog_version": {
+          "api_version": {
             "type": "string"
           },
-          "contract_version": {
+          "catalog_version": {
             "type": "string"
           },
           "generation": {
             "type": "string"
+          },
+          "project_schema_version": {
+            "type": "string",
+            "description": "The `project_data.json` `schema_version` that `validate` and `order` admit."
           },
           "steward": {
             "oneOf": [

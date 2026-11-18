@@ -2,7 +2,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_catalog::{CONTRACT_VERSION, Code, ops};
+use reg_catalog::{API_VERSION, Code, ops};
 use serde_json::{Value, json};
 
 fn spec(name: &str) -> toml::Table {
@@ -74,14 +74,14 @@ fn param_schema(ty: &str) -> Value {
 /// Every served operation is a row of `operations.toml` with the same route and
 /// parameters, every served download a `[[download]]` row with the same route and
 /// media type, taking its operation's parameters plus its route's other
-/// placeholders, and `meta.contract_version` is the table's. A parameter the route
+/// placeholders, and `meta.api_version` is the table's. A parameter the route
 /// names is a path parameter; a `project` one is the request body of a POST route.
 /// Fails when a route, parameter, its location or optionality, or a media type drifts
 /// on either side, or when a route of the table is not served.
 #[test]
 fn openapi_matches_operations_toml() {
     let table = spec("operations.toml");
-    assert_eq!(table["contract_version"].as_str(), Some(CONTRACT_VERSION));
+    assert_eq!(table["api_version"].as_str(), Some(API_VERSION));
     let rows: BTreeMap<&str, &toml::Table> = table["operation"]
         .as_array()
         .unwrap()

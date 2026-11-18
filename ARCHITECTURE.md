@@ -206,15 +206,16 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   rendered routes target CLS < 0.1. The load-test harness, its fixtures and a CI perf
   gate are remaining work (#1455).
 - **Project schema version.** Schema breakage is signalled by `project_data.json`'s
-  `schema_version`. Contract 5.1.0 added optional boolean `follow_successor` on variable
-  bindings; absent or false keeps the bound variable's own history. Contract 5.2.0 adds
+  `schema_version`, versioned apart from the API (`meta.api_version`); every response's
+  `meta.project_schema_version` names the one the server admits. Schema 5.1.0 added
+  optional boolean `follow_successor` on variable bindings; absent or false keeps the bound variable's own history. Schema 5.2.0 adds
   optional top-level `extract_format` (`dta`, `parquet`, `csv`); absent means the order
   authoring default `dta`, resolved by the order file and never inserted into the
-  project. Contract 6.0.0 makes the binding `type` an optional override in catalog type
-  names and drops the subtype and format fields. Contract 6.1.0 adds optional top-level
-  `linkage.database`, the steward database an order draws from. Contract 6.2.0 adds
+  project. Schema 6.0.0 makes the binding `type` an optional override in catalog type
+  names and drops the subtype and format fields. Schema 6.1.0 adds optional top-level
+  `linkage.database`, the steward database an order draws from. Schema 6.2.0 adds
   manual items: a source or binding entered by hand (`manual` in place of `table` or
-  `variable`) for data the catalog does not document. Contract 6.3.0 adds optional
+  `variable`) for data the catalog does not document. Schema 6.3.0 adds optional
   `releases` on a catalog source, naming the releases that serve days two of the
   table's releases share. `reg-core` accepts
   exactly its `SCHEMA_VERSION` and refuses any other with an

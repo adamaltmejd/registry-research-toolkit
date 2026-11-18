@@ -214,7 +214,8 @@ schemas, and pinned catalog SHA-256 must match. Published catalog invariants bel
 `reg-build verify`. The paired holdings artifact supplies steward branding and delivery
 metadata; no runtime steward repository is loaded.
 
-Every JSON response's `meta` carries contract version, catalog version and generation
+Every JSON response's `meta` carries API version, project schema version, catalog version
+and generation
 (and the steward's identity in steward mode). Context's `period_span` bounds the
 study-years slider: in steward mode the hull of the years held, otherwise of the
 registers' periods, leaving out timeless periods (an ongoing register leaves the end
