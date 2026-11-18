@@ -20,18 +20,13 @@ the `register-metadata-search` skill.
 ## Drafting a project
 
 1. Set the document's `schema_version` to `meta.project_schema_version` from a response
-   of the catalog you order from: each server admits exactly that version, and a steward's
-   catalog can run an older release than the public one. Leave out fields newer than it
-   (`releases`, below, is 6.3.0). On an older server whose `meta` lacks the field, call
-   `order` with `operation: "validate"` and `project` `{"schema_version": "0.0.0"}`: the
-   one `unsupported_schema_version` issue it returns names the version that server reads.
-   Order from the catalog the data comes from: a steward's catalog for the steward's holdings
-   (`register-metadata-search` skill, `references/data-stewards.md`). Set
-   `reg_meta_version` (required) to the serving catalog's release tag, `reg_meta/vX.Y.Z`.
-   Read `meta.catalog_version`
-   from a catalog tool response and format its release version `X.Y.Z` as that tag. If
-   it is not a release version (for example, `dev`), ask which catalog release to use.
-   Never infer it from the local executable or from memory.
+   of the catalog you order from. Order from the catalog the data comes from: a steward's
+   catalog for the steward's holdings (`register-metadata-search` skill,
+   `references/data-stewards.md`). Set `reg_meta_version` (required) to the serving
+   catalog's release tag, `reg_meta/vX.Y.Z`. Read `meta.catalog_version` from a catalog
+   tool response and format its release version `X.Y.Z` as that tag. If it is not a
+   release version (for example, `dev`), ask which catalog release to use. Never infer it
+   from the local executable or from memory.
 2. Find each variable with `search` and `show`, then `segments` for the table that
    delivers it over the study period. To list the variables on one table, page
    `schema` (`ref` = the table, `period`, `limit`, `cursor`); `show` on a large register
