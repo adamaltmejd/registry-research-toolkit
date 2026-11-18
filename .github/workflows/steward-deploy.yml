@@ -103,14 +103,22 @@ env:
   TARGET: x86_64-unknown-linux-gnu
   # Same Cloudflare account as the toolkit's own edge deploys (container-build.yml).
   DEFAULT_CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
-  IMAGE: registry.fly.io/${{ inputs.fly_app }}:${{ github.run_id }}-${{ github.run_attempt }}
 
 jobs:
   image:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    # Each attempt that builds gets its own tag, so a full rerun never overwrites the
+    # image a previous deploy used (the rollback handle). The later jobs read the
+    # built tag from these outputs: `gh run rerun --failed` reruns only the failed
+    # jobs and keeps the outputs of the jobs that succeeded (#2543).
+    outputs:
+      image: ${{ env.IMAGE }}
+      tag: ${{ env.IMAGE_TAG }}
     env:
+      IMAGE_TAG: ${{ github.run_id }}-${{ github.run_attempt }}
+      IMAGE: registry.fly.io/${{ inputs.fly_app }}:${{ github.run_id }}-${{ github.run_attempt }}
       STEWARD: ${{ inputs.steward }}
       TAG: ${{ inputs.reg_meta_tag }}
       HOLDINGS: ${{ inputs.holdings_release }}
@@ -224,6 +232,7 @@ jobs:
       group: steward-deploy-${{ inputs.fly_app }}
       cancel-in-progress: false
     env:
+      IMAGE: ${{ needs.image.outputs.image }}
       EDGE_HOST: ${{ inputs.public_host }}
       ACCESS: ${{ inputs.access }}
       CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
@@ -336,10 +345,22 @@ jobs:
             fi
             sleep "$interval"
           done
-          etag=$(curl -m 15 -A reg-meta-ci-smoke -sfo /dev/null -w '%header{etag}' "$url")
-          code=$(curl -m 15 -A reg-meta-ci-smoke -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
-          echo "If-None-Match -> $code"
-          [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
+          # Right after a deploy the edge can still serve old and new versions side by
+          # side, so the ETag and the conditional request may disagree: retry both
+          # together, bounded to about a minute (#2543). A failed transfer or an empty
+          # ETag is a failed try, never a pass.
+          for try in 1 2 3 4 5; do
+            if etag=$(curl -m 15 -A reg-meta-ci-smoke -sfo /dev/null -w '%header{etag}' "$url") && [ -n "$etag" ]; then
+              code=$(curl -m 15 -A reg-meta-ci-smoke -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url") || code=curl-failed
+            else
+              code=no-etag
+            fi
+            echo "If-None-Match -> $code (try $try/5)"
+            [ "$code" = "304" ] && exit 0
+            [ "$try" -lt 5 ] && sleep 15
+          done
+          echo "FATAL: edge 304 revalidation broken" >&2
+          exit 1
       # The steward's context through the edge, and the hosted MCP endpoint: initialize,
       # tools/list naming `search`, one `search` call that is not a tool error.
       - name: Context and MCP smoke
@@ -366,7 +387,7 @@ jobs:
 
   # Registry prune (scripts/fly-prune.sh). A prune hiccup never fails the deploy.
   prune:
-    needs: deploy
+    needs: [image, deploy]
     runs-on: ubuntu-latest
     continue-on-error: true
     concurrency:
@@ -385,6 +406,6 @@ jobs:
         continue-on-error: true
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          DEPLOYED_TAG: ${{ github.run_id }}-${{ github.run_attempt }}
+          DEPLOYED_TAG: ${{ needs.image.outputs.tag }}
           FLY_APP: ${{ inputs.fly_app }}
         run: bash toolkit/scripts/fly-prune.sh
