@@ -637,9 +637,11 @@ export interface components {
         /** @enum {string} */
         ManifestMode: "steward_holdings";
         Meta: {
+            api_version: string;
             catalog_version: string;
-            contract_version: string;
             generation: string;
+            /** @description The `project_data.json` `schema_version` that `validate` and `order` admit. */
+            project_schema_version: string;
             steward?: components["schemas"]["Steward"] | null;
         };
         /** @description A located finding with the names of the catalog entities it is about. The MONA order file carries the bare `Issue`. */

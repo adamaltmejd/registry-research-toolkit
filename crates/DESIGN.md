@@ -1152,8 +1152,9 @@ Rules:
 
 - **JSON only, `{data, meta}` on every success**, except raw-bytes downloads (the
   document file), which carry their media type and have a JSON operation for their
-  metadata. `meta` is `contract_version`, `generation` and `catalog_version`, so an
-  agent always knows which catalog answered.
+  metadata. `meta` is `api_version`, `project_schema_version`, `generation` and
+  `catalog_version`, so an agent always knows which catalog answered and which project
+  version it admits.
 - **Deterministic responses.** `meta` carries no timing; the same request on the same
   catalog returns the same bytes, and goldens compare raw output.
 - **A ref is an FQID or a bare name.** A bare name resolves through `ident.pid`, then
@@ -1511,7 +1512,7 @@ and `sun2000niva`.
        "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
     ]
   },
-  "meta": {"contract_version": "6.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"api_version": "7.0.0", "project_schema_version": "6.3.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1541,7 +1542,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
       ]
     }
   },
-  "meta": {"contract_version": "6.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"api_version": "7.0.0", "project_schema_version": "6.3.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -3216,7 +3217,7 @@ still name the table the provider delivers for each era.
   ends, before coverage, moves and curated names: a source or asserted table's own
   name, else its handle, else the register's name for the implicit table. A release
   that never moved has its table's source name.
-- **Orders** (contract 6.3.0). Every order entry and row-key piece has
+- **Orders** (project schema 6.3.0). Every order entry and row-key piece has
   `delivered_table`. An entry or piece whose days span releases with different
   delivered names splits at the first day of each era, so each part names one delivered
   table. One that names a `release` (a shared day, "Concurrent releases") takes that
@@ -3382,8 +3383,10 @@ and not FQID kinds.
   release publishes. That is expected; the check is not required on main. Merge, then
   release when the maintainer runs it; a gap is allowed, with deployments blocked until
   the matching release publishes.
-- **Contract version.** `CONTRACT_VERSION` versions the operation set and its JSON
-  shapes, and `meta` reports it on every response.
+- **API version.** `API_VERSION` versions the operation set and its JSON shapes, apart
+  from the `project_data.json` schema (`reg_core::project::SCHEMA_VERSION`); `meta`
+  reports both on every response, as `api_version` and `project_schema_version`, so a
+  client reads the project version the server admits instead of copying it.
 - **Releases** are tagged per package (`reg_meta/vX.Y.Z`); each release carries the
   `reg_meta.db.zst` catalog asset (documents included) and the binaries. Steward
   holdings are released in each steward's repository. `project_data.json` records the

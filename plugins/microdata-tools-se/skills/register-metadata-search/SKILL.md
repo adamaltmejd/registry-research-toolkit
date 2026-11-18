@@ -48,7 +48,8 @@ Each tool's parameters are in its MCP schema; this is what each one is for.
 ## Responses
 
 A successful call returns `{data, meta}`. `data` is the result; `meta` names the
-`contract_version` (the API's, not the project schema version), the catalog `generation`
+`api_version` (the API's), the `project_schema_version` (the `project_data.json`
+`schema_version` this server's `validate` and `order` admit), the catalog `generation`
 and the `catalog_version`, the release the server runs.
 
 A failed call is an MCP tool error carrying `{error, meta}`, where `error` is

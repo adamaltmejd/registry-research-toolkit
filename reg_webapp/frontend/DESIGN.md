@@ -850,7 +850,7 @@ Time is the axis every relation is drawn on.
   affected. A ghost "Remove table" in the card header also asks first. Focus returns to
   the card heading after a column removal, or the Tables heading after a source removal.
 
-  Data the catalog does not document (a project's "manual" items, contract 6.2.0) is shown
+  Data the catalog does not document (a project's "manual" items, project schema 6.2.0) is shown
   and removed, never edited, and nothing about it is read from the catalog. A source
   entered by hand is a plain `Panel` card headed "<provider>: <register>" as the
   researcher wrote them, with the line "Not in the catalog, entered by hand", its

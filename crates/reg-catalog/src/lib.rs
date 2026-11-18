@@ -15,8 +15,9 @@ use serde_json::Value;
 pub use error::{Code, Error, Spec};
 pub use holdings::Steward;
 
-/// `contract_version` in `conformance/api/operations.toml`.
-pub const CONTRACT_VERSION: &str = "6.4.0";
+/// `api_version` in `conformance/api/operations.toml`: the operation set and its JSON
+/// shapes, not the `project_data.json` schema (`reg_core::project::SCHEMA_VERSION`).
+pub const API_VERSION: &str = "7.0.0";
 const DB_FILENAME: &str = "reg_meta.db";
 /// The `meta` keys every catalog carries (`reg-build`'s `schema.sql` and `checks.sql`).
 const REQUIRED_META: [&str; 10] = [

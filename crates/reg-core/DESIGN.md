@@ -22,24 +22,24 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
   binding names a three-segment binding FQID in `variable`. The optional top-level
   `window: {"from": <year>, "to": <year>}` is the study period the semantic layer
   measures a source period against; absent means the full history.
-- **`extract_format`** is an optional top-level string (contract 5.2.0 on): `dta`,
+- **`extract_format`** is an optional top-level string (schema 5.2.0 on): `dta`,
   `parquet` or `csv`. Absent means the order authoring default (`dta`), which the order
   file resolves; the default is never written into the project. The structural layer
   refuses a non-string, including explicit `null` (`invalid_field_type`), and a string
   outside the three (`invalid_enum_value`).
-- **`linkage`** is an optional top-level closed object (contract 6.1.0 on),
+- **`linkage`** is an optional top-level closed object (schema 6.1.0 on),
   `{"database": <string>}`: the steward database the order draws from. The structural
   layer checks the shape only; whether the steward needs one and whether the id is one
   of its databases are holdings findings (`database_required`, `database_unknown`,
   `not_in_database`; [../DESIGN.md](../DESIGN.md), "Linkage spaces").
-- **`Binding.follow_successor`** is an optional boolean in contract 5.1.0. Absent or
+- **`Binding.follow_successor`** is an optional boolean in schema 5.1.0. Absent or
   false orders only the named variable. True permits the catalog order layer to extend
   along `continues` successors after that variable ends; the precise chain and refusal
   rules live in [../DESIGN.md](../DESIGN.md). The structural layer refuses non-boolean
   values, including explicit `null`; catalog resolution ensures the binding names a
   variable. Other object types remain closed and refuse this field.
 - **`Binding.type`** is an optional override of the catalog type for the whole binding
-  (contract 6.0.0, maintainer G10–G12 in #2071), in the catalog's published type names:
+  (schema 6.0.0, maintainer G10–G12 in #2071), in the catalog's published type names:
   `integer`, `decimal`, `text`, `date`, `datetime`, `boolean`, `geometry`, `uuid`,
   `binary`, `identifier`. Absent means the catalog type. A binding is not split by year:
   years whose delivery differs go in their own source by period, or the catalog is
@@ -51,7 +51,7 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
   override informs the order check only (`binding_type_differs`,
   [../DESIGN.md](../DESIGN.md), "The logical order"); it changes no entry and no order
   file.
-- **Manual items** (contract 6.2.0 on) are data the catalog does not document, entered
+- **Manual items** (schema 6.2.0 on) are data the catalog does not document, entered
   by hand. A binding has `variable` (catalog) or `manual` (a closed
   `{column, type, codes?}`), and a source has `table` (catalog) or `manual` (a closed
   `{provider, register}` of free-text names, not ids). `Source` and `Binding` are
@@ -82,7 +82,7 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
 - **A source has no `edition` or `qualifier`.** Selecting an edition or a qualifier is
   deferred until curation; the primary segments serve every order (final over
   preliminary), and the closed source object refuses a document that carries either.
-- **`Source.releases`** (contract 6.3.0 on) is an optional, non-empty list of release
+- **`Source.releases`** (schema 6.3.0 on) is an optional, non-empty list of release
   names on a catalog source: the releases that serve days two of the table's releases
   share ([../DESIGN.md](../DESIGN.md), "Concurrent releases"). Structurally each name is
   a non-blank string (`invalid_field_type`) and distinct from the earlier ones under

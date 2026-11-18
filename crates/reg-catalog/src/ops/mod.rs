@@ -37,7 +37,7 @@ use utoipa::openapi::{
     OpenApi, OpenApiBuilder, PathItem, PathsBuilder, Ref, RefOr, Required, Schema, Type as Json,
 };
 
-use crate::{CONTRACT_VERSION, Catalog, Code, Error};
+use crate::{API_VERSION, Catalog, Code, Error};
 
 /// What a running server answers from: the admitted catalog, the `context` computed
 /// when it was admitted and the server's version (`reg_meta_version`).
@@ -528,7 +528,9 @@ pub fn hash<'a>(params: &Params<'a>, name: &str) -> Result<Option<&'a str>, Erro
 
 #[derive(Serialize, ToSchema)]
 pub struct Meta {
-    pub contract_version: &'static str,
+    pub api_version: &'static str,
+    /// The `project_data.json` `schema_version` that `validate` and `order` admit.
+    pub project_schema_version: &'static str,
     pub generation: String,
     pub catalog_version: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -539,7 +541,8 @@ impl Meta {
     #[must_use]
     pub fn new(catalog: &Catalog) -> Self {
         Self {
-            contract_version: CONTRACT_VERSION,
+            api_version: API_VERSION,
+            project_schema_version: reg_core::project::SCHEMA_VERSION,
             generation: catalog.generation().to_owned(),
             catalog_version: catalog.meta("catalog_version").to_owned(),
             steward: catalog.steward(),

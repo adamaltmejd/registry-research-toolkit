@@ -75,13 +75,17 @@
         },
         "Meta": {
           "properties": {
+            "api_version": {
+              "type": "string"
+            },
             "catalog_version": {
               "type": "string"
             },
-            "contract_version": {
+            "generation": {
               "type": "string"
             },
-            "generation": {
+            "project_schema_version": {
+              "description": "The `project_data.json` `schema_version` that `validate` and `order` admit.",
               "type": "string"
             },
             "steward": {
@@ -96,7 +100,8 @@
             }
           },
           "required": [
-            "contract_version",
+            "api_version",
+            "project_schema_version",
             "generation",
             "catalog_version"
           ],
@@ -535,13 +540,17 @@
         },
         "Meta": {
           "properties": {
+            "api_version": {
+              "type": "string"
+            },
             "catalog_version": {
               "type": "string"
             },
-            "contract_version": {
+            "generation": {
               "type": "string"
             },
-            "generation": {
+            "project_schema_version": {
+              "description": "The `project_data.json` `schema_version` that `validate` and `order` admit.",
               "type": "string"
             },
             "steward": {
@@ -556,7 +565,8 @@
             }
           },
           "required": [
-            "contract_version",
+            "api_version",
+            "project_schema_version",
             "generation",
             "catalog_version"
           ],
@@ -2234,13 +2244,17 @@
         },
         "Meta": {
           "properties": {
+            "api_version": {
+              "type": "string"
+            },
             "catalog_version": {
               "type": "string"
             },
-            "contract_version": {
+            "generation": {
               "type": "string"
             },
-            "generation": {
+            "project_schema_version": {
+              "description": "The `project_data.json` `schema_version` that `validate` and `order` admit.",
               "type": "string"
             },
             "steward": {
@@ -2255,7 +2269,8 @@
             }
           },
           "required": [
-            "contract_version",
+            "api_version",
+            "project_schema_version",
             "generation",
             "catalog_version"
           ],
@@ -2773,13 +2788,17 @@
         },
         "Meta": {
           "properties": {
+            "api_version": {
+              "type": "string"
+            },
             "catalog_version": {
               "type": "string"
             },
-            "contract_version": {
+            "generation": {
               "type": "string"
             },
-            "generation": {
+            "project_schema_version": {
+              "description": "The `project_data.json` `schema_version` that `validate` and `order` admit.",
               "type": "string"
             },
             "steward": {
@@ -2794,7 +2813,8 @@
             }
           },
           "required": [
-            "contract_version",
+            "api_version",
+            "project_schema_version",
             "generation",
             "catalog_version"
           ],
@@ -3244,13 +3264,17 @@
         },
         "Meta": {
           "properties": {
+            "api_version": {
+              "type": "string"
+            },
             "catalog_version": {
               "type": "string"
             },
-            "contract_version": {
+            "generation": {
               "type": "string"
             },
-            "generation": {
+            "project_schema_version": {
+              "description": "The `project_data.json` `schema_version` that `validate` and `order` admit.",
               "type": "string"
             },
             "steward": {
@@ -3265,7 +3289,8 @@
             }
           },
           "required": [
-            "contract_version",
+            "api_version",
+            "project_schema_version",
             "generation",
             "catalog_version"
           ],
@@ -3482,13 +3507,17 @@
         },
         "Meta": {
           "properties": {
+            "api_version": {
+              "type": "string"
+            },
             "catalog_version": {
               "type": "string"
             },
-            "contract_version": {
+            "generation": {
               "type": "string"
             },
-            "generation": {
+            "project_schema_version": {
+              "description": "The `project_data.json` `schema_version` that `validate` and `order` admit.",
               "type": "string"
             },
             "steward": {
@@ -3503,7 +3532,8 @@
             }
           },
           "required": [
-            "contract_version",
+            "api_version",
+            "project_schema_version",
             "generation",
             "catalog_version"
           ],
@@ -3868,13 +3898,17 @@
         },
         "Meta": {
           "properties": {
+            "api_version": {
+              "type": "string"
+            },
             "catalog_version": {
               "type": "string"
             },
-            "contract_version": {
+            "generation": {
               "type": "string"
             },
-            "generation": {
+            "project_schema_version": {
+              "description": "The `project_data.json` `schema_version` that `validate` and `order` admit.",
               "type": "string"
             },
             "steward": {
@@ -3889,7 +3923,8 @@
             }
           },
           "required": [
-            "contract_version",
+            "api_version",
+            "project_schema_version",
             "generation",
             "catalog_version"
           ],
@@ -4176,13 +4211,17 @@
         },
         "Meta": {
           "properties": {
+            "api_version": {
+              "type": "string"
+            },
             "catalog_version": {
               "type": "string"
             },
-            "contract_version": {
+            "generation": {
               "type": "string"
             },
-            "generation": {
+            "project_schema_version": {
+              "description": "The `project_data.json` `schema_version` that `validate` and `order` admit.",
               "type": "string"
             },
             "steward": {
@@ -4197,7 +4236,8 @@
             }
           },
           "required": [
-            "contract_version",
+            "api_version",
+            "project_schema_version",
             "generation",
             "catalog_version"
           ],
@@ -4816,13 +4856,17 @@
         },
         "Meta": {
           "properties": {
+            "api_version": {
+              "type": "string"
+            },
             "catalog_version": {
               "type": "string"
             },
-            "contract_version": {
+            "generation": {
               "type": "string"
             },
-            "generation": {
+            "project_schema_version": {
+              "description": "The `project_data.json` `schema_version` that `validate` and `order` admit.",
               "type": "string"
             },
             "steward": {
@@ -4837,7 +4881,8 @@
             }
           },
           "required": [
-            "contract_version",
+            "api_version",
+            "project_schema_version",
             "generation",
             "catalog_version"
           ],
@@ -5817,13 +5862,17 @@
         },
         "Meta": {
           "properties": {
+            "api_version": {
+              "type": "string"
+            },
             "catalog_version": {
               "type": "string"
             },
-            "contract_version": {
+            "generation": {
               "type": "string"
             },
-            "generation": {
+            "project_schema_version": {
+              "description": "The `project_data.json` `schema_version` that `validate` and `order` admit.",
               "type": "string"
             },
             "steward": {
@@ -5838,7 +5887,8 @@
             }
           },
           "required": [
-            "contract_version",
+            "api_version",
+            "project_schema_version",
             "generation",
             "catalog_version"
           ],
