@@ -1954,8 +1954,12 @@ Every table in the pinned export is held. Selection is the steward's export step
 only structural (which databases, which object kinds or name prefixes the steward
 publishes from); every content decision (preliminary, raw, superseded or old snapshots,
 withheld columns) stays in the authored topology with a reason. The reader config has no
-selection vocabulary. A column's ordinal is its `ordinal_position`, so an order lists a
-table's columns in the table's own order.
+selection vocabulary. A column's ordinal (`holding_column.ordinal`) is its
+`ordinal_position`, which verify checks against the export. The ordinal does not set
+an order's column order. Materialization sorts a file's columns by source, binding,
+entry and slot index, and uses the ordinal only to break the remaining ties. It also
+orders the physical columns that one variable maps to within a table when placements
+are read.
 
 The reader refuses, at `storage_export:row=N`: an invalid storage fact, a repeated
 column name or `ordinal_position` within one table, a table whose rows disagree on
@@ -2331,6 +2335,10 @@ Holdings schema 7 replaces the unique `holding_table.physical_name` with a uniqu
 Holdings schema 8 adds `holding_space` and `holding_table.space` (see "Linkage spaces").
 
 Holdings schema 10 adds `holding_table.release` (see "Concurrent releases").
+
+Holdings schema 12 takes column ordinals from the storage export's `ordinal_position`
+and renames the accounting meta keys to `held_tables` and `held_columns` (see "Physical
+possession"). A steward meets it at its bump to the release that ships it.
 
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
