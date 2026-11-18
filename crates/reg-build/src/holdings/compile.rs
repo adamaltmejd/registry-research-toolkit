@@ -726,6 +726,21 @@ pub(super) fn physical_identity(table: &physical::Table) -> Identity {
     (table.schema.clone(), table.name.clone())
 }
 
+/// Refuse an authored `schema_name` that is not the table's export schema. Keyed, the
+/// identity already matched it; unkeyed, it is checked here, by compile and verify.
+pub(super) fn authored_schema(authored: &input::Table, table: &physical::Table) -> Result<()> {
+    if authored
+        .schema_name
+        .as_ref()
+        .is_some_and(|name| *name != table.storage_schema)
+    {
+        return Err(
+            "holdings_accounting_invalid: authored schema differs from the storage export".into(),
+        );
+    }
+    Ok(())
+}
+
 /// An authored table's identity. Without a schema-keyed reader `schema_name` is no part
 /// of the identity and must name the table's schema in the export.
 pub(super) fn authored_identity(table: &input::Table, keyed: bool) -> Identity {
@@ -824,18 +839,7 @@ pub(super) fn write(
                     "holdings_period_column_invalid: column and encoding must be paired".into(),
                 );
             }
-            // Keyed, the identity already matched the schema; unkeyed, a stated schema
-            // must be the export's.
-            if authored
-                .schema_name
-                .as_ref()
-                .is_some_and(|name| *name != table.storage_schema)
-            {
-                return Err(
-                    "holdings_accounting_invalid: authored schema differs from the storage export"
-                        .into(),
-                );
-            }
+            authored_schema(authored, &table)?;
             let file_name = reg_resolve::slugify(&match &table.schema {
                 Some(schema) => format!("{schema}_{}", table.name),
                 None => table.name.clone(),

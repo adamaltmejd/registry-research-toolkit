@@ -190,6 +190,7 @@ fn sources(
         else {
             return Err(format!("{location}: holdings_topology_source_mismatch").into());
         };
+        compile::authored_schema(spec, table).map_err(|e| format!("{location}: {e}"))?;
         if !parent_in_schema
             || (&spec.projection_of, &spec.projection_token, &spec.partition)
                 != (&placement.0, &placement.1, &placement.2)
