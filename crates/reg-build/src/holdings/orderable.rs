@@ -83,7 +83,7 @@ impl Reason {
     }
 }
 
-/// One delivered (census) column and why it is not orderable, `None` when it is.
+/// One delivered (held) column and why it is not orderable, `None` when it is.
 pub(crate) struct Column {
     pub table: i64,
     pub schema: Option<String>,
@@ -199,7 +199,7 @@ struct Selection {
     through: BTreeMap<i64, i64>,
 }
 
-/// Every census column of a compiled holdings file with its reason.
+/// Every held column of a compiled holdings file with its reason.
 pub(crate) fn columns(db: &Connection) -> Result<Vec<Column>> {
     let Selection {
         kept,

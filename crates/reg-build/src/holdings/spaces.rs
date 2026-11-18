@@ -1,10 +1,10 @@
-//! Linkage spaces: which census schemas share one person key (`crates/DESIGN.md`,
+//! Linkage spaces: which export schemas share one person key (`crates/DESIGN.md`,
 //! "Linkage spaces"). Compile and verify resolve them the same way, from the admitted
-//! config and the census.
+//! config and the storage export.
 use std::collections::BTreeMap;
 use std::path::Path;
 
-use reg_readers::holdings as census;
+use reg_readers::holdings as physical;
 
 use super::input;
 use crate::error::Result;
@@ -12,13 +12,13 @@ use crate::error::Result;
 /// The steward's spaces in config order, as (id, name), and each table's space.
 pub(super) struct Spaces {
     pub list: Vec<(String, String)>,
-    /// Census schema to space id; empty for the one implicit space.
+    /// Export schema to space id; empty for the one implicit space.
     by_schema: BTreeMap<String, String>,
 }
 
 impl Spaces {
-    /// The space of a census table. `resolve` mapped every census schema.
-    pub fn of(&self, table: &census::Table) -> &str {
+    /// The space of a held table. `resolve` mapped every held schema.
+    pub fn of(&self, table: &physical::Table) -> &str {
         match table.schema.as_ref() {
             Some(schema) if !self.by_schema.is_empty() => &self.by_schema[schema],
             _ => &self.list[0].0,
@@ -31,7 +31,7 @@ impl Spaces {
 pub(super) fn resolve(
     root: &Path,
     config: &input::Config,
-    tables: &[census::Table],
+    tables: &[physical::Table],
 ) -> Result<Spaces> {
     if config.space.is_empty() {
         let presentation =
@@ -46,7 +46,7 @@ pub(super) fn resolve(
         });
     }
     if !super::compile::schema_keyed(tables) {
-        return Err("config:space=1: holdings_space_invalid: spaces need a schema-keyed census (census_schema)".into());
+        return Err("config:space=1: holdings_space_invalid: spaces need a schema-keyed reader (schema_keyed)".into());
     }
     let mut by_schema = BTreeMap::<String, String>::new();
     let mut list = Vec::new();
@@ -72,7 +72,9 @@ pub(super) fn resolve(
         }
         for schema in &space.schemas {
             if !tables.iter().any(|t| t.schema.as_ref() == Some(schema)) {
-                return Err(refuse(format!("schema {schema:?} is not in the census")));
+                return Err(refuse(format!(
+                    "schema {schema:?} is not in the storage export"
+                )));
             }
             if let Some(other) = by_schema.insert(schema.clone(), space.id.clone()) {
                 return Err(refuse(format!(
@@ -87,7 +89,7 @@ pub(super) fn resolve(
         .find(|t| t.schema.as_ref().is_none_or(|s| !by_schema.contains_key(s)))
     {
         return Err(format!(
-            "census:row={}: holdings_space_unmapped: schema {:?} is in no space",
+            "storage_export:row={}: holdings_space_unmapped: schema {:?} is in no space",
             table.source_row,
             table.schema.as_deref().unwrap_or("")
         )

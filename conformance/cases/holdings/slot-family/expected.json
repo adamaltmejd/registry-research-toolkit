@@ -3,6 +3,6 @@
   "verify_refusal": {
     "sql": "UPDATE holding_column SET slot_family='invented-family' WHERE slot_family='received-position'",
     "code": "holdings_slot_source_mismatch",
-    "location": "census:row=3:column=6"
+    "location": "storage_export:row=3:column=6"
   }
 }

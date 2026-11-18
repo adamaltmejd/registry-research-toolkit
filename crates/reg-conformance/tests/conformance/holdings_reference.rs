@@ -64,14 +64,6 @@ fn extend(root: &Path) {
     )
     .unwrap();
     append(
-        &root.join("census.csv"),
-        "Synthetic,Attested,Attested,Old,Id,,,,,,,\n\
-         Synthetic,AttestedSlot,AttestedSlot,ReceivedKey,Slot,,,,,,,\n\
-         Synthetic,AttestedMember,AttestedMember,Id,,,,,,,,\n\
-         Synthetic,AttestedGrid,AttestedGrid,GridId,Cells,,,,,,,\n",
-    )
-    .unwrap();
-    append(
         &root.join("storage.csv"),
         "dbo,Attested,BASE TABLE,Old,int,,10,0,1\ndbo,Attested,BASE TABLE,Id,int,,10,0,2\n\
          dbo,AttestedSlot,BASE TABLE,ReceivedKey,int,,10,0,1\n\

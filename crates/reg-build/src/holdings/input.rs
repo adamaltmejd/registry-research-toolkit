@@ -50,7 +50,6 @@ pub(super) struct Presentation {
 #[serde(deny_unknown_fields)]
 pub(super) struct Inputs {
     pub reference_occurrences: Option<String>,
-    pub census: String,
     pub storage_export: String,
     pub holdings: String,
     pub census_reader: String,
@@ -277,7 +276,6 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
         &curation,
         &config.presentation.steward,
         &config.presentation.logo,
-        &config.inputs.census,
         &config.inputs.storage_export,
         &config.inputs.holdings,
         &config.inputs.census_reader,

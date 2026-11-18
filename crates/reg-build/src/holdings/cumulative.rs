@@ -4,7 +4,7 @@
 //! and the older ones are superseded by it.
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_readers::holdings as census;
+use reg_readers::holdings as physical;
 use rusqlite::Connection;
 
 use super::compile::{self, Identity};
@@ -41,14 +41,14 @@ pub(super) fn starts(base: &Connection, db: &Connection) -> Result<Starts> {
 /// result.
 pub(super) fn resolve(
     authored: &mut BTreeMap<Identity, input::Table>,
-    census: &[census::Table],
+    held: &[physical::Table],
     spaces: &super::spaces::Spaces,
     starts: &Starts,
     primaries: &compile::Primaries,
 ) -> Result<()> {
-    let space: BTreeMap<Identity, &str> = census
+    let space: BTreeMap<Identity, &str> = held
         .iter()
-        .map(|t| (compile::census_identity(t), spaces.of(t)))
+        .map(|t| (compile::physical_identity(t), spaces.of(t)))
         .collect();
     let mut groups = BTreeMap::<(&str, Vec<String>, Option<String>), Vec<(i64, Identity)>>::new();
     for (identity, table) in authored.iter() {
@@ -80,7 +80,7 @@ pub(super) fn resolve(
         let mut routes = table.routes.clone();
         routes.sort();
         let Some(space) = space.get(identity) else {
-            continue; // Accounting refuses a table the census lacks.
+            continue; // Accounting refuses a table the export lacks.
         };
         groups
             // The resolved release, so two spellings of one release are one group.

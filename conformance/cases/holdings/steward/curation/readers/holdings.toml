@@ -1,7 +1,6 @@
-census_table = "Table"
-census_columns = "V"
+schema_keyed = false
 
 [[rewrite]]
 prefix = "Received_"
 replacement = ""
-evidence = "Synthetic census explicitly prefixes the reference row key."
+evidence = "Synthetic storage export explicitly prefixes the reference row key."

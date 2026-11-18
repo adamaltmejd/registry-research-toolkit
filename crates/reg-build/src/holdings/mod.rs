@@ -93,12 +93,11 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
             }
             (
                 format!(
-                    "holdings: tables={} columns={} mapped={} unmatched={} storage_extras={}",
+                    "holdings: tables={} columns={} mapped={} unmatched={}",
                     meta(&db, "census_tables")?,
                     meta(&db, "census_columns")?,
                     meta(&db, "mapped_columns")?,
-                    meta(&db, "unmatched_columns")?,
-                    meta(&db, "storage_extra_columns")?
+                    meta(&db, "unmatched_columns")?
                 ),
                 orderable,
             )
@@ -236,20 +235,19 @@ fn write(
     drop(semantic);
     let topology: input::Topology = crate::toml_file(&input::path(root, &config.inputs.holdings)?)
         .map_err(|_| "holdings_topology_invalid: malformed authored topology".to_owned())?;
-    let census = reg_readers::holdings::read(
-        &input::path(root, &config.inputs.census)?,
+    let held = reg_readers::holdings::read(
         &input::path(root, &config.inputs.storage_export)?,
         &input::path(root, &config.inputs.census_reader)?,
     )?;
-    let spaces = spaces::resolve(root, config, &census.tables)?;
+    let spaces = spaces::resolve(root, config, &held.tables)?;
     let mut db = Connection::open(scratch)?;
     db.execute_batch("PRAGMA foreign_keys=ON;")?;
     let counts = compile::write(
         &mut db,
         &base_db,
         topology,
-        census.tables,
-        &census.rename_targets,
+        held.tables,
+        &held.rename_targets,
         &spaces,
     )?;
     let mut generation = crate::sha256_file(&input::path(root, &pin.config)?)?.0;
@@ -314,10 +312,6 @@ fn write(
         ("census_columns", counts.1.to_string()),
         ("mapped_columns", counts.2.to_string()),
         ("unmatched_columns", counts.3.to_string()),
-        (
-            "storage_extra_columns",
-            census.storage_extra_columns.to_string(),
-        ),
     ]);
     let tx = db.transaction()?;
     for (key, value) in metadata {

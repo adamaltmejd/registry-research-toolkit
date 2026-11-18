@@ -249,11 +249,11 @@ pub(super) fn verify(
     index: &BTreeMap<String, Vec<compile::Segment>>,
     variables: &compile::Variables<'_>,
     topology: &input::Topology,
-    census: &reg_readers::holdings::ReadOutput,
+    held: &reg_readers::holdings::ReadOutput,
     primaries: &compile::Primaries,
 ) -> Result<()> {
-    compile::renames_resolve(index, &census.rename_targets)?;
-    let keyed = compile::schema_keyed(&census.tables);
+    compile::renames_resolve(index, &held.rename_targets)?;
+    let keyed = compile::schema_keyed(&held.tables);
     let tables: BTreeMap<_, _> = topology
         .table
         .iter()
@@ -270,10 +270,13 @@ pub(super) fn verify(
          JOIN holding_column c ON c.id=n.column_id JOIN holding_table h ON h.id=c.holding_id
          WHERE h.physical_name=?1 AND c.name=?2 AND (?3 IS NULL OR h.schema_name=?3)",
     )?;
-    for table in &census.tables {
-        let authored = tables[&compile::census_identity(table)];
+    for table in &held.tables {
+        let authored = tables[&compile::physical_identity(table)];
         for column in &table.columns {
-            let location = format!("census:row={}:column={}", table.source_row, column.ordinal);
+            let location = format!(
+                "storage_export:row={}:column={}",
+                table.source_row, column.ordinal
+            );
             let mut compare = || -> Result<Option<&str>> {
                 let (mut expected, mut contested) = expected(
                     &claims(
