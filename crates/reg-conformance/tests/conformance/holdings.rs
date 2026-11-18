@@ -88,8 +88,8 @@ fn verify_refuses_a_mapping_beside_its_held_row_key() {
     // explicit missing-time-key hold must hold every column of the received table.
     // Also fails if the build report counts those columns as their own holds (the
     // compiler stamps the key's hold on each, and `Held` has its own) instead of
-    // listing the table as blocked by its key: all 9 census columns of Pool
-    // (`steward/census.csv`) under `row_key_held`, with the hold from
+    // listing the table as blocked by its key: all 9 columns of Pool
+    // (`steward/storage.csv`) under `row_key_held`, with the hold from
     // `row-key-hold.toml`.
     let dir = Scratch::new("held-key").unwrap();
     let root = locked_copy(dir.path()).unwrap();
@@ -181,20 +181,20 @@ fn held_binding_needs_its_follow_up() {
 }
 
 #[test]
-fn census_replacement_refuses_vanished_columns() {
+fn storage_export_replacement_refuses_vanished_columns() {
     // Fails if a new input pin silently drops a stale reviewed route, if the old pair
     // stops demanding its recorded source commit, or if a refused compile replaces the
-    // published pair. Expectations come from the second census.
-    let expected = read_json(&holdings_case().join("census-update.json")).unwrap();
+    // published pair. Expectations come from the second export.
+    let expected = read_json(&holdings_case().join("storage-update.json")).unwrap();
     let text = |key: &str| expected[key].as_str().unwrap();
-    let dir = Scratch::new("census-update").unwrap();
+    let dir = Scratch::new("storage-update").unwrap();
     let root = locked_copy(dir.path()).unwrap();
     let out = dir.path().join("published.db");
     compile(dir.path(), &out).ok();
     let original = fs::read(&out).unwrap();
     fs::copy(
-        holdings_case().join("census-next.csv"),
-        root.join("census.csv"),
+        holdings_case().join("storage-next.csv"),
+        root.join("storage.csv"),
     )
     .unwrap();
     let holdings = pinned_holdings(dir.path()).unwrap();
@@ -237,13 +237,12 @@ fn renamed_physical_column_matches_its_catalog_name() {
     // placements (`renames.json`, `catalog`) come from the base frame and Pool's
     // authored delivery.
     let expected = rename_expected("catalog");
-    let dir = Scratch::new("census-rename").unwrap();
+    let dir = Scratch::new("physical-rename").unwrap();
     let root = locked_copy(dir.path()).unwrap();
-    edit(&root.join("census.csv"), ",Old,", ",Received_Olde,", false).unwrap();
     edit(&root.join("storage.csv"), ",Old,", ",Received_Olde,", false).unwrap();
     append(
         &root.join("curation/readers/holdings.toml"),
-        "\n[[rename]]\nphysical = \"Received_Olde\"\ncatalog = \"Old\"\nevidence = \"Synthetic census renames Old.\"\n",
+        "\n[[rename]]\nphysical = \"Received_Olde\"\ncatalog = \"Old\"\nevidence = \"Synthetic export renames Old.\"\n",
     )
     .unwrap();
     let out = dir.path().join("renamed.db");
@@ -258,9 +257,8 @@ fn variable_rename_places_every_documented_spelling() {
     // spelling places only one of the Pool's two intervals. The expected placements
     // (`renames.json`, `variable`) come from the base frame and Pool's authored delivery.
     let expected = rename_expected("variable");
-    let dir = Scratch::new("census-variable-rename").unwrap();
+    let dir = Scratch::new("variable-rename").unwrap();
     let root = locked_copy(dir.path()).unwrap();
-    edit(&root.join("census.csv"), ",Old,New,", ",Value,,", false).unwrap();
     let storage = root.join("storage.csv");
     edit(
         &storage,
@@ -272,7 +270,7 @@ fn variable_rename_places_every_documented_spelling() {
     edit(&storage, "dbo,Pool,BASE TABLE,New,int,,10,0,3\n", "", false).unwrap();
     append(
         &root.join("curation/readers/holdings.toml"),
-        "\n[[rename]]\nphysical = \"Value\"\nvariable = \"demo/held/value\"\nevidence = \"Synthetic census drops the spelling change.\"\n",
+        "\n[[rename]]\nphysical = \"Value\"\nvariable = \"demo/held/value\"\nevidence = \"Synthetic export drops the spelling change.\"\n",
     )
     .unwrap();
     let out = dir.path().join("variable.db");
@@ -292,11 +290,6 @@ fn table_less_mapping_places_on_every_documenting_table() {
     let expected = read_json(&holdings_case().join("derived.json")).unwrap();
     let dir = Scratch::new("derived").unwrap();
     let root = locked_copy(dir.path()).unwrap();
-    append(
-        &root.join("census.csv"),
-        "Synthetic,Derived,Derived,Id,RelativeId,,,,,,,\n",
-    )
-    .unwrap();
     append(
         &root.join("storage.csv"),
         "dbo,Derived,BASE TABLE,Id,int,,10,0,1\ndbo,Derived,BASE TABLE,RelativeId,int,,10,0,2\n",
@@ -346,11 +339,6 @@ fn cumulative_table_keeps_the_newest_extract() {
     let root = locked_copy(dir.path()).unwrap();
     for year in [2019, 2021, 2022] {
         append(
-            &root.join("census.csv"),
-            &format!("Synthetic,People {year},People {year},Id,,,,,,,,\n"),
-        )
-        .unwrap();
-        append(
             &root.join("storage.csv"),
             &format!("dbo,People {year},BASE TABLE,Id,int,,10,0,1\n"),
         )
@@ -381,20 +369,19 @@ fn cumulative_table_keeps_the_newest_extract() {
 }
 
 #[test]
-fn schema_keyed_census_holds_one_name_in_two_schemas() {
-    // Fails if a schema-keyed census still keys tables by name (the aux twin of
+fn schema_keyed_export_holds_one_name_in_two_schemas() {
+    // Fails if a schema-keyed reader still keys tables by name (the aux twin of
     // Excluded refuses as a duplicate, or the unique physical name refuses it at
     // insert), if file names ignore the schema (both twins slug to `excluded`), or if
     // a repeated (schema, table) is admitted.
-    let dir = Scratch::new("census-schema").unwrap();
+    let dir = Scratch::new("export-schema").unwrap();
     let root = locked_copy(dir.path()).unwrap();
-    let census = root.join("census.csv");
-    edit(&census, "Synthetic,", "dbo,", true).unwrap();
-    append(&census, "aux,Excluded,Excluded,Secret,,,,,,,,\n").unwrap();
+    let storage = root.join("storage.csv");
+    append(&storage, "aux,Excluded,BASE TABLE,Secret,int,,10,0,1\n").unwrap();
     edit(
         &root.join("curation/readers/holdings.toml"),
-        "census_columns = \"V\"\n",
-        "census_columns = \"V\"\ncensus_schema = \"Category\"\n",
+        "schema_keyed = false\n",
+        "schema_keyed = true\n",
         false,
     )
     .unwrap();
@@ -426,9 +413,9 @@ fn schema_keyed_census_holds_one_name_in_two_schemas() {
     );
     let base = cached_reader_artifact(&holdings_case().join("base")).unwrap();
     verify_holdings(&out, &base, &root).ok();
-    append(&census, "dbo,Excluded,Excluded,Secret,,,,,,,,\n").unwrap();
+    append(&storage, "dbo,Excluded,BASE TABLE,Secret,int,,10,0,1\n").unwrap();
     compile(dir.path(), &dir.path().join("repeated.db"))
-        .refused(&["census", "row=12: duplicate physical table"]);
+        .refused(&["storage_export", "row=29: duplicate physical column"]);
 }
 
 #[test]
@@ -437,7 +424,7 @@ fn one_placement_in_two_spaces_is_two_databases_copies() {
     // refuses beside the dbo original even in its own space), if it stops refusing
     // within one space (the single-space compile publishes), or if a table is stored
     // in another space than its schema's.
-    let dir = Scratch::new("census-spaces").unwrap();
+    let dir = Scratch::new("export-spaces").unwrap();
     let root = locked_copy(dir.path()).unwrap();
     steward::split_schemas(&root).unwrap();
     let out = dir.path().join("spaces.db");

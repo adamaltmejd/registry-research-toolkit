@@ -13,7 +13,6 @@ dbo,Part B,BASE TABLE,Id,int,,10,0,1
 dbo,Part B,BASE TABLE,New,int,,10,0,2
 dbo,Parent,BASE TABLE,Id,int,,10,0,1
 dbo,Child,BASE TABLE,Id,int,,10,0,1
-dbo,Outside,BASE TABLE,Extra,int,,10,0,1
 dbo,Pool,BASE TABLE,Year,int,,10,0,9
 dbo,Owners,BASE TABLE,Id,int,,10,0,2
 dbo,Child,BASE TABLE,ChildId,int,,10,0,2
@@ -22,3 +21,7 @@ dbo,Parent,BASE TABLE,Amount,int,,10,0,2
 dbo,Parent,BASE TABLE,Status,int,,10,0,3
 dbo,Child,BASE TABLE,Amount,int,,10,0,3
 dbo,Child,BASE TABLE,Status,int,,10,0,4
+dbo,Pool,BASE TABLE,Held,int,,10,0,8
+dbo,Unknown,BASE TABLE,Unplaced,int,,10,0,1
+dbo,Lookup,BASE TABLE,Code,int,,10,0,1
+dbo,Excluded,BASE TABLE,Secret,int,,10,0,1

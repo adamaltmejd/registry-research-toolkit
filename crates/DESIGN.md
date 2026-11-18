@@ -1013,7 +1013,7 @@ release assets are left unchanged.
   `[start, end)` periods. Explicit table ids are compared by table name; implicit tables
   share their register's id and are excluded. `--holdings` compares two holdings
   catalogs instead (release step 8g), OLD on the same or an older holdings schema with
-  the same cross-schema report: census columns by (physical table, column), with orderable
+  the same cross-schema report: held columns by (physical table, column), with orderable
   and per-reason counts and blocked tables as the holdings build reports them ("Orderable
   columns"), changed placements grouped by old and new `table_pid` and
   classed newly placed, folded or renamed, variable or interval changed, or unmapped;
@@ -1638,7 +1638,7 @@ commit and the `--config` path as the steward pin, and refuses a dirty tree, unt
 files included. The dedicated repo's `steward.toml` declares owner id, scope,
 presentation paths, reader/input roles and semantic curation root. Use `scope.toml`,
 `branding/` (`steward.json`, logo), `curation/registers/` (normal ledgers and
-statements, including slots), `curation/readers/`, and `inputs/` (census, storage
+statements, including slots), `curation/readers/`, and `inputs/` (the storage
 export, provider source TOML/converted transcription CSV, inventory and legacy slug
 evidence). Pin selected delivery-document evidence there too, retaining originals
 privately. Reuse the catalog input-pin discipline: verify the declared paths/hashes in
@@ -1664,7 +1664,7 @@ counts and cursor, alongside the reference group; independent bm25 ranks are nev
 merged.
 
 A second steward such as IFAU needs its own pinned repo/config, owner id, scope,
-branding, logical definitions/ledgers, mappings and metadata-only census/storage inputs,
+branding, logical definitions/ledgers, mappings and a metadata-only storage export,
 then a holdings asset paired with the base catalog. The same compiler and
 `reg-meta serve --catalog <steward>` select it without SWECOV branches. Serving that
 second steward's webapp and steward-specific MCP is later, not E; E establishes the
@@ -1686,15 +1686,15 @@ Every legacy mapping was converted, dropped with a reason, or refused at its sou
 Missing targets were retargeted to existing ids with evidence, minted as steward-only
 definitions or slots, corrected through reviewed global curation, or held or unmapped
 with a reason. The legacy paths survive in `steward.toml` only as conversion provenance;
-the compiler never reads them. The census is matched by table and exact column; storage
-facts that are missing or multiply resolved refuse for orderable holdings.
+the compiler never reads them. The physical census converted then was retired for the
+storage export alone in #2548 (see "Physical possession").
 
 The 27 providers absent from the reference catalog have legally public definitions but
 no global-catalog home (maintainer 2026-10-29): they live in the holdings file's
-supplemental semantic part. The private census, storage export, inventory and original
+supplemental semantic part. The private storage export, inventory and original
 documents are not published; release assets include only admitted metadata and safe
-source locators. One generic holdings compiler reads the authored definitions and census
-directly. There is no generate-then-reparse inventory stage and no steward-specific
+source locators. One generic holdings compiler reads the authored definitions and the
+storage export directly. There is no generate-then-reparse inventory stage and no steward-specific
 code.
 
 The ordinary catalog pipeline handles missing logical facts before holdings compile:
@@ -1746,11 +1746,11 @@ The generic compiler does the following against the exact catalog/semantic-view 
 1. Apply table dispositions and explicit column `unmap`/`hold` decisions first. A hold
    carries a reason and follow-up issue; an unmap is permanent. Neither becomes an
    unresolved auto-map candidate. Stale decisions naming absent physical columns refuse.
-2. Per routed logical table, match the census column to documented spellings using
+2. Per routed logical table, match the physical column to documented spellings using
    reader-side trimming followed by `reg-core::fold_identity` (Unicode `to_lowercase()`
    only, no trim or normalization in that function; D12). Only reader-configured renames
-   and rewrites may precede the fold (see "Census reader renames and rewrites"): carry
-   the old `^P1105_LopNr_` key-prefix rewrite explicitly into the census reader config,
+   and rewrites may precede the fold (see "Holdings reader renames and rewrites"): carry
+   the old `^P1105_LopNr_` key-prefix rewrite explicitly into the holdings reader config,
    with its source evidence. Do not add fuzzy matching, label matching or
    provider-specific branches in resolve. An explicit reviewed mapping may supply a
    different physical/logical header association. A spelling must match documentation at
@@ -1794,8 +1794,8 @@ The generic compiler does the following against the exact catalog/semantic-view 
    **not** block publication or require an invented unmap reason.
    `ambiguous_delivered_owners` is likewise a notice with no contested placement, not
    one of the refusal codes below. Explicit hold/unmap decisions retain their own
-   reasons. Every census column must still be accounted in the artifact. Invalid
-   authored routes/targets/windows, unaccounted census columns and illegal duplicate
+   reasons. Every held column must still be accounted in the artifact. Invalid
+   authored routes/targets/windows, unaccounted held columns and illegal duplicate
    placements remain located refusals (`holdings_table_route_unresolved`,
    `stale_declared_mapping_target`, `inventory_window_invalid`,
    `inventory_cell_conflict`). At request time, a missing placement is
@@ -1820,8 +1820,9 @@ variable or use fallback to defeat an owner/window refusal.
 Storage checks run in the holdings compiler **after mapping**: the `disagrees`,
 `narrower`, `uncurated` and `unmatched` findings of the old steward build, against the
 adopted catalog type and physical precision/scale/length. Catalog typing never sees this
-storage export. Storage mismatch findings require review; missing or ambiguous schema
-facts and unsafe output types remain publication/materialization refusals. No
+storage export. Storage mismatch findings require review; unsafe output types remain
+publication/materialization refusals. Every held column has exactly one storage fact by
+construction (see "Physical possession"), so none is missing or ambiguous. No
 disagreement auto-corrects provider types.
 
 #### Steward-derived tables
@@ -1926,9 +1927,9 @@ ids. `reg-build verify <holdings-db> --catalog <catalog-db> --steward-repo <dir>
 validates the pair, including cross-file references that SQLite cannot enforce as
 foreign keys. It admits the clean steward checkout against the repository, commit,
 config and input pins recorded in the holdings file, then independently re-reads the
-census and storage export. Every census table and exact physical column must be present,
-with no extra coordinates; offered columns must match the source schema, table type,
-storage type, length, precision and scale. Compiler-recorded counts are summaries, not
+storage export. Every exported table and exact physical column must be present at its
+`ordinal_position`, with no extra coordinates; every table must match its source schema
+and table type, every column its storage type, length, precision and scale. Compiler-recorded counts are summaries, not
 the oracle. Physical mappings must equal the complete admitted explicit mappings or
 automatic spelling matches: interval unions grouped by table, variable, role, carried
 flag, caveat and authored window. Verification derives these expectations from the
@@ -1937,8 +1938,35 @@ projection keys. Missing coverage or changed attributes refuse with located
 `holdings_mapping_source_mismatch`. Refusals locate source rows/column ordinals or
 artifact table/column ids without printing private physical identifiers.
 
-The census is the authority for physical possession (maintainer, 2026-11-02), and its
-replacement is an ordinary pinned input change followed by recompilation. Reviewed
+#### Physical possession
+
+The pinned storage export is the authority for physical possession (maintainer,
+2026-11-18, #2548; it replaces the 2026-11-02 ruling that made a separate census the
+authority). It is the nine `INFORMATION_SCHEMA.COLUMNS` fields `table_schema`,
+`table_name`, `table_type`, `column_name`, `data_type`, `character_maximum_length`,
+`numeric_precision`, `numeric_scale` and `ordinal_position`, one row per column, and it
+is a steward's single physical input (`inputs.storage_export`). The census it replaced
+was a projection of the same export, pinned as a second file from a second step, and the
+two drifted: one steward's census ordinals were an alphabetical sort, not the tables'
+order.
+
+Every table in the pinned export is held. Selection is the steward's export step and
+only structural (which databases, which object kinds or name prefixes the steward
+publishes from); every content decision (preliminary, raw, superseded or old snapshots,
+withheld columns) stays in the authored topology with a reason. The reader config has no
+selection vocabulary. A column's ordinal (`holding_column.ordinal`) is its
+`ordinal_position`, which verify checks against the export. The ordinal does not set
+an order's column order. Materialization sorts a file's columns by source, binding,
+entry and slot index, and uses the ordinal only to break the remaining ties. It also
+orders the physical columns that one variable maps to within a table when placements
+are read.
+
+The reader refuses, at `storage_export:row=N`: an invalid storage fact, a repeated
+column name or `ordinal_position` within one table, a table whose rows disagree on
+`table_type`, and, without a schema-keyed reader, a table name in a second schema.
+Other refusals locate a table at its first export row.
+
+Replacing the export is an ordinary pinned input change followed by recompilation. Reviewed
 routes and windows on surviving columns remain authored inputs. A vanished column named
 by an authored decision is `stale_declared_mapping_target`, located to that decision and
 its route locators; it is not silently retired. A new column passes through ordinary
@@ -1949,13 +1977,14 @@ Steward attestation can support years absent from the reference catalog (maintai
 2026-11-02). Provider labels, definitions and value sets for those years are not a
 prerequisite. This is a review rule, applied in the steward repository when authoring
 `inputs.reference_occurrences` (its evidence is that repository's
-`reconcile_census_continuity.py` and `census-continuity-evidence.jsonl`); the compiler
+`reconcile_census_continuity.py` and `census-continuity-evidence.jsonl`, named before the
+census was retired); the compiler
 does not evaluate it. A canonical occurrence can be added when all five conditions hold:
 
-1. The same register and delivery-table series are established by the census naming and
+1. The same register and delivery-table series are established by the physical naming and
    pinned series topology, including its covered-year tables.
 2. The exact physical column name occurs for that variable, or its spelling is
-   documented. The same exact census spelling with an unambiguous covered-year mapping
+   documented. The same exact physical spelling with an unambiguous covered-year mapping
    is a spelling witness; the pinned reader's literal-prefix rules still apply.
 3. The periods are contiguous or the series is continuous, with no documented break,
    recode or intervening `continues` successor. Missing provider metadata alone is not a
@@ -1968,7 +1997,7 @@ does not evaluate it. A canonical occurrence can be added when all five conditio
    replacing that coding with the later canonical meaning.
 
 A documented steward variable may retain its private definition namespace: both
-placements must have located provenance to the same actual source register and census
+placements must have located provenance to the same actual source register and physical
 series. That namespace alone does not establish a different physical source.
 
 A failed condition leaves the column held. Shared-shape choices without a separating
@@ -1976,18 +2005,18 @@ fact remain held. Documentary new-variable definitions still use ordinary supple
 transcription and ledgers. Compiling the declared occurrences never changes global
 validity or invents historical provider types, code lists or definitions.
 
-A census table need not have a logical route when no route is proved. Its held columns
+A held table need not have a logical route when no route is proved. Its held columns
 remain held, and other columns without an accepted owner remain `mapping_missing`.
 Absence of a route grants no possession; a declared route for an offered binding must
-resolve. This lets a fully held table survive a census refresh without a guessed route.
+resolve. This lets a fully held table survive an export refresh without a guessed route.
 An authored mapping may itself have `hold` and `follow_up`, with a reason and locator.
 It produces a `mapping_held` notice with its requested window and follow-up, never a
 placement or automatic fallback. This preserves a proved earlier-coding binding beside
 an unproved later meaning without pretending that either widens global validity.
 
 The compiler's closed steward config adds `inputs.holdings` (authored replacement
-topology), `inputs.census_reader` and `[pins]`, mapping consumed relative paths to
-SHA-256. A directory pin uses the catalog builder's sorted `path\tsha256\n` tree digest;
+topology), `inputs.storage_export`, `inputs.holdings_reader` and `[pins]`, mapping
+consumed relative paths to SHA-256. A directory pin uses the catalog builder's sorted `path\tsha256\n` tree digest;
 individual file pins are also accepted. Every supplemental manifest input is pinned too.
 Config bytes must match the checkout's `HEAD` commit, including when index flags hide
 worktree changes. Paths stay inside that checkout and directory traversal refuses
@@ -1995,10 +2024,10 @@ symlinks.
 
 `inputs.holdings` declares physical tables and reviewed column decisions once. The old
 inventory and series remain migration evidence, not additional compiler authorities.
-Automatic matching still reads the raw census against the resolved semantic view; it
-does not consume generated automatic mappings. The census reader's closed config names
-the table header and numbered-column prefix, optionally a schema header, and permits
-evidenced exact-name renames and literal prefix rewrites only. Identifiers remain exact
+Automatic matching still reads the raw storage export against the resolved semantic view;
+it does not consume generated automatic mappings. The holdings reader's closed config
+states `schema_keyed` and permits evidenced exact-name renames and literal prefix
+rewrites only. Identifiers remain exact
 after reader trimming; renames and rewrites affect matching, not emitted physical names.
 CSV errors identify input roles and row numbers without echoing private source values.
 
@@ -2062,13 +2091,13 @@ its physical tables. One classifier (`reg-build/src/holdings/orderable.rs`) serv
 build, the report and `reg-build diff --holdings`; when an older holdings schema cannot
 answer it, the diff says "orderability: not comparable" and compares the rest.
 
-#### Census reader renames and rewrites
+#### Holdings reader renames and rewrites
 
 A steward whose physical column names differ from the catalog's documented spellings
-lists the differences in the census reader config. `[[rewrite]]` (`prefix`,
+lists the differences in the holdings reader config. `[[rewrite]]` (`prefix`,
 `replacement`, `evidence`) replaces a literal prefix of every column that has it.
 `[[rename]]` (`physical`, `evidence`, and exactly one of `catalog` and `variable`) maps
-one exact trimmed physical name, across every census table, to one catalog name
+one exact trimmed physical name, across every held table, to one catalog name
 (`catalog`) or to one catalog variable (`variable`, an FQID). Patterns are never
 accepted. A `catalog` match name goes through the ordinary fold. A `variable` target
 matches the routed tables' segments of that variable whatever their documented spelling,
@@ -2097,14 +2126,14 @@ therefore has one match result, never one from each list.
 
 Refusals, each naming the entry by its 1-based position, never by name:
 
-- `census_rename_invalid`: an empty or untrimmed physical name, not exactly one of
+- `holdings_rename_invalid`: an empty or untrimmed physical name, not exactly one of
   `catalog` and `variable`, an empty catalog name, an empty or untrimmed variable, or
   empty evidence.
-- `census_rename_duplicate`: two entries for one physical name.
-- `census_rename_chain`: a catalog name that is itself a renamed physical name. Renames
+- `holdings_rename_duplicate`: two entries for one physical name.
+- `holdings_rename_chain`: a catalog name that is itself a renamed physical name. Renames
   apply once; a chain means the author expected them to compose, so it refuses rather
   than guess.
-- `census_rename_unresolved` (compiler and verify): a catalog name that folds to no
+- `holdings_rename_unresolved` (compiler and verify): a catalog name that folds to no
   documented spelling, or a variable with no segment, in the base or semantic view. It
   can never match, so it is a typo or a stale entry.
 
@@ -2116,27 +2145,22 @@ column decision (`unmap`, `hold` or an explicit mapping) on one of them. The rea
 not refuse it earlier: a reader refusal would come before the column decision that fixes
 it, and the steward would have to drop the rename for every table.
 
-#### Schema-keyed census
+#### Schema-keyed holdings
 
-A steward whose census covers several databases or schemas names the column that holds
-the schema in the census reader config: `census_schema = "<header>"` (IFAU: `Category`,
-one value per database; 1,890 table names repeat across its eight databases). Without it
-nothing changes: a table is its name, and a repeated name refuses.
-
-With it, a table is (schema, name). The reader refuses an empty schema cell as a missing
-table identifier and a repeated (schema, name) as `duplicate physical table` at its
-census row, the same refusal a repeated name gets without a schema. Storage facts are
-matched by (schema, table, column), and only facts outside the admitted (schema, table,
-column) set count as storage extras.
+The holdings reader config states `schema_keyed` (no default). A steward whose export
+covers several databases or schemas sets it `true` (IFAU: one schema per database; 1,890
+table names repeat across its eight databases), and a table is (schema, name). With
+`false` a table is its name, and the reader refuses a name in a second schema at that
+row; the table's schema still comes from the export.
 
 `holdings.toml` addresses a table by the existing `[[table]]` fields `schema_name` and
 `physical_name`; there is no qualified `schema.table` spelling, since physical names may
 contain dots and the order already carries schema and table separately to the runner.
-Under a schema-keyed census every `[[table]]` gives `schema_name`, equal to its census
-schema; an entry without it does not match its census table and refuses as
-`holdings_accounting_invalid: authored tables differ from census`. Without a
-schema-keyed census `schema_name` keeps its older meaning only: it picks the storage
-schema of a table whose name has facts in several, and is no part of the identity.
+Under a schema-keyed reader every `[[table]]` gives `schema_name`, equal to its export
+schema; an entry without it does not match its held table and refuses as
+`holdings_accounting_invalid: authored tables differ from the storage export`. Without a
+schema-keyed reader `schema_name` is no part of the identity and may be omitted; one that
+differs from the table's export schema refuses as `holdings_accounting_invalid`.
 Column decisions, keys and dispositions sit inside their `[[table]]`, so they need no
 schema of their own. `projection_of` names a parent in the projection's own schema.
 
@@ -2156,28 +2180,28 @@ schema; the file name stays the unique handle.
 A linkage space is a set of a steward's tables that share one person key: on screen, a
 database. A steward whose databases each have their own key holds separate spaces. A
 copy of one series in two databases is then not interchangeable with the other, and an
-order draws from one space only. The steward config (`steward.toml`, not the census
+order draws from one space only. The steward config (`steward.toml`, not the holdings
 reader config, since spaces describe the steward's data) declares them:
 
 ```toml
 [[space]]
 id = "a"              # slug; the id an order names
 name = "Database A"   # the database's name as the steward shows it
-schemas = ["A"]       # census schema values; several schemas may share one space
+schemas = ["A"]       # export schema values; several schemas may share one space
 ```
 
 Without `[[space]]` the steward has one implicit space: its owner id, named by its
 presentation `name`. Nothing is shown for it, and SWECOV's config is unchanged. With any
-`[[space]]` the census must be schema-keyed, and compile refuses, located at
-`config:space=N` or the census row:
+`[[space]]` the reader must be schema-keyed, and compile refuses, located at
+`config:space=N` or the table's first export row:
 
 - `holdings_space_invalid`: a space without a slug id, a name or a schema; a repeated id
-  or name; a listed schema absent from the census or already in another space;
-- `holdings_space_unmapped`: a census schema in no space.
+  or name; a listed schema absent from the export or already in another space;
+- `holdings_space_unmapped`: an export schema in no space.
 
 Holdings schema 8 stores the spaces in `holding_space` (`id`, `name`, `ord` in config
 order) and each table's space in `holding_table.space`. `verify` re-derives both from
-the pinned config and census (`holdings_space_source_mismatch`). The duplicate-placement
+the pinned config and export (`holdings_space_source_mismatch`). The duplicate-placement
 rule holds within one space: the same variable over the same period in two spaces'
 tables is admitted, while inside one space the partition, projection and carried-key
 exemptions apply unchanged. The per-column checks are inside one table, so already
@@ -2257,7 +2281,7 @@ base-copy/append pipeline.
 Steward-attested occurrences of a canonical variable use the same ordinary CSV reader
 and ledger with the canonical variable/table ids. The pinned optional
 `inputs.reference_occurrences` TOML declares each `(table_pid, variable_pid)` with a
-locator and reviewed identity evidence from provider documents or census/series
+locator and reviewed identity evidence from provider documents or physical series
 continuity. The compiler and pair verifier require both endpoints in both origins, the
 same register/provider, dated tables, nonempty source periods, and no overlap with
 existing reference segments. Both endpoints must exist, but the base may omit their
@@ -2278,7 +2302,7 @@ Reference `coverage` spans retain their original meaning. In selected steward mo
 attested periods reach readers only as held years (`coverage`) and placement rows
 (`segments`); a variable's holdings include these steward-attested memberships even when
 the global member list omits them. The occurrences' own text and locators are not
-served: a release carries catalog items, never steward working files or census row
+served: a release carries catalog items, never steward working files or export row
 references (maintainer 2026-11-03).
 
 `reg-build/src/holdings/schema.sql` owns the holdings DDL, except `holding_relation`
@@ -2306,11 +2330,15 @@ that digest. Build provenance for review lives in the `--report` JSON under `ste
 repo, commit, config and every input pin. That report is private release evidence.
 
 Holdings schema 7 replaces the unique `holding_table.physical_name` with a unique
-(`schema_name`, `physical_name`) for schema-keyed censuses (see "Schema-keyed census").
+(`schema_name`, `physical_name`) for schema-keyed stewards (see "Schema-keyed holdings").
 
 Holdings schema 8 adds `holding_space` and `holding_table.space` (see "Linkage spaces").
 
 Holdings schema 10 adds `holding_table.release` (see "Concurrent releases").
+
+Holdings schema 12 takes column ordinals from the storage export's `ordinal_position`
+and renames the accounting meta keys to `held_tables` and `held_columns` (see "Physical
+possession"). A steward meets it at its bump to the release that ships it.
 
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
@@ -2320,7 +2348,7 @@ catalog's half-open day convention:
   | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, optional `release` (the catalog name of the primary release the file is), `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
   | `holding_route`   | `holding_id`, public `table_pid`: the table's default logical routes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
   | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                   |
-  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot family/kind/index as topology evidence, `disposition` (`candidate`, `hold`, `unmap`) with its reason and follow-up issue. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                    |
+  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot family/kind/index as topology evidence, `disposition` (`candidate`, `hold`, `unmap`) with its reason and follow-up issue. Includes every exported column, even when it maps to nothing.                                                                                                                                                                                                                                                                    |
   | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried` and caveat/window. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                                                     |
 
 Required held keys are the received row's entity components and time components,
@@ -2350,7 +2378,7 @@ column is offered as an implicit time supplier only where an active declaration 
 implicit period dimension. Missing physical components require an explicit, located
 table-key hold and follow-up; it must be the table's sole key declaration, without a
 scoped `period`. Its columns remain held, not unmatched, and never become orderable
-placements. New census columns remain ordinary unmatched notices. Semantic `role` is
+placements. New exported columns remain ordinary unmatched notices. Semantic `role` is
 retained from the reference or supplemental occurrence; it does not by itself make an
 identifier required. Carried copies must be declared entity/time components, including
 received keys the reference catalog does not curate as row keys. They grant no additional ordered
@@ -2381,10 +2409,10 @@ household amounts are child-only data, not claims that the parent holds them.
 
 Index mappings by logical table, variable and start/end and columns by holding/name.
 Coverage is computed from indexed facts, not stored guesses about future UI summaries.
-Include the input-manifest digest and the accepted census accounting in `meta`; publish
-no steward locators or per-file pins (schema 5).
+Include the input-manifest digest and the accepted export accounting (`held_tables`,
+`held_columns`) in `meta`; publish no steward locators or per-file pins (schema 5).
 
-`reg-build verify` is the sole publication validator. It checks exact census accounting
+`reg-build verify` is the sole publication validator. It checks exact export accounting
 (one disposition per table; every physical column represented), stored disposition and
 periods against the pinned authored topology before using them as bounds, referential
 integrity, form/window containment, complete storage facts for orderable columns, key
@@ -2753,7 +2781,7 @@ numbers. The design is in [`reg-mock/DESIGN.md`](reg-mock/DESIGN.md) (#707).
 
 The logical `order` corpus (`conformance/cases/order`, run by `crates/reg-conformance`)
 is the contract for availability clips, row keys, ambiguity, classification and
-`validate` agreement. A physical corpus drives small readable census, storage and
+`validate` agreement. A physical corpus drives small readable storage-export and
 curation inputs through the real holdings stage. Refusals assert located codes;
 `reg-build verify` owns structural invariants.
 

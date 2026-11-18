@@ -12,8 +12,8 @@
 # `git status` first. `slot_family = true` starts from Pool's documented slot family
 # 1, 2, 10 (`slot-family/`).
 #
-# A location names the edited census table (`holdings:table=N` counts the census
-# tables in name order: Child 1, Excluded 2, Lookup 3, Owners 4, Parent 5, Part A 6,
+# A location names the edited held table (`holdings:table=N` counts the storage
+# export's tables in name order: Child 1, Excluded 2, Lookup 3, Owners 4, Parent 5, Part A 6,
 # Part B 7, Pool 8; `CON` sorts before Child, `Other positions` after Lookup) and its
 # column, or the edited key's locator. The pin refusals have no location, so their
 # message names which check refused.
@@ -33,14 +33,11 @@ name = "window"
 located = ["holdings:table=8: column=7: inventory_window_invalid:"]
 edit = [{ file = "holdings.toml", from = 'delivery = "2017"', to = 'delivery = "2016"', all = true }]
 
-[[refusal]]
-name = "storage"
-located = ["holdings:table=8: column=6: holdings_storage_missing:"]
-edit = [{ file = "storage.csv", drop = ",Slot2," }]
-
+# Without a schema-keyed reader a table name has one schema: a second one refuses at
+# its first row in the other schema.
 [[refusal]]
 name = "mixed-schema"
-located = ["holdings:table=8: column=1: holdings_storage_ambiguous:"]
+located = ["storage_export: row=5: table name in several schemas"]
 edit = [{ file = "storage.csv", from = "dbo,Pool,BASE TABLE,New,", to = "other,Pool,BASE TABLE,New,", all = true }]
 
 [[refusal]]
@@ -123,7 +120,7 @@ edit = [{ file = "holdings.toml", from = 'period = "2019"', to = 'period = "2018
 name = "device-file-name"
 located = ["holdings:table=1: holdings_filename_invalid: locator=fixture:lookup:"]
 edit = [
-  { file = "census.csv", from = "Synthetic,Lookup,Lookup,", to = "Synthetic,Lookup,CON,", all = true },
+  { file = "storage.csv", from = "dbo,Lookup,", to = "dbo,CON," },
   { file = "holdings.toml", from = 'physical_name = "Lookup"', to = 'physical_name = "CON"' },
 ]
 
@@ -154,6 +151,5 @@ slot_family = true
 located = ["holdings:tables=4,9:route=steward/slots:variable=steward/slots/slot2:period=17532..17897: inventory_cell_conflict:"]
 edit = [
   { file = "holdings.toml", append_case = "slot-family/cross-table.toml" },
-  { file = "census.csv", append_case = "slot-family/cross-table-census.csv" },
   { file = "storage.csv", append_case = "slot-family/cross-table-storage.csv" },
 ]

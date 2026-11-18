@@ -1,9 +1,9 @@
 //! `reg-build diff --holdings OLD NEW`: what changed between two holdings catalogs
 //! (release step 8g; `crates/DESIGN.md`, "Release diff").
 //!
-//! Census columns are keyed by (schema, physical table, column name), text and notices by the
+//! Held columns are keyed by (schema, physical table, column name), text and notices by the
 //! natural keys below, never by row id. Only counts and keys are printed: no text body
-//! and no census or storage value.
+//! and no storage value.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -128,11 +128,11 @@ fn schema(conn: &rusqlite::Connection) -> Result<(i64, Option<String>)> {
     Ok((user, meta.into_iter().next()))
 }
 
-/// Each census column with its status ([`status`]) and its placements, and whether the
+/// Each held column with its status ([`status`]) and its placements, and whether the
 /// orderability classifier could read this side. An older holdings schema it cannot
 /// answer leaves every status unclassified, and the rest of the diff goes on.
-fn placements(conn: &rusqlite::Connection) -> Result<(Census, bool)> {
-    let mut out: Census = BTreeMap::new();
+fn placements(conn: &rusqlite::Connection) -> Result<(HeldColumns, bool)> {
+    let mut out: HeldColumns = BTreeMap::new();
     for column in query(
         conn,
         "SELECT t.schema_name, t.physical_name, c.name FROM holding_column c \
@@ -210,13 +210,13 @@ fn shown(item: Item) -> Item {
     }
 }
 
-/// Census columns by key: (status, placements).
-type Census = BTreeMap<Column, (&'static str, BTreeSet<Placement>)>;
+/// Held columns by key: (status, placements).
+type HeldColumns = BTreeMap<Column, (&'static str, BTreeSet<Placement>)>;
 
 /// Orderable and per-reason totals, blocked tables, and the columns on one side only.
 /// When either side's schema cannot answer the classifier, one line says so in place of
 /// the totals and blocked tables.
-fn totals(p: &Pair, old: &Census, new: &Census, classified: bool) -> Result<Vec<Item>> {
+fn totals(p: &Pair, old: &HeldColumns, new: &HeldColumns, classified: bool) -> Result<Vec<Item>> {
     let mut counts = Vec::new();
     if classified {
         counts = orderability(p, old, new)?;
@@ -248,8 +248,8 @@ fn totals(p: &Pair, old: &Census, new: &Census, classified: bool) -> Result<Vec<
 }
 
 /// Orderable and per-reason totals and blocked tables, both sides classified.
-fn orderability(p: &Pair, old: &Census, new: &Census) -> Result<Vec<Item>> {
-    let count = |side: &Census| {
+fn orderability(p: &Pair, old: &HeldColumns, new: &HeldColumns) -> Result<Vec<Item>> {
+    let count = |side: &HeldColumns| {
         let mut t: BTreeMap<&str, usize> = BTreeMap::new();
         for (s, _) in side.values() {
             *t.entry(s).or_default() += 1;
@@ -294,11 +294,11 @@ fn orderability(p: &Pair, old: &Census, new: &Census) -> Result<Vec<Item>> {
         format!("blocked tables: {} → {}", bo.len(), bn.len()),
     );
     counts.push(if bo == bn { shown(item) } else { item });
-    // A blocked table that left the census is a removed column set, listed below, not
+    // A blocked table that left the export is a removed column set, listed below, not
     // an unblocked table.
-    let census: BTreeSet<(Option<String>, String)> =
+    let held: BTreeSet<(Option<String>, String)> =
         new.keys().map(|(s, t, _)| (s.clone(), t.clone())).collect();
-    let still: BTreeSet<_> = bo.intersection(&census).cloned().collect();
+    let still: BTreeSet<_> = bo.intersection(&held).cloned().collect();
     for (name, a, b) in [("newly blocked", &bn, &bo), ("unblocked", &still, &bn)] {
         let list: Vec<Value> = a
             .difference(b)
@@ -314,7 +314,7 @@ fn orderability(p: &Pair, old: &Census, new: &Census) -> Result<Vec<Item>> {
     Ok(counts)
 }
 
-fn census(p: &Pair) -> Result<Vec<Section>> {
+fn held_columns(p: &Pair) -> Result<Vec<Section>> {
     let ((old, old_classified), (new, new_classified)) = (placements(&p.old)?, placements(&p.new)?);
     let classified = old_classified && new_classified;
     let mut counts = totals(p, &old, &new, classified)?;
@@ -386,7 +386,7 @@ fn census(p: &Pair) -> Result<Vec<Section>> {
         placement.groups.push(("", Vec::new()));
     }
     Ok(vec![
-        Section::flat("placement", "census placement", counts),
+        Section::flat("placement", "held-column placement", counts),
         placement,
         Section::flat(
             "status_changes",
@@ -666,7 +666,7 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
                        FROM holding_notice n JOIN holding_table t ON t.id = n.holding_id \
                        LEFT JOIN holding_column c ON c.id = n.column_id";
     let mut out = vec![Section::flat("meta", "holdings", sides)];
-    out.extend(census(p)?);
+    out.extend(held_columns(p)?);
     out.push(texts(p)?);
     out.push(delta(
         "notices",

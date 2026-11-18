@@ -50,10 +50,9 @@ pub(super) struct Presentation {
 #[serde(deny_unknown_fields)]
 pub(super) struct Inputs {
     pub reference_occurrences: Option<String>,
-    pub census: String,
     pub storage_export: String,
     pub holdings: String,
-    pub census_reader: String,
+    pub holdings_reader: String,
 }
 
 #[derive(Deserialize)]
@@ -277,10 +276,9 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
         &curation,
         &config.presentation.steward,
         &config.presentation.logo,
-        &config.inputs.census,
         &config.inputs.storage_export,
         &config.inputs.holdings,
-        &config.inputs.census_reader,
+        &config.inputs.holdings_reader,
     ];
     let manifest: crate::Manifest =
         crate::toml_file(&path(root, &format!("{curation}/inputs.toml"))?)

@@ -17,7 +17,7 @@ use reg_core::hex;
 use crate::{Catalog, Code, Error, connect, read_meta};
 
 /// SQL for how readers name the physical table `h`: its name, qualified as
-/// `<schema>.<name>` only when another held table has the same name (a census keyed by
+/// `<schema>.<name>` only when another held table has the same name (holdings keyed by
 /// schema), so single-schema holders read their names unchanged.
 pub(crate) const TABLE_LABEL: &str = "CASE WHEN EXISTS(SELECT 1 FROM holding_table o \
      WHERE o.physical_name = h.physical_name AND o.id <> h.id) \

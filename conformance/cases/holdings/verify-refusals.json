@@ -1,27 +1,27 @@
 [
   {
     "sql": "UPDATE holding_column SET name='Invented' WHERE name='Slot2'",
-    "code": "holdings_census_column_missing",
-    "location": "census:row=3:column=6"
+    "code": "holdings_source_column_missing",
+    "location": "storage_export:row=3:column=6"
   },
   {
     "sql": "UPDATE holding_column SET storage_type='varchar' WHERE name='Slot2'",
     "code": "holdings_source_storage_mismatch",
-    "location": "census:row=3:column=6"
+    "location": "storage_export:row=3:column=6"
   },
   {
-    "sql": "DELETE FROM holding_table WHERE physical_name='Excluded'; UPDATE meta SET value='8' WHERE key='census_tables'",
-    "code": "holdings_census_table_missing",
-    "location": "census:row=10"
+    "sql": "DELETE FROM holding_table WHERE physical_name='Excluded'; UPDATE meta SET value='8' WHERE key='held_tables'",
+    "code": "holdings_source_table_missing",
+    "location": "storage_export:row=27"
   },
   {
-    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition) SELECT id,'Invented',10,'int','candidate' FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message) SELECT holding_id,id,'mapping_missing','Not documented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='23' WHERE key='census_columns'",
-    "code": "holdings_census_column_extra",
+    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition) SELECT id,'Invented',10,'int','candidate' FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message) SELECT holding_id,id,'mapping_missing','Not documented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='23' WHERE key='held_columns'",
+    "code": "holdings_source_column_extra",
     "location": "column=10"
   },
   {
-    "sql": "INSERT INTO holding_table(physical_name,space,file_name,disposition,reason) VALUES('Invented','fixture','invented','lookup','Not in census'); UPDATE meta SET value='10' WHERE key='census_tables'",
-    "code": "holdings_census_table_extra",
+    "sql": "INSERT INTO holding_table(physical_name,space,file_name,disposition,reason) VALUES('Invented','fixture','invented','lookup','Not in the export'); UPDATE meta SET value='10' WHERE key='held_tables'",
+    "code": "holdings_source_table_extra",
     "location": "holdings:table="
   },
   {
@@ -32,12 +32,12 @@
   {
     "sql": "UPDATE holding_table SET key_requirements='[]' WHERE physical_name='Pool'",
     "code": "holdings_row_key_source_mismatch",
-    "location": "census:row=3"
+    "location": "storage_export:row=3"
   },
   {
     "sql": "UPDATE holding_table SET period_encoding='date' WHERE physical_name='Pool'",
     "code": "holdings_period_source_mismatch",
-    "location": "census:row=3"
+    "location": "storage_export:row=3"
   },
   {
     "sql": "INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried) SELECT c.id,'demo/held','demo/held/id',m.start,m.end,m.role,1 FROM holding_column c JOIN holding_table h ON h.id=c.holding_id JOIN holding_column original ON original.holding_id=h.id AND original.name='Received_Id' JOIN holding_mapping m ON m.column_id=original.id WHERE h.physical_name='Pool' AND c.name='Unknown'; UPDATE meta SET value=CAST(value AS INTEGER)+1 WHERE key='mapped_columns'; UPDATE meta SET value=CAST(value AS INTEGER)-1 WHERE key='unmatched_columns';",
@@ -47,12 +47,12 @@
   {
     "sql": "UPDATE holding_table SET partition=NULL WHERE physical_name='Part B'",
     "code": "holdings_topology_source_mismatch",
-    "location": "census:row=5"
+    "location": "storage_export:row=12"
   },
   {
     "sql": "UPDATE holding_period SET end=end+365 WHERE holding_id=(SELECT id FROM holding_table WHERE physical_name='Parent')",
     "code": "holdings_period_source_mismatch",
-    "location": "census:row=6"
+    "location": "storage_export:row=14"
   },
   {
     "sql": "UPDATE holding_mapping SET carried=1 WHERE column_id=(SELECT c.id FROM holding_column c JOIN holding_table t ON t.id=c.holding_id WHERE t.physical_name='Child' AND c.name='ChildId')",
@@ -79,27 +79,27 @@
   {
     "sql": "UPDATE holding_table SET projection_of=(SELECT id FROM holding_table WHERE physical_name='Part A') WHERE physical_name='Child'",
     "code": "holdings_topology_source_mismatch",
-    "location": "census:row=7"
+    "location": "storage_export:row=15"
   },
   {
     "sql": "UPDATE holding_mapping SET column_id=CASE column_id WHEN (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name='Code') THEN (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name='Year') ELSE (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name='Code') END WHERE column_id IN (SELECT c.id FROM holding_column c JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name='Pool' AND c.name IN ('Code','Year'))",
     "code": "holdings_mapping_source_mismatch",
-    "location": "census:row=3:column=7"
+    "location": "storage_export:row=3:column=7"
   },
   {
     "sql": "UPDATE holding_mapping SET end=end-1 WHERE variable_pid='demo/held/late'",
     "code": "holdings_mapping_source_mismatch",
-    "location": "census:row=3:column=4"
+    "location": "storage_export:row=3:column=4"
   },
   {
     "sql": "UPDATE holding_mapping SET caveat=NULL WHERE variable_pid='steward/slots/code'",
     "code": "holdings_mapping_source_mismatch",
-    "location": "census:row=3:column=7"
+    "location": "storage_export:row=3:column=7"
   },
   {
     "sql": "DELETE FROM holding_notice_candidate WHERE variable_pid='demo/owners/second'",
     "code": "holdings_contested_source_mismatch",
-    "location": "census:row=2:column=1"
+    "location": "storage_export:row=2:column=1"
   },
   {
     "sql": "UPDATE text SET body=body || ' Evidence: inventory-evidence.jsonl' WHERE id=(SELECT min(id) FROM text)",

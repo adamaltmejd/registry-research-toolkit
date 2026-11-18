@@ -137,20 +137,11 @@ fn after(text: &str, anchor: &str, insert: &str) -> Result<String, String> {
     Ok(format!("{}{insert}{}", &text[..at], &text[at..]))
 }
 
-/// `text` with its one `from` replaced by `to`.
-fn replaced(text: &str, from: &str, to: &str) -> Result<String, String> {
-    if !text.contains(from) {
-        return Err(format!("no {from:?} to replace"));
-    }
-    Ok(text.replacen(from, to, 1))
-}
-
 /// Replace Pool's single Slot2 with the documented position family 1, 2, 10.
 pub fn splice_slot_family(root: &Path) -> Result<(), String> {
     let slots = holdings_case().join("slot-family");
-    for name in ["census.csv", "storage.csv"] {
-        fs::copy(slots.join(name), root.join(name)).map_err(|e| format!("{name}: {e}"))?;
-    }
+    fs::copy(slots.join("storage.csv"), root.join("storage.csv"))
+        .map_err(|e| format!("storage.csv: {e}"))?;
     let path = root.join("holdings.toml");
     let text = read(&path)?;
     let column = "[[table.column]]";
@@ -177,21 +168,6 @@ fn prepare_materialize(directory: &Path) -> Result<(), String> {
     let root = &locked_copy(directory)?;
     splice_slot_family(root)?;
     let extension = cases().join("materialize/fixture");
-    let census = root.join("census.csv");
-    let mut text = read(&census)?;
-    text = replaced(
-        &text,
-        "Synthetic,Partition,Part B,Id,New,",
-        "Synthetic,Partition,Part B,Id,New,Relative identifier as received in the delivery",
-    )?;
-    text = replaced(
-        &text,
-        "Synthetic,Rivals,Owners,Shared,Id,Unmatched,,",
-        "Synthetic,Rivals,Owners,Shared,Id,Unmatched,Gamma,Rival",
-    )?;
-    text += &read(&extension.join("keyed-census.csv"))?;
-    text += &read(&extension.join("waves-census.csv"))?;
-    write(&census, &text)?;
     let storage = root.join("storage.csv");
     let mut text = read(&storage)?;
     for name in [
@@ -227,21 +203,18 @@ fn prepare_materialize(directory: &Path) -> Result<(), String> {
     compile(directory).map(drop)
 }
 
-/// Split the steward copy at `root` into a schema-keyed census of two schemas: every
+/// Split the steward copy at `root` into a schema-keyed export of two schemas: every
 /// table in `dbo`, plus a copy of Part A (Id, New over 2021) in `aux`. It compiles only
 /// once [`declare_spaces`] puts the two schemas in separate databases.
 pub fn split_schemas(root: &Path) -> Result<(), String> {
-    let census = root.join("census.csv");
-    edit(&census, "Synthetic,", "dbo,", true)?;
-    append(&census, "aux,Partition,Part A,Id,New,,,,,,,\n")?;
     append(
         &root.join("storage.csv"),
         "aux,Part A,BASE TABLE,Id,int,,10,0,1\naux,Part A,BASE TABLE,New,int,,10,0,2\n",
     )?;
     edit(
         &root.join("curation/readers/holdings.toml"),
-        "census_columns = \"V\"\n",
-        "census_columns = \"V\"\ncensus_schema = \"Category\"\n",
+        "schema_keyed = false\n",
+        "schema_keyed = true\n",
         false,
     )?;
     let topology = root.join("holdings.toml");

@@ -14,14 +14,13 @@ struct StoredColumn {
     length: Option<i64>,
     precision: Option<i64>,
     scale: Option<i64>,
-    offered: bool,
     slot_family: Option<String>,
     slot_kind: Option<String>,
     slot_index: Option<String>,
 }
 
 /// Compare artifact coordinates with the independently re-read, admitted sources.
-/// Artifact counters are summaries, never the census oracle.
+/// Artifact counters are summaries, never the export oracle.
 #[allow(clippy::too_many_lines)]
 fn sources(
     db: &Connection,
@@ -48,12 +47,11 @@ fn sources(
             "holdings_source_pin_mismatch: input manifest differs from pinned config".into(),
         );
     }
-    let census = reg_readers::holdings::read(
-        &input::path(root, &config.inputs.census)?,
+    let held = reg_readers::holdings::read(
         &input::path(root, &config.inputs.storage_export)?,
-        &input::path(root, &config.inputs.census_reader)?,
+        &input::path(root, &config.inputs.holdings_reader)?,
     )?;
-    let spaces = super::spaces::resolve(root, &config, &census.tables)?;
+    let spaces = super::spaces::resolve(root, &config, &held.tables)?;
     let stored: Vec<(i64, String, String)> = rows(
         db,
         "SELECT ord,id,name FROM holding_space ORDER BY ord",
@@ -72,9 +70,9 @@ fn sources(
                 .into(),
         );
     }
-    let source_tables = census.tables.len();
-    let source_columns: usize = census.tables.iter().map(|t| t.columns.len()).sum();
-    let keyed = compile::schema_keyed(&census.tables);
+    let source_tables = held.tables.len();
+    let source_columns: usize = held.tables.iter().map(|t| t.columns.len()).sum();
+    let keyed = compile::schema_keyed(&held.tables);
     let mut topology: input::Topology =
         crate::toml_file(&input::path(root, &config.inputs.holdings)?)
             .map_err(|_| "holdings_topology_invalid: malformed authored topology")?;
@@ -84,7 +82,7 @@ fn sources(
         .drain(..)
         .map(|t| (compile::authored_identity(&t, keyed), t))
         .collect();
-    super::cumulative::resolve(&mut effective, &census.tables, &spaces, starts, primaries)?;
+    super::cumulative::resolve(&mut effective, &held.tables, &spaces, starts, primaries)?;
     topology.table = effective.into_values().collect();
     // Each authored table with its delivery and coverage, parsed for every table before
     // any is compared.
@@ -124,19 +122,24 @@ fn sources(
         ))
     })? {
         // The DDL's unique (schema_name, physical_name) admits repeated NULL schemas, and
-        // a name-keyed identity ignores the schema: a second row would escape the census.
+        // a name-keyed identity ignores the schema: a second row would escape the export.
         let id = stored.0;
         if tables.insert(identity, stored).is_some() {
-            return Err(format!("holdings:table={id}: holdings_census_table_extra").into());
+            return Err(format!("holdings:table={id}: holdings_source_table_extra").into());
         }
     }
-    for table in &census.tables {
-        let location = format!("census:row={}", table.source_row);
+    for table in &held.tables {
+        let location = format!("storage_export:row={}", table.source_row);
         let (id, schema, kind, space) = tables
-            .remove(&compile::census_identity(table))
-            .ok_or_else(|| format!("{location}: holdings_census_table_missing"))?;
+            .remove(&compile::physical_identity(table))
+            .ok_or_else(|| format!("{location}: holdings_source_table_missing"))?;
         if space != spaces.of(table) {
             return Err(format!("{location}: holdings_space_source_mismatch").into());
+        }
+        if schema.as_deref() != Some(table.storage_schema.as_str())
+            || kind.as_deref() != Some(table.table_type.as_str())
+        {
+            return Err(format!("{location}: holdings_source_storage_mismatch").into());
         }
         #[allow(clippy::type_complexity)]
         let (
@@ -183,10 +186,11 @@ fn sources(
             },
         )?;
         let Some((spec, spec_delivery, spec_periods)) =
-            authored.get(&compile::census_identity(table))
+            authored.get(&compile::physical_identity(table))
         else {
             return Err(format!("{location}: holdings_topology_source_mismatch").into());
         };
+        compile::authored_schema(spec, table).map_err(|e| format!("{location}: {e}"))?;
         if !parent_in_schema
             || (&spec.projection_of, &spec.projection_token, &spec.partition)
                 != (&placement.0, &placement.1, &placement.2)
@@ -224,18 +228,12 @@ fn sources(
         if (&spec.period_column, &spec.period_encoding) != (&binding.0, &binding.1) {
             return Err(format!("{location}: holdings_period_source_mismatch").into());
         }
-        // The stored keys are the authored ones (checked above).
-        let period_offered = keys::period_column_offered(db, id)?;
-        let mut query = db
-            .prepare(
-                "SELECT c.name,c.ordinal,c.storage_type,c.length,c.precision,c.scale,
-            EXISTS(SELECT 1 FROM holding_mapping m WHERE m.column_id=c.id)
-              OR (COALESCE(c.id=(SELECT period_column_id FROM holding_table WHERE id=c.holding_id),0) AND ?2)
-            ,c.slot_family,c.slot_kind,c.slot_index
-            FROM holding_column c WHERE c.holding_id=?1",
-            )?;
+        let mut query = db.prepare(
+            "SELECT name,ordinal,storage_type,length,precision,scale,slot_family,slot_kind,slot_index
+            FROM holding_column WHERE holding_id=?1",
+        )?;
         let mut columns: BTreeMap<String, StoredColumn> = query
-            .query_map(rusqlite::params![id, period_offered], |r| {
+            .query_map([id], |r| {
                 Ok((
                     r.get(0)?,
                     StoredColumn {
@@ -244,10 +242,9 @@ fn sources(
                         length: r.get(3)?,
                         precision: r.get(4)?,
                         scale: r.get(5)?,
-                        offered: r.get(6)?,
-                        slot_family: r.get(7)?,
-                        slot_kind: r.get(8)?,
-                        slot_index: r.get(9)?,
+                        slot_family: r.get(6)?,
+                        slot_kind: r.get(7)?,
+                        slot_index: r.get(8)?,
                     },
                 ))
             })?
@@ -256,12 +253,12 @@ fn sources(
             let location = format!("{location}:column={}", column.ordinal);
             let stored = columns
                 .remove(&column.name)
-                .ok_or_else(|| format!("{location}: holdings_census_column_missing"))?;
+                .ok_or_else(|| format!("{location}: holdings_source_column_missing"))?;
             if stored.ordinal != column.ordinal {
-                return Err(format!("{location}: holdings_census_ordinal_mismatch").into());
+                return Err(format!("{location}: holdings_source_ordinal_mismatch").into());
             }
             let authored = authored_columns
-                .get(&(compile::census_identity(table), column.name.as_str()))
+                .get(&(compile::physical_identity(table), column.name.as_str()))
                 .copied();
             compile::column_periods(authored, &[])
                 .map_err(|error| format!("{location}: {error}"))?;
@@ -272,48 +269,34 @@ fn sources(
             {
                 return Err(format!("{location}: holdings_slot_source_mismatch").into());
             }
-            if stored.offered {
-                let declared_schema = spec.schema_name.as_deref();
-                let facts: Vec<_> = column
-                    .storage
-                    .iter()
-                    .filter(|s| declared_schema.is_none_or(|name| name == s.schema_name))
-                    .collect();
-                let [fact] = facts.as_slice() else {
-                    return Err(format!(
-                        "{location}: holdings_source_storage_ambiguous: offered column needs exactly one source fact"
-                    ).into());
-                };
-                if schema.as_deref() != Some(fact.schema_name.as_str())
-                    || kind.as_deref() != Some(fact.table_type.as_str())
-                    || stored.dtype.as_deref() != Some(fact.data_type.as_str())
-                    || (stored.length, stored.precision, stored.scale)
-                        != (fact.length, fact.precision, fact.scale)
-                {
-                    return Err(format!("{location}: holdings_source_storage_mismatch").into());
-                }
+            let fact = &column.storage;
+            if stored.dtype.as_deref() != Some(fact.data_type.as_str())
+                || (stored.length, stored.precision, stored.scale)
+                    != (fact.length, fact.precision, fact.scale)
+            {
+                return Err(format!("{location}: holdings_source_storage_mismatch").into());
             }
         }
         if let Some((_, stored)) = columns.first_key_value() {
             let ordinal = stored.ordinal;
             return Err(format!(
-                "holdings:table={id}:column={ordinal}: holdings_census_column_extra"
+                "holdings:table={id}:column={ordinal}: holdings_source_column_extra"
             )
             .into());
         }
     }
     if let Some((_, (id, ..))) = tables.first_key_value() {
-        return Err(format!("holdings:table={id}: holdings_census_table_extra").into());
+        return Err(format!("holdings:table={id}: holdings_source_table_extra").into());
     }
     for (key, count) in [
-        ("census_tables", source_tables),
-        ("census_columns", source_columns),
+        ("held_tables", source_tables),
+        ("held_columns", source_columns),
     ] {
         if meta(db, key)? != count.to_string() {
-            return Err(format!("census:{key}: holdings_source_accounting_mismatch").into());
+            return Err(format!("meta:{key}: holdings_source_accounting_mismatch").into());
         }
     }
-    Ok((topology, census, declarations))
+    Ok((topology, held, declarations))
 }
 
 pub(super) fn distinct(
@@ -374,7 +357,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     super::cumulative::check(&db, &starts)?;
     let primaries = compile::primaries(&base, &db)?;
     let shared = compile::shared_days(&primaries);
-    let (topology, census, declarations) = sources(&db, &primaries, &starts, root)?;
+    let (topology, held, declarations) = sources(&db, &primaries, &starts, root)?;
     for key in ["steward", "scope"] {
         if !serde_json::from_str::<serde_json::Value>(&meta(&db, key)?)
             .map_err(|_| "holdings_presentation_invalid")?
@@ -523,7 +506,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     let tables = compile::segment_index(&base, &db)?;
     let variables = compile::by_variable(&tables);
     super::keys::verify(&db, &base, &variables, &topology)?;
-    super::verify_mappings::verify(&db, &tables, &variables, &topology, &census, &primaries)?;
+    super::verify_mappings::verify(&db, &tables, &variables, &topology, &held, &primaries)?;
     // A documented position family only authorizes distinct positions in one file.
     // Other duplicates within one space still need a partition, projection, or carried
     // key; the same placement in two spaces is two databases' copies, and on a shared

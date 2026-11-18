@@ -42,7 +42,7 @@ CREATE TABLE holding_table (
  CHECK(partition IS NULL OR projection_of IS NULL),
  CHECK((projection_of IS NULL) = (projection_token IS NULL)),
  CHECK((period_column_id IS NULL) = (period_encoding IS NULL)),
- -- A schema-keyed census may hold one name in two schemas; the reader refuses a
+ -- A schema-keyed steward may hold one name in two schemas; the reader refuses a
  -- duplicate name (or schema and name), so a NULL schema needs no tighter key here.
  UNIQUE(schema_name, physical_name)
 ) STRICT;

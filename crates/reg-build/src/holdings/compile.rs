@@ -1,7 +1,7 @@
 //! Interval-local ownership and metadata-only physical emission.
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_readers::holdings as census;
+use reg_readers::holdings as physical;
 use rusqlite::{Connection, params};
 
 use reg_core::days::{self, Span};
@@ -288,7 +288,7 @@ pub(super) struct Candidate {
 
 pub(super) fn candidates(
     table: &input::Table,
-    column: &census::Column,
+    column: &physical::Column,
     decision: Option<&input::Column>,
     owed: &[Span],
     index: &BTreeMap<String, Vec<Segment>>,
@@ -554,7 +554,7 @@ fn storage_findings(
     db: &Connection,
     holding: i64,
     column: i64,
-    storage: &census::Storage,
+    storage: &physical::Storage,
     segments: &[Segment],
 ) -> Result<()> {
     let Some(storage_family) = StorageFamily::of(&storage.data_type) else {
@@ -668,17 +668,17 @@ pub(super) fn mapping_segments<'a>(
     Ok(segments)
 }
 
-/// A census column's match target, folded once: a spelling or a variable FQID.
+/// A physical column's match target, folded once: a spelling or a variable FQID.
 pub(super) enum Target<'a> {
     Spelling(String),
     Variable(&'a str),
 }
 
 impl<'a> Target<'a> {
-    pub(super) fn of(target: &'a census::Match) -> Self {
+    pub(super) fn of(target: &'a physical::Match) -> Self {
         match target {
-            census::Match::Spelling(name) => Self::Spelling(reg_core::fold_identity(name)),
-            census::Match::Variable(fqid) => Self::Variable(fqid),
+            physical::Match::Spelling(name) => Self::Spelling(reg_core::fold_identity(name)),
+            physical::Match::Variable(fqid) => Self::Variable(fqid),
         }
     }
 
@@ -694,7 +694,7 @@ impl<'a> Target<'a> {
 /// semantic view: it could never match, so it is a typo or a stale entry.
 pub(super) fn renames_resolve(
     index: &BTreeMap<String, Vec<Segment>>,
-    targets: &[census::Match],
+    targets: &[physical::Match],
 ) -> Result<()> {
     let segments = || index.values().flatten();
     let spellings: BTreeSet<_> = segments()
@@ -702,32 +702,47 @@ pub(super) fn renames_resolve(
         .collect();
     let variables: BTreeSet<_> = segments().map(|s| s.variable.as_str()).collect();
     match (1..).zip(targets).find(|(_, t)| match t {
-        census::Match::Spelling(name) => !spellings.contains(&reg_core::fold_identity(name)),
-        census::Match::Variable(fqid) => !variables.contains(fqid.as_str()),
+        physical::Match::Spelling(name) => !spellings.contains(&reg_core::fold_identity(name)),
+        physical::Match::Variable(fqid) => !variables.contains(fqid.as_str()),
     }) {
         Some((n, _)) => Err(format!(
-            "census_rename_unresolved: rename {n}: target matches no documented spelling or variable"
+            "holdings_rename_unresolved: rename {n}: target matches no documented spelling or variable"
         )
         .into()),
         None => Ok(()),
     }
 }
 
-/// A physical table's identity: (schema, name) when the census reader is schema-keyed,
+/// A physical table's identity: (schema, name) when the holdings reader is schema-keyed,
 /// the name alone (schema `None`) otherwise.
 pub(super) type Identity = (Option<String>, String);
 
-/// Whether the census reader keyed its tables by schema.
-pub(super) fn schema_keyed(census: &[census::Table]) -> bool {
-    census.iter().any(|t| t.schema.is_some())
+/// Whether the holdings reader keyed its tables by schema.
+pub(super) fn schema_keyed(tables: &[physical::Table]) -> bool {
+    tables.iter().any(|t| t.schema.is_some())
 }
 
-pub(super) fn census_identity(table: &census::Table) -> Identity {
+pub(super) fn physical_identity(table: &physical::Table) -> Identity {
     (table.schema.clone(), table.name.clone())
 }
 
-/// An authored table's identity. Without a schema-keyed census `schema_name` only selects
-/// storage facts and is no part of the identity.
+/// Refuse an authored `schema_name` that is not the table's export schema. Keyed, the
+/// identity already matched it; unkeyed, it is checked here, by compile and verify.
+pub(super) fn authored_schema(authored: &input::Table, table: &physical::Table) -> Result<()> {
+    if authored
+        .schema_name
+        .as_ref()
+        .is_some_and(|name| *name != table.storage_schema)
+    {
+        return Err(
+            "holdings_accounting_invalid: authored schema differs from the storage export".into(),
+        );
+    }
+    Ok(())
+}
+
+/// An authored table's identity. Without a schema-keyed reader `schema_name` is no part
+/// of the identity and must name the table's schema in the export.
 pub(super) fn authored_identity(table: &input::Table, keyed: bool) -> Identity {
     (
         table.schema_name.clone().filter(|_| keyed),
@@ -740,15 +755,15 @@ pub(super) fn write(
     db: &mut Connection,
     base: &Connection,
     topology: input::Topology,
-    mut census: Vec<census::Table>,
-    rename_targets: &[census::Match],
+    mut exported: Vec<physical::Table>,
+    rename_targets: &[physical::Match],
     spaces: &super::spaces::Spaces,
 ) -> Result<(usize, usize, usize, usize)> {
     let index = segment_index(base, db)?;
     let variables = by_variable(&index);
     let primaries = primaries(base, db)?;
     renames_resolve(&index, rename_targets)?;
-    let keyed = schema_keyed(&census);
+    let keyed = schema_keyed(&exported);
     let mut authored = BTreeMap::new();
     for table in topology.table {
         if table.locator.trim().is_empty()
@@ -759,23 +774,25 @@ pub(super) fn write(
             return Err("holdings_accounting_invalid: duplicate table or missing locator".into());
         }
     }
-    census.sort_by_key(census_identity);
-    let ids: BTreeMap<_, _> = census
+    exported.sort_by_key(physical_identity);
+    let ids: BTreeMap<_, _> = exported
         .iter()
         .enumerate()
         .map(|(i, t)| {
             (
-                census_identity(t),
+                physical_identity(t),
                 i64::try_from(i + 1).expect("table count fits i64"),
             )
         })
         .collect();
     if ids.len() != authored.len() || ids.keys().any(|name| !authored.contains_key(name)) {
-        return Err("holdings_accounting_invalid: authored tables differ from census".into());
+        return Err(
+            "holdings_accounting_invalid: authored tables differ from the storage export".into(),
+        );
     }
     let starts = super::cumulative::starts(base, db)?;
-    super::cumulative::resolve(&mut authored, &census, spaces, &starts, &primaries)?;
-    let count_tables = census.len();
+    super::cumulative::resolve(&mut authored, &exported, spaces, &starts, &primaries)?;
+    let count_tables = exported.len();
     let tx = db.transaction()?;
     let mut count_columns = 0usize;
     let mut mapped = 0usize;
@@ -790,8 +807,8 @@ pub(super) fn write(
             params![space, name, ord],
         )?;
     }
-    for table in census {
-        let identity = census_identity(&table);
+    for table in exported {
+        let identity = physical_identity(&table);
         let authored = &authored[&identity];
         let id = ids[&identity];
         let result = (|| -> Result<()> {
@@ -822,24 +839,7 @@ pub(super) fn write(
                     "holdings_period_column_invalid: column and encoding must be paired".into(),
                 );
             }
-            let storages: Vec<_> = table
-                .columns
-                .iter()
-                .flat_map(|c| c.storage.iter())
-                .filter(|s| {
-                    authored
-                        .schema_name
-                        .as_ref()
-                        .is_none_or(|name| *name == s.schema_name)
-                })
-                .collect();
-            let schema: BTreeSet<_> = storages.iter().map(|s| s.schema_name.as_str()).collect();
-            let kinds: BTreeSet<_> = storages.iter().map(|s| s.table_type.as_str()).collect();
-            let schema_name = authored
-                .schema_name
-                .as_deref()
-                .or_else(|| (schema.len() == 1).then(|| *schema.first().expect("one schema")));
-            let table_type = (kinds.len() == 1).then(|| *kinds.first().expect("one kind"));
+            authored_schema(authored, &table)?;
             let file_name = reg_resolve::slugify(&match &table.schema {
                 Some(schema) => format!("{schema}_{}", table.name),
                 None => table.name.clone(),
@@ -862,7 +862,7 @@ pub(super) fn write(
             }
             // The period column and its encoding are set together once the columns exist.
             tx.execute("INSERT INTO holding_table(id,physical_name,space,key_requirements,schema_name,table_type,file_name,disposition,delivery,release,superseded_by,partition,projection_of,
-          projection_token,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,spaces.of(&table),serde_json::to_string(&authored.key)?,schema_name,table_type,
+          projection_token,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,spaces.of(&table),serde_json::to_string(&authored.key)?,table.storage_schema,table.table_type,
           file_name,authored.disposition,authored.delivery.as_deref().map(canonical_period).transpose()?,release,authored.superseded_by.as_ref().map(|kept| ids[kept]),authored.partition,projection,authored.projection_token,
           authored.reason]).map_err(|_|"holdings_table_invalid: duplicate name or invalid topology".to_owned())?;
             for (start, end) in &spans {
@@ -920,12 +920,7 @@ pub(super) fn write(
                             "inventory_cell_conflict: hold/unmap cannot carry mappings".into()
                         );
                     }
-                    let eligible: Vec<_> = column
-                        .storage
-                        .iter()
-                        .filter(|s| schema_name.is_none_or(|schema| schema == s.schema_name))
-                        .collect();
-                    let storage = (eligible.len() == 1).then(|| eligible[0]);
+                    let storage = &column.storage;
                     let disposition = if hold.is_some() {
                         "hold"
                     } else if unmap.is_some() {
@@ -940,10 +935,10 @@ pub(super) fn write(
                             id,
                             column.name,
                             column.ordinal,
-                            storage.map(|s| s.data_type.as_str()),
-                            storage.and_then(|s| s.length),
-                            storage.and_then(|s| s.precision),
-                            storage.and_then(|s| s.scale),
+                            storage.data_type,
+                            storage.length,
+                            storage.precision,
+                            storage.scale,
                             decision.and_then(|c| c.slot_family.as_deref()),
                             decision.and_then(|c| c.slot_kind.as_deref()),
                             decision.and_then(|c| c.slot_index.as_ref().map(ToString::to_string)),
@@ -1021,15 +1016,7 @@ pub(super) fn write(
                             "Storage column has no accepted semantic owner",
                         )?;
                     } else {
-                        if schema_name.is_none() || table_type.is_none() {
-                            return Err("holdings_storage_ambiguous: orderable table needs one schema and table type".into());
-                        }
                         mapped += 1;
-                        let storage = storage.ok_or(if eligible.is_empty() {
-                    "holdings_storage_missing: orderable column needs a storage fact"
-                } else {
-                    "holdings_storage_ambiguous: orderable column needs exactly one storage fact"
-                })?;
                         storage_findings(&tx, id, cid, storage, &accepted)?;
                     }
                     Ok(())
