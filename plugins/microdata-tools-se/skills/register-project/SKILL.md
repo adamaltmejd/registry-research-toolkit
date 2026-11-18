@@ -22,9 +22,10 @@ the `register-metadata-search` skill.
 1. Set the document's `schema_version` to `meta.project_schema_version` from a response
    of the catalog you order from: each server admits exactly that version, and a steward's
    catalog can run an older release than the public one. Leave out fields newer than it
-   (`releases`, below, is 6.3.0). An older server whose `meta` lacks the field returns
-   `unsupported_schema_version` from `validate`, naming the version it reads. Order
-   from the catalog the data comes from: a steward's catalog for the steward's holdings
+   (`releases`, below, is 6.3.0). On an older server whose `meta` lacks the field, call
+   `order` with `operation: "validate"` and `project` `{"schema_version": "0.0.0"}`: the
+   one `unsupported_schema_version` issue it returns names the version that server reads.
+   Order from the catalog the data comes from: a steward's catalog for the steward's holdings
    (`register-metadata-search` skill, `references/data-stewards.md`). Set
    `reg_meta_version` (required) to the serving catalog's release tag, `reg_meta/vX.Y.Z`.
    Read `meta.catalog_version`
