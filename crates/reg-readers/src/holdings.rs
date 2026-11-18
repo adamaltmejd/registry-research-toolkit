@@ -285,7 +285,7 @@ fn renames(entries: &[Rename]) -> Result<(BTreeMap<&str, Match>, Vec<Match>), Re
             return Err(error(
                 ROLE,
                 format!(
-                    "census_rename_invalid: rename {n}: empty or untrimmed name, not exactly one of catalog and variable, or empty evidence"
+                    "holdings_rename_invalid: rename {n}: empty or untrimmed name, not exactly one of catalog and variable, or empty evidence"
                 ),
             ));
         };
@@ -295,7 +295,7 @@ fn renames(entries: &[Rename]) -> Result<(BTreeMap<&str, Match>, Vec<Match>), Re
         {
             return Err(error(
                 ROLE,
-                format!("census_rename_duplicate: rename {n}: physical name already renamed"),
+                format!("holdings_rename_duplicate: rename {n}: physical name already renamed"),
             ));
         }
         targets.push(target);
@@ -311,7 +311,7 @@ fn renames(entries: &[Rename]) -> Result<(BTreeMap<&str, Match>, Vec<Match>), Re
         return Err(error(
             ROLE,
             format!(
-                "census_rename_chain: rename {n}: catalog name is also a renamed physical name"
+                "holdings_rename_chain: rename {n}: catalog name is also a renamed physical name"
             ),
         ));
     }

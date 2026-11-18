@@ -94,8 +94,8 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
             (
                 format!(
                     "holdings: tables={} columns={} mapped={} unmatched={}",
-                    meta(&db, "census_tables")?,
-                    meta(&db, "census_columns")?,
+                    meta(&db, "held_tables")?,
+                    meta(&db, "held_columns")?,
                     meta(&db, "mapped_columns")?,
                     meta(&db, "unmatched_columns")?
                 ),
@@ -237,7 +237,7 @@ fn write(
         .map_err(|_| "holdings_topology_invalid: malformed authored topology".to_owned())?;
     let held = reg_readers::holdings::read(
         &input::path(root, &config.inputs.storage_export)?,
-        &input::path(root, &config.inputs.census_reader)?,
+        &input::path(root, &config.inputs.holdings_reader)?,
     )?;
     let spaces = spaces::resolve(root, config, &held.tables)?;
     let mut db = Connection::open(scratch)?;
@@ -308,8 +308,8 @@ fn write(
             "logo",
             std::fs::read_to_string(input::path(root, &config.presentation.logo)?)?,
         ),
-        ("census_tables", counts.0.to_string()),
-        ("census_columns", counts.1.to_string()),
+        ("held_tables", counts.0.to_string()),
+        ("held_columns", counts.1.to_string()),
         ("mapped_columns", counts.2.to_string()),
         ("unmatched_columns", counts.3.to_string()),
     ]);

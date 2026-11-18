@@ -1,8 +1,8 @@
 //! A holdings DB carries only what the builder declares (release step 8e).
 //!
 //! The holdings asset is public (maintainer 2026-11-03), so it has no disclosure
-//! review. What it must not carry is background data: steward-repo notes, raw census or
-//! storage exports, inventory working files. The pair verifier enforces that here, in
+//! review. What it must not carry is background data: steward-repo notes, raw storage
+//! exports, inventory working files. The pair verifier enforces that here, in
 //! the released `reg-build`, because a steward repository verifies its own pair with
 //! that binary alone (the steward-repository move, R15.4; this supersedes the post-F
 //! Q16 choice of an xtask command).
@@ -16,11 +16,10 @@
 //! - Size: every TEXT, BLOB or untyped column of every table stays under its bound, so a
 //!   raw payload in an allowed column is caught.
 //! - Text: no `text` body names a steward working file (`*.json`, `*.jsonl`, `*.toml`)
-//!   or a source row (`storage_export:row=`, or `census:row=` as steward locators
-//!   still write it). The reader serves these bodies as labels,
+//!   or a storage export row (`storage_export:row=`). The reader serves these bodies as labels,
 //!   definitions and notes, so a provenance suffix in a transcription cell reaches the
-//!   public site (0.72.0: "Evidence: reference-occurrence-evidence.jsonl;
-//!   census:row=489; ...").
+//!   public site (0.72.0: "Evidence: reference-occurrence-evidence.jsonl;" followed by a
+//!   source row).
 //!
 //! A refusal names each failing item (a table, a column, a key or a text id), never row
 //! contents.
@@ -67,8 +66,8 @@ const META_KEYS: [&str; 29] = [
     "steward",                 // holdings: steward presentation, shown in the SPA
     "scope",                   // holdings: the steward's public scope document
     "logo",                    // holdings: steward logo, shown in the SPA
-    "census_tables",           // holdings: aggregate count
-    "census_columns",          // holdings: aggregate count
+    "held_tables",             // holdings: aggregate count
+    "held_columns",            // holdings: aggregate count
     "mapped_columns",          // holdings: aggregate count
     "unmatched_columns",       // holdings: aggregate count
 ];
@@ -262,8 +261,8 @@ fn is_word(c: char) -> bool {
     c.is_alphanumeric() || c == '_'
 }
 /// The first steward working-file name (`[\w./-]+\.(jsonl?|toml)\b`) or export row
-/// locator (`storage_export:row=` or `census:row=`) in `body`, as the reported kind:
-/// `json`, `jsonl`, `toml`, `storage_export:row` or `census:row`. Leftmost match first; at one start, the file name wins and its last
+/// locator (`storage_export:row=`) in `body`, as the reported kind: `json`, `jsonl`,
+/// `toml` or `storage_export:row`. Leftmost match first; at one start, the file name wins and its last
 /// valid extension counts, as a backtracking regex would pick them.
 fn working_reference(body: &str) -> Option<&'static str> {
     let chars: Vec<char> = body.chars().collect();
@@ -277,11 +276,7 @@ fn working_reference(body: &str) -> Option<&'static str> {
                 && chars.get(end).is_none_or(|c| !is_word(*c))
         })
     };
-    // Steward locators still carry the retired census's row form.
-    let locators: Vec<(Vec<char>, &str)> = ["storage_export:row", "census:row"]
-        .into_iter()
-        .map(|kind| (format!("{kind}=").chars().collect(), kind))
-        .collect();
+    let locator: Vec<char> = "storage_export:row=".chars().collect();
     // A name run that held no file name at its first character holds none later on.
     let mut run_end = 0;
     for start in 0..chars.len() {
@@ -299,11 +294,8 @@ fn working_reference(body: &str) -> Option<&'static str> {
                 return Some(ext);
             }
         }
-        if let Some((_, kind)) = locators
-            .iter()
-            .find(|(locator, _)| chars[start..].starts_with(locator))
-        {
-            return Some(kind);
+        if chars[start..].starts_with(&locator) {
+            return Some("storage_export:row");
         }
     }
     None

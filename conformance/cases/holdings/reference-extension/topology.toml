@@ -4,7 +4,7 @@ physical_name = "Attested"
 disposition = "dated"
 delivery = "2015..2016"
 table_pids = ["demo/held"]
-locator = "synthetic-census:row=10"
+locator = "synthetic-export:row=10"
 [[table.column]]
 name = "Old"
 locator = "synthetic-delivery:row=2"
@@ -23,7 +23,7 @@ physical_name = "AttestedMember"
 disposition = "dated"
 delivery = "2017..2019"
 table_pids = ["demo/owners/received"]
-locator = "synthetic-census:row=12"
+locator = "synthetic-export:row=12"
 [[table.key]]
 entity = ["demo/owners/id"]
 locator = "synthetic-delivery:new-membership"
@@ -33,7 +33,7 @@ physical_name = "AttestedGrid"
 disposition = "dated"
 delivery = "2015..2016"
 table_pids = ["demo/projected/grid"]
-locator = "synthetic-census:row=13"
+locator = "synthetic-export:row=13"
 [[table.column]]
 name = "Cells"
 locator = "synthetic-delivery:row=6"
@@ -51,7 +51,7 @@ physical_name = "AttestedSlot"
 disposition = "dated"
 delivery = "2014"
 table_pids = ["demo/projected"]
-locator = "synthetic-census:row=14"
+locator = "synthetic-export:row=14"
 [[table.column]]
 name = "Slot"
 locator = "synthetic-delivery:row=4"

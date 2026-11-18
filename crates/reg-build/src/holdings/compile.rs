@@ -706,7 +706,7 @@ pub(super) fn renames_resolve(
         physical::Match::Variable(fqid) => !variables.contains(fqid.as_str()),
     }) {
         Some((n, _)) => Err(format!(
-            "census_rename_unresolved: rename {n}: target matches no documented spelling or variable"
+            "holdings_rename_unresolved: rename {n}: target matches no documented spelling or variable"
         )
         .into()),
         None => Ok(()),

@@ -2011,9 +2011,8 @@ placement or automatic fallback. This preserves a proved earlier-coding binding 
 an unproved later meaning without pretending that either widens global validity.
 
 The compiler's closed steward config adds `inputs.holdings` (authored replacement
-topology), `inputs.storage_export`, `inputs.census_reader` (the holdings reader config) and
-`[pins]`, mapping consumed relative paths to
-SHA-256. A directory pin uses the catalog builder's sorted `path\tsha256\n` tree digest;
+topology), `inputs.storage_export`, `inputs.holdings_reader` and `[pins]`, mapping
+consumed relative paths to SHA-256. A directory pin uses the catalog builder's sorted `path\tsha256\n` tree digest;
 individual file pins are also accepted. Every supplemental manifest input is pinned too.
 Config bytes must match the checkout's `HEAD` commit, including when index flags hide
 worktree changes. Paths stay inside that checkout and directory traversal refuses
@@ -2121,17 +2120,16 @@ order. Rename first is what the real case needs: a source like `dnr2013230_samh`
 to `lopnr_samh` would become `samh` if a `dnr2013230_` strip ran first. A physical name
 therefore has one match result, never one from each list.
 
-Refusals, each naming the entry by its 1-based position, never by name (the codes keep
-the retired census's name):
+Refusals, each naming the entry by its 1-based position, never by name:
 
-- `census_rename_invalid`: an empty or untrimmed physical name, not exactly one of
+- `holdings_rename_invalid`: an empty or untrimmed physical name, not exactly one of
   `catalog` and `variable`, an empty catalog name, an empty or untrimmed variable, or
   empty evidence.
-- `census_rename_duplicate`: two entries for one physical name.
-- `census_rename_chain`: a catalog name that is itself a renamed physical name. Renames
+- `holdings_rename_duplicate`: two entries for one physical name.
+- `holdings_rename_chain`: a catalog name that is itself a renamed physical name. Renames
   apply once; a chain means the author expected them to compose, so it refuses rather
   than guess.
-- `census_rename_unresolved` (compiler and verify): a catalog name that folds to no
+- `holdings_rename_unresolved` (compiler and verify): a catalog name that folds to no
   documented spelling, or a variable with no segment, in the base or semantic view. It
   can never match, so it is a typo or a stale entry.
 
@@ -2403,8 +2401,8 @@ household amounts are child-only data, not claims that the parent holds them.
 
 Index mappings by logical table, variable and start/end and columns by holding/name.
 Coverage is computed from indexed facts, not stored guesses about future UI summaries.
-Include the input-manifest digest and the accepted export accounting (`census_tables`, `census_columns`) in `meta`; publish
-no steward locators or per-file pins (schema 5).
+Include the input-manifest digest and the accepted export accounting (`held_tables`,
+`held_columns`) in `meta`; publish no steward locators or per-file pins (schema 5).
 
 `reg-build verify` is the sole publication validator. It checks exact export accounting
 (one disposition per table; every physical column represented), stored disposition and

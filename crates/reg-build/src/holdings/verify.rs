@@ -49,7 +49,7 @@ fn sources(
     }
     let held = reg_readers::holdings::read(
         &input::path(root, &config.inputs.storage_export)?,
-        &input::path(root, &config.inputs.census_reader)?,
+        &input::path(root, &config.inputs.holdings_reader)?,
     )?;
     let spaces = super::spaces::resolve(root, &config, &held.tables)?;
     let stored: Vec<(i64, String, String)> = rows(
@@ -125,14 +125,14 @@ fn sources(
         // a name-keyed identity ignores the schema: a second row would escape the export.
         let id = stored.0;
         if tables.insert(identity, stored).is_some() {
-            return Err(format!("holdings:table={id}: holdings_census_table_extra").into());
+            return Err(format!("holdings:table={id}: holdings_source_table_extra").into());
         }
     }
     for table in &held.tables {
         let location = format!("storage_export:row={}", table.source_row);
         let (id, schema, kind, space) = tables
             .remove(&compile::physical_identity(table))
-            .ok_or_else(|| format!("{location}: holdings_census_table_missing"))?;
+            .ok_or_else(|| format!("{location}: holdings_source_table_missing"))?;
         if space != spaces.of(table) {
             return Err(format!("{location}: holdings_space_source_mismatch").into());
         }
@@ -252,9 +252,9 @@ fn sources(
             let location = format!("{location}:column={}", column.ordinal);
             let stored = columns
                 .remove(&column.name)
-                .ok_or_else(|| format!("{location}: holdings_census_column_missing"))?;
+                .ok_or_else(|| format!("{location}: holdings_source_column_missing"))?;
             if stored.ordinal != column.ordinal {
-                return Err(format!("{location}: holdings_census_ordinal_mismatch").into());
+                return Err(format!("{location}: holdings_source_ordinal_mismatch").into());
             }
             let authored = authored_columns
                 .get(&(compile::physical_identity(table), column.name.as_str()))
@@ -279,20 +279,20 @@ fn sources(
         if let Some((_, stored)) = columns.first_key_value() {
             let ordinal = stored.ordinal;
             return Err(format!(
-                "holdings:table={id}:column={ordinal}: holdings_census_column_extra"
+                "holdings:table={id}:column={ordinal}: holdings_source_column_extra"
             )
             .into());
         }
     }
     if let Some((_, (id, ..))) = tables.first_key_value() {
-        return Err(format!("holdings:table={id}: holdings_census_table_extra").into());
+        return Err(format!("holdings:table={id}: holdings_source_table_extra").into());
     }
     for (key, count) in [
-        ("census_tables", source_tables),
-        ("census_columns", source_columns),
+        ("held_tables", source_tables),
+        ("held_columns", source_columns),
     ] {
         if meta(db, key)? != count.to_string() {
-            return Err(format!("census:{key}: holdings_source_accounting_mismatch").into());
+            return Err(format!("meta:{key}: holdings_source_accounting_mismatch").into());
         }
     }
     Ok((topology, held, declarations))

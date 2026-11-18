@@ -52,7 +52,7 @@ pub(super) struct Inputs {
     pub reference_occurrences: Option<String>,
     pub storage_export: String,
     pub holdings: String,
-    pub census_reader: String,
+    pub holdings_reader: String,
 }
 
 #[derive(Deserialize)]
@@ -278,7 +278,7 @@ pub(super) fn admit(root: &Path, pin: &Pin, owner: &str) -> Result<Config> {
         &config.presentation.logo,
         &config.inputs.storage_export,
         &config.inputs.holdings,
-        &config.inputs.census_reader,
+        &config.inputs.holdings_reader,
     ];
     let manifest: crate::Manifest =
         crate::toml_file(&path(root, &format!("{curation}/inputs.toml"))?)

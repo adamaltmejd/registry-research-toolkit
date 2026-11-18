@@ -447,7 +447,7 @@ pub fn pin_steward(root: &Path) -> Result<(), String> {
          curation_root = \"curation/registers\"\n\n[presentation]\n\
          steward = \"branding/steward.json\"\nlogo = \"branding/logo.svg\"\n\n{inputs}\n\
          storage_export = \"storage.csv\"\n\
-         holdings = \"holdings.toml\"\ncensus_reader = \"curation/readers/holdings.toml\"\n\n\
+         holdings = \"holdings.toml\"\nholdings_reader = \"curation/readers/holdings.toml\"\n\n\
          [pins]\n{pins}"
     );
     fs::write(root.join("steward.toml"), config).map_err(|e| e.to_string())?;

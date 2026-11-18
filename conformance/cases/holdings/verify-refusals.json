@@ -1,7 +1,7 @@
 [
   {
     "sql": "UPDATE holding_column SET name='Invented' WHERE name='Slot2'",
-    "code": "holdings_census_column_missing",
+    "code": "holdings_source_column_missing",
     "location": "storage_export:row=3:column=6"
   },
   {
@@ -10,18 +10,18 @@
     "location": "storage_export:row=3:column=6"
   },
   {
-    "sql": "DELETE FROM holding_table WHERE physical_name='Excluded'; UPDATE meta SET value='8' WHERE key='census_tables'",
-    "code": "holdings_census_table_missing",
+    "sql": "DELETE FROM holding_table WHERE physical_name='Excluded'; UPDATE meta SET value='8' WHERE key='held_tables'",
+    "code": "holdings_source_table_missing",
     "location": "storage_export:row=27"
   },
   {
-    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition) SELECT id,'Invented',10,'int','candidate' FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message) SELECT holding_id,id,'mapping_missing','Not documented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='23' WHERE key='census_columns'",
-    "code": "holdings_census_column_extra",
+    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition) SELECT id,'Invented',10,'int','candidate' FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message) SELECT holding_id,id,'mapping_missing','Not documented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='23' WHERE key='held_columns'",
+    "code": "holdings_source_column_extra",
     "location": "column=10"
   },
   {
-    "sql": "INSERT INTO holding_table(physical_name,space,file_name,disposition,reason) VALUES('Invented','fixture','invented','lookup','Not in census'); UPDATE meta SET value='10' WHERE key='census_tables'",
-    "code": "holdings_census_table_extra",
+    "sql": "INSERT INTO holding_table(physical_name,space,file_name,disposition,reason) VALUES('Invented','fixture','invented','lookup','Not in the export'); UPDATE meta SET value='10' WHERE key='held_tables'",
+    "code": "holdings_source_table_extra",
     "location": "holdings:table="
   },
   {
