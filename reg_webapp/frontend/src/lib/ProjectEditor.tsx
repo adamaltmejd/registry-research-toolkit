@@ -8,9 +8,9 @@ import {
 } from "./api";
 import {
   registerRead,
-  retryTableShowRead,
+  retrySharedDaysRead,
+  sharedDaysReads,
   tableSegmentsReads,
-  tableShowReads,
 } from "./catalog_names";
 import { DeliverySummary } from "./DeliverySummary";
 import { stewardDatabases } from "./databases";
@@ -449,8 +449,8 @@ function Sources({
   // Each source table is read whole for the years its releases share: only
   // the table says so, since a source can bind only releaseless rows of a
   // table whose releases share years.
-  const tableShows = useCatalogRead(
-    tableShowReads,
+  const sharedDays = useCatalogRead(
+    sharedDaysReads,
     useDistinct(catalogSources.map((source) => source.table)),
   );
   const columnRead = (table: string, variable: string) =>
@@ -537,15 +537,13 @@ function Sources({
               raw={raw}
               names={names}
               segments={segments}
-              sharedDays={
-                tableShows[source.table]?.value?.shared_release_days ?? []
-              }
+              sharedDays={sharedDays[source.table]?.value ?? []}
               sharedDaysError={
-                !!tableShows[source.table] &&
-                !tableShows[source.table].loading &&
-                !tableShows[source.table].value
+                !!sharedDays[source.table] &&
+                !sharedDays[source.table].loading &&
+                !sharedDays[source.table].value
               }
-              onRetrySharedDays={() => retryTableShowRead(source.table)}
+              onRetrySharedDays={() => retrySharedDaysRead(source.table)}
               table={tables.find((table) => table.fqid === source.table)}
               sharedHeading={catalogSources.some(
                 (other) =>
@@ -556,7 +554,7 @@ function Sources({
               bounds={bounds}
               loading={
                 !!register?.loading ||
-                !!tableShows[source.table]?.loading ||
+                !!sharedDays[source.table]?.loading ||
                 catalogBindings(source).some(
                   (binding) =>
                     columnRead(source.table, binding.variable)?.loading,

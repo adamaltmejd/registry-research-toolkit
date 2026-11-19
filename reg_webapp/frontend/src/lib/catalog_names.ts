@@ -1,3 +1,4 @@
+import type { SharedDays } from "./add_columns";
 import {
   ApiError,
   type CatalogPeriod,
@@ -293,16 +294,38 @@ export function tableShowRead(ref: string): Read<TableShow> {
   });
 }
 
-/** `tableShowRead` for each of `refs`, by ref: the argument of a `useCatalogRead`. */
-export function tableShowReads(
-  refs: readonly string[],
-): Record<string, Read<TableShow>> {
-  return Object.fromEntries(refs.map((ref) => [ref, tableShowRead(ref)]));
+const sharedDaysKey = (ref: string) => `shared-days:${ref}`;
+
+/** The days two or more of a table's releases share, with those releases: where a
+ * project source names the releases it takes. An implicit table has its register's
+ * address, which `show` answers with the register, and no read serves such a
+ * table's shared days.
+ * simplify: an implicit table reads as sharing no days, true of every one in the
+ * 0.90.0 catalog; if one gets concurrent releases the order still refuses with
+ * `release_ambiguous`, and the server must then serve its shared days (#2584). */
+function sharedDaysRead(ref: string): Read<SharedDays> {
+  return read(sharedDaysKey(ref), async () => {
+    const node = await getShow(ref);
+    if (node.kind === "table") return node.shared_release_days ?? [];
+    if (
+      node.kind === "register" &&
+      node.tables.some((table) => table.implicit && table.fqid === ref)
+    )
+      return [];
+    throw new Error(`${ref} is not a table`);
+  });
 }
 
-/** Forget a failed `tableShowRead`, so the next render reads it again (Retry). */
-export function retryTableShowRead(ref: string): void {
-  const key = `table:${ref}`;
+/** `sharedDaysRead` for each of `refs`, by ref: the argument of a `useCatalogRead`. */
+export function sharedDaysReads(
+  refs: readonly string[],
+): Record<string, Read<SharedDays>> {
+  return Object.fromEntries(refs.map((ref) => [ref, sharedDaysRead(ref)]));
+}
+
+/** Forget a failed `sharedDaysRead`, so the next render reads it again (Retry). */
+export function retrySharedDaysRead(ref: string): void {
+  const key = sharedDaysKey(ref);
   const current = reads[key];
   if (!current || current.loading || current.value) return;
   const { [key]: _, ...rest } = reads;
