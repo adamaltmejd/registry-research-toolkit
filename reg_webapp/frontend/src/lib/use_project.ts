@@ -120,8 +120,14 @@ export function projectVerdict(
   select: boolean,
 ): Verdict {
   if (!draft) return "problems";
-  // An empty draft is checked only when it names another catalog (useProjectCheck).
-  if (draft.sources.length === 0 && !check.loading && !check.data)
+  // An empty draft is checked only when it names another catalog (useProjectCheck);
+  // a check of it that did not run says so, with Retry.
+  if (
+    draft.sources.length === 0 &&
+    !check.loading &&
+    !check.data &&
+    !check.error
+  )
     return "empty";
   if (check.loading) return "checking";
   if (check.error || !check.data) return "unchecked";

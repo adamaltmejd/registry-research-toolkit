@@ -72,8 +72,10 @@ A failed call is an MCP tool error carrying `{error, meta}`, where `error` is
 - `invalid_cursor`, `stale_cursor`: restart the listing without `cursor`.
 - `holdings_unavailable`: `materialize_order` on a catalog without holdings (the global
   one); use the steward's catalog.
-- `catalog_mismatch` (a finding of `order_blocked` or `validate`): the project's
-  `catalog` names another catalog; ask that catalog's server.
+- `catalog_mismatch`: the project's `catalog` names another catalog. `validate` answers
+  it as its one issue, `order` and `materialize_order` as the one finding of
+  `order_blocked`. Ask the server of the catalog the project names; don't edit the
+  project's `catalog`.
 - `project_unnamed`, `order_manual_only`: `materialize_order` needs a project `name` and
   at least one catalog source.
 - `docs_unavailable`: the catalog has no documents.

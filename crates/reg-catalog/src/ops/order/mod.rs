@@ -408,9 +408,8 @@ fn catalog_mismatch(server: &Server, project: &ProjectData) -> Option<Issue> {
             "catalog_mismatch",
             "/catalog",
             format!(
-                "The project is drafted on the {} catalog, but this server serves the {} catalog. \
-                 Validate and order it on its own catalog's server, or change `catalog` \
-                 to move it here.",
+                "This project is for the {0} catalog, and this is the {1} catalog. \
+                 Check and order it on the {0} catalog.",
                 reg_core::quote(&project.catalog),
                 reg_core::quote(&here)
             ),

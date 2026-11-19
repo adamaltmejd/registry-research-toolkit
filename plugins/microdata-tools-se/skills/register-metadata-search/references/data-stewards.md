@@ -132,10 +132,11 @@ skill).
 ## Confirming it worked
 
 After restarting the agent in the project, call `show` with no `ref` on the
-`steward-catalog` server and check `meta.catalog_version` against the `reg_meta_version`
-that `/api/context` reported. Then `order` with `operation: "materialize_order"` on any
-small project: a steward answers an order file or an `order_blocked`/`project_invalid`
-naming the project's problems, never `holdings_unavailable`. If no `steward-catalog`
+`steward-catalog` server and check `meta.steward.owner` against the `data.catalog` that
+`/api/context` reported. Then `order` with `operation: "materialize_order"` on a small
+project whose `catalog` names that steward: a steward answers an order file or an
+`order_blocked`/`project_invalid` naming the project's problems, never
+`holdings_unavailable` or `catalog_mismatch`. If no `steward-catalog`
 tools are listed, the server has not been approved or the agent was started outside the
 project.
 

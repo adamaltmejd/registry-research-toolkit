@@ -147,6 +147,7 @@ export function ProjectBanner({
         <StudyWindow
           active={draft.window ?? null}
           bounds={windowBounds(context)}
+          foreign={draft.catalog !== context.catalog}
         />
       )}
     </section>
@@ -158,9 +159,13 @@ const YEAR_FORMAT: Intl.NumberFormatOptions = { useGrouping: false };
 function StudyWindow({
   active,
   bounds,
+  foreign,
 }: {
   active: ProjectStudyWindow | null;
   bounds: WindowBounds;
+  /** The project is for another catalog: its years are shown as stored and
+   * cannot be changed here, since this catalog's span would clamp them. */
+  foreign: boolean;
 }) {
   const [dragging, setDragging] = useState<number[] | null>(null);
   const startThumb = useRef<HTMLDivElement>(null);
@@ -168,14 +173,18 @@ function StudyWindow({
     active?.from ?? bounds.min,
     active?.to ?? bounds.max,
   ];
+  // Another catalog's years may fall outside this one's span: widen the scale
+  // so the thumbs sit on them rather than on this span's ends.
+  const min = foreign ? Math.min(bounds.min, value[0]) : bounds.min;
+  const max = foreign ? Math.max(bounds.max, value[1]) : bounds.max;
   return (
     <Slider
       className={styles.window}
       value={value}
-      minValue={bounds.min}
+      minValue={min}
       // A disabled one-year catalog still needs a non-zero drawing scale.
-      maxValue={Math.max(bounds.max, bounds.min + 1)}
-      isDisabled={bounds.min === bounds.max}
+      maxValue={Math.max(max, min + 1)}
+      isDisabled={foreign || bounds.min === bounds.max}
       formatOptions={YEAR_FORMAT}
       onChange={setDragging}
       onChangeEnd={([from, to]) => {
@@ -201,11 +210,11 @@ function StudyWindow({
             keeps the button's height and does not grow when it appears. */}
         <span
           className={styles.clear}
-          data-hidden={active === null || undefined}
+          data-hidden={active === null || foreign || undefined}
         >
           <Button
             variant="ghost"
-            isInert={active === null}
+            isInert={active === null || foreign}
             onPress={() => {
               setDragging(null);
               projectStore.updateField("window", undefined);
