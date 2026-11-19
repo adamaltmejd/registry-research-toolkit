@@ -133,6 +133,12 @@ if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
 fi
 ```
 
+The push starts a `container-build.yml` run that is **expected to be red** at
+`schema-guard`'s release guard, as is every later main push until step 9: the crate
+version has no published release yet, so nothing deploys (a deploy here would ship the
+new server on the previous catalog). The run that step 9's publication dispatches does
+the deploy.
+
 `git push` refuses a non-fast-forward. If `main` moved meanwhile, rebase the bump onto
 it, push the branch again and wait for CI on the new commit. The base build made at the
 old bump commit is then reused or rebuilt by the rule in 8a.
@@ -348,7 +354,8 @@ from step 4, not a re-run), then runs artifact conformance (`integration.yml`, o
 global asset), and dispatches `container-build.yml`, which bakes and deploys the
 catalog. Integration and deployment dispatch both depend on that check, not on each
 other. The deploy guard passes only when the released `CATALOG_SCHEMA_VERSION` equals
-main's; a missing constant or a mismatch blocks deployment. Scope the run lookup to this
+main's and the newest published release is the one of main's `reg-meta` crate version;
+a missing constant or a mismatch blocks deployment. Scope the run lookup to this
 release; an unfiltered `--limit 1` can match a stale run:
 
 ```sh
@@ -362,7 +369,8 @@ done
 gh run watch "$run_id" --exit-status
 ```
 
-Share the run URL, then watch the dispatched `container-build.yml` through its deploys.
+Share the run URL, then watch the dispatched `container-build.yml` (event
+`workflow_dispatch`, not the bump's red push run from step 5) through its deploys.
 A red `integration` job, a missing or wrong or duplicated asset, or failing artifact
 conformance means a fixed build and a new patch release: a published release's assets
 are never re-uploaded (step 8e, publish ordering). Re-validate a transient failure with
