@@ -113,12 +113,8 @@ fn focuses(
                 .collect());
         }
         // simplify: classification graphs (versions and their correspondences) are not
-        // served; serve them when a reader needs version correspondences.
-        "class_family" | "class_version" => {
-            return Err(Error::internal(format!(
-                "{value:?}: classification graphs are not served yet."
-            )));
-        }
+        // served, so a class ref is refused like any other kind; serve them when a reader
+        // needs version correspondences (#795).
         other => {
             return Err(refs::wrong_kind(
                 value,
