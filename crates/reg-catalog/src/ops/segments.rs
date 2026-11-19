@@ -190,17 +190,13 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
             let id = refs::table(&conn, given)?;
             let pid: String =
                 conn.query_row("SELECT pid FROM tbl WHERE id = ?", [id], |row| row.get(0))?;
-            // Its variables are not held here: none has a row to list.
-            let not_orderable = server.catalog.not_orderable(&pid).to_vec();
-            if !not_orderable.is_empty() {
-                return Ok(serde_json::to_value(SegmentPage {
-                    items: vec![],
-                    next_cursor: None,
-                    not_orderable,
-                })
-                .expect("a page serializes"));
+            // A table only blocked files hold places none of its variables: they are
+            // not served, so none is resolved and the page lists no rows.
+            if server.catalog.not_orderable(&pid).is_empty() {
+                (variable_pids(server, named)?, Some(pid))
+            } else {
+                (vec![], Some(pid))
             }
-            (variable_pids(server, named)?, Some(pid))
         }
         (kind, true) => {
             return Err(refs::wrong_kind(given, kind, "not a variable"));

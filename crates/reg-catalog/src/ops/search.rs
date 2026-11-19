@@ -1,6 +1,8 @@
 //! `search`: one ranked FTS5 query over `search` and `search_item`
 //! (crates/DESIGN.md, "Search", rules 1-6).
 
+use std::fmt::Write as _;
+
 use rusqlite::{Connection, OptionalExtension, params};
 use serde::Serialize;
 use serde_json::Value;
@@ -340,23 +342,42 @@ fn search_filter(server: &Server, conn: &Connection, held: bool) -> Result<Strin
             JOIN variable hv ON hv.pid = hm.variable_pid
             JOIN tbl ht ON ht.pid = hm.table_pid
             WHERE (?4 IS NULL OR (hm.start < ?5 AND ?4 < hm.end))";
-        // A table only blocked files route to shows too (`Catalog::shows`), over the
-        // years those files hold: a table some placement holds is already in `from`.
-        let blocked = "FROM held.holding_blocked hb
-            JOIN held.holding_route hr ON hr.holding_id = hb.holding_id
-            JOIN tbl bt ON bt.pid = hr.table_pid
-            WHERE bt.pid NOT IN (SELECT table_pid FROM held.holding_mapping)
-              AND (?4 IS NULL OR EXISTS (SELECT 1 FROM held.holding_period hp
-              WHERE hp.holding_id = hb.holding_id AND hp.start < ?5 AND ?4 < hp.end))";
+        // A table or register only blocked files hold shows too (`Catalog::shows`), over
+        // the years those files hold, as its hit's period reads them (`held_spans`);
+        // one that a placement holds matches over its placements alone, in `from`.
+        // simplify: the blocked spans are inlined as a VALUES list per query; tens on the
+        // stewards today. Attach them as a table if a steward routes thousands.
+        let mut blocked = String::new();
+        for (kind, table) in [("table", "tbl"), ("register", "register")] {
+            let spans = server.catalog.blocked_spans(kind);
+            if spans.is_empty() {
+                continue;
+            }
+            let values = spans
+                .iter()
+                .map(|(pid, span)| {
+                    let (start, end) = span.map_or(("NULL".into(), "NULL".into()), |(s, e)| {
+                        (s.to_string(), e.to_string())
+                    });
+                    format!("('{}', {start}, {end})", pid.replace('\'', "''"))
+                })
+                .collect::<Vec<_>>()
+                .join(", ");
+            write!(
+                blocked,
+                "\n                UNION ALL SELECT '{kind}', b.id FROM {table} b
+                  JOIN (VALUES {values}) s ON s.column1 = b.pid
+                  WHERE ?4 IS NULL OR (s.column2 < ?5 AND ?4 < s.column3)"
+            )
+            .expect("write to String");
+        }
         (
             format!(
                 " AND (i.kind NOT IN ('register', 'table', 'variable')
             OR (i.kind, i.entity_id) IN (
                 SELECT 'variable', hv.id {from}
                 UNION ALL SELECT 'table', ht.id {from}
-                UNION ALL SELECT 'register', ht.register_id {from}
-                UNION ALL SELECT 'table', bt.id {blocked}
-                UNION ALL SELECT 'register', bt.register_id {blocked}))"
+                UNION ALL SELECT 'register', ht.register_id {from}{blocked}))"
             ),
             "i.kind IN ('register', 'table', 'variable') OR ",
         )

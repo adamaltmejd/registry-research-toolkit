@@ -82,7 +82,10 @@ fn a_register_held_only_in_blocked_files_is_shown_with_the_reason() {
     // list, the register, its table, a search hit or `segments`. Also fails if showing
     // it widens possession, so its variables read as held. Parent and Child
     // (`steward/holdings.toml`) are the only files of `demo/projected`; this case holds
-    // both row keys.
+    // both row keys. It also holds Pool's (`row-key-hold.toml`): Pool (2017..2020) alone
+    // reaches `demo/owners/empty`, while Owners places `demo/owners` over 2017..2019, so a
+    // register search for 2020 must not match `demo/owners` through the blocked table it
+    // does not show (#2574 review), and a table search for 2020 finds the blocked table.
     let dir = reg_conformance::Scratch::new("blocked-view").unwrap();
     let root = steward::locked_copy(dir.path()).unwrap();
     let topology = root.join("holdings.toml");
@@ -97,6 +100,14 @@ fn a_register_held_only_in_blocked_files_is_shown_with_the_reason() {
         let held = format!("{key}hold = \"Key not reviewed\"\nfollow_up = \"{follow_up}\"\n");
         steward::edit(&topology, &key, &held, false).unwrap();
     }
+    steward::edit(
+        &topology,
+        "[[table.key]]\nentity = [\"demo/held/id\"]\ntime = []\nperiod_key = \"column\"\n\
+         locator = \"fixture:declared-entity-time-key\"\n",
+        &steward::read(&reg_conformance::holdings_case().join("row-key-hold.toml")).unwrap(),
+        false,
+    )
+    .unwrap();
     steward::compile(dir.path()).unwrap();
     let port = server::steward_server(dir.path(), "fixture").unwrap().port;
     let get = |path: &str| {
@@ -152,6 +163,23 @@ fn a_register_held_only_in_blocked_files_is_shown_with_the_reason() {
     let search = get("/api/search?q=Projection%20reference&type=register");
     assert_eq!(search["items"][0]["fqid"], "demo/projected", "{search}");
     assert_eq!(search["items"][0]["not_orderable"], true, "{search}");
+    let hits = |query: &str| -> Vec<(Value, Value)> {
+        get(&format!("/api/search?{query}"))["items"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|hit| (hit["fqid"].clone(), hit["not_orderable"].clone()))
+            .collect()
+    };
+    let owners = "q=Interval-local%20rival%20owners&type=register";
+    assert!(hits(owners).contains(&(json!("demo/owners"), Value::Null)));
+    assert!(
+        !hits(&format!("{owners}&period=2020"))
+            .iter()
+            .any(|(fqid, _)| fqid == "demo/owners")
+    );
+    let empty = "q=Segmentless%20routed%20table&type=table&period=2020";
+    assert!(hits(empty).contains(&(json!("demo/owners/empty"), json!(true))));
     // The rest of the steward is placed, so it carries no mark.
     assert!(get("/api/catalog/demo/held").get("not_orderable").is_none());
 }

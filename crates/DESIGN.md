@@ -2104,7 +2104,10 @@ its register and provider when nothing placed holds them, over the years the blo
 files hold (an `unknown` file states none, so its table lists no `spans` and its
 `period` stays the catalog's). `show` lists its blocked files under `not_orderable` (file, reason, a fixed
 plain-language message per reason, and the steward's own row-key holds and follow-ups);
-registers and search hits shown only that way carry `not_orderable: true`; `segments` on
+registers and search hits shown only that way carry `not_orderable: true`. Search
+matches such a table or register over the blocked files' years, as its hit reports
+them; a register or table a placement holds matches over its placements only, so a
+period only a blocked table covers finds that table, not its placed register; `segments` on
 such a table lists no rows and the same `not_orderable` files. Nothing else changes:
 `serves` and every other operation (orders, materialization, coverage, `schema`, the
 context span) still see only placements. An unrouted blocked table has no catalog table

@@ -565,6 +565,29 @@ impl Catalog {
         !self.serves(kind, pid) && self.shows(kind, pid)
     }
 
+    /// Each table or register shown only through blocked files, with each span those
+    /// files hold (`None` for one whose files state no years), in pid order: what
+    /// `search` matches them over, as `held_spans` gives their hits' periods.
+    pub(crate) fn blocked_spans(&self, kind: &str) -> Vec<(&str, Option<Span>)> {
+        let mut out: Vec<(&str, Option<Span>)> = self
+            .holdings
+            .as_ref()
+            .and_then(|h| h.possession.blocked.of(kind))
+            .into_iter()
+            .flatten()
+            .flat_map(|(pid, spans)| {
+                let spans: Vec<Option<Span>> = if spans.is_empty() {
+                    vec![None]
+                } else {
+                    spans.iter().copied().map(Some).collect()
+                };
+                spans.into_iter().map(move |span| (pid.as_str(), span))
+            })
+            .collect();
+        out.sort_unstable();
+        out
+    }
+
     /// A shown table's files no order can draw on yet; empty when it has none, outside
     /// steward mode, or when a placement holds it.
     #[must_use]
