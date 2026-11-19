@@ -143,7 +143,7 @@ independent wholly invented mock sample; keep it separate from unit fixtures and
 identify its limitations. Never derive unit fixtures from mock data or restricted
 records.
 
-The reference pins catalog `reg_meta/v0.90.0` and the gate version in
+The reference pins catalog `reg_meta/v0.91.0` and the gate version in
 [export-gate.md](references/export-gate.md); a gate update changes both together.
 
 ## Verification proportional to risk
