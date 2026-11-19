@@ -190,11 +190,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
             let id = refs::table(&conn, given)?;
             let pid: String =
                 conn.query_row("SELECT pid FROM tbl WHERE id = ?", [id], |row| row.get(0))?;
-            // A table only blocked files hold places none of its variables, so none is
-            // served there: each is still resolved as a ref and the rows run as for any
-            // table, finding no placement.
-            let blocked = !server.catalog.not_orderable(&pid).is_empty();
-            (variable_pids(server, named, blocked)?, Some(pid))
+            (variable_pids(server, named, &pid)?, Some(pid))
         }
         (kind, true) => {
             return Err(refs::wrong_kind(given, kind, "not a variable"));
@@ -264,18 +260,15 @@ pub(super) fn all(
 
 /// The variables `values` names, each resolved in its own origin (as a ref is), in
 /// pid order without repeats.
-/// `unheld` admits a variable the steward does not hold (a blocked table's).
-fn variable_pids(server: &Server, values: &[&str], unheld: bool) -> Result<Vec<String>, Error> {
+/// On a steward catalog a variable must be one a request about `table` may name
+/// (`Catalog::connect_for_ref_in`), else it is `not_found`, as an unheld ref is.
+fn variable_pids(server: &Server, values: &[&str], table: &str) -> Result<Vec<String>, Error> {
     // simplify: a connection per named variable (up to 200); resolve against the
     // open origins if table reads show in timing.
     let mut pids = values
         .iter()
         .map(|&value| {
-            let conn = if unheld {
-                server.catalog.connect_for_any_ref(value)?
-            } else {
-                server.catalog.connect_for_ref(value)?
-            };
+            let conn = server.catalog.connect_for_ref_in(value, table)?;
             Ok(refs::expect(&conn, value, &["variable"], "not a variable")?.pid)
         })
         .collect::<Result<Vec<_>, Error>>()?;

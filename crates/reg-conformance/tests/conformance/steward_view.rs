@@ -160,6 +160,21 @@ fn a_register_held_only_in_blocked_files_is_shown_with_the_reason() {
     let pid = register["tables"][0]["fqid"].as_str().unwrap().to_owned();
     let segments = get(&format!("/api/segments/{pid}?variable=demo/projected/id"));
     assert_eq!(files(&segments["not_orderable"]), expected);
+    // A variable the steward holds nowhere, named for a blocked table that does not
+    // document it, is not found, as on an orderable table (#2574 review).
+    let (status, answer) = client::json(
+        port,
+        "GET",
+        "/api/segments/demo/owners/empty?variable=demo/projected/id",
+        &[],
+        None,
+    )
+    .unwrap();
+    assert_eq!(
+        (status, &answer["error"]["code"]),
+        (404, &json!("not_found")),
+        "{answer}"
+    );
     let search = get("/api/search?q=Projection%20reference&type=register");
     assert_eq!(search["items"][0]["fqid"], "demo/projected", "{search}");
     assert_eq!(search["items"][0]["not_orderable"], true, "{search}");

@@ -2108,7 +2108,8 @@ registers and search hits shown only that way carry `not_orderable: true`. Searc
 matches such a table or register over the blocked files' years, as its hit reports
 them; a register or table a placement holds matches over its placements only, so a
 period only a blocked table covers finds that table, not its placed register; `segments` on
-such a table lists no rows and the same `not_orderable` files. Nothing else changes:
+such a table lists no rows and the same `not_orderable` files; a `variable` it names
+must be held or documented in that table, else it is `not_found`. Nothing else changes:
 `serves` and every other operation (orders, materialization, coverage, `schema`, the
 context span) still see only placements. An unrouted blocked table has no catalog table
 to show; excluded, superseded and lookup tables are decisions, not gaps, and stay out.

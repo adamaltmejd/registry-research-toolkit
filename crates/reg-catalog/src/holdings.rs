@@ -53,6 +53,9 @@ pub(crate) struct Possession {
     blocked: Blocked,
     /// Each such table's blocked files.
     not_orderable: HashMap<String, Vec<NotOrderable>>,
+    /// (variable, table) pairs the catalog documents in such a table: the variables a
+    /// request may name there although no placement holds them.
+    blocked_pairs: HashSet<(String, String)>,
 }
 
 #[derive(Default)]
@@ -270,6 +273,19 @@ impl Possession {
         self.blocked
             .providers
             .retain(|pid, _| !providers.contains_key(pid));
+        let tables = serde_json::to_string(&self.not_orderable.keys().collect::<Vec<_>>())
+            .expect("pids serialize");
+        for origin in ["main", "held"] {
+            let mut query = conn.prepare(&format!(
+                "SELECT DISTINCT v.pid, t.pid FROM {origin}.segment s
+                   JOIN {origin}.variable v ON v.id = s.variable_id
+                   JOIN {origin}.tbl t ON t.id = s.table_id
+                 WHERE t.pid IN (SELECT value FROM json_each(?))"
+            ))?;
+            for pair in query.query_map([&tables], |r| Ok((r.get(0)?, r.get(1)?)))? {
+                self.blocked_pairs.insert(pair?);
+            }
+        }
         Ok(())
     }
 
@@ -598,6 +614,19 @@ impl Catalog {
             .map_or(&[], Vec::as_slice)
     }
 
+    /// Whether a request about `table` may name `variable`: always outside steward
+    /// mode; in steward mode when the steward holds the variable, or when `table` is
+    /// shown only through blocked files and the catalog documents the variable there.
+    #[must_use]
+    pub fn admits_in(&self, variable: &str, table: &str) -> bool {
+        self.serves("variable", variable)
+            || self.holdings.as_ref().is_some_and(|h| {
+                h.possession
+                    .blocked_pairs
+                    .contains(&(variable.to_owned(), table.to_owned()))
+            })
+    }
+
     /// Whether this deployment serves `variable` in `table`: always outside steward
     /// mode; in steward mode only when a placement names that pair.
     #[must_use]
@@ -680,12 +709,25 @@ impl Catalog {
         self.connect_admitted(value, Self::shows)
     }
 
-    /// `connect_for_ref` without the possession check: the ref need only exist.
+    /// `connect_for_ref` for a ref named in a request about `table`: a variable is
+    /// admitted by `admits_in`, any other entity by `serves`.
     ///
     /// # Errors
-    /// As `connect_for_ref`, but never `not_found` for an unheld entity.
-    pub(crate) fn connect_for_any_ref(&self, value: &str) -> Result<Connection, Error> {
-        self.connect_admitted(value, |_, _, _| true)
+    /// As `connect_for_ref`.
+    pub(crate) fn connect_for_ref_in(&self, value: &str, table: &str) -> Result<Connection, Error> {
+        let conn = self.origin_for_ref(value)?;
+        if self.holdings.is_some() {
+            let entity = crate::ops::refs::resolve(&conn, value)?;
+            let admitted = if entity.kind == "variable" {
+                self.admits_in(&entity.pid, table)
+            } else {
+                self.serves(&entity.kind, &entity.pid)
+            };
+            if !admitted {
+                return Err(Error::not_found(value));
+            }
+        }
+        Ok(conn)
     }
 
     fn connect_admitted(
