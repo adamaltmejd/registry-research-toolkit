@@ -92,12 +92,14 @@ or `AGENTS.md`, then:
    adapter (`R/inputs.R`), the analysis (`R/analysis.R`) and the cells and statistics
    in `R/disclosure.R` (its suppress, perturb, round order stays). One Markdown ticket
    per question in `questions/`.
-4. Run `Rscript make_keys.R` once and `Rscript run.R` on the mocks until the gate passes.
+4. Run `Rscript make_keys.R mock` once and `Rscript run.R mock` until the gate passes.
 
 Keep the parts that carry a rule, whatever the question:
 
-- `run.R` picks the mode once from which input folder exists, prints it and never
-  falls back; mock and real runs write to separate `out/<mode>/` folders.
+- `run.R mock|real` first removes that mode's earlier export, using nothing sourced,
+  then checks the mode's input folder and never falls back; mock and real runs write
+  to separate `out/<mode>/` folders. A file's year comes from the order answer
+  (`LISA_FILES` in `config.R`), never from its name.
 - A mock input must be listed in `reg-mock`'s `mock_manifest.json` and carry its
   `reg_mock` Parquet metadata; a real input must not carry it.
 - An analysis returns person-level rows, never counts or statistics. The one disclosure

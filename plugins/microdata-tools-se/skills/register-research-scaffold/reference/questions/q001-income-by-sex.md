@@ -7,9 +7,9 @@ depends_on: []
 
 ## Question
 
-How does the mean of household disposable income (LISA `DispInkHB04`, the
-household's income recorded on each member), taken over persons, differ between men
-and women aged 15 or older, by year? It is not individual income.
+How does mean individual disposable income (LISA `DispInk04`, the individual's
+component of the family's disposable income, 2004 definition) differ between men and
+women aged 15 or older, by year?
 
 ## Method
 

@@ -4,7 +4,7 @@
   "layout": "standard",
   "project": {
     "name": "reference-income-by-sex",
-    "hash": "37827d91eb975cd938ae01c8e4957d1f296cb00dd0853415c86e8c7caa64b6de"
+    "hash": "faed7d993a8a4d9d2a7e860b466cd2757fe8ba845c3f97acce92553ad7a72485"
   },
   "catalog_generation": "b626a5d55b0d7ee0a21673e36083ac3496d3821bf0e373ca6503faf7b9ac3100",
   "null_rate": 0.02,
@@ -42,7 +42,7 @@
           }
         },
         {
-          "name": "DispInkHB04",
+          "name": "DispInk04",
           "type": "integer"
         },
         {
@@ -87,7 +87,7 @@
           }
         },
         {
-          "name": "DispInkHB04",
+          "name": "DispInk04",
           "type": "integer"
         },
         {

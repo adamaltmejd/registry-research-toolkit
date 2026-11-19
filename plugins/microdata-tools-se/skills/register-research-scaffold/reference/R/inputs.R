@@ -1,18 +1,20 @@
-# Mode and source adapter. The mode is chosen once, from which input folder exists,
-# and never falls back to the other.
-select_mode <- function() {
-  mode <- if (dir.exists(REAL_DIR)) "real" else if (dir.exists(MOCK_DIR)) "mock" else
-    stop("neither the real nor the mock input folder exists")
+# Mode and source adapter. The mode is named on the command line; its input folder
+# must exist, and a mock run refuses where real data is present. No fallback.
+check_mode <- function(mode) {
+  if (!dir.exists(c(real = REAL_DIR, mock = MOCK_DIR)[[mode]])) {
+    stop("the ", mode, " input folder does not exist")
+  }
+  if (mode == "mock" && dir.exists(REAL_DIR)) stop("a mock run where real data exists")
   message("==== MODE: ", toupper(mode), " ====")
-  mode
 }
 
-# LISA Individer, exactly the files LISA_FILES names, columns renamed from
-# LISA_COLUMNS to the project's names. A mock file must be listed in reg-mock's
-# manifest and carry its "reg_mock" metadata; a real file must not carry it.
+# LISA Individer, exactly the files LISA_FILES names, each with its delivery year,
+# columns renamed from LISA_COLUMNS to the project's names. A mock file must be
+# listed in reg-mock's manifest and carry its "reg_mock" metadata; a real file must
+# not carry it.
 read_lisa <- function(mode) {
   dir <- if (mode == "real") REAL_DIR else MOCK_DIR
-  # A missing or extra year would change the results unseen by the gate.
+  # A missing or extra file would change the results unseen by the gate.
   if (!setequal(list.files(dir, pattern = "\\.parquet$"), LISA_FILES)) {
     stop("the input folder's Parquet files differ from LISA_FILES")
   }
@@ -21,13 +23,13 @@ read_lisa <- function(mode) {
                      function(f) f$file, "")
     if (!all(LISA_FILES %in% listed)) stop("a mock input file is not in mock_manifest.json")
   }
-  frames <- lapply(LISA_FILES, function(f) {
-    t <- arrow::read_parquet(file.path(dir, f), as_data_frame = FALSE)
+  frames <- lapply(names(LISA_FILES), function(year) {
+    t <- arrow::read_parquet(file.path(dir, LISA_FILES[[year]]), as_data_frame = FALSE)
     if (("reg_mock" %in% names(t$metadata)) != (mode == "mock")) {
       stop("an input file's mock label does not match the mode")
     }
     d <- setNames(as.data.frame(t)[LISA_COLUMNS], names(LISA_COLUMNS))
-    d$year <- as.integer(sub("\\D+", "", sub("\\.parquet$", "", f)))
+    d$year <- as.integer(year)
     d
   })
   do.call(rbind, frames)

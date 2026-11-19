@@ -10,7 +10,7 @@
       "period": {"from": 2021, "to": 2022},
       "bindings": [
         {"variable": "scb/lisa/kon"},
-        {"variable": "scb/lisa/disponibel-inkomst"}
+        {"variable": "scb/lisa/delkomponent-disponibel-inkomst-2004"}
       ]
     }
   ]

@@ -9,7 +9,9 @@ KEY_FILE <- c(
 SCHEMA <- "export_gate/aggregates.schema.json"
 POLICY <- "export_gate/aggregates.policy.json"
 
-# The delivery: every file the order delivers and its stored column names, from the
-# order answer (a steward's: materialize_order). reg-mock mirrors them.
-LISA_FILES <- sprintf("scb_lisa_individer_%d.parquet", 2021:2022)
-LISA_COLUMNS <- c(person_id = "PersonNr", sex = "Kon", income = "DispInkHB04")
+# The delivery, from the order answer (a steward's: materialize_order): every file
+# it delivers, named by the delivery year the answer gives it (never parsed from
+# the file name), and the stored column names. reg-mock mirrors them.
+LISA_FILES <- c("2021" = "scb_lisa_individer_2021.parquet",
+                "2022" = "scb_lisa_individer_2022.parquet")
+LISA_COLUMNS <- c(person_id = "PersonNr", sex = "Kon", income = "DispInk04")

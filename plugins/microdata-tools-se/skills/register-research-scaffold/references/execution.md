@@ -14,9 +14,10 @@ investigations, aggregate data files and the mandatory final export-gate check
 flexible servers return the checked file set through rsync. No model calls or automatic
 raw-data synchronization. Tables and figures are rendered locally.
 
-Configure real and mock input directories outside the project. Select real mode when the
-real directory exists; otherwise select mock when its directory exists; fail when
-neither exists. Select once before running. An unreadable directory, invalid input or
+Configure real and mock input directories outside the project. Name the mode when
+starting a run (the reference: `Rscript run.R mock|real`); fail when its directory is
+missing, and refuse a mock run where the real directory exists. Before anything that
+can fail, invalidate that mode's previous export. An unreadable directory, invalid input or
 failed assertion in the selected mode halts execution; never retry with another mode.
 Print the selected mode prominently. Verify that mock inputs belong to an approved
 invented input set before reading them; a mode flag or filename is not sufficient:

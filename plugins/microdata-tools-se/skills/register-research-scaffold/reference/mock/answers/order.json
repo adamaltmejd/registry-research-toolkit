@@ -46,20 +46,20 @@
         "register": "scb/lisa",
         "release": null,
         "source": "lisa",
-        "spelling": "DispInkHB04",
+        "spelling": "DispInk04",
         "table": "scb/lisa/individer",
         "table_name": "Individer",
         "type": "integer",
         "value_set": null,
-        "variable": "scb/lisa/disponibel-inkomst",
-        "variable_name": "Disponibel inkomst"
+        "variable": "scb/lisa/delkomponent-disponibel-inkomst-2004",
+        "variable_name": "Delkomponent till disponibel inkomst, 2004 års definition"
       }
     ],
     "findings": [],
     "manual": [],
     "project": {
       "name": "reference-income-by-sex",
-      "project_hash": "37827d91eb975cd938ae01c8e4957d1f296cb00dd0853415c86e8c7caa64b6de",
+      "project_hash": "faed7d993a8a4d9d2a7e860b466cd2757fe8ba845c3f97acce92553ad7a72485",
       "reg_meta_version": "reg_meta/v0.90.0",
       "schema_version": "6.3.0"
     },

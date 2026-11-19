@@ -1,15 +1,19 @@
 # The batch: inputs -> analysis -> disclosure -> staging -> export gate, in that
-# order, with nothing after the gate. Run from the project folder: Rscript run.R
-source("config.R")
-source("R/inputs.R")
-mode <- select_mode()
+# order, with nothing after the gate. Run from the project folder:
+# Rscript run.R mock|real
+
+# First, using nothing sourced: no earlier export of this mode may look current.
+mode <- commandArgs(trailingOnly = TRUE)[1]
+if (!mode %in% c("mock", "real")) stop("usage: Rscript run.R mock|real")
 run <- file.path("out", mode)
-# First, before anything else can fail: no earlier export may look current.
 old <- file.path(run, c("export", "run_record.json"))
 unlink(old, recursive = TRUE)
 if (any(file.exists(old))) stop("could not remove the previous export")
-dir.create(run, recursive = TRUE, showWarnings = FALSE)
 
+source("config.R")
+source("R/inputs.R")
+check_mode(mode)
+dir.create(run, recursive = TRUE, showWarnings = FALSE)
 source("export_gate/cell_key.R")
 source("export_gate/export_gate.R")
 for (f in list.files("R", full.names = TRUE)) source(f)
