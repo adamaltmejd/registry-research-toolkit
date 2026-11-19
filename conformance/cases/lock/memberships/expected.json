@@ -1,6 +1,6 @@
 {
   "singleton": {
-    "command": "build",
+    "command": "lock",
     "location": "registers/demo/r/curation.toml:1",
     "code": "set-too-small",
     "pid": "set/demo/r/concept"

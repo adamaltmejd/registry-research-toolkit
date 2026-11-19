@@ -2158,6 +2158,23 @@ fn run_selected(
             return rerun_without(&|s| refused.contains(&publication_identity(s)), refusals);
         }
     }
+    // The set minimum, on the final memberships. It runs here so that `lock` refuses
+    // before it writes any lock, and the build reuses the resolved catalog (#2468).
+    let resolved = match result.resolved.take() {
+        Some(resolved) => resolved,
+        None => resolve_catalog(
+            root,
+            retired,
+            &records,
+            &result.variables,
+            &result.metadata,
+            &result.classifications,
+        )
+        .map_err(|e| after_refusals(&refusals, e))?,
+    };
+    crate::sets::final_members(&resolved, statements)
+        .map_err(|e| after_refusals(&refusals, e.into()))?;
+    result.resolved = Some(resolved);
     for ((provider, register), (path, _, _)) in locks {
         if !registers.is_empty()
             && !registers

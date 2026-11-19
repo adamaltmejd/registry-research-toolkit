@@ -730,6 +730,7 @@ pub fn apply(
                             "length",
                             "sensitive",
                             "identifier",
+                            "spelling",
                         ],
                     )?;
                     let mut value = json!({"kind":"occurrence","provider":register.provider,"register":register.register,"table":table,"release":null,"column":if spellings[0] == "<none>" { "" } else { &spellings[0] },"source_key":format!("stmt:{}",statement.scoped_identity(&register.provider, &register.register)),"from":null,"to":null,"label":null,"definition":null,"operational_definition":null,"unit":null,"dtype":null,"length":null,"valueset":null,"population_valuesets":[],"coded":null,"code_system":null,"sensitive":null,"identifier":null,"locator":at,"also":[],"conflicts":[]});
@@ -744,6 +745,8 @@ pub fn apply(
                     } else {
                         &spellings[0]
                     };
+                    // A stated `spelling` is the delivered form of the subject's fold, so it
+                    // is never blank or `<none>` under a column subject.
                     if reg_core::fold_identity(column) != spelling {
                         return Err("assert occurrence spelling differs from its subject".into());
                     }
