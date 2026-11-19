@@ -164,6 +164,11 @@ pub struct AssertFields {
     pub length: Option<u64>,
     pub sensitive: Option<bool>,
     pub identifier: Option<bool>,
+    /// An occurrence's delivered column spelling, where it differs from the fold the
+    /// subject carries. Left out of the serialized form when unstated, so adding the
+    /// field moved no existing statement identity.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub spelling: Option<String>,
 }
 
 impl Statement {

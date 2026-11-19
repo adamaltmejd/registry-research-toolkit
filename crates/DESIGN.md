@@ -698,7 +698,10 @@ Kind-specific content is:
 `table:` subject, `true` only; see "Cumulative tables") and `series_break`
 (alone in its statement; see "Series breaks"). Source-shaped assertion fields have a
 separate closed schema: table `name`, `description` and `coverage`; occurrence `label`,
-`definition`, `unit`, `type`, `length`, `sensitive` and `identifier`. Lists of sets,
+`definition`, `unit`, `type`, `length`, `sensitive`, `identifier` and `spelling`. An
+asserted occurrence's column is its subject's folded spelling unless `spelling` states
+the delivered form (`IDNR` for a subject that folds to `idnr`); it must fold to the
+subject's, and it is part of the statement's identity only when stated. Lists of sets,
 tags and sentinels normalize as sorted sets; asserted codes sort by code, while
 duplicate codes are refused. Addresses normalize folded spellings, expanded braces and
 sorted guards and period tokens before hashing. Links add relations; conflicting
@@ -3237,12 +3240,12 @@ topic) also form a set. An input to the concept stays out: gross income goes int
 disposable income but is not a quantity of it. A lone variable gets no set. Members that
 differ in whose value they measure, sub-population, classification version or level of
 aggregation stay in one set; when a variable is split by level of aggregation, each
-resulting variable stays in the set (maintainer 2026-11-13). The build refuses fewer
+resulting variable stays in the set (maintainer 2026-11-13). Lock and build refuse fewer
 than two distinct final member variables (`set-too-small`) at the originating curation
-statement, after all memberships resolve. Repeated occurrences of one variable never
-supply a second member. Artifact verification also checks this minimum and that every
-member belongs to the set's register. `reg-build lock` does not check the minimum, so a
-membership change can pass lock and fail the build (#2468). Lock and build refuse a
+statement, after all memberships resolve; `reg-build lock` checks every register, not
+only the ones it relocks, and refuses before writing any lock. Repeated occurrences of
+one variable never supply a second member. Artifact verification also checks this
+minimum and that every member belongs to the set's register. Lock and build refuse a
 variable assigned to more than one set, naming every set and originating
 statement after identity resolution and before membership setters apply; tags are
 exempt.

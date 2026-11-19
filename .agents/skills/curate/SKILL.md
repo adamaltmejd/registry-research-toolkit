@@ -95,8 +95,8 @@ ask.
   low/medium/high), with the rank as the facet value and the word as its label. A
   single-value axis is only ever an ordering: numbered names ("Kod 1" to "Kod 12") need
   none.
-- After any membership change check set sizes. A set left with one member fails the
-  build (`set-too-small`); `reg-build lock` does not catch it.
+- A set left with one member is refused by `reg-build lock` and the build
+  (`set-too-small`), at the statement that names the set.
 - New ledger ids follow the conventions in the register's `ids.toml`.
 - Before splitting, grep the stewards' `curation/` and `ids.toml` for the variable's
   pid. A steward that holds it re-locks at its bump; list it in the PR. Never write
@@ -135,9 +135,8 @@ Run all of it before the PR is ready.
    reads the whole corpus, so run one at a time (a mutex directory taken with `mkdir`
    and released by `trap`). Batch locks: one at the end of a batch. Commit the refreshed
    locks. Confirm no diagnostic in the new blocks and that no variable lacks a ledger id.
-5. Before merge: a lane checks every touched set's size by script; the Operator runs a
-   build (build-db), which refuses any set below two members. CI green and rebased on
-   `origin/main`.
+5. Before merge: the lock in step 4 has refused any set below two members; the Operator
+   runs a build (build-db). CI green and rebased on `origin/main`.
 
 Never run a real-seed `build` as a check inside a lane, and never `pkill` or `killall`.
 

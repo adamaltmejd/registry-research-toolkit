@@ -89,7 +89,7 @@ pub fn statements(
 
 pub fn final_members(
     registers: &[reg_resolve::Resolved],
-    statements: &[LocatedStatement],
+    statements: &[&LocatedStatement],
 ) -> Result<(), String> {
     for register in registers {
         let mut sets = BTreeMap::<&str, BTreeSet<usize>>::new();

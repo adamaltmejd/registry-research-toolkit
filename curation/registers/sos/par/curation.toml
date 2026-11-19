@@ -1739,37 +1739,37 @@ evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) a
 [[statement]]
 kind = "assert"
 subject = "par-sv-diagnoser: IDNR @2015.. where key = 'n:idnr'"
-fact = { entity = "occurrence", fields = { label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+fact = { entity = "occurrence", fields = { spelling = "IDNR", label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
 evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. It is the same variable as the PAR_SV flat-file IDNR (lopnr-slutenvardstillfalle; split from the outpatient IDNR below). The period is the par-sv-diagnoser table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
 
 [[statement]]
 kind = "assert"
 subject = "par-sv-atgarder: IDNR @2015.. where key = 'n:idnr'"
-fact = { entity = "occurrence", fields = { label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+fact = { entity = "occurrence", fields = { spelling = "IDNR", label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
 evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. It is the same variable as the PAR_SV flat-file IDNR (lopnr-slutenvardstillfalle; split from the outpatient IDNR below). The period is the par-sv-atgarder table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
 
 [[statement]]
 kind = "assert"
 subject = "par-sv-lakemedel: IDNR @2025.. where key = 'n:idnr'"
-fact = { entity = "occurrence", fields = { label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+fact = { entity = "occurrence", fields = { spelling = "IDNR", label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
 evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. It is the same variable as the PAR_SV flat-file IDNR (lopnr-slutenvardstillfalle; split from the outpatient IDNR below). The period is the par-sv-lakemedel table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
 
 [[statement]]
 kind = "assert"
 subject = "par-ov-diagnoser: IDNR @2015.. where key = 'n:idnr'"
-fact = { entity = "occurrence", fields = { label = "Löpnummer för öppenvårdskontakt", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+fact = { entity = "occurrence", fields = { spelling = "IDNR", label = "Löpnummer för öppenvårdskontakt", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
 evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_OV row 38 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_OV flerfil row carries it. Same source key n:idnr as the flat-file listing, so it is the same variable (lopnr-oppenvardskontakt). The period is the par-ov-diagnoser table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 38."
 
 [[statement]]
 kind = "assert"
 subject = "par-ov-atgarder: IDNR @2015.. where key = 'n:idnr'"
-fact = { entity = "occurrence", fields = { label = "Löpnummer för öppenvårdskontakt", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+fact = { entity = "occurrence", fields = { spelling = "IDNR", label = "Löpnummer för öppenvårdskontakt", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
 evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_OV row 38 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_OV flerfil row carries it. Same source key n:idnr as the flat-file listing, so it is the same variable (lopnr-oppenvardskontakt). The period is the par-ov-atgarder table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 38."
 
 [[statement]]
 kind = "assert"
 subject = "par-ov-lakemedel: IDNR @2025.. where key = 'n:idnr'"
-fact = { entity = "occurrence", fields = { label = "Löpnummer för öppenvårdskontakt", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+fact = { entity = "occurrence", fields = { spelling = "IDNR", label = "Löpnummer för öppenvårdskontakt", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
 evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_OV row 38 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_OV flerfil row carries it. Same source key n:idnr as the flat-file listing, so it is the same variable (lopnr-oppenvardskontakt). The period is the par-ov-lakemedel table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 38."
 
 # IDNR numbers a different unit in each part of PAR: an inpatient episode (SV), an

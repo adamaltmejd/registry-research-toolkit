@@ -574,7 +574,6 @@ fn build_with_provenance(
             });
         }
     }
-    sets::final_members(&resolved, &statements)?;
     let (docs, doc_warnings) = docs::merge(docs)?;
     warnings.extend(doc_warnings);
     timing::done("refusals and docs", t);

@@ -315,7 +315,7 @@ fn membership_refusals() {
     // Regression: source occurrences are counted as set members instead of final
     // variables, an unknown tag is accepted, or a retired var_set pid is accepted. The
     // singleton uses three nonconcurrent source occurrences resolving to one final
-    // variable. The allowed twin has two distinct variables in different same-register
+    // variable; `lock` refuses it, so a relock cannot pass and the build then fail. The allowed twin has two distinct variables in different same-register
     // tables. Multi-group: a variable selector and an occurrence selector put the same
     // final variable in different groups; neither group's origin may be hidden, and
     // its faceted member pins refusal before an unqualified facet map could choose
@@ -346,9 +346,6 @@ fn membership_refusals() {
                 curation.join("registers/demo/r/curation.toml"),
             )
             .unwrap();
-            if change == "singleton" {
-                run("lock").ok();
-            }
         }
         let want = &expected[change];
         let text = |key: &str| want[key].as_str().unwrap().to_owned();

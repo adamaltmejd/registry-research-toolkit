@@ -2158,6 +2158,48 @@ fn run_selected(
             return rerun_without(&|s| refused.contains(&publication_identity(s)), refusals);
         }
     }
+    // The set minimum, on the final memberships. It runs here so that `lock` refuses
+    // before it writes any lock (#2468). Without a resolved catalog from the stages
+    // above, only the registers with memberships resolve: a register that does not
+    // resolve yet must not block another register's lock.
+    if let Some(resolved) = &result.resolved {
+        crate::sets::final_members(resolved, statements)
+            .map_err(|e| after_refusals(&refusals, e.into()))?;
+    } else {
+        let members = result
+            .metadata
+            .iter()
+            .filter(|m| {
+                matches!(
+                    m.value,
+                    reg_resolve::curation::apply::MetadataValue::Sets(_)
+                )
+            })
+            .map(|m| (&m.key.identity.provider, &m.key.identity.register))
+            .collect::<BTreeSet<_>>();
+        if !members.is_empty() {
+            let source = records
+                .iter()
+                .filter(|r| {
+                    coordinates(r).is_none_or(|(provider, register, _)| {
+                        members.contains(&(provider, register))
+                    })
+                })
+                .cloned()
+                .collect::<Vec<_>>();
+            let resolved = resolve_catalog(
+                root,
+                retired,
+                &source,
+                &result.variables,
+                &result.metadata,
+                &result.classifications,
+            )
+            .map_err(|e| after_refusals(&refusals, e))?;
+            crate::sets::final_members(&resolved, statements)
+                .map_err(|e| after_refusals(&refusals, e.into()))?;
+        }
+    }
     for ((provider, register), (path, _, _)) in locks {
         if !registers.is_empty()
             && !registers
