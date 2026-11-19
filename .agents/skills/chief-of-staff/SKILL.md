@@ -79,9 +79,8 @@ After every merge, for your own workers only:
 2. The desktop app archives the session on merge; if it did not, archive it. In auto
    mode the first `archive_session` call can be refused because a hook adds a `session`
    label to the input after auto mode reviewed it: resend once with exactly the input the
-   refusal quotes. Archiving detaches the worktree's HEAD and keeps the worktree in the
-   app's pool for a later session (the app reuses or deletes it): a detached worktree
-   under `.claude/worktrees/` is not a leftover. Workers never call ExitWorktree; it only
+   refusal quotes. Archiving detaches the worktree's HEAD and leaves the worktree under
+   `.claude/worktrees/`; step 4 removes it. Workers never call ExitWorktree; it only
    removes worktrees a session made itself.
 3. Archiving leaves the local branch (`claude/<name>-<suffix>`): once its tip equals the
    merged PR's `headRefOid`, delete it with `git branch -D <branch>` (the `error: could
@@ -89,13 +88,18 @@ After every merge, for your own workers only:
    expected; the delete succeeded when git prints `Deleted branch <branch>`).
    Delete the remote branch if it is still there (GitHub normally deletes merged head
    branches).
-4. A worktree still on its branch after archiving goes to the maintainer as one exact `!`
-   command, e.g. `git worktree remove <path> && git branch -D <branch>`, after the same
-   `headRefOid` check as step 3. Worktree folders
-   are pooled and reused, so the folder name need not match the session or branch: take
-   `<path>` from `git worktree list` (or the worker's `pwd`), not from the branch name.
-   No loops over `.claude/worktrees/agent-*`. Add `--force` only when the extras were read
-   and are disposable (e.g. an ignored `target/`).
+4. A worktree of your own archived worker, whether detached or still on its branch, is a
+   leftover. The sandbox makes `.git/worktrees` read-only for you, so the maintainer
+   removes it: give one exact `!` command per batch, one `git worktree remove --force
+   <path>` per worktree joined with `&&` (a worktree still on its branch also gets
+   `git branch -D <branch>`). Check each first. Its session is archived (idle is still
+   live) and its HEAD is the merged PR's `headRefOid` or an ancestor of `origin/main`
+   (never a branch with unmerged commits). `git -C <path> status --porcelain --ignored`
+   shows nothing worth keeping: an ignored `target/` or `node_modules/` is disposable;
+   read anything else, and what is worth keeping goes to a new PR or to `.local/` in the
+   main checkout. Worktree folders are pooled and reused, so the folder name need not
+   match the session or branch: take `<path>` from `git worktree list` (or the worker's
+   `pwd`), not from the branch name. No loops over `.claude/worktrees/agent-*`.
 5. Catch up the main checkout (`/Users/adam/code/registry-research-toolkit`): `git fetch
    origin main`, then `git diff --name-only HEAD origin/main -- .claude`. Empty →
    `git merge --ff-only origin/main` there. Non-empty → don't run it: the sandbox denies
@@ -120,7 +124,8 @@ question to the maintainer for regenerable output.
   worker is idle and has been told. Never delete one written in the last hour, reported or
   not (`find <dir> -type f -newermt <time>`). The sandbox hides other sessions' processes,
   so `ps` and `lsof` prove nothing.
-- A merged PR's worktree: its `target/` is disposable.
+- A merged PR's worktree: its `target/` is disposable. Check `git worktree list` for
+  detached leftovers of archived workers and hand them over as in "Clean up" step 4.
 - `$TMPDIR`: remove your own scratch, steward-repository clones and stray copies of
   holdings files left by Codex reviews, once the review they served is done.
 - Not yours to delete: other tools' and projects' caches under `~/.local/cache` (e.g.
