@@ -2850,14 +2850,17 @@ days, split where that name changes, as row keys already do: a held file can nam
 column otherwise than the catalog (`AvgAr` for `avgar`). Days several differently named
 columns deliver at once (a slot family's members) keep the catalog spelling (#2409).
 
-**The project's catalog.** Before anything reads the catalog, `validate`, `order` and
-`materialize_order` compare the project's `catalog` with the one served (the steward's
-id, or `global` with no holdings; `context` reports it). A difference is one error,
-`catalog_mismatch` at `/catalog`, reported alone: every other finding would answer for
-a catalog the project is not on. reg-core keeps no list of stewards, so this is also
-the only check that the named one exists. Moving a project to another catalog is a hand
-edit of the field, not a feature. `reg-mock fetch` needs no check of its own: it asks
-the server, which refuses.
+**The project's catalog.** Once the document passes structural validation, and
+before any other refusal (`materialize_order`'s `holdings_unavailable` included),
+`validate`, `order` and `materialize_order` compare the project's `catalog` with the
+one served (the steward's id, or `global` with no holdings; `context` reports it). A
+difference is one error, `catalog_mismatch` at `/catalog`, reported alone: every other
+finding would answer for a catalog the project is not on. reg-core keeps no list of
+stewards, so this is also the only check that the named one exists. Moving a project to
+another catalog is a hand edit of the field, not a feature. `reg-mock fetch` needs no
+check of its own: it asks the server, which refuses. The SPA leaves a project drafted
+on another catalog as it is (no study-window clamp at open) and checks it even when it
+has no tables, so the mismatch is shown.
 
 ### Project document 7.0.0
 
