@@ -59,11 +59,55 @@ default policy (`schemas/aggregates.policy.json`, named `aggregates-min5`) sets:
 
 Each choice and its source is in `reg_export_gate/DESIGN.md`, "The shipped files".
 
-**Cell-key perturbation is not yet provided.** The toolkit has no helper for it (tracked
-in #2524): the pipeline applies the method itself, and the file's `n_true` and `k_true`
-columns are check-only true counts the gate tests and never exports. Do not invent an
-API in project code and present it as the toolkit's; write the perturbation as project
-code and record how it is done.
+**The disclosure stage.** The pipeline has one disclosure stage, between the analyses and
+the staging writer, in this order:
+
+1. **Suppress.** Set a statistic to `NA` where its true support is below the minimum:
+   `n_true` below 5 for `statistics.parquet` and each quantile column's `min_support`
+   (50, 20, 10, 20, 50) in `quantiles.parquet`. In `coefficients.parquet`, set
+   `estimate` and `std_error` to `NA` where `n_true` is below 5, or where `k_true` or
+   `n_true - k_true` is 1 to 4.
+2. **Perturb.** Every published person count (`n_persons` in all four files) comes from
+   `ck_perturb()` in [cell_key.R](../scripts/cell_key.R), from the persons behind the
+   cell, never from a computed count. It returns `n_true` (true, check-only) and the
+   perturbed `n_persons`, already `NA` below the floor. A share is one `counts.parquet`
+   row per outcome category, each perturbed, never a ratio.
+3. **Round** every `double` statistic to 4 significant digits (`signif(x, 4)`).
+
+`n_true` and `k_true` stay true and unperturbed: the gate tests them and never exports
+them.
+
+Stage exactly the columns the schema declares for each file, nothing more:
+
+- Under the default `aggregates` schema, `counts.parquet` has no `n_true`. Write
+  `ck_perturb()`'s `n_persons` and drop its `n_true`, or the gate refuses the file as
+  `structure` (`extra_column`). `statistics.parquet`, `quantiles.parquet` and
+  `coefficients.parquet` declare `n_true`, so they keep it.
+- A project schema that gives a count `"units": "n_true"` checks the true count too. Set
+  `n_persons` to `NA` wherever `n_true` is below `min_cell_count` as well: otherwise a
+  true 1 perturbed to 5 passes the published floor and is refused as `disclosure`
+  (`count_units_too_small`). Such a count also needs `"perturbation": 5` (D): without
+  it, the bound is 0 and any perturbed count is refused as
+  `count_perturbation_exceeded`.
+
+`cell_key.R` is the toolkit's helper, shipped with this skill. Copy it into the project
+unchanged, as `export_gate/cell_key.R`, and record its `CELL_KEY_VERSION` and SHA-256 in
+the project instructions beside the gate's. Its record keys are a secret key file that
+stays on MONA, outside the project folder that is synced or exported, readable by the
+researcher only. On every platform it lives in a folder only the researcher can read;
+that folder is the guarantee. The helper also writes the file with mode 0600, a second
+layer that a folder's inherited access rights (a default ACL, Windows permissions) can
+override. The keys come from a cryptographic generator, the `openssl` R package, which
+also checks the p-table's SHA-256: it is the helper's one package requirement on every R
+version (install it on MONA from the configured repository; without it the helper
+refuses as `cell_key_openssl_missing`). The researcher creates the key file once with
+`ck_keys_create(<all person ids in the extract>, <path>)`; this is key epoch 1.
+Persons it lacks are refused (`cell_key_missing_ids`); `ck_keys_extend()` adds keys for
+them in the same epoch. A new epoch (`new_epoch = TRUE`) replaces every key, so a table
+published under two epochs loses its protection. Make one only on the researcher's
+explicit request. Every result carries its `key_epoch` (an attribute). The pipeline
+writes it to the project's run record on MONA, never to staging or the export. Locally,
+on mocks, use a key file made from the mock person ids, outside Git.
 
 **A project sets its own policy** as a `<name>.policy.json` (format
 `reg-export-gate/policy`, fields in `reg_export_gate/DESIGN.md`, "Policy format"),
