@@ -48,7 +48,7 @@ On MONA the researcher uploads the committed project with `export_gate/` and
 
 ## Pins
 
-Catalog `reg_meta/v0.90.0` (`project_data.json`). R packages: `arrow`, `jsonlite`,
+Catalog `reg_meta/v0.91.0` (`project_data.json`). R packages: `arrow`, `jsonlite`,
 `openssl` (the key file), and on R below 4.5 `digest`.
 
 | File                                 | Version                              | SHA-256                                                            |
