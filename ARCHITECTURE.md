@@ -30,7 +30,7 @@ Access), a remote-desktop environment. Three consequences shape the whole toolki
   pre-installed (WinPython, incl. duckdb/pyodbc/numpy) or uploaded with the code.
 - **LLM agents are not allowed inside MONA.** Researchers develop analysis code with
   coding agents *outside* MONA. Local mock data generated from a `project_data.json` is
-  remaining work (#707), as a local skill.
+  written by `reg-mock`, driven by the plugin's `register-mock-data` skill.
 
 ### Data stewards
 
@@ -203,8 +203,7 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   ≤ 500 ms. Search correctness and latency are origin properties: edge hits do not
   substitute for cold-origin evidence. Classification/value-set initial responses must
   be bounded by bucket/page limits rather than total code cardinality, and cold/repeat
-  rendered routes target CLS < 0.1. The load-test harness, its fixtures and a CI perf
-  gate are remaining work (#1455).
+  rendered routes target CLS < 0.1. There is no load-test harness and no CI perf gate.
 - **Project schema version.** Schema breakage is signalled by `project_data.json`'s
   `schema_version`, versioned apart from the API (`meta.api_version`); every response's
   `meta.project_schema_version` names the one the server admits. Schema 5.1.0 added

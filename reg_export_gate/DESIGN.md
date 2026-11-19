@@ -228,9 +228,9 @@ The shipped files:
 - `schemas/trial.schema.json` and `schemas/trial.policy.json` (minimum 5), for the first
   MONA trial.
 - `schemas/mock-stats.schema.json` and `schemas/mock-stats.policy.json`, the marginal
-  statistics for local mock data (#707 milestone 2): unit counts and deciles of the
-  delivered files, by year, age range and sex, written by the `register-mock-data`
-  scaffold. The policy is minimum 5, statistics on at least 50 units (5 per decile
+  statistics for local mock data: unit counts and deciles of the delivered files, by
+  year, age range and sex, to be written by a `mock_stats.R` scaffold that is not yet
+  built. The policy is minimum 5, statistics on at least 50 units (5 per decile
   group) and 3 significant digits. The scaffold perturbs every count with the cell key
   method; the gate cannot verify noise, which is why it still checks the minimum of 5 on
   these counts: a waived floor would let raw small counts pass under the mock-stats name
@@ -259,8 +259,9 @@ The shipped files:
     (a true 1–4 is published as 0 or as 5 or more) and gives a cell with one person more
     an unrelated cell key, so differencing two tables does not recover a person. That is
     why there is no secondary-suppression rule and no count rounding. The gate cannot
-    verify noise, so it keeps the floor of 5 on the published counts. The toolkit has no
-    cell key implementation yet: the mock-stats plan's `mock_stats.R` scaffold is unbuilt.
+    verify noise, so it keeps the floor of 5 on the published counts. The toolkit ships
+    the method as `cell_key.R` in the plugin's `register-research-scaffold` skill
+    (`scripts/`); the mock-stats plan's `mock_stats.R` scaffold is unbuilt.
   - **Every statistic rests on a check-only true count** (`n_true`), never only on the
     published, perturbed `n_persons`: a published 5 can rest on one true person, and a
     mean is not perturbed. So a mean needs 5 true persons.
@@ -652,8 +653,8 @@ exported file decodes to exactly the schema's columns less its check-only ones.
 
 ## Out of scope
 
-- Level-1 mock data (metadata-only, generated from a draft `project_data.json`): epic
-  #707.
+- Mock data generation (metadata-only, from a `project_data.json`): `reg-mock`
+  (`crates/reg-mock/DESIGN.md`).
 - Changes to the MONA extract runner.
 - Carrying code into the data VM (the first stop of the education-returns flow).
 - Differencing against earlier approved exports.
