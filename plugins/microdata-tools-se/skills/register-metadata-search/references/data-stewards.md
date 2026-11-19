@@ -47,11 +47,14 @@ answers that), an HTML page, or a redirect or `403` (sign-in, below). Tell the u
 steward's `name` and release before adding it.
 
 For a steward behind a sign-in, send the token's two headers from the environment that
-holds it (below), never with the values typed:
+holds it (below), never with the values typed. The URL comes from `CF_ACCESS_HOST`, so
+the token goes only to its own host, and the headers go on standard input, so the secret
+is not in curl's argument list:
 
 ```bash
-curl -sS -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" \
-  -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" https://<steward-host>/api/context
+printf 'CF-Access-Client-Id: %s\nCF-Access-Client-Secret: %s\n' \
+  "$CF_ACCESS_CLIENT_ID" "$CF_ACCESS_CLIENT_SECRET" |
+  curl -sS -H @- "https://$CF_ACCESS_HOST/api/context"
 ```
 
 ## Adding it to the project
