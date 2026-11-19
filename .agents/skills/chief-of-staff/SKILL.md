@@ -7,9 +7,10 @@ description: >-
 
 # Chief of staff
 
-The COS writes no code. It launches and briefs workers, verifies gates, merges, cleans up
-and keeps GitHub issues current. Merging, CI and all runs (gate, flows, real-seed
-builds) are its job. The maintainer always approves releases and what to work on.
+The COS writes no code. It launches and briefs workers, verifies gates, merges, cleans up,
+keeps the build environment clean and keeps GitHub issues current. Merging, CI and all
+runs (gate, flows, real-seed builds) are its job. The maintainer always approves releases
+and what to work on.
 Curation is the COS's call: raise tricky calls and broad curation design questions,
 preferably after the fact for a second look rather than by stopping. Ask with the
 question tool in the COS session; decide what an earlier ruling settles.
@@ -82,14 +83,15 @@ After every merge, for your own workers only:
    app's pool for a later session (the app reuses or deletes it): a detached worktree
    under `.claude/worktrees/` is not a leftover. Workers never call ExitWorktree; it only
    removes worktrees a session made itself.
-3. Archiving leaves the local branch (`claude/<name>-<suffix>`): delete it with
-   `git branch -D <branch>` (the `error: could not lock config file .git/config` and
-   `warning: update of config-file failed` lines are expected; the delete succeeded when
-   git prints `Deleted branch <branch>`).
+3. Archiving leaves the local branch (`claude/<name>-<suffix>`): once its tip equals the
+   merged PR's `headRefOid`, delete it with `git branch -D <branch>` (the `error: could
+   not lock config file .git/config` and `warning: update of config-file failed` lines are
+   expected; the delete succeeded when git prints `Deleted branch <branch>`).
    Delete the remote branch if it is still there (GitHub normally deletes merged head
    branches).
 4. A worktree still on its branch after archiving goes to the maintainer as one exact `!`
-   command, e.g. `git worktree remove <path> && git branch -D <branch>`. Worktree folders
+   command, e.g. `git worktree remove <path> && git branch -D <branch>`, after the same
+   `headRefOid` check as step 3. Worktree folders
    are pooled and reused, so the folder name need not match the session or branch: take
    `<path>` from `git worktree list` (or the worker's `pwd`), not from the branch name.
    No loops over `.claude/worktrees/agent-*`. Add `--force` only when the extras were read
@@ -100,3 +102,30 @@ After every merge, for your own workers only:
    writes under `.claude/` (settings, skill links, hooks), so git stops halfway with HEAD
    old and a mixed working tree. Give the maintainer one exact `!` command instead:
    `git -C /Users/adam/code/registry-research-toolkit pull --ff-only`.
+
+## Housekeeping
+
+Keeping the build environment clean is the COS's job, with standing authorization: no
+question to the maintainer for regenerable output.
+
+- When: at session start, after every merge, and when a worker reports a full disk. Check
+  `df -h ~/.local` and the `code` volume; act below about 10 GB free.
+- Shared cargo build cache, `~/.local/share/cargo/build/<xx>/<hash>/`: one directory per
+  workspace path, so one per worktree, 5 to 11 GB each. Find the ones in use:
+  `cargo metadata --format-version 1 --no-deps` reports `build_directory` for the
+  directory it runs in; run it in the main checkout and every worktree in
+  `git worktree list`. The cache is shared with every cargo project on the machine: a
+  directory no checkout or worktree of this repository reports, and not written for a day,
+  is stale. Delete a live worktree's directory only when its session is archived, or its
+  worker is idle and has been told. Never delete one written in the last hour, reported or
+  not (`find <dir> -type f -newermt <time>`). The sandbox hides other sessions' processes,
+  so `ps` and `lsof` prove nothing.
+- A merged PR's worktree: its `target/` is disposable.
+- `$TMPDIR`: remove your own scratch, steward-repository clones and stray copies of
+  holdings files left by Codex reviews, once the review they served is done.
+- Not yours to delete: other tools' and projects' caches under `~/.local/cache` (e.g.
+  `sccache`), `rustup`, the pinned inputs under the main checkout's `.local/`, and notes
+  or evidence in `.local/` (archive, never delete). When these fill the disk, report them
+  to the maintainer with sizes.
+- Look before deleting: list the target with size and last write time first. Report every
+  deletion with the space freed.
