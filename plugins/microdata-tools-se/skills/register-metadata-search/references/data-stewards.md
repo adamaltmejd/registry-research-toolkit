@@ -125,7 +125,9 @@ Then record the choice in the project's agent instructions (`CLAUDE.md` or
 tools for questions about the steward's holdings; for anything outside them, use the
 plugin's `catalog` (the global catalog) and say which catalog each fact came from."
 Both servers are loaded in such a project. In a project without a `steward-catalog`
-server, use the plugin's `catalog`.
+server, use the plugin's `catalog`. The project's `project_data.json` records the same
+choice in `catalog`: the steward's id here, `global` otherwise (`register-project`
+skill).
 
 ## Confirming it worked
 

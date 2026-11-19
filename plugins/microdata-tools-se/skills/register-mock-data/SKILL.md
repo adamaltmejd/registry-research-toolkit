@@ -23,7 +23,8 @@ catalog's answers, write the rules and compile them into `mock_spec.json`, gener
   `reg_meta/v*` GitHub release; the download and SHA-256 check are in the repository
   README's Mock data section. Use the release that matches `reg_meta_version` in
   `project_data.json`.
-- The answers come from the catalog the project orders from, over MCP:
+- The answers come from the catalog the project orders from, the one its `catalog`
+  names, over MCP (a server for another catalog refuses with `catalog_mismatch`):
   - a steward's catalog (the project's `steward-catalog` server,
     `https://<steward-host>/mcp`) with mode `materialize`, which gives the delivery's
     own file and column names;
