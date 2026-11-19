@@ -90,16 +90,21 @@ After every merge, for your own workers only:
    branches).
 4. A worktree of your own archived worker, whether detached or still on its branch, is a
    leftover. The sandbox makes `.git/worktrees` read-only for you, so the maintainer
-   removes it: give one exact `!` command per batch, one `git worktree remove --force
-   <path>` per worktree joined with `&&` (a worktree still on its branch also gets
-   `git branch -D <branch>`). Check each first. Its session is archived (idle is still
-   live) and its HEAD is the merged PR's `headRefOid` or an ancestor of `origin/main`
-   (never a branch with unmerged commits). `git -C <path> status --porcelain --ignored`
-   shows nothing worth keeping: an ignored `target/` or `node_modules/` is disposable;
-   read anything else, and what is worth keeping goes to a new PR or to `.local/` in the
-   main checkout. Worktree folders are pooled and reused, so the folder name need not
-   match the session or branch: take `<path>` from `git worktree list` (or the worker's
-   `pwd`), not from the branch name. No loops over `.claude/worktrees/agent-*`.
+   removes it: give one exact `!` command per batch, joined with `&&`, one part per
+   worktree: `[ "$(git -C <path> rev-parse HEAD)" = <sha> ] && git worktree remove
+   --force <path>` (a worktree still on its branch also gets `git branch -D <branch>`).
+   `<sha>` is the HEAD you checked. Re-read `git worktree list` right before handing the
+   command over; the HEAD test stops it removing a path the app has reused for a new
+   session in the meantime. Check each worktree first. Its session is archived (idle is
+   still live) and its HEAD is the merged PR's `headRefOid` or an ancestor of
+   `origin/main` (never a branch with unmerged commits); the ancestor case allows
+   removing the worktree only, and `git branch -D` still needs step 3's exact match with
+   `headRefOid`. `git -C <path> status --porcelain --ignored --untracked-files=all` shows
+   nothing worth keeping: an ignored `target/` or `node_modules/` is disposable; read
+   anything else, and what is worth keeping goes to a new PR or to `.local/` in the main
+   checkout. Worktree folders are pooled and reused, so the folder name need not match
+   the session or branch: take `<path>` from `git worktree list` (or the worker's `pwd`),
+   not from the branch name. No loops over `.claude/worktrees/agent-*`.
 5. Catch up the main checkout (`/Users/adam/code/registry-research-toolkit`): `git fetch
    origin main`, then `git diff --name-only HEAD origin/main -- .claude`. Empty →
    `git merge --ff-only origin/main` there. Non-empty → don't run it: the sandbox denies
