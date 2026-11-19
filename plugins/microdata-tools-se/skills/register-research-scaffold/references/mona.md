@@ -73,7 +73,7 @@ A project folder on MONA:
   <the analysis code, as committed>
   export_gate\
     export_gate.R               pinned, unchanged
-    cell_key.R                  pinned, unchanged
+    cell_key.R                  pinned, unchanged (needs the openssl package)
     <name>.schema.json          chosen, unchanged
     <name>.policy.json          chosen, unchanged
   staging\                      the pipeline's aggregates; the gate only reads it

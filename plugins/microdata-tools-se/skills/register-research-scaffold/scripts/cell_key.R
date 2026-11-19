@@ -1,6 +1,6 @@
 # Cell-key perturbation of person counts, for a pipeline's disclosure stage on
 # MONA. A project copies this file unchanged and records its SHA-256, like
-# export_gate.R. Base R only.
+# export_gate.R. Base R plus the openssl package, for the record keys only.
 #
 # CELL_KEY_VERSION names this file's method; a project pins it.
 #
@@ -128,10 +128,21 @@ ck_stop <- function(code, message) {
   ))
 }
 
-# A secret draw from R's generator. The key file, not the seed, is the secret:
-# no seed is set or recorded.
+# Record keys from the operating system's cryptographic generator (openssl),
+# never R's generator, so no seed can reproduce them. Four random bytes per key,
+# the top six bits masked off: 2^26 divides 2^32, so every key is equally likely.
 ck_draw <- function(n) {
-  as.integer(sample.int(CK_MODULUS, n, replace = TRUE) - 1L)
+  if (!requireNamespace("openssl", quietly = TRUE)) {
+    ck_stop(
+      "cell_key_openssl_missing",
+      paste(
+        "record keys need the openssl R package;",
+        "install it with install.packages(\"openssl\")"
+      )
+    )
+  }
+  b <- matrix(as.integer(openssl::rand_bytes(4L * n)), nrow = 4L)
+  b[1L, ] + 256L * b[2L, ] + 65536L * b[3L, ] + 16777216L * bitwAnd(b[4L, ], 3L)
 }
 
 ck_ids <- function(ids) {

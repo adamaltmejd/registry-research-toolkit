@@ -23,8 +23,9 @@ Read [contracts.md](references/contracts.md) before implementation. Read
 [execution.md](references/execution.md) when wiring batches, packaging, and transfers.
 Read [operator-review.md](references/operator-review.md) when preparing human-operated
 transfer and model-access approval. Read [export-gate.md](references/export-gate.md)
-when wiring the disclosure stage (`scripts/cell_key.R`) or the final release stage: the
-toolkit's export gate, its pinned version and how a MONA project calls it. Read [mona.md](references/mona.md) for a project on MONA.
+when wiring the disclosure stage (`scripts/cell_key.R`, which needs the `openssl` R
+package) or the final release stage: the toolkit's export gate, its pinned version and
+how a MONA project calls it. Read [mona.md](references/mona.md) for a project on MONA.
 
 ## On MONA
 

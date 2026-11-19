@@ -80,15 +80,17 @@ them.
 `cell_key.R` is the toolkit's helper, shipped with this skill. Copy it into the project
 unchanged, as `export_gate/cell_key.R`, and record its `CELL_KEY_VERSION` and SHA-256 in
 the project instructions beside the gate's. Its record keys are a secret key file that
-stays on MONA, outside the project folder that is synced or exported. The researcher
-creates it once with `ck_keys_create(<all person ids in the extract>, <path>)`; this is
-key epoch 1. Persons it lacks are refused (`cell_key_missing_ids`).
-`ck_keys_extend()` adds keys for them in the same epoch. A new epoch
-(`new_epoch = TRUE`) replaces every key, so a table published under two epochs loses its
-protection. Make one only on the researcher's explicit request. Every result carries its
-`key_epoch` (an attribute). The pipeline writes it to the project's run record on MONA,
-never to staging or the export. Locally, on mocks, use a key file made from the mock
-person ids, outside Git.
+stays on MONA, outside the project folder that is synced or exported. The keys come from
+a cryptographic generator, the `openssl` R package, the helper's one package requirement
+(install it on MONA from the configured repository; without it key creation refuses as
+`cell_key_openssl_missing`). The researcher creates the key file once with
+`ck_keys_create(<all person ids in the extract>, <path>)`; this is key epoch 1.
+Persons it lacks are refused (`cell_key_missing_ids`); `ck_keys_extend()` adds keys for
+them in the same epoch. A new epoch (`new_epoch = TRUE`) replaces every key, so a table
+published under two epochs loses its protection. Make one only on the researcher's
+explicit request. Every result carries its `key_epoch` (an attribute). The pipeline
+writes it to the project's run record on MONA, never to staging or the export. Locally,
+on mocks, use a key file made from the mock person ids, outside Git.
 
 **A project sets its own policy** as a `<name>.policy.json` (format
 `reg-export-gate/policy`, fields in `reg_export_gate/DESIGN.md`, "Policy format"),
