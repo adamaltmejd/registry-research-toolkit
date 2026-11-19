@@ -263,7 +263,7 @@ pub(crate) fn columns(db: &Connection) -> Result<Vec<Column>> {
                 {
                     Reason::Ambiguous
                 }
-                _ if has_notice("unmatched") || has_notice("mapping_missing") => Reason::Unmatched,
+                _ if has_notice("mapping_missing") => Reason::Unmatched,
                 _ => Reason::Other,
             })
         };

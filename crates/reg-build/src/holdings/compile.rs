@@ -1005,16 +1005,8 @@ pub(super) fn write(
                         return Ok(());
                     }
                     if accepted.is_empty() {
+                        // `placements` recorded the `mapping_missing` notice.
                         unmatched += 1;
-                        notice(
-                            &tx,
-                            id,
-                            Some(cid),
-                            "unmatched",
-                            None,
-                            (&[], &[], &[]),
-                            "Storage column has no accepted semantic owner",
-                        )?;
                     } else {
                         mapped += 1;
                         storage_findings(&tx, id, cid, storage, &accepted)?;
