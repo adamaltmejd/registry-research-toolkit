@@ -130,8 +130,7 @@ impl Access {
     }
 
     /// Every refusal with the token removed from its location and message.
-    #[must_use]
-    pub fn redacted(&self, refusals: &[Refusal]) -> Vec<Refusal> {
+    fn redacted(&self, refusals: &[Refusal]) -> Vec<Refusal> {
         refusals
             .iter()
             .map(|r| Refusal::new(r.code, self.redact(&r.at), self.redact(&r.message)))
@@ -186,6 +185,18 @@ impl Catalog {
     /// `network` for a failed request; `catalog_unreadable` for a reply that is not a
     /// tool result; `catalog_refused`, one per error finding, for the catalog's error.
     pub fn call(&self, tool: &str, arguments: &Value) -> Result<Value, Vec<Refusal>> {
+        self.call_unredacted(tool, arguments)
+            .map_err(|r| self.redacted(r))
+    }
+
+    fn redacted(&self, refusals: Vec<Refusal>) -> Vec<Refusal> {
+        match &self.access {
+            Some(access) => access.redacted(&refusals),
+            None => refusals,
+        }
+    }
+
+    fn call_unredacted(&self, tool: &str, arguments: &Value) -> Result<Value, Vec<Refusal>> {
         let body = json!({
             "jsonrpc": "2.0", "id": 1, "method": "tools/call",
             "params": { "name": tool, "arguments": arguments },
@@ -341,6 +352,15 @@ fn catalog_refusals(at: &str, document: &Value) -> Vec<Refusal> {
 /// or `load_answers`'s refusal for the saved set (`mixed_generations` when the catalog
 /// was redeployed during the fetch).
 pub fn fetch(
+    catalog: &Catalog,
+    project: &Value,
+    mode: Mode,
+    out: &Path,
+) -> Result<usize, Vec<Refusal>> {
+    fetch_answers(catalog, project, mode, out).map_err(|r| catalog.redacted(r))
+}
+
+fn fetch_answers(
     catalog: &Catalog,
     project: &Value,
     mode: Mode,
