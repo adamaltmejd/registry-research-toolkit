@@ -2621,6 +2621,13 @@
           "reason": {
             "type": "string",
             "description": "`row_key_held`, `table_unknown` or `no_orderable_column`."
+          },
+          "spans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Period"
+            },
+            "description": "The years the file holds; absent when the data holder states none\n(`table_unknown`)."
           }
         }
       },

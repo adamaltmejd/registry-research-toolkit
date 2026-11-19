@@ -13,6 +13,7 @@ use utoipa::ToSchema;
 
 use reg_core::days::Span;
 use reg_core::hex;
+use reg_core::issue::Period;
 
 use crate::{Catalog, Code, Error, connect, read_meta};
 
@@ -51,9 +52,9 @@ pub(crate) struct Possession {
     /// Shown though nothing placed holds them: the tables only blocked files route to,
     /// and the registers and providers above them, with the years those files hold.
     blocked: Blocked,
-    /// Each such table's blocked files.
+    /// Each catalog table's blocked files, whether or not a placement also holds it.
     not_orderable: HashMap<String, Vec<NotOrderable>>,
-    /// (variable, table) pairs the catalog documents in such a table: the variables a
+    /// (variable, table) pairs the catalog documents in a table only blocked files route to: the variables a
     /// request may name there although no placement holds them.
     blocked_pairs: HashSet<(String, String)>,
 }
@@ -72,6 +73,10 @@ pub struct NotOrderable {
     pub file: String,
     /// `row_key_held`, `table_unknown` or `no_orderable_column`.
     pub reason: String,
+    /// The years the file holds; absent when the data holder states none
+    /// (`table_unknown`).
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub spans: Vec<Period>,
     /// What the reason means.
     pub message: &'static str,
     /// The data holder's own notes on each held row key, as written.
@@ -88,7 +93,7 @@ pub struct Hold {
 }
 
 impl NotOrderable {
-    fn new(file: String, reason: &str, keys: &str) -> Self {
+    fn new(file: String, reason: &str, keys: &str, spans: Vec<Period>) -> Self {
         let message = match reason {
             "row_key_held" => {
                 "Held by the data holder, but not orderable yet: the columns that identify \
@@ -116,6 +121,7 @@ impl NotOrderable {
         Self {
             file,
             reason: reason.to_owned(),
+            spans,
             message,
             holds,
         }
@@ -123,7 +129,7 @@ impl NotOrderable {
 }
 
 impl Possession {
-    fn read(conn: &Connection) -> Result<Self, Error> {
+    fn read(conn: &Connection, open: (i64, i64)) -> Result<Self, Error> {
         // A placement or a route names its table by public id, in either origin.
         let mut above: HashMap<String, (String, String)> = HashMap::new();
         for origin in ["main", "held"] {
@@ -202,17 +208,19 @@ impl Possession {
             .filter(|(_, held)| held.len() >= 2)
             .map(|(set, _)| set)
             .collect();
-        possession.read_blocked(conn, &above)?;
+        possession.read_blocked(conn, &above, open)?;
         Ok(possession)
     }
 
-    /// The catalog tables only blocked files route to (crates/DESIGN.md, "Held tables
-    /// that cannot be ordered"): each with its blocked files, and the years those files
-    /// hold, rolled up to registers and providers nothing placed holds.
+    /// Every catalog table a blocked file routes to, with its blocked files and the years
+    /// each holds (crates/DESIGN.md, "Held tables that cannot be ordered"); and the tables
+    /// only blocked files route to, with those years rolled up to the registers and
+    /// providers nothing placed holds.
     fn read_blocked(
         &mut self,
         conn: &Connection,
         above: &HashMap<String, (String, String)>,
+        open: (i64, i64),
     ) -> Result<(), Error> {
         let mut query = conn.prepare(&format!(
             "SELECT r.table_pid, {TABLE_LABEL}, b.reason, h.key_requirements, h.id
@@ -221,8 +229,9 @@ impl Possession {
                JOIN held.holding_route r ON r.holding_id = h.id
              ORDER BY r.table_pid, 2"
         ))?;
-        let mut periods =
-            conn.prepare("SELECT start, end FROM held.holding_period WHERE holding_id = ?")?;
+        let mut periods = conn.prepare(
+            "SELECT start, end FROM held.holding_period WHERE holding_id = ? ORDER BY start, end",
+        )?;
         let found = query
             .query_map([], |r| {
                 Ok((
@@ -235,26 +244,33 @@ impl Possession {
             })?
             .collect::<rusqlite::Result<Vec<_>>>()?;
         for (table, file, reason, keys, holding) in found {
-            if self.tables.contains_key(&table) {
-                continue;
+            let spans = reg_core::days::merge(
+                periods
+                    .query_map([holding], |r| Ok((r.get(0)?, r.get(1)?)))?
+                    .collect::<rusqlite::Result<Vec<Span>>>()?,
+            );
+            // A table a placement holds is served over its placements; its blocked
+            // files are listed, not rolled up.
+            if !self.tables.contains_key(&table) {
+                let (register, provider) = above.get(&table).ok_or_else(|| {
+                    Error::internal(format!("blocked route {table} names no table"))
+                })?;
+                for (map, pid) in [
+                    (&mut self.blocked.tables, &table),
+                    (&mut self.blocked.registers, register),
+                    (&mut self.blocked.providers, provider),
+                ] {
+                    map.entry(pid.clone()).or_default().extend(&spans);
+                }
             }
-            let spans = periods
-                .query_map([holding], |r| Ok((r.get(0)?, r.get(1)?)))?
-                .collect::<rusqlite::Result<Vec<Span>>>()?;
-            let (register, provider) = above
-                .get(&table)
-                .ok_or_else(|| Error::internal(format!("blocked route {table} names no table")))?;
-            for (map, pid) in [
-                (&mut self.blocked.tables, &table),
-                (&mut self.blocked.registers, register),
-                (&mut self.blocked.providers, provider),
-            ] {
-                map.entry(pid.clone()).or_default().extend(&spans);
-            }
+            let spans = spans
+                .iter()
+                .map(|&(start, end)| Period::new(open, start, end))
+                .collect();
             self.not_orderable
                 .entry(table)
                 .or_default()
-                .push(NotOrderable::new(file, &reason, &keys));
+                .push(NotOrderable::new(file, &reason, &keys, spans));
         }
         for map in [
             &mut self.blocked.tables,
@@ -273,7 +289,7 @@ impl Possession {
         self.blocked
             .providers
             .retain(|pid, _| !providers.contains_key(pid));
-        let tables = serde_json::to_string(&self.not_orderable.keys().collect::<Vec<_>>())
+        let tables = serde_json::to_string(&self.blocked.tables.keys().collect::<Vec<_>>())
             .expect("pids serialize");
         for origin in ["main", "held"] {
             let mut query = conn.prepare(&format!(
@@ -486,7 +502,13 @@ impl Catalog {
     fn admit_possession(&mut self) -> Result<(), Error> {
         let conn = self.connect()?;
         self.attach_holdings(&conn)?;
-        let possession = Possession::read(&conn)?;
+        let day = |key: &str| {
+            self.meta(key)
+                .parse::<i64>()
+                .map_err(|_| Error::internal(format!("meta {key} is not a day number")))
+        };
+        let open = (day("open_start")?, day("open_end")?);
+        let possession = Possession::read(&conn, open)?;
         let mut query = conn.prepare("SELECT id, name FROM held.holding_space ORDER BY ord")?;
         let spaces = query
             .query_map([], |r| {
@@ -604,8 +626,8 @@ impl Catalog {
         out
     }
 
-    /// A shown table's files no order can draw on yet; empty when it has none, outside
-    /// steward mode, or when a placement holds it.
+    /// A shown table's files no order can draw on yet, whether or not a placement also
+    /// holds it; empty when it has none or outside steward mode.
     #[must_use]
     pub fn not_orderable(&self, table: &str) -> &[NotOrderable] {
         self.holdings

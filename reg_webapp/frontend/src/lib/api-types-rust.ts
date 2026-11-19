@@ -688,6 +688,11 @@ export interface components {
             message: string;
             /** @description `row_key_held`, `table_unknown` or `no_orderable_column`. */
             reason: string;
+            /**
+             * @description The years the file holds; absent when the data holder states none
+             *     (`table_unknown`).
+             */
+            spans?: components["schemas"]["Period"][];
         };
         /** @description One delivery behind this row. */
         Occurrence: {

@@ -226,3 +226,46 @@ fn a_placed_register_matches_search_over_its_placements_only() {
     let empty = "q=Segmentless%20routed%20table&type=table&period=2020";
     assert!(hits(empty).contains(&(json!("demo/owners/empty"), json!(true))));
 }
+
+#[test]
+fn a_placed_table_lists_its_blocked_files_beside_its_orderable_years() {
+    // Fails if a table with orderable years hides a blocked file that also routes to it
+    // (the blocked years read as never held), drops that file's years, lets them widen
+    // the table's own period, or admits a variable the steward holds nowhere because the
+    // table has blocked files. Part A and Part B place `demo/held` over 2021; Pool
+    // (delivery 2017..2020, row key held by `row-key-hold.toml`) routes there too.
+    let port = blocked();
+    let pool = json!([{
+        "file": "Pool",
+        "reason": "row_key_held",
+        "spans": [{"start": "2017-01-01", "end": "2021-01-01"}],
+        "message": "Held by the data holder, but not orderable yet: the columns that \
+                    identify its rows are on hold. Ask the data holder.",
+        "holds": [{
+            "hold": "required_time_key_absent: EventDate",
+            "follow_up": "synthetic:request-event-key",
+        }],
+    }]);
+    let register = data(port, "/api/catalog/demo/held");
+    let table = &register["tables"][0];
+    assert_eq!(table["not_orderable"], pool, "{register}");
+    assert_eq!(
+        table["period"],
+        json!({"start": "2021-01-01", "end": "2022-01-01"})
+    );
+    let segments = data(port, "/api/segments/demo/held?variable=demo/held/id");
+    assert_eq!(segments["not_orderable"], pool, "{segments}");
+    let (status, answer) = client::json(
+        port,
+        "GET",
+        "/api/segments/demo/held?variable=demo/held/late",
+        &[],
+        None,
+    )
+    .unwrap();
+    assert_eq!(
+        (status, &answer["error"]["code"]),
+        (404, &json!("not_found")),
+        "{answer}"
+    );
+}
