@@ -12,7 +12,8 @@ delivers into MONA from its holdings. Each step names who does it.
 
 Add the steward's catalog to the project as its `steward-catalog` MCP server, in the
 project's `.mcp.json` (or `.codex/config.toml`), and record in the project instructions
-that the agent uses it, not the plugin's global `catalog`: the
+that the agent uses it for the project's data and the plugin's global `catalog` only for
+questions about data outside the steward's holdings: the
 `register-metadata-search` skill's `references/data-stewards.md`. Only a steward's
 catalog knows its holdings, delivers its own file and column names, and writes MONA
 order files. Every `meta.catalog_version` the tools return is that steward's release,

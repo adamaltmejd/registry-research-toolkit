@@ -12,11 +12,12 @@ description: Query Swedish register metadata (SCB, Socialstyrelsen and other hol
 The plugin's `catalog` MCP server answers questions about Swedish administrative
 registers from the published global catalog (`https://reg-meta.vqv.uk/mcp`). A project
 whose data comes from a data steward adds the steward's catalog as its own
-`steward-catalog` server, which answers the same tools but only for what the steward holds: in such a project
-use `steward-catalog` for the steward's holdings and the plugin's `catalog` for anything
-outside them, saying which catalog each fact came from. A steward's `not_found` means
-it does not hold the entity, and a held table marked `not_orderable` is not to be entered
-as a manual source (data-stewards.md). To add one, read [data-stewards.md](references/data-stewards.md).
+`steward-catalog` server, which answers the same tools but only for what the steward holds (plus the shared
+classifications, value sets, codes and documents): in such a project use
+`steward-catalog` for the steward's holdings and the plugin's `catalog` for data outside
+them, saying which catalog each fact came from. A `show` or `search` `not_found` there
+means the steward does not hold the entity, and a held table marked `not_orderable` is
+not to be entered as a manual source (data-stewards.md). To add one, read [data-stewards.md](references/data-stewards.md).
 `show` with no `ref` lists a catalog's providers. A catalog holds structural metadata —
 registers, tables, variables, value codes, documentation — not microdata.
 

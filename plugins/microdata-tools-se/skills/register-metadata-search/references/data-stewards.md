@@ -27,19 +27,29 @@ catalog's: every response's `meta.catalog_version` names it, and the project, `r
 
 ## What a steward's catalog answers
 
-Only what the steward holds. A register the steward lacks is not listed.
+Only what the steward holds: a register the steward lacks is not listed. Classifications,
+value sets, codes and documents are shared reference metadata and are always served.
 
-- **`not_found`** on a steward's catalog means the steward does not hold it, not that it
-  does not exist.
-- **Held, not orderable.** A table the steward holds but cannot be ordered yet is still
-  shown: `show`, `search` and `segments` mark it `not_orderable`, and `show` and
-  `segments` list its files under `not_orderable` with a `reason`:
+- **`not_found`** from `show` or `search` on the steward's catalog means the steward does
+  not hold the entity, not that it does not exist. Other tools (`coverage`, `schema`)
+  can answer `not_found` for a held table that cannot be ordered: conclude what the
+  steward holds from `show` or `search`, not from them.
+- **Held, not orderable.** A table the steward holds but cannot be ordered yet is shown
+  when none of its years is orderable: `show`, `search` and `segments` mark it
+  `not_orderable`, and `show` and `segments` list its files under `not_orderable` with
+  a `reason`:
   - `row_key_held`: the columns that identify its rows are on hold.
   - `table_unknown`: the steward has not stated which years the file covers.
   - `no_orderable_column`: none of its columns can be ordered.
 
-  Tell the user to ask the steward (its `order_instructions` from `/api/context` say how
-  to reach them). Do not enter the table as a manual source and do not guess its columns.
+  When a table has some orderable years, only those are listed: a blocked year does not
+  appear, with or without a reason. Do not conclude from its absence that the steward
+  lacks it.
+
+  Tell the user to ask the steward. Each blocked file's `holds[].follow_up`, when
+  present, says where; else the steward's `order_instructions` from `/api/context`, if
+  it has any; else the user contacts the steward. Do not enter the table as a manual
+  source and do not guess its columns.
 - **Anything outside the steward's holdings**, such as what else the researcher could
   order or what a register the steward lacks contains: switch to the plugin's own
   `catalog` server (the global catalog), and say in the answer which catalog each fact
