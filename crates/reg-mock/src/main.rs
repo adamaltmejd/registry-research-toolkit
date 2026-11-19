@@ -22,7 +22,7 @@ use std::path::{Path, PathBuf};
 
 use reg_mock::Refusal;
 use reg_mock::compile::{compile, load_answers};
-use reg_mock::fetch::{Access, Catalog, Mode, fetch};
+use reg_mock::fetch::{Catalog, Mode, fetch};
 use reg_mock::rules::Rules;
 use reg_mock::spec::{SPEC_VERSION, Spec};
 use reg_mock::{generate, write};
@@ -81,9 +81,8 @@ fn run_fetch(mut args: impl Iterator<Item = String>) -> ! {
     };
     let project = read_json(Path::new(&project));
     let out = PathBuf::from(out);
-    let access = Access::from_env(&catalog).unwrap_or_else(|r| refuse(&[r]));
-    let saved =
-        fetch(&Catalog::new(&catalog, access), &project, mode, &out).unwrap_or_else(|r| refuse(&r));
+    let catalog = Catalog::from_env(&catalog).unwrap_or_else(|r| refuse(&[r]));
+    let saved = fetch(&catalog, &project, mode, &out).unwrap_or_else(|r| refuse(&r));
     eprintln!("saved {saved} answers into {}", out.display());
     std::process::exit(0);
 }

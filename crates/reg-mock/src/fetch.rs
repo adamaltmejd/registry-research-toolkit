@@ -49,8 +49,7 @@ const MAX_ANSWER_BYTES: u64 = 256 * 1024 * 1024;
 
 /// A Cloudflare Access service token, sent only to the one steward host it was issued
 /// for. No `Debug` or `Display`: the secret must reach nothing but the request header.
-#[derive(Clone)]
-pub struct Access {
+struct Access {
     id: String,
     secret: String,
 }
@@ -71,7 +70,7 @@ impl Access {
     /// header value, or the token would go to `url` over plain http (anything but a
     /// loopback host) or with user-info in the URL. The error names the variable, never
     /// its value.
-    pub fn from_env(url: &str) -> Result<Option<Self>, Refusal> {
+    fn from_env(url: &str) -> Result<Option<Self>, Refusal> {
         Self::from_vars(url, |name| std::env::var(name).ok())
     }
 
@@ -150,8 +149,19 @@ pub struct Catalog {
 }
 
 impl Catalog {
-    #[must_use]
-    pub fn new(url: &str, access: Option<Access>) -> Self {
+    /// A catalog at `url`, with the Access token from the environment when it applies
+    /// to that URL (`Access::from_env`).
+    ///
+    /// # Errors
+    ///
+    /// `access_credentials`, as `Access::from_env`.
+    pub fn from_env(url: &str) -> Result<Self, Refusal> {
+        Ok(Self::new(url, Access::from_env(url)?))
+    }
+
+    /// The token is resolved from the same `url` the calls go to, so it cannot be paired
+    /// with another one.
+    fn new(url: &str, access: Option<Access>) -> Self {
         // No redirects: Access answers a call without a valid token by redirecting to its
         // login page, and the token must not follow a redirect to another host. A loopback
         // catalog is reached directly, never through a proxy from the environment.
@@ -187,6 +197,14 @@ impl Catalog {
     pub fn call(&self, tool: &str, arguments: &Value) -> Result<Value, Vec<Refusal>> {
         self.call_unredacted(tool, arguments)
             .map_err(|r| self.redacted(r))
+    }
+
+    /// `text` with the token removed; redact the whole text before cutting it short, so
+    /// a value straddling the cut cannot leave its prefix.
+    fn redact(&self, text: &str) -> String {
+        self.access
+            .as_ref()
+            .map_or_else(|| text.to_owned(), |a| a.redact(text))
     }
 
     fn redacted(&self, refusals: Vec<Refusal>) -> Vec<Refusal> {
@@ -241,7 +259,7 @@ impl Catalog {
             if evidence {
                 return vec![self.access_refusal(&at, status)];
             }
-            let start: String = text.chars().take(300).collect();
+            let start: String = self.redact(&text).chars().take(300).collect();
             vec![Refusal::new(
                 "catalog_unreadable",
                 &at,
@@ -265,7 +283,10 @@ impl Catalog {
                 &at,
                 format!(
                     "HTTP {status}, not a tool result: {}",
-                    reply.to_string().chars().take(300).collect::<String>()
+                    self.redact(&reply.to_string())
+                        .chars()
+                        .take(300)
+                        .collect::<String>()
                 ),
             )]),
         }
