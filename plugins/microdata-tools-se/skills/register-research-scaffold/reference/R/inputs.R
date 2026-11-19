@@ -14,6 +14,9 @@ check_mode <- function(mode) {
 # not carry it.
 read_lisa <- function(mode) {
   dir <- if (mode == "real") REAL_DIR else MOCK_DIR
+  if (anyDuplicated(LISA_FILES) || anyDuplicated(names(LISA_FILES))) {
+    stop("LISA_FILES repeats a file or a year")
+  }
   # A missing or extra file would change the results unseen by the gate.
   if (!setequal(list.files(dir, pattern = "\\.parquet$"), LISA_FILES)) {
     stop("the input folder's Parquet files differ from LISA_FILES")
