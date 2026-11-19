@@ -154,11 +154,30 @@ ck_ids <- function(ids) {
 }
 
 ck_keys_write <- function(keys, path) {
-  tmp <- paste0(path, ".tmp")
+  tmp <- tempfile("cell_key_", tmpdir = dirname(path), fileext = ".tmp")
   utils::write.csv(keys, tmp, row.names = FALSE)
   if (!file.rename(tmp, path)) {
+    unlink(tmp)
     ck_stop("cell_key_write_failed", "could not write the key file")
   }
+}
+
+# One update of the key file at a time: a lock directory beside it, held from
+# the read through the replace. dir.create() is atomic, so a second update
+# refuses instead of writing over the first one's new keys.
+ck_with_lock <- function(path, update) {
+  lock <- paste0(path, ".lock")
+  if (!dir.create(lock, showWarnings = FALSE)) {
+    ck_stop(
+      "cell_key_locked",
+      paste(
+        "another update of the key file is running (lock", lock, "exists);",
+        "wait for it, or delete that folder if no update is running"
+      )
+    )
+  }
+  on.exit(unlink(lock, recursive = TRUE), add = TRUE)
+  update()
 }
 
 #' Read and check a key file: columns key_epoch, id, key.
@@ -166,9 +185,11 @@ ck_keys_read <- function(path) {
   if (!file.exists(path)) {
     ck_stop("cell_key_no_key_file", "no key file at the given path")
   }
+  # na.strings: an id "NA" is an id, as ck_keys_write() wrote it.
   keys <- utils::read.csv(
     path,
-    colClasses = c(key_epoch = "integer", id = "character", key = "integer")
+    colClasses = c(key_epoch = "integer", id = "character", key = "integer"),
+    na.strings = character()
   )
   ok <- identical(names(keys), c("key_epoch", "id", "key")) &&
     nrow(keys) > 0 &&
@@ -190,36 +211,41 @@ ck_keys_read <- function(path) {
 #' the researcher's explicit request.
 ck_keys_create <- function(ids, path, new_epoch = FALSE) {
   ids <- ck_ids(ids)
-  epoch <- 1L
-  if (file.exists(path)) {
-    if (!isTRUE(new_epoch)) {
-      ck_stop(
-        "cell_key_file_exists",
-        "a key file exists; a new key epoch needs new_epoch = TRUE"
-      )
+  ck_with_lock(path, function() {
+    epoch <- 1L
+    if (file.exists(path)) {
+      if (!isTRUE(new_epoch)) {
+        ck_stop(
+          "cell_key_file_exists",
+          "a key file exists; a new key epoch needs new_epoch = TRUE"
+        )
+      }
+      epoch <- ck_keys_read(path)$key_epoch[[1]] + 1L
     }
-    epoch <- ck_keys_read(path)$key_epoch[[1]] + 1L
-  }
-  ck_keys_write(
-    data.frame(key_epoch = epoch, id = ids, key = ck_draw(length(ids))),
-    path
-  )
-  invisible(epoch)
+    ck_keys_write(
+      data.frame(key_epoch = epoch, id = ids, key = ck_draw(length(ids))),
+      path
+    )
+    invisible(epoch)
+  })
 }
 
 #' Add keys for persons in `ids` the key file lacks, in the same epoch.
 #' Existing keys never change, so earlier tables stay consistent.
 ck_keys_extend <- function(ids, path) {
-  keys <- ck_keys_read(path)
-  new <- setdiff(ck_ids(ids), keys$id)
-  if (length(new) > 0) {
-    keys <- rbind(
-      keys,
-      data.frame(key_epoch = keys$key_epoch[[1]], id = new, key = ck_draw(length(new)))
-    )
-    ck_keys_write(keys, path)
-  }
-  invisible(length(new))
+  ids <- ck_ids(ids)
+  ck_with_lock(path, function() {
+    keys <- ck_keys_read(path)
+    new <- setdiff(ids, keys$id)
+    if (length(new) > 0) {
+      keys <- rbind(
+        keys,
+        data.frame(key_epoch = keys$key_epoch[[1]], id = new, key = ck_draw(length(new)))
+      )
+      ck_keys_write(keys, path)
+    }
+    invisible(length(new))
+  })
 }
 
 # SHA-256 as export_gate.R gets it: tools::sha256sum (R >= 4.5), else digest.
@@ -272,11 +298,16 @@ ck_ptable_check <- function(pt, d = 5L, variance = 6.5, js = 4L) {
   invisible(pt)
 }
 
-# One integer code per distinct combination of the `by` columns, NA its own
-# value in each column, so a string "NA" and a missing value never merge.
+# One integer code per distinct combination of the `by` columns, by exact
+# value (match(), not factor(), whose labels merge numbers that print alike);
+# NA is its own value, so a string "NA" and a missing value never merge. No
+# `by` is one cell, the overall total.
 ck_cells <- function(frame, by) {
-  codes <- lapply(frame[by], function(x) as.integer(addNA(factor(x), ifany = TRUE)))
-  key <- do.call(paste, c(codes, sep = "."))
+  if (length(by) == 0) {
+    return(rep(1L, nrow(frame)))
+  }
+  codes <- lapply(unname(as.list(frame[by])), function(x) match(x, unique(x)))
+  key <- do.call(paste, c(codes, list(sep = ".")))
   match(key, unique(key))
 }
 
@@ -312,6 +343,15 @@ ck_perturb <- function(data, by, id, keys, min_cell_count = 5L) {
     )
   }
 
+  if (nrow(persons) == 0) {
+    # An unused output: zero rows, as the export expects.
+    out <- persons[0, by, drop = FALSE]
+    out$n_true <- integer()
+    out$n_persons <- integer()
+    attr(out, "key_epoch") <- k$key_epoch[[1]]
+    return(out)
+  }
+
   cell <- ck_cells(persons, by)
   first <- !duplicated(cell)
   out <- persons[first, by, drop = FALSE]
@@ -335,7 +375,9 @@ ck_perturb <- function(data, by, id, keys, min_cell_count = 5L) {
   out$n_true <- as.integer(n_true)
   out$n_persons <- as.integer(published)
   # Rows in `by` order, not input order, so a rerun on reordered data is identical.
-  out <- out[do.call(order, unname(as.list(out[by]))), , drop = FALSE]
+  if (length(by) > 0) {
+    out <- out[do.call(order, unname(as.list(out[by]))), , drop = FALSE]
+  }
   rownames(out) <- NULL
   attr(out, "key_epoch") <- k$key_epoch[[1]]
   out

@@ -77,6 +77,19 @@ the staging writer, in this order:
 `n_true` and `k_true` stay true and unperturbed: the gate tests them and never exports
 them.
 
+Stage exactly the columns the schema declares for each file, nothing more:
+
+- Under the default `aggregates` schema, `counts.parquet` has no `n_true`. Write
+  `ck_perturb()`'s `n_persons` and drop its `n_true`, or the gate refuses the file as
+  `structure` (`extra_column`). `statistics.parquet`, `quantiles.parquet` and
+  `coefficients.parquet` declare `n_true`, so they keep it.
+- A project schema that gives a count `"units": "n_true"` checks the true count too. Set
+  `n_persons` to `NA` wherever `n_true` is below `min_cell_count` as well: otherwise a
+  true 1 perturbed to 5 passes the published floor and is refused as `disclosure`
+  (`count_units_too_small`). Such a count also needs `"perturbation": 5` (D): without
+  it, the bound is 0 and any perturbed count is refused as
+  `count_perturbation_exceeded`.
+
 `cell_key.R` is the toolkit's helper, shipped with this skill. Copy it into the project
 unchanged, as `export_gate/cell_key.R`, and record its `CELL_KEY_VERSION` and SHA-256 in
 the project instructions beside the gate's. Its record keys are a secret key file that
