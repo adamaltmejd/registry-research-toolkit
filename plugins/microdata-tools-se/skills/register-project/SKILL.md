@@ -10,9 +10,7 @@ A `project_data.json` lists the register columns a study orders: each source is 
 table over a period, and each binding is one variable delivered from it. The agent
 drafts and checks the file. The document's schema is
 [project_data.schema.json](project_data.schema.json), generated from the server's API
-contract. Regenerate it with
-`REG_META_BLESS=1 cargo test -p xtask --test project_schema_snapshot` from the
-repository root.
+contract.
 
 The catalog server's `search`, `show`, `segments` and `coverage` tools are described in
 the `register-metadata-search` skill.
@@ -20,9 +18,10 @@ the `register-metadata-search` skill.
 ## Drafting a project
 
 1. Set the document's `schema_version` to `meta.project_schema_version` from a response
-   of the catalog you order from. Order from the catalog the data comes from: a steward's
-   catalog for the steward's holdings (`register-metadata-search` skill,
-   `references/data-stewards.md`). Set `reg_meta_version` (required) to the serving
+   of the catalog you order from. Order from the catalog the data comes from: in a steward's
+   project, the project's `steward-catalog` server, for the steward's holdings
+   (`register-metadata-search` skill, `references/data-stewards.md`); otherwise the
+   plugin's `catalog`. Set `reg_meta_version` (required) to the serving
    catalog's release tag, `reg_meta/vX.Y.Z`. Read `meta.catalog_version` from a catalog
    tool response and format its release version `X.Y.Z` as that tag. If it is not a
    release version (for example, `dev`), ask which catalog release to use. Never infer it
@@ -79,7 +78,11 @@ the `register-metadata-search` skill.
    `identifier` column. `validate` reports each such source with a `manual_item` info;
    tell the user that the extract runner does not deliver these columns, so the data
    manager adds them by hand.
-6. Call `order` with `operation: "validate"` and the document as `project`. Fix every
+6. Set `extract_format`, the format the extract runner writes each file in: `dta`
+   (Stata, the default when absent), `parquet` or `csv`. Ask the user when the language
+   the analysis runs in on MONA makes it matter (`dta` suits Stata; `parquet` suits R,
+   Python or DuckDB); otherwise leave it out.
+7. Call `order` with `operation: "validate"` and the document as `project`. Fix every
    issue whose `level` is `error` and validate again until `ok` is true; report the
    warnings to the user. A `classification_version_ambiguous` warning means the variable
    carries several versions of a code list (municipality codes, say) over the period and
@@ -90,8 +93,8 @@ the `register-metadata-search` skill.
    from over the period is a `classification_incompatible` error. To cover several
    versions, split the source by period and pin each. Ignore the warning when the column
    is only carried along, not used to join or recode across years.
-7. Save the file as `project_data.json`.
-8. On a steward's catalog, `order` with `operation: "materialize_order"` returns the MONA
+8. Save the file as `project_data.json`.
+9. On a steward's catalog, `order` with `operation: "materialize_order"` returns the MONA
    order file the steward's extract runner reads: one file per table and delivery, its
    columns and row filter. Show it to the user to confirm what the extract will hold. It
    submits nothing; the steward writes the order it runs. It needs a non-blank `name`

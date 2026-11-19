@@ -32,71 +32,98 @@ A steward deployment serves its catalog MCP at `/mcp` on its host:
 https://<steward-host>/mcp
 ```
 
-Confirm the host is a steward deployment before setting it:
+Confirm the host is a steward deployment before adding it:
 
 ```bash
 curl -sS https://<steward-host>/api/context
 ```
 
 A steward answers JSON whose `data.steward_config.presentation` holds the steward's `id`
-and `name`, `data.steward_config.spaces` its databases, and `data.reg_meta_version` its
+and `name`, and `order_instructions` when the steward has written them (how a researcher
+hands in an order: follow them when the project's order goes in);
+`data.steward_config.spaces` lists its databases, and `data.reg_meta_version` its
 release. Anything else is not a steward deployment: a `Not found` (the global catalog
 answers that), an HTML page, or a redirect or `403` (sign-in, below). Tell the user the
-steward's `name` and release before changing the setting.
+steward's `name` and release before adding it.
 
-## Setting it
+## Adding it to the project
 
-**Claude Code.** The URL is the plugin option `catalog_url`. Either the user runs
-`/plugin configure microdata-tools-se@microdata-tools-se` (or Configure on the plugin's
-Installed tab in `/plugin`) and enters it, or the agent runs, with the user's go-ahead:
+The steward's catalog belongs to the project whose data comes from that steward, not to
+the user's machine: the plugin's own `catalog` server stays on the global catalog, and
+the project adds the steward's catalog as a second MCP server, always named
+`steward-catalog`. With the user's go-ahead, write it into the project's files and
+commit them:
 
-```bash
-echo '{"catalog_url": "https://<steward-host>/mcp"}' |
-  claude plugin configure microdata-tools-se@microdata-tools-se --values-stdin
+**Claude Code**: `.mcp.json` at the project root.
+
+```json
+{
+  "mcpServers": {
+    "steward-catalog": {
+      "type": "http",
+      "url": "https://<steward-host>/mcp"
+    }
+  }
+}
 ```
 
-`claude plugin configure microdata-tools-se@microdata-tools-se --json` shows the current
-value. It is stored in the user's settings under
-`pluginConfigs["microdata-tools-se@microdata-tools-se"].options.catalog_url`. Claude Code
-must be restarted to apply it. To go back to the global catalog, set
-`https://reg-meta.vqv.uk/mcp`.
+Claude Code asks the user to approve a project's servers the first time it starts in the
+project. Its tools then appear as `mcp__steward-catalog__<tool>`.
 
-**Codex.** The plugin's server always points at the global catalog. Add the steward's
-catalog as a separate MCP server in `~/.codex/config.toml`, under its own name, and use
-that server's tools for steward questions:
+**Codex**: `.codex/config.toml` in the project, which Codex reads once the user trusts
+the project.
 
 ```toml
-[mcp_servers.steward_catalog]
+[mcp_servers.steward-catalog]
 url = "https://<steward-host>/mcp"
 ```
 
+Then record the choice in the project's agent instructions (`CLAUDE.md` or
+`AGENTS.md`): "This is a `<steward name>` project: use the `steward-catalog` server's
+tools for every catalog question, not the plugin's `catalog`." Both servers are loaded
+in such a project; the rule is to use the steward's for everything, since it answers
+every tool the global one does and adds the holdings. In a project without a
+`steward-catalog` server, use the plugin's `catalog`.
+
 ## Confirming it worked
 
-After the restart, call any catalog tool (`show` with no `ref`) and check
-`meta.catalog_version` against the `reg_meta_version` that `/api/context` reported. Then
-`order` with `operation: "materialize_order"` on any small project: a steward answers an
-order file or an `order_blocked`/`project_invalid` naming the project's problems, never
-`holdings_unavailable`. If the tools still answer from the global catalog, the restart
-has not happened or the option was saved under another plugin id.
+After restarting the agent in the project, call `show` with no `ref` on the
+`steward-catalog` server and check `meta.catalog_version` against the `reg_meta_version`
+that `/api/context` reported. Then `order` with `operation: "materialize_order"` on any
+small project: a steward answers an order file or an `order_blocked`/`project_invalid`
+naming the project's problems, never `holdings_unavailable`. If no `steward-catalog`
+tools are listed, the server has not been approved or the agent was started outside the
+project.
 
 ## Stewards behind a sign-in
 
 Some stewards protect their deployment with Cloudflare Access. `/api/context` then
 answers a redirect to a `cloudflareaccess.com` sign-in page, or `403`, instead of JSON.
-The plugin's option carries a URL only, so it cannot reach such a host. The user must:
+The user must ask the steward for access to its catalog for an agent: a Cloudflare
+Access service token (a client id and a client secret).
 
-1. Ask the steward for access to its catalog for an agent: a Cloudflare Access service
-   token (a client id and a client secret).
-2. Add the catalog as their own MCP server with the token as headers, instead of the
-   plugin option. In Claude Code:
+The token is the user's secret: it is never written into a project file, and the agent
+never asks for its value. The project's server reads it from two environment variables
+the user sets in their own shell profile, `STEWARD_CF_CLIENT_ID` and
+`STEWARD_CF_CLIENT_SECRET`. In `.mcp.json`:
 
-   ```bash
-   claude mcp add --transport http steward-catalog https://<steward-host>/mcp \
-     --header "CF-Access-Client-Id: <id>" --header "CF-Access-Client-Secret: <secret>"
-   ```
+```json
+{
+  "mcpServers": {
+    "steward-catalog": {
+      "type": "http",
+      "url": "https://<steward-host>/mcp",
+      "headers": {
+        "CF-Access-Client-Id": "${STEWARD_CF_CLIENT_ID}",
+        "CF-Access-Client-Secret": "${STEWARD_CF_CLIENT_SECRET}"
+      }
+    }
+  }
+}
+```
 
-   The token is the user's secret: they run this themselves, it is never written into a
-   project file, and the agent never asks for its value.
+In Codex's `.codex/config.toml`, the same server takes
+`env_http_headers = { "CF-Access-Client-Id" = "STEWARD_CF_CLIENT_ID", "CF-Access-Client-Secret" = "STEWARD_CF_CLIENT_SECRET" }`.
 
 Without a token, the user can still browse the steward's site in a signed-in browser,
 but the agent cannot use its catalog.

@@ -23,8 +23,9 @@ catalog's answers, write the rules and compile them into `mock_spec.json`, gener
   `reg_meta/v*` GitHub release; the download and SHA-256 check are in the repository
   README's Mock data section. Use the release that matches `reg_meta_version` in
   `project_data.json`.
-- The answers come from the catalog the plugin's `catalog_url` names, over MCP:
-  - a steward's catalog (for example `https://data.swecov.se/mcp`) with mode
+- The answers come from the catalog the project orders from, over MCP:
+  - a steward's catalog (the project's `steward-catalog` server,
+    `https://<steward-host>/mcp`) with mode
     `materialize`, which gives the delivery's own file and column names;
   - the global catalog (`https://reg-meta.vqv.uk/mcp`) with mode `order`. Files then
     follow the standard names: the table's public id with `_` for `/` and `-`, one file
@@ -34,7 +35,7 @@ catalog's answers, write the rules and compile them into `mock_spec.json`, gener
 ## 1. Save the answers
 
 ```bash
-reg-mock fetch --catalog <catalog_url> --project project_data.json \
+reg-mock fetch --catalog <catalog-mcp-url> --project project_data.json \
   --mode order|materialize --out mock/answers
 ```
 

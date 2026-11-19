@@ -10,12 +10,13 @@ description: Query Swedish register metadata (SCB, Socialstyrelsen and other hol
 # Register metadata queries
 
 The plugin's `catalog` MCP server answers questions about Swedish administrative
-registers. By default it serves the published global catalog
-(`https://reg-meta.vqv.uk/mcp`); the user can point it at a data steward's catalog
-instead, which also answers from the steward's holdings. To set that up, or to check
-which catalog is configured, read [data-stewards.md](references/data-stewards.md). `show` with no `ref` lists its providers. It holds
-structural metadata — registers, tables, variables, value codes, documentation — not
-microdata.
+registers from the published global catalog (`https://reg-meta.vqv.uk/mcp`). A project
+whose data comes from a data steward adds the steward's catalog as its own
+`steward-catalog` server, which answers the same tools and also from the steward's
+holdings: in such a project use `steward-catalog` for every catalog question, otherwise
+the plugin's `catalog`. To add one, read [data-stewards.md](references/data-stewards.md).
+`show` with no `ref` lists a catalog's providers. A catalog holds structural metadata —
+registers, tables, variables, value codes, documentation — not microdata.
 
 ## Tools
 

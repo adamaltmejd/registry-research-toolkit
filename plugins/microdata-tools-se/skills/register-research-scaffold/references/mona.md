@@ -10,12 +10,14 @@ delivers into MONA from its holdings. Each step names who does it.
 
 ## 1. The catalog (researcher, once)
 
-Point the plugin at the steward's catalog, not the global one: the
-`register-metadata-search` skill's `references/data-stewards.md`. Only a steward's catalog knows its holdings, delivers its own file
-and column names, and writes MONA order files. Every `meta.catalog_version` the tools
-return is that steward's release, which can lag the global catalog. Use that release for
-everything below: the project's `reg_meta_version`, the `reg-mock` binary, `extract.R`
-and `export_gate.R`.
+Add the steward's catalog to the project as its `steward-catalog` MCP server, in the
+project's `.mcp.json` (or `.codex/config.toml`), and record in the project instructions
+that the agent uses it, not the plugin's global `catalog`: the
+`register-metadata-search` skill's `references/data-stewards.md`. Only a steward's
+catalog knows its holdings, delivers its own file and column names, and writes MONA
+order files. Every `meta.catalog_version` the tools return is that steward's release,
+which can lag the global catalog. Use that release for everything below: the project's
+`reg_meta_version`, the `reg-mock` binary, `extract.R` and `export_gate.R`.
 
 ## 2. The order (agent drafts, researcher approves)
 
@@ -38,8 +40,10 @@ mock and real data by its input directory alone.
 
 ## 4. The extract (steward, on MONA)
 
-The researcher sends the reviewed `project_data.json` to the steward by the steward's own
-procedure. The steward's coordinator writes the order file with `materialize_order` (or
+The researcher sends the reviewed `project_data.json` to the steward following the
+steward's `order_instructions` (in `data.steward_config.presentation` of
+`https://<steward-host>/api/context`; ask the steward if it has none). The steward's
+coordinator writes the order file with `materialize_order` (or
 `POST /api/project/materialize`). The steward's data manager uploads the order file to
 MONA with `extract.R` from the toolkit's `reg_mona_runner/` at the steward's pinned tag
 and the steward's own `extract-config.json`, and runs it. The extract is one file per
@@ -89,8 +93,9 @@ only the category code (`setup`, `inventory`, `structure`, `disclosure`, `backst
 
 The gate checks the export against a schema (which files and columns may leave) and a
 policy (the disclosure thresholds). The toolkit ships its pairs in
-`reg_export_gate/schemas/`. The default for a project's results is `aggregates` with the
-policy `aggregates-min5`: long-form counts, means, quantiles and regression
+`reg_export_gate/schemas/`. The default for a project's results is
+`schemas/aggregates.schema.json` with `schemas/aggregates.policy.json` (policy name
+`aggregates-min5`): long-form counts, means, quantiles and regression
 coefficients by groups. Shape the pipeline's outputs to it, a first batch included, so
 the whole flow, gate included, runs end to end on mocks. A file the project does not use
 is written with zero rows. `trial` and `mock-stats` are not for a project's outputs.
