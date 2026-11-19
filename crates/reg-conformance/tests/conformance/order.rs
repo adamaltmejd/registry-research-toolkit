@@ -154,7 +154,11 @@ fn steward_only_slot_orders_paired_and_is_unresolved_base_only() {
         reg_conformance::cached_reader_artifact(&reg_conformance::holdings_case().join("base"))
             .unwrap();
     let port = server::server(base.parent().unwrap()).unwrap().port;
-    let (status, blocked) = client::json(port, "POST", "/api/project/order", &[], project).unwrap();
+    // Retargeted by hand, as a user would: otherwise it is `catalog_mismatch` alone.
+    let mut global = expected["project"].clone();
+    global["catalog"] = json!("global");
+    let (status, blocked) =
+        client::json(port, "POST", "/api/project/order", &[], Some(&global)).unwrap();
     assert_eq!(status, 422, "{blocked}");
     let got = json!({ "findings": without_nulls(&blocked["error"]["fields"]["findings"]) });
     assert!(json_eq(&got, &expected["base_only"]), "{got}");

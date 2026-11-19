@@ -35,6 +35,7 @@ const TITLES: Readonly<Record<string, string>> = {
   invalid_field_type: "Field has the wrong type",
   invalid_enum_value: "Choose a supported field value",
   invalid_fqid: "Catalog reference is invalid",
+  invalid_slug: "Catalog name is invalid",
   fqid_table_mismatch: "Variable and table belong to different registers",
   unexpected_field: "Field is not supported",
   invalid_period: "Years are invalid",
@@ -88,6 +89,7 @@ const TITLES: Readonly<Record<string, string>> = {
   // A steward with several databases: an order draws from one.
   database_required: "Choose a database",
   database_unknown: "This database does not exist",
+  catalog_mismatch: "Project is for another catalog",
   not_in_database: "This column is not in the chosen database",
   // Data the project states by hand, which the catalog does not describe.
   manual_item: "Not checked",

@@ -661,6 +661,14 @@ impl Catalog {
         })
     }
 
+    /// The id a project's `catalog` names this catalog by: the admitted steward's, or
+    /// `global` in reference-only mode.
+    #[must_use]
+    pub fn id(&self) -> String {
+        self.steward()
+            .map_or_else(|| "global".to_owned(), |steward| steward.owner)
+    }
+
     /// The admitted steward's linkage spaces in config order: one for a steward that
     /// declares none. Absent in reference-only mode.
     pub(crate) fn spaces(&self) -> Option<&[Space]> {

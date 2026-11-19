@@ -1,0 +1,21 @@
+{
+  "note": "The steward holds demo/held/id, so this project would order here but for its `catalog`: it is drafted on the global catalog and posted to the steward `fixture`. Fails if materialize, validate or order stops refusing a project drafted on another catalog with exactly one `catalog_mismatch` at /catalog (#2566), or reports the order check's findings beside it. Oracle: the project's `catalog` and the served steward id.",
+  "project": {
+    "schema_version": "7.0.0",
+    "reg_meta_version": "0.90.0",
+    "catalog": "global",
+    "name": "Drafted on global",
+    "sources": [
+      {
+        "name": "k",
+        "table": "demo/held",
+        "period": 2017,
+        "bindings": [
+          {
+            "variable": "demo/held/id"
+          }
+        ]
+      }
+    ]
+  }
+}

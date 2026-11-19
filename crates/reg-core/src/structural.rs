@@ -27,7 +27,13 @@ use crate::grammar::{Date, PeriodToken, iso};
 use crate::project::{ColumnType, ExtractFormat};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
-const PROJECT_REQUIRED: [&str; 4] = ["schema_version", "reg_meta_version", "name", "sources"];
+const PROJECT_REQUIRED: [&str; 5] = [
+    "schema_version",
+    "reg_meta_version",
+    "catalog",
+    "name",
+    "sources",
+];
 const PROJECT_OPTIONAL: [&str; 4] = ["panels", "window", "extract_format", "linkage"];
 const SOURCE_KEYS: [&str; 6] = ["name", "table", "manual", "period", "releases", "bindings"];
 const MANUAL_ORIGIN_KEYS: [&str; 2] = ["provider", "register"];
@@ -413,7 +419,7 @@ fn check_top_level(root: &Map<String, Value>, issues: &mut Issues) {
             );
         }
     }
-    for field in ["schema_version", "reg_meta_version", "name"] {
+    for field in ["schema_version", "reg_meta_version", "catalog", "name"] {
         if get(root, field).is_some_and(|v| !v.is_string()) {
             issues.error(
                 "invalid_field_type",
@@ -421,6 +427,20 @@ fn check_top_level(root: &Map<String, Value>, issues: &mut Issues) {
                 format!("{field} must be a string"),
             );
         }
+    }
+    // `global` is itself a slug. reg-core keeps no list of stewards: whether the id is
+    // the serving catalog's is `catalog_mismatch`, in reg-catalog.
+    if let Some(catalog) = get(root, "catalog").and_then(Value::as_str)
+        && !crate::is_slug(catalog)
+    {
+        issues.error(
+            "invalid_slug",
+            "/catalog".into(),
+            format!(
+                "catalog must be 'global' or a steward id (a lowercase slug); got {}",
+                q(catalog)
+            ),
+        );
     }
     optional_string(root, "extract_format", "", "extract_format", issues);
     if let Some(format) = get(root, "extract_format").and_then(Value::as_str)

@@ -128,7 +128,7 @@
     "mode": "steward_holdings",
     "project": {
       "name": "Concurrent release partial holdings",
-      "schema_version": "6.3.0"
+      "schema_version": "7.0.0"
     },
     "steward": "fixture"
   },

@@ -147,7 +147,7 @@
     "mode": "steward_holdings",
     "project": {
       "name": "Concurrent release files",
-      "schema_version": "6.3.0"
+      "schema_version": "7.0.0"
     },
     "steward": "fixture"
   },

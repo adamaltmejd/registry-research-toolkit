@@ -41,6 +41,7 @@ export function catalogBindings(
 
 export interface ProjectSeed {
   reg_meta_version: string;
+  catalog: string;
   name?: string;
   window?: ProjectStudyWindow;
 }
@@ -49,6 +50,7 @@ export function newProjectData(seed: ProjectSeed): ProjectData {
   return {
     schema_version: projectSchemaVersion(),
     reg_meta_version: seed.reg_meta_version,
+    catalog: seed.catalog,
     name: seed.name ?? "new_project",
     sources: [],
     ...(seed.window ? { window: { ...seed.window } } : {}),

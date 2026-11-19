@@ -1,0 +1,10 @@
+{
+  "findings": [
+    {
+      "level": "error",
+      "code": "catalog_mismatch",
+      "path": "/catalog",
+      "message": "The project is drafted on the 'global' catalog, but this server serves the 'fixture' catalog. Validate and order it on its own catalog's server, or change `catalog` to move it here."
+    }
+  ]
+}

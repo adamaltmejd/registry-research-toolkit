@@ -1,6 +1,7 @@
 {
   "schema_version": null,
   "reg_meta_version": "reg_meta/v1.0.0",
+  "catalog": "global",
   "name": "demo",
   "sources": null
 }

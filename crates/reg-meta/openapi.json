@@ -1525,9 +1525,14 @@
         "description": "What the site shell shows. Catalog identity is in every response's `meta`.",
         "required": [
           "period_span",
-          "reg_meta_version"
+          "reg_meta_version",
+          "catalog"
         ],
         "properties": {
+          "catalog": {
+            "type": "string",
+            "description": "The catalog served, `global` or the steward id, which seeds a new project's\n`catalog`."
+          },
           "period_span": {
             "oneOf": [
               {
@@ -3193,10 +3198,15 @@
         "required": [
           "schema_version",
           "reg_meta_version",
+          "catalog",
           "name",
           "sources"
         ],
         "properties": {
+          "catalog": {
+            "type": "string",
+            "description": "The catalog the project is drafted on and ordered from: `global`, or a steward\nid. `validate`, `order` and `materialize_order` refuse a document whose catalog\nis not the one serving them (`catalog_mismatch`)."
+          },
           "extract_format": {
             "$ref": "#/components/schemas/ProjectExtractFormat",
             "description": "The extract file format. Absent means the order authoring default, `dta`, which\nthe order file resolves; it is never inserted here. An explicit `null` is\n`invalid_field_type`."

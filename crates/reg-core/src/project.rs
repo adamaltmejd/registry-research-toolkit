@@ -23,7 +23,7 @@ use crate::{
 };
 
 /// The `project_data.json` contract this runtime reads, exactly.
-pub const SCHEMA_VERSION: &str = "6.3.0";
+pub const SCHEMA_VERSION: &str = "7.0.0";
 
 /// The project in `raw`, or the issues that reject it without a catalog: the single
 /// entry point the server's validate and order operations share.
@@ -168,6 +168,10 @@ str_enum!(
 pub struct ProjectData {
     pub schema_version: String,
     pub reg_meta_version: String,
+    /// The catalog the project is drafted on and ordered from: `global`, or a steward
+    /// id. `validate`, `order` and `materialize_order` refuse a document whose catalog
+    /// is not the one serving them (`catalog_mismatch`).
+    pub catalog: String,
     pub name: String,
     pub sources: Vec<Source>,
     #[serde(default)]
@@ -207,6 +211,7 @@ pub struct Linkage {
 struct Fields {
     schema_version: String,
     reg_meta_version: String,
+    catalog: String,
     name: String,
     sources: Vec<Source>,
     #[serde(default)]
@@ -248,6 +253,7 @@ impl ProjectData {
         Ok(Self {
             schema_version: f.schema_version,
             reg_meta_version: f.reg_meta_version,
+            catalog: f.catalog,
             name: f.name,
             sources: f.sources,
             panels: f.panels,

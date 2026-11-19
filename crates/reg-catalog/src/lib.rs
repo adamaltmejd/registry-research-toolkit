@@ -17,7 +17,7 @@ pub use holdings::Steward;
 
 /// `api_version` in `conformance/api/operations.toml`: the operation set and its JSON
 /// shapes, not the `project_data.json` schema (`reg_core::project::SCHEMA_VERSION`).
-pub const API_VERSION: &str = "7.0.0";
+pub const API_VERSION: &str = "7.1.0";
 const DB_FILENAME: &str = "reg_meta.db";
 /// The `meta` keys every catalog carries (`reg-build`'s `schema.sql` and `checks.sql`).
 const REQUIRED_META: [&str; 10] = [

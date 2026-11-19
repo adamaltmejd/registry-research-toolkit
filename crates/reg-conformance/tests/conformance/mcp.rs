@@ -448,6 +448,7 @@ fn materialize_tool_matches_http() {
     let manual_only = json!({
         "schema_version": project["schema_version"],
         "reg_meta_version": project["reg_meta_version"],
+        "catalog": project["catalog"],
         "name": "Manual only",
         "sources": [{
             "name": "nya",
