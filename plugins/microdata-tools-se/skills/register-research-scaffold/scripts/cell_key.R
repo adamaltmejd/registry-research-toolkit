@@ -152,8 +152,8 @@ ck_draw <- function(n) {
 
 # Person ids as text, one text per distinct id: character and factor ids as
 # they are, integer ids in full, and double ids only when whole and below 2^53,
-# where "%.0f" writes each distinct value differently. Anything else could give
-# two persons one key, so it is refused.
+# where "%.0f" writes each distinct value differently (x + 0 turns -0 into 0).
+# Anything else could give two persons one key, so it is refused.
 ck_id_text <- function(x) {
   if (is.character(x) || is.factor(x)) {
     return(as.character(x))
@@ -164,7 +164,7 @@ ck_id_text <- function(x) {
   if (is.double(x) && is.null(attr(x, "class"))) {
     ok <- is.na(x) | (is.finite(x) & x == round(x) & abs(x) < 2^53)
     if (all(ok)) {
-      return(ifelse(is.na(x), NA_character_, sprintf("%.0f", x)))
+      return(ifelse(is.na(x), NA_character_, sprintf("%.0f", x + 0)))
     }
   }
   ck_stop(
