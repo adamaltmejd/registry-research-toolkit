@@ -12,8 +12,8 @@
 //! 1 000 000 persons needs `--allow-large`.
 //!
 //! `fetch` sends `CF-Access-Client-Id` and `CF-Access-Client-Secret` from the environment
-//! variables `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET` when set (a steward behind
-//! Cloudflare Access). `--version` prints the `reg_meta` release the binary ships in.
+//! variables `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET` (a steward behind
+//! Cloudflare Access), only to the host named by `CF_ACCESS_HOST`. `--version` prints the `reg_meta` release the binary ships in.
 //!
 //! A refusal prints `{"refusals": [...]}` (every located refusal at once) on stderr and
 //! exits 2; a usage error exits 64.

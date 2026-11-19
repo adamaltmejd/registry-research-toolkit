@@ -121,18 +121,33 @@ fn fetch_saves_every_page_after_a_rate_limit() {
     assert_eq!(saved, expected);
 }
 
-/// A steward behind Cloudflare Access: the call carries both Access headers, and a call
-/// without them meets the login redirect, which `fetch` refuses as `access_required`
-/// without printing the token. A regression that drops the headers, follows the redirect
-/// or echoes the secret fails here.
+/// A steward behind Cloudflare Access: the call carries both Access headers only to the
+/// host `CF_ACCESS_HOST` names, and a call that meets the login redirect is refused as
+/// `access_required` without printing the token. A token for plain http to a remote host
+/// (even one hidden behind a loopback prefix in the user-info) is refused before any
+/// request. A regression that sends the token to another host, drops the headers,
+/// follows the redirect, trusts the URL prefix or echoes the secret fails here.
 #[test]
-fn fetch_sends_access_headers_and_refuses_a_login_page() {
+fn fetch_sends_access_headers_only_to_the_steward() {
     let listener = TcpListener::bind("127.0.0.1:0").expect("a local port");
+    listener.set_nonblocking(true).expect("nonblocking");
     let url = format!("http://{}/mcp", listener.local_addr().expect("bound"));
     let seen = std::thread::spawn(move || {
         let mut seen = Vec::new();
-        for _ in 0..2 {
-            let (mut stream, _) = listener.accept().expect("a connection");
+        for _ in 0..3 {
+            // A deadline, so a client that never connects fails the test instead of hanging it.
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+            let mut stream = loop {
+                match listener.accept() {
+                    Ok((stream, _)) => break stream,
+                    Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => {
+                        assert!(std::time::Instant::now() < deadline, "no connection");
+                        std::thread::sleep(std::time::Duration::from_millis(20));
+                    }
+                    Err(e) => panic!("accept: {e}"),
+                }
+            };
+            stream.set_nonblocking(false).expect("blocking");
             let mut reader = BufReader::new(stream.try_clone().expect("a stream"));
             let mut headers = String::new();
             loop {
@@ -157,32 +172,51 @@ fn fetch_sends_access_headers_and_refuses_a_login_page() {
     std::fs::create_dir_all(&dir).expect("a directory");
     let project = dir.join("project.json");
     std::fs::write(&project, "{}").expect("the project");
-    let run = |token: bool| {
+    let run = |catalog: &str, token_host: Option<&str>| {
         let mut command = Command::new(env!("CARGO_BIN_EXE_reg-mock"));
         command
-            .args(["fetch", "--catalog", &url, "--mode", "order", "--project"])
+            .args([
+                "fetch",
+                "--catalog",
+                catalog,
+                "--mode",
+                "order",
+                "--project",
+            ])
             .arg(&project)
             .arg("--out")
             .arg(&dir)
             .env_remove("CF_ACCESS_CLIENT_ID")
-            .env_remove("CF_ACCESS_CLIENT_SECRET");
-        if token {
+            .env_remove("CF_ACCESS_CLIENT_SECRET")
+            .env_remove("CF_ACCESS_HOST");
+        if let Some(host) = token_host {
             command
                 .env("CF_ACCESS_CLIENT_ID", "id-123.access")
-                .env("CF_ACCESS_CLIENT_SECRET", "s3cret-value");
+                .env("CF_ACCESS_CLIENT_SECRET", "s3cret-value")
+                .env("CF_ACCESS_HOST", host);
         }
         command.output().expect("runs")
     };
-    let without = run(false);
-    let with = run(true);
+    let without = run(&url, None);
+    let other_host = run(&url, Some("steward.example"));
+    let steward = run(&url, Some("127.0.0.1"));
+    let userinfo = run("http://127.0.0.1@evil.example/mcp", Some("evil.example"));
     let seen = seen.join().expect("the stub");
     assert!(!seen[0].contains("cf-access-client"));
-    assert!(seen[1].contains("cf-access-client-id: id-123.access\r\n"));
-    assert!(seen[1].contains("cf-access-client-secret: s3cret-value\r\n"));
-    for run in [without, with] {
+    assert!(!seen[1].contains("cf-access-client"));
+    assert!(seen[2].contains("cf-access-client-id: id-123.access\r\n"));
+    assert!(seen[2].contains("cf-access-client-secret: s3cret-value\r\n"));
+    for run in [without, other_host, steward] {
         assert_eq!(run.status.code(), Some(2));
         let stderr = String::from_utf8_lossy(&run.stderr);
         assert!(stderr.contains("\"code\":\"access_required\""), "{stderr}");
         assert!(!stderr.contains("s3cret-value"));
     }
+    assert_eq!(userinfo.status.code(), Some(2));
+    let stderr = String::from_utf8_lossy(&userinfo.stderr);
+    assert!(
+        stderr.contains("\"code\":\"access_credentials\""),
+        "{stderr}"
+    );
+    assert!(!stderr.contains("s3cret-value"));
 }
