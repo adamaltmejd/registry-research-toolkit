@@ -4309,7 +4309,7 @@
             "items": {
               "$ref": "#/components/schemas/NotOrderable"
             },
-            "description": "On a data holder's catalog, for a table it holds only in files no order can draw\non yet: those files, and why. Absent otherwise."
+            "description": "On a data holder's catalog, when the list names a table (a table ref, or a\nvariable ref with `table`) that the holder holds in files no order can draw on\nyet, whether or not other files of it are orderable: those files, their years and\nwhy. Absent otherwise."
           }
         }
       },

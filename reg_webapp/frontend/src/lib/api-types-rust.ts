@@ -1218,8 +1218,10 @@ export interface components {
             items: components["schemas"]["Segment"][];
             next_cursor: string | null;
             /**
-             * @description On a data holder's catalog, for a table it holds only in files no order can draw
-             *     on yet: those files, and why. Absent otherwise.
+             * @description On a data holder's catalog, when the list names a table (a table ref, or a
+             *     variable ref with `table`) that the holder holds in files no order can draw on
+             *     yet, whether or not other files of it are orderable: those files, their years and
+             *     why. Absent otherwise.
              */
             not_orderable?: components["schemas"]["NotOrderable"][];
         };

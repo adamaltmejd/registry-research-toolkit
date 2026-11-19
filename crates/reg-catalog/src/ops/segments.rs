@@ -48,8 +48,10 @@ pub struct SegmentPage {
     items: Vec<Segment>,
     #[schema(required = true)]
     next_cursor: Option<String>,
-    /// On a data holder's catalog, for a table it holds only in files no order can draw
-    /// on yet: those files, and why. Absent otherwise.
+    /// On a data holder's catalog, when the list names a table (a table ref, or a
+    /// variable ref with `table`) that the holder holds in files no order can draw on
+    /// yet, whether or not other files of it are orderable: those files, their years and
+    /// why. Absent otherwise.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     not_orderable: Vec<NotOrderable>,
 }
@@ -228,7 +230,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     let items = served(server, &origins, page, evidence)?;
     let not_orderable = table
         .as_deref()
-        .map_or_else(Vec::new, |t| server.catalog.not_orderable(t).to_vec());
+        .map_or_else(Vec::new, |t| server.not_orderable(t));
     Ok(serde_json::to_value(SegmentPage {
         items,
         next_cursor,

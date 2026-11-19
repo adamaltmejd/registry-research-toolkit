@@ -54,8 +54,8 @@ pub(crate) struct Possession {
     blocked: Blocked,
     /// Each catalog table's blocked files, whether or not a placement also holds it.
     not_orderable: HashMap<String, Vec<NotOrderable>>,
-    /// (variable, table) pairs the catalog documents in a table only blocked files route to: the variables a
-    /// request may name there although no placement holds them.
+    /// (variable, table) pairs the catalog documents in a table only blocked files route
+    /// to: the variables a request may name there although no placement holds them.
     blocked_pairs: HashSet<(String, String)>,
 }
 
@@ -75,8 +75,11 @@ pub struct NotOrderable {
     pub reason: String,
     /// The years the file holds; absent when the data holder states none
     /// (`table_unknown`).
+    // Filled from `days` by `Server::not_orderable`.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub spans: Vec<Period>,
+    #[serde(skip)]
+    days: Vec<Span>,
     /// What the reason means.
     pub message: &'static str,
     /// The data holder's own notes on each held row key, as written.
@@ -93,7 +96,7 @@ pub struct Hold {
 }
 
 impl NotOrderable {
-    fn new(file: String, reason: &str, keys: &str, spans: Vec<Period>) -> Self {
+    fn new(file: String, reason: &str, keys: &str, days: Vec<Span>) -> Self {
         let message = match reason {
             "row_key_held" => {
                 "Held by the data holder, but not orderable yet: the columns that identify \
@@ -121,15 +124,28 @@ impl NotOrderable {
         Self {
             file,
             reason: reason.to_owned(),
-            spans,
+            spans: Vec::new(),
+            days,
             message,
             holds,
+        }
+    }
+
+    /// This file with its years as result periods.
+    pub(crate) fn dated(&self, period: impl Fn(i64, i64) -> Period) -> Self {
+        Self {
+            spans: self
+                .days
+                .iter()
+                .map(|&(start, end)| period(start, end))
+                .collect(),
+            ..self.clone()
         }
     }
 }
 
 impl Possession {
-    fn read(conn: &Connection, open: (i64, i64)) -> Result<Self, Error> {
+    fn read(conn: &Connection) -> Result<Self, Error> {
         // A placement or a route names its table by public id, in either origin.
         let mut above: HashMap<String, (String, String)> = HashMap::new();
         for origin in ["main", "held"] {
@@ -208,7 +224,7 @@ impl Possession {
             .filter(|(_, held)| held.len() >= 2)
             .map(|(set, _)| set)
             .collect();
-        possession.read_blocked(conn, &above, open)?;
+        possession.read_blocked(conn, &above)?;
         Ok(possession)
     }
 
@@ -220,7 +236,6 @@ impl Possession {
         &mut self,
         conn: &Connection,
         above: &HashMap<String, (String, String)>,
-        open: (i64, i64),
     ) -> Result<(), Error> {
         let mut query = conn.prepare(&format!(
             "SELECT r.table_pid, {TABLE_LABEL}, b.reason, h.key_requirements, h.id
@@ -263,10 +278,6 @@ impl Possession {
                     map.entry(pid.clone()).or_default().extend(&spans);
                 }
             }
-            let spans = spans
-                .iter()
-                .map(|&(start, end)| Period::new(open, start, end))
-                .collect();
             self.not_orderable
                 .entry(table)
                 .or_default()
@@ -502,13 +513,7 @@ impl Catalog {
     fn admit_possession(&mut self) -> Result<(), Error> {
         let conn = self.connect()?;
         self.attach_holdings(&conn)?;
-        let day = |key: &str| {
-            self.meta(key)
-                .parse::<i64>()
-                .map_err(|_| Error::internal(format!("meta {key} is not a day number")))
-        };
-        let open = (day("open_start")?, day("open_end")?);
-        let possession = Possession::read(&conn, open)?;
+        let possession = Possession::read(&conn)?;
         let mut query = conn.prepare("SELECT id, name FROM held.holding_space ORDER BY ord")?;
         let spaces = query
             .query_map([], |r| {
@@ -627,9 +632,9 @@ impl Catalog {
     }
 
     /// A shown table's files no order can draw on yet, whether or not a placement also
-    /// holds it; empty when it has none or outside steward mode.
-    #[must_use]
-    pub fn not_orderable(&self, table: &str) -> &[NotOrderable] {
+    /// holds it; empty when it has none or outside steward mode. Their `spans` are
+    /// unfilled: `Server::not_orderable` dates them.
+    pub(crate) fn not_orderable(&self, table: &str) -> &[NotOrderable] {
         self.holdings
             .as_ref()
             .and_then(|h| h.possession.not_orderable.get(table))

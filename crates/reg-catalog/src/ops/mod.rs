@@ -85,6 +85,16 @@ impl Server {
         Period::new(self.open, start, end)
     }
 
+    /// A shown table's files no order can draw on yet, each with the years it holds.
+    #[must_use]
+    pub fn not_orderable(&self, table: &str) -> Vec<crate::holdings::NotOrderable> {
+        self.catalog
+            .not_orderable(table)
+            .iter()
+            .map(|file| file.dated(|start, end| self.period(start, end)))
+            .collect()
+    }
+
     /// An entity's hull: in steward mode the years it is held, else `[start, end)`.
     #[must_use]
     pub fn hull(&self, kind: &str, pid: &str, start: i64, end: i64) -> Period {
