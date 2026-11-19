@@ -46,6 +46,14 @@ release. Anything else is not a steward deployment: a `Not found` (the global ca
 answers that), an HTML page, or a redirect or `403` (sign-in, below). Tell the user the
 steward's `name` and release before adding it.
 
+For a steward behind a sign-in, send the token's two headers from the environment that
+holds it (below), never with the values typed:
+
+```bash
+curl -sS -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" \
+  -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" https://<steward-host>/api/context
+```
+
 ## Adding it to the project
 
 The steward's catalog belongs to the project whose data comes from that steward, not to
@@ -115,10 +123,11 @@ export CF_ACCESS_CLIENT_ID=<client id>
 export CF_ACCESS_CLIENT_SECRET=<client secret>
 ```
 
-and loads it into the shell the agent starts from, in the project: `direnv` does that
-on entering the folder, or by hand `set -a; . ./.envrc; set +a` before starting the
-agent. The project's server reads the pair from that environment; `reg-mock fetch`
-reads all three (`register-mock-data` skill). In `.mcp.json`:
+and loads it only for the agent it starts in the project: `direnv` does that on entering
+the folder and unloads it on leaving; by hand, start the agent in a subshell so the
+token ends with it, `(set -a; . ./.envrc; exec claude)` (or `exec codex`). The
+project's server reads the pair from that environment; `reg-mock fetch` reads all
+three (`register-mock-data` skill). In `.mcp.json`:
 
 ```json
 {
