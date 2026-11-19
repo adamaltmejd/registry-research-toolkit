@@ -83,8 +83,8 @@ After every merge, for your own workers only:
    app's pool for a later session (the app reuses or deletes it): a detached worktree
    under `.claude/worktrees/` is not a leftover. Workers never call ExitWorktree; it only
    removes worktrees a session made itself.
-3. Archiving leaves the local branch (`claude/<name>-<suffix>`): delete it with
-   `git branch -D <branch>` (the `error: could not lock config file .git/config` and
+3. Archiving leaves the local branch (`claude/<name>-<suffix>`): once its tip equals the
+   merged PR's `headRefOid`, delete it with `git branch -D <branch>` (the `error: could not lock config file .git/config` and
    `warning: update of config-file failed` lines are expected; the delete succeeded when
    git prints `Deleted branch <branch>`).
    Delete the remote branch if it is still there (GitHub normally deletes merged head
@@ -110,14 +110,15 @@ question to the maintainer for regenerable output.
 - When: at session start, after every merge, and when a worker reports a full disk. Check
   `df -h ~/.local` and the `code` volume; act below about 10 GB free.
 - Shared cargo build cache, `~/.local/share/cargo/build/<xx>/<hash>/`: one directory per
-  workspace path, so one per worktree, 5 to 11 GB each. Delete one when its worktree's PR
-  has merged and the session is archived, or when nothing in it was written for a day.
-  Identify one by its newest files (`find <dir> -type f -newermt <time>`; the test names
-  under `tmp/` show the crate). Never delete one written in the last hour or one a running
-  worker builds into. The sandbox hides other sessions' processes: file times are the
-  evidence, not `ps` or `lsof`.
+  workspace path, so one per worktree, 5 to 11 GB each. Find the ones in use:
+  `cargo metadata --format-version 1 --no-deps` reports `build_directory` for the
+  directory it runs in; run it in the main checkout and every worktree in
+  `git worktree list`. A directory none of them reports belongs to a removed or reused
+  worktree and can go at once. Delete a live worktree's directory only when its session is
+  archived, or its worker is idle and has been told. As a second check, never delete one
+  written in the last hour (`find <dir> -type f -newermt <time>`). The sandbox hides other
+  sessions' processes, so `ps` and `lsof` prove nothing.
 - A merged PR's worktree: its `target/` and other ignored build output are disposable.
-  Delete local branches of merged PRs.
 - `$TMPDIR`: remove your own scratch, steward-repository clones and stray copies of
   holdings files left by Codex reviews, once the review they served is done.
 - Not yours to delete: other tools' and projects' caches under `~/.local/cache` (e.g.
