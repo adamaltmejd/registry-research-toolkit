@@ -120,3 +120,69 @@ fn fetch_saves_every_page_after_a_rate_limit() {
     }
     assert_eq!(saved, expected);
 }
+
+/// A steward behind Cloudflare Access: the call carries both Access headers, and a call
+/// without them meets the login redirect, which `fetch` refuses as `access_required`
+/// without printing the token. A regression that drops the headers, follows the redirect
+/// or echoes the secret fails here.
+#[test]
+fn fetch_sends_access_headers_and_refuses_a_login_page() {
+    let listener = TcpListener::bind("127.0.0.1:0").expect("a local port");
+    let url = format!("http://{}/mcp", listener.local_addr().expect("bound"));
+    let seen = std::thread::spawn(move || {
+        let mut seen = Vec::new();
+        for _ in 0..2 {
+            let (mut stream, _) = listener.accept().expect("a connection");
+            let mut reader = BufReader::new(stream.try_clone().expect("a stream"));
+            let mut headers = String::new();
+            loop {
+                let mut line = String::new();
+                reader.read_line(&mut line).expect("a header");
+                if line == "\r\n" {
+                    break;
+                }
+                headers.push_str(&line.to_ascii_lowercase());
+            }
+            seen.push(headers);
+            write!(
+                stream,
+                "HTTP/1.1 302 Found\r\nlocation: https://team.cloudflareaccess.com/login\r\n\
+                 content-length: 0\r\nconnection: close\r\n\r\n"
+            )
+            .expect("a reply");
+        }
+        seen
+    });
+    let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("reg-mock-access");
+    std::fs::create_dir_all(&dir).expect("a directory");
+    let project = dir.join("project.json");
+    std::fs::write(&project, "{}").expect("the project");
+    let run = |token: bool| {
+        let mut command = Command::new(env!("CARGO_BIN_EXE_reg-mock"));
+        command
+            .args(["fetch", "--catalog", &url, "--mode", "order", "--project"])
+            .arg(&project)
+            .arg("--out")
+            .arg(&dir)
+            .env_remove("CF_ACCESS_CLIENT_ID")
+            .env_remove("CF_ACCESS_CLIENT_SECRET");
+        if token {
+            command
+                .env("CF_ACCESS_CLIENT_ID", "id-123.access")
+                .env("CF_ACCESS_CLIENT_SECRET", "s3cret-value");
+        }
+        command.output().expect("runs")
+    };
+    let without = run(false);
+    let with = run(true);
+    let seen = seen.join().expect("the stub");
+    assert!(!seen[0].contains("cf-access-client"));
+    assert!(seen[1].contains("cf-access-client-id: id-123.access\r\n"));
+    assert!(seen[1].contains("cf-access-client-secret: s3cret-value\r\n"));
+    for run in [without, with] {
+        assert_eq!(run.status.code(), Some(2));
+        let stderr = String::from_utf8_lossy(&run.stderr);
+        assert!(stderr.contains("\"code\":\"access_required\""), "{stderr}");
+        assert!(!stderr.contains("s3cret-value"));
+    }
+}

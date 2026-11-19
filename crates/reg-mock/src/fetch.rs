@@ -46,23 +46,87 @@ const BATCH: usize = 200;
 const ATTEMPTS: u32 = 30;
 const MAX_ANSWER_BYTES: u64 = 256 * 1024 * 1024;
 
+/// A Cloudflare Access service token, sent with every call to a steward behind Access.
+/// No `Debug` or `Display`: the secret must reach nothing but the request header.
+pub struct Access {
+    id: String,
+    secret: String,
+}
+
+impl Access {
+    const ID: &'static str = "CF_ACCESS_CLIENT_ID";
+    const SECRET: &'static str = "CF_ACCESS_CLIENT_SECRET";
+
+    /// The token from `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET` (environment
+    /// variables, not flags, so the secret stays out of shell history); `None` when
+    /// neither is set.
+    ///
+    /// # Errors
+    ///
+    /// `access_credentials` when only one is set, a value is not a valid header value, or
+    /// `url` is plain http to a non-local host (the secret would cross the network
+    /// unencrypted). The error names the variable, never its value.
+    pub fn from_env(url: &str) -> Result<Option<Self>, Refusal> {
+        Self::from_vars(url, |name| std::env::var(name).ok())
+    }
+
+    fn from_vars(url: &str, var: impl Fn(&str) -> Option<String>) -> Result<Option<Self>, Refusal> {
+        let refuse = |message: String| Refusal::new("access_credentials", url, message);
+        let (id, secret) = match (var(Self::ID), var(Self::SECRET)) {
+            (None, None) => return Ok(None),
+            (Some(id), Some(secret)) => (id, secret),
+            _ => {
+                return Err(refuse(format!(
+                    "set both {} and {}, or neither",
+                    Self::ID,
+                    Self::SECRET
+                )));
+            }
+        };
+        for (name, value) in [(Self::ID, &id), (Self::SECRET, &secret)] {
+            if value.is_empty() || !value.bytes().all(|b| (0x21..=0x7e).contains(&b)) {
+                return Err(refuse(format!(
+                    "{name} is empty or has characters a header cannot carry"
+                )));
+            }
+        }
+        let local = ["http://127.0.0.1", "http://localhost", "http://[::1]"]
+            .iter()
+            .any(|p| {
+                url.strip_prefix(p)
+                    .is_some_and(|r| r.starts_with([':', '/']))
+            });
+        if !url.starts_with("https://") && !local {
+            return Err(refuse(
+                "the catalog URL must be https when an Access token is set".to_owned(),
+            ));
+        }
+        Ok(Some(Self { id, secret }))
+    }
+}
+
 /// A catalog's MCP endpoint: the plugin's `catalog_url`.
 pub struct Catalog {
     agent: ureq::Agent,
     url: String,
+    access: Option<Access>,
 }
 
 impl Catalog {
     #[must_use]
-    pub fn new(url: &str) -> Self {
+    pub fn new(url: &str, access: Option<Access>) -> Self {
+        // No redirects: Access answers a call without a valid token by redirecting to its
+        // login page, and the token must not follow a redirect to another host.
         let agent = ureq::Agent::config_builder()
             .http_status_as_error(false)
+            .max_redirects(0)
             .timeout_global(Some(Duration::from_secs(300)))
             .build()
             .into();
         Self {
             agent,
             url: url.to_owned(),
+            access,
         }
     }
 
@@ -83,13 +147,17 @@ impl Catalog {
         let network = |e: ureq::Error| vec![Refusal::new("network", &self.url, e.to_string())];
         let mut attempt = 1;
         let (status, text) = loop {
-            let mut response = self
+            let mut request = self
                 .agent
                 .post(&self.url)
                 .header("content-type", "application/json")
-                .header("accept", "application/json, text/event-stream")
-                .send(&body)
-                .map_err(network)?;
+                .header("accept", "application/json, text/event-stream");
+            if let Some(access) = &self.access {
+                request = request
+                    .header("CF-Access-Client-Id", &access.id)
+                    .header("CF-Access-Client-Secret", &access.secret);
+            }
+            let mut response = request.send(&body).map_err(network)?;
             let status = response.status().as_u16();
             if matches!(status, 408 | 429 | 500 | 502 | 503 | 504) && attempt < ATTEMPTS {
                 let wait = response
@@ -111,6 +179,9 @@ impl Catalog {
         };
         let at = format!("{}: {tool}", self.url);
         let reply: Value = serde_json::from_str(&text).map_err(|_| {
+            if (300..400).contains(&status) || text.trim_start().starts_with('<') {
+                return vec![self.access_refusal(&at, status)];
+            }
             let start: String = text.chars().take(300).collect();
             vec![Refusal::new(
                 "catalog_unreadable",
@@ -139,6 +210,23 @@ impl Catalog {
                 ),
             )]),
         }
+    }
+}
+
+impl Catalog {
+    /// The reply is a login redirect or an HTML page, not JSON: the steward is behind
+    /// Cloudflare Access and did not accept the call.
+    fn access_refusal(&self, at: &str, status: u16) -> Refusal {
+        let advice = if self.access.is_some() {
+            "the token was not accepted: check that it is a service token with a policy for this steward and has not expired"
+        } else {
+            "the steward is behind Cloudflare Access: set CF_ACCESS_CLIENT_ID and CF_ACCESS_CLIENT_SECRET to a service token for it"
+        };
+        Refusal::new(
+            "access_required",
+            at,
+            format!("HTTP {status}, an Access login page instead of JSON: {advice}"),
+        )
     }
 }
 

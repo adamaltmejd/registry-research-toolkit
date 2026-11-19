@@ -97,6 +97,12 @@ It sends only the project document and reads metadata only.
   The hosted rate limit (60 calls, then one a second) answers 429 with `Retry-After`,
   which fetch waits out, up to 30 times a call. #2448 would fold the values calls
   into one.
+- **Cloudflare Access** (#2569): when `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET`
+  are both set, every call carries them as `CF-Access-Client-Id` and
+  `CF-Access-Client-Secret`. They are environment variables, not flags, to keep the
+  secret out of shell history; the secret is never printed or saved. Redirects are not
+  followed, so the token goes only to the catalog URL (https, or a local address). A
+  login redirect or HTML page is refused as `access_required`, naming the variables.
 - **All or nothing**: the earlier answers (`order.json`, `manifest.json`, `segments/`,
   `values/`) are replaced only once every answer has arrived, and the saved set is then
   read as compile reads it, so a catalog redeployed during the fetch is refused there
@@ -105,7 +111,8 @@ It sends only the project document and reads metadata only.
   then one per error-level item of its `issues` (`project_invalid`) or `findings`
   (`order_blocked`), at its project path; `network` for a failed request;
   `catalog_unreadable` for a reply that is not a tool result (a wrong URL, a proxy's
-  page).
+  page); `access_required` for an Access login page; `access_credentials` for a half-set
+  or malformed token.
 
 ## Compile
 

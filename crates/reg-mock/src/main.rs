@@ -11,6 +11,10 @@
 //! `mock_manifest.json`. `--seed` defaults to 1 and `--persons` to 10 000; more than
 //! 1 000 000 persons needs `--allow-large`.
 //!
+//! `fetch` sends `CF-Access-Client-Id` and `CF-Access-Client-Secret` from the environment
+//! variables `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET` when set (a steward behind
+//! Cloudflare Access). `--version` prints the `reg_meta` release the binary ships in.
+//!
 //! A refusal prints `{"refusals": [...]}` (every located refusal at once) on stderr and
 //! exits 2; a usage error exits 64.
 
@@ -18,7 +22,7 @@ use std::path::{Path, PathBuf};
 
 use reg_mock::Refusal;
 use reg_mock::compile::{compile, load_answers};
-use reg_mock::fetch::{Catalog, Mode, fetch};
+use reg_mock::fetch::{Access, Catalog, Mode, fetch};
 use reg_mock::rules::Rules;
 use reg_mock::spec::{SPEC_VERSION, Spec};
 use reg_mock::{generate, write};
@@ -34,6 +38,9 @@ fn main() {
         Some("fetch") => run_fetch(args),
         Some("compile") => run_compile(args),
         Some("generate") => run_generate(args),
+        Some("--version") => {
+            println!("reg-mock {}", env!("REG_META_VERSION"));
+        }
         _ => usage("expected a subcommand"),
     }
 }
@@ -74,7 +81,9 @@ fn run_fetch(mut args: impl Iterator<Item = String>) -> ! {
     };
     let project = read_json(Path::new(&project));
     let out = PathBuf::from(out);
-    let saved = fetch(&Catalog::new(&catalog), &project, mode, &out).unwrap_or_else(|r| refuse(&r));
+    let access = Access::from_env(&catalog).unwrap_or_else(|r| refuse(&[r]));
+    let saved =
+        fetch(&Catalog::new(&catalog, access), &project, mode, &out).unwrap_or_else(|r| refuse(&r));
     eprintln!("saved {saved} answers into {}", out.display());
     std::process::exit(0);
 }
