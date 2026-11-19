@@ -23,7 +23,7 @@ import {
   registerRead,
   registerSubjectNames,
   segmentsRead,
-  tableShowReads,
+  sharedDaysReads,
 } from "./catalog_names";
 import { segmentYears, sourcePeriodLabel } from "./catalog_period";
 import {
@@ -220,8 +220,8 @@ export function useVariableCoverage({
   );
   // A bound table is read whole for the days its releases share: there a
   // source takes only the releases it names, releaseless rows included.
-  const tableShows = useCatalogRead(
-    tableShowReads,
+  const sharedDayReads = useCatalogRead(
+    sharedDaysReads,
     useDistinct(
       subjects.flatMap((subject) =>
         subject.segments.flatMap((segment) =>
@@ -233,9 +233,9 @@ export function useVariableCoverage({
     ),
   );
   const sharedDays = new Map(
-    Object.entries(tableShows).map(([table, read]) => [
+    Object.entries(sharedDayReads).map(([table, read]) => [
       table,
-      read.value?.shared_release_days ?? [],
+      read.value ?? [],
     ]),
   );
   // What is picked is a variable in a table, its lane (#2408): a project
