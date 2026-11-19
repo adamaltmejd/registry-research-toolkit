@@ -1,0 +1,17 @@
+{
+  "schema_version": "6.3.0",
+  "reg_meta_version": "reg_meta/v0.90.0",
+  "name": "reference-income-by-sex",
+  "extract_format": "parquet",
+  "sources": [
+    {
+      "name": "lisa",
+      "table": "scb/lisa/individer",
+      "period": {"from": 2021, "to": 2022},
+      "bindings": [
+        {"variable": "scb/lisa/kon"},
+        {"variable": "scb/lisa/delkomponent-disponibel-inkomst-2004"}
+      ]
+    }
+  ]
+}

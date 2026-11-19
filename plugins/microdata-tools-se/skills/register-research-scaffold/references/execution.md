@@ -14,14 +14,16 @@ investigations, aggregate data files and the mandatory final export-gate check
 flexible servers return the checked file set through rsync. No model calls or automatic
 raw-data synchronization. Tables and figures are rendered locally.
 
-Configure real and mock input directories outside the project. Select real mode when the
-real directory exists; otherwise select mock when its directory exists; fail when
-neither exists. Select once before running. An unreadable directory, invalid input or
+Configure real and mock input directories outside the project. Name the mode when
+starting a run (the reference: `Rscript run.R mock|real`); fail when its directory is
+missing, and refuse a mock run where the real directory exists. Before anything that
+can fail, invalidate that mode's previous export. An unreadable directory, invalid input or
 failed assertion in the selected mode halts execution; never retry with another mode.
 Print the selected mode prominently. Verify that mock inputs belong to an approved
-invented input set before reading them; a mode flag or filename is not sufficient. For a
-small trial, a committed content-hash manifest can bind the ignored mock files without
-tracking their records. Keep that manifest distinct from unit fixtures. Derive separate
+invented input set before reading them; a mode flag or filename is not sufficient:
+`reg-mock` lists its files in `mock_manifest.json` and labels each with `reg_mock`
+metadata, and a real input must not carry the label (the reference's `R/inputs.R`).
+No separate hash manifest: the committed spec and seed fix the bytes. Derive separate
 cache, result and local-render paths from the selected mode. Ignore caches, mock
 outputs, private intermediates, logs, environments and machine-specific configuration.
 Disclosure-checked, human-approved real aggregate results and local renders may be
@@ -35,16 +37,16 @@ The order flow (catalog, `project_data.json`, mock inputs, the steward's extract
 gate, MONA's export) and who does each step is in [mona.md](mona.md). On MONA the real
 input directory is the folder the steward's extract lands in.
 
-Target one uploadable execution file and one result ZIP per batch. The execution file's
-last step calls the pinned `export_gate.R`, uploaded unchanged beside it with the chosen
-schema and policy, never folded into the project's own file: the receipt's gate version
+Upload the committed project folder (the reference project's layout: `run.R`, `R/`,
+`config.R`, `export_gate/`) and return one result ZIP per batch. The run's last step
+calls the pinned `export_gate.R`, uploaded unchanged in `export_gate/` with the chosen
+schema and policy, never folded into the project's own code: the receipt's gate version
 must name those exact bytes. A Python pipeline runs the gate as a separate `Rscript`
 step after it ([export-gate.md](export-gate.md)). The result ZIP is the gate's output
 folder (the schema's Parquet files and `receipt.json`), never `.diagnostics/` or
-staging. Python zipapp is a candidate when permitted; a supported plain-source format is
-another. Verify accepted formats and runtime before claiming compatibility. Preserve
-modular source locally; do not concatenate modules blindly. Include small required
-nonpersonal lookup/configuration assets.
+staging. Verify accepted formats and runtime before claiming compatibility; do not
+concatenate modules into one file. Include small required nonpersonal
+lookup/configuration assets.
 
 Build from an explicit commit and source allowlist. Exclude .git, datasets, caches,
 logs, secrets and unrelated investigations. Record commit and file hashes. Dependencies
@@ -98,8 +100,9 @@ check alone never grants that approval.
 
 ## Incremental builds
 
-Use an established dependency-aware tool (for example targets in R or pytask for a
-Python/file-based pipeline) rather than writing a cache manager. A Makefile may expose
+Not in the first scaffold: add one when a run's time matters. Use an established
+dependency-aware tool (for example targets in R or pytask for a Python/file-based
+pipeline) rather than writing a cache manager. A Makefile may expose
 convenient commands; if Make is the dependency engine, explicitly handle
 code/configuration/environment changes rather than relying on output existence alone.
 This skill does not mandate a particular engine.
@@ -130,20 +133,15 @@ cache reuse and invalidation on mocks with a small targeted check before remote 
 
 ## Local handoff gate
 
-1. Validate ticket/batch dependencies and configuration.
-2. Run the small fixture-only suite.
-3. Prepare the committed execution snapshot (one file for MONA, source files for a
-   flexible server).
-4. Run that snapshot on separate mock inputs in a fresh directory using the actual
+1. Run the small fixture-only suite, if the project has one.
+2. Prepare the committed execution snapshot (the project folder's committed
+   source files).
+3. Run that snapshot on separate mock inputs in a fresh directory using the actual
    pipeline/assertions, ending with the export gate.
-5. Verify the labelled mock export against its `receipt.json`, import it, then build
-   local reports.
-6. Record revision, artifact digest, commands, runtimes and outcomes outside the
+4. Once an import check exists, verify the labelled mock export against its
+   `receipt.json` and import it.
+5. Record revision, artifact digest, commands, runtimes and outcomes outside the
    execution snapshot. Real run/release remain pending until completed.
-
-Exercise one minimal release-boundary rejection: a mock run the export gate refuses
-(e.g. an unsuppressed small count or an undeclared file), leaving no export behind. Do
-not proliferate tests of command wording.
 
 ## Archive
 

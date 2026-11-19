@@ -1,0 +1,103 @@
+{
+  "version": 2,
+  "format": "parquet",
+  "layout": "standard",
+  "project": {
+    "name": "reference-income-by-sex",
+    "hash": "faed7d993a8a4d9d2a7e860b466cd2757fe8ba845c3f97acce92553ad7a72485"
+  },
+  "catalog_generation": "b626a5d55b0d7ee0a21673e36083ac3496d3821bf0e373ca6503faf7b9ac3100",
+  "null_rate": 0.02,
+  "files": [
+    {
+      "name": "scb_lisa_individer_2021",
+      "source": "lisa",
+      "unit": "person",
+      "population": {
+        "age_min": 15
+      },
+      "rows_per_unit": 1.0,
+      "years": [
+        2021
+      ],
+      "columns": [
+        {
+          "name": "Kon",
+          "type": "integer",
+          "length": 1,
+          "codes": [
+            {
+              "code": "1",
+              "label": "Man"
+            },
+            {
+              "code": "2",
+              "label": "Kvinna"
+            }
+          ],
+          "attribute": "sex",
+          "map": {
+            "female": "2",
+            "male": "1"
+          }
+        },
+        {
+          "name": "DispInk04",
+          "type": "integer"
+        },
+        {
+          "name": "PersonNr",
+          "type": "text",
+          "length": 12,
+          "attribute": "person_key",
+          "identifier": true
+        }
+      ]
+    },
+    {
+      "name": "scb_lisa_individer_2022",
+      "source": "lisa",
+      "unit": "person",
+      "population": {
+        "age_min": 15
+      },
+      "rows_per_unit": 1.0,
+      "years": [
+        2022
+      ],
+      "columns": [
+        {
+          "name": "Kon",
+          "type": "integer",
+          "length": 1,
+          "codes": [
+            {
+              "code": "1",
+              "label": "Man"
+            },
+            {
+              "code": "2",
+              "label": "Kvinna"
+            }
+          ],
+          "attribute": "sex",
+          "map": {
+            "female": "2",
+            "male": "1"
+          }
+        },
+        {
+          "name": "DispInk04",
+          "type": "integer"
+        },
+        {
+          "name": "PersonNr",
+          "type": "text",
+          "length": 12,
+          "attribute": "person_key",
+          "identifier": true
+        }
+      ]
+    }
+  ]
+}

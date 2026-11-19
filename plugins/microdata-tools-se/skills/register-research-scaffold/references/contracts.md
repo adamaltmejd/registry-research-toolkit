@@ -5,10 +5,10 @@ framework. Use simple files and existing tools.
 
 ## Questions
 
-Each Markdown ticket has stable id, title, status, depends_on, and batch frontmatter.
-Add evidence/run references and supersession links when available. Validate duplicate
-IDs, dangling dependencies and cycles. Keep question, rationale, method, answer,
-evidence and limitations in readable prose.
+Each Markdown ticket has stable id, title, status and depends_on frontmatter. Add
+evidence/run references and supersession links when available. Tickets are plain
+Markdown: no validator. Keep question, rationale, method, answer, evidence and
+limitations in readable prose.
 
 Use a small status vocabulary, e.g. proposed, ready, awaiting-results, reviewed, closed,
 superseded. Distinguish answered, inconclusive and rejected outcomes in prose. Mock
@@ -74,8 +74,8 @@ partial outputs must never turn a failed run into a releasable one. The gate rew
 the checked tables itself and hashes what it wrote, so only checked data is exported;
 any change to the staged files requires rechecking. The gate's detailed report stays in
 `.diagnostics/` on the data side; only the files and the receipt are exported, and a
-refusal tells the agent only its category code. Exercise the same gate locally on mocks,
-with one rejection case in the small fixture suite. The gate only checks: the
+refusal tells the agent only its category code. Exercise the same gate locally on mocks;
+the gate's own case corpus covers its refusals. The gate only checks: the
 pipeline's one disclosure stage suppresses, perturbs counts (the toolkit's `cell_key.R`)
 and rounds before writing. The toolkit ships cited defaults (the `aggregates` schema and
 `aggregates-min5` policy) and every disclosure parameter is configurable per project
@@ -113,7 +113,8 @@ or unsupported statistical quantities do.
 
 ## Local interface
 
-Generate offline-capable HTML from canonical ticket/result files, not a second state
-store or server platform. Escape prose, filenames and labels. Show batch status,
-question, answer/uncertainty, provenance, result table/figure and next action. Separate
-remote output, local renders and paper/slides outputs.
+Built after a first real export, not in the first scaffold. Generate offline-capable
+HTML from canonical ticket/result files, not a second state store or server platform.
+Escape prose, filenames and labels. Show batch status, question, answer/uncertainty,
+provenance, result table/figure and next action. Separate remote output, local renders
+and paper/slides outputs.
