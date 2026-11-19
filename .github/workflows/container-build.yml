@@ -26,6 +26,11 @@
 # Nothing deploys without green CI: a `wait-ci` job polls the ci.yml run for this
 # commit and every deploy job requires its success — an image that builds but fails
 # lint/types/tests never ships.
+#
+# Nothing deploys while main's `reg-meta` crate version has no published release
+# (#2388): `schema-guard` fails closed, so the bump commit of a release, which reaches
+# main before the release is published, cannot ship the new server on the previous
+# release's catalog. Publishing dispatches this workflow, and that run does the deploy.
 
 name: Container build
 
@@ -171,10 +176,13 @@ jobs:
   # Schema guard — its OWN job so EVERY deploy path can consult it, including an
   # edge-only push that skips build-image. Resolves the reg_meta/v* tag to bake and
   # fails closed unless the code's catalog schema constant equals the newest
-  # release's. Two outcomes only, no pass-through: between the merge of a schema
-  # change and its release, every main push is red here and nothing deploys
+  # release's, and (push and dispatch) unless that release is the one of the code's
+  # `reg-meta` crate version. Two outcomes only, no pass-through: between the merge of
+  # a schema change and its release, and between a release's bump commit and its
+  # publication, every main push is red here and nothing deploys
   # (plan: "Deploy window"). Publishing the release (publish_reg_meta.yml) dispatches
-  # this workflow, which then passes.
+  # this workflow, which then passes. Red, not a green skip: the `changes` resolver
+  # reads a successful run as a deployed commit.
   schema-guard:
     needs: changes
     if: >-
@@ -187,12 +195,15 @@ jobs:
       db_sha256: ${{ steps.regmeta.outputs.db_sha256 }}
       schema_match: ${{ steps.schemaguard.outputs.schema_match }}
     steps:
-      # Only the code side's schema constants file: the guard below reads the released
-      # asset's side from the resolved reg_meta/v* tag, which it fetches alone, without
-      # blobs (a sparse path missing here fails the guard: "code has 'absent'").
+      # Only the code side's schema constants file and the `reg-meta` manifest (the
+      # crate version): the schema guard below reads the released asset's side from the
+      # resolved reg_meta/v* tag, which it fetches alone, without blobs (a sparse path
+      # missing here fails its guard: "code has 'absent'").
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          sparse-checkout: /crates/reg-core/src/lib.rs
+          sparse-checkout: |
+            /crates/reg-core/src/lib.rs
+            /crates/reg-meta/Cargo.toml
           sparse-checkout-cone-mode: false
           filter: blob:none
       # Resolve the CONCRETE newest reg_meta/v* release tag for the bake
@@ -257,6 +268,32 @@ jobs:
           fi
           echo "schema_match=true" >> "$GITHUB_OUTPUT"
           echo "schema-guard: code and $TAG agree on the catalog schema version"
+      # The baked catalog must be the release of this commit's `reg-meta` crate version
+      # (#2388). A release's bump commit lands on main before the release is published
+      # (release skill, steps 5 to 9), and the newest published release is then still
+      # the previous one: deploying would ship the new server on the previous catalog,
+      # and could finish after the release's own dispatched deploy and replace it.
+      # Between releases the crate version is the newest release's, so ordinary pushes
+      # pass. Not checked on a pull request (build-only; the bump's PR bakes the
+      # previous catalog as its Dockerfile proof) or under an explicit `reg_meta_tag`
+      # pin, which exists to bake another release than the newest.
+      - name: Release guard
+        if: github.event_name != 'pull_request'
+        env:
+          TAG: ${{ steps.regmeta.outputs.tag }}
+          PIN: ${{ inputs.reg_meta_tag }}
+        run: |
+          set -euo pipefail
+          if [ -n "$PIN" ]; then
+            echo "release-guard: explicit pin $PIN; crate version not compared"
+            exit 0
+          fi
+          version=$(sed -n 's/^version = "\(.*\)"$/\1/p' crates/reg-meta/Cargo.toml | head -n 1)
+          if [ "$TAG" != "reg_meta/v${version:-absent}" ]; then
+            echo "::error::release-guard: reg-meta crate version is '${version:-absent}' but the newest published release is $TAG; deploys blocked until reg_meta/v${version:-absent} is published (its dispatched run deploys)."
+            exit 1
+          fi
+          echo "release-guard: $TAG is the release of crate version $version"
 
   # Deploy gate: nothing ships unless the ci.yml run for THIS commit succeeded
   # (lint, Rust and SPA jobs). CI runs on every main push (no paths
