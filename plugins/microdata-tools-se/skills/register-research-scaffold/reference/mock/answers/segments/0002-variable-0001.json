@@ -1,0 +1,93 @@
+{
+  "data": {
+    "items": [
+      {
+        "coded": "no",
+        "column": "PersonNr",
+        "identifier": true,
+        "length": 12,
+        "period": {
+          "end": "2024-01-01",
+          "start": "1990-01-01"
+        },
+        "role": "measure",
+        "sensitive": false,
+        "table": "scb/lisa/individer",
+        "table_name": "Individer",
+        "type": "text",
+        "variable": "scb/lisa/personnr",
+        "wording": "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten."
+      },
+      {
+        "coded": "no",
+        "column": "PersonNr",
+        "identifier": true,
+        "length": 12,
+        "period": {
+          "end": "2024-01-01",
+          "start": "1990-01-01"
+        },
+        "role": "measure",
+        "sensitive": false,
+        "table": "scb/lisa/individer-avlidna",
+        "table_name": "Individer avlidna",
+        "type": "text",
+        "variable": "scb/lisa/personnr",
+        "wording": "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten."
+      },
+      {
+        "coded": "no",
+        "column": "PersonNr",
+        "identifier": true,
+        "length": 12,
+        "period": {
+          "end": "2024-01-01",
+          "start": "1990-01-01"
+        },
+        "role": "measure",
+        "sensitive": false,
+        "table": "scb/lisa/individer-fodelseland",
+        "table_name": "Individer födelseland",
+        "type": "text",
+        "variable": "scb/lisa/personnr",
+        "wording": "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten.\nPersonnummer hämtas från Flergenerationsregistret, dels från biologiska föräldrar och dels från födelseuppgifter."
+      },
+      {
+        "coded": "no",
+        "column": "personnr",
+        "identifier": true,
+        "length": 12,
+        "period": {
+          "end": "2024-01-01",
+          "start": "1990-01-01"
+        },
+        "role": "measure",
+        "sensitive": false,
+        "table": "scb/lisa/individer-in-utvandring",
+        "table_name": "Indvider in- och utvandring",
+        "type": "text",
+        "variable": "scb/lisa/personnr",
+        "wording": "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten."
+      },
+      {
+        "column": "personnr",
+        "identifier": true,
+        "period": {
+          "end": "2025-01-01",
+          "start": "2024-01-01"
+        },
+        "role": "measure",
+        "table": "scb/lisa/individer",
+        "table_name": "Individer",
+        "variable": "scb/lisa/personnr"
+      }
+    ],
+    "next_cursor": null
+  },
+  "meta": {
+    "api_version": "7.0.0",
+    "catalog_version": "0.90.0",
+    "generation": "b626a5d55b0d7ee0a21673e36083ac3496d3821bf0e373ca6503faf7b9ac3100",
+    "project_schema_version": "6.3.0"
+  }
+}

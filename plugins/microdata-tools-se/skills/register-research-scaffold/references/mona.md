@@ -60,8 +60,9 @@ counts against the order.
 ## 5. Analysis (researcher, on MONA)
 
 The researcher uploads the project's committed analysis code, the pinned
-`export_gate.R` and the chosen schema and policy to the MONA project folder, then runs
-the pipeline by hand. The pipeline reads the extract folder as its real input
+`export_gate.R` and `cell_key.R` and the chosen schema and policy to the MONA project
+folder, creates the cell-key file once in a folder only they can read (`make_keys.R` in
+the reference project), then runs the pipeline by hand. The pipeline reads the extract folder as its real input
 directory, writes its aggregates to a fresh staging folder and ends with the export gate
 ([export-gate.md](export-gate.md)). The same code ran locally on the mock inputs first,
 ending with the same gate call.
@@ -70,21 +71,23 @@ A project folder on MONA:
 
 ```text
 <project>\
-  <the analysis code, as committed>
+  run.R, config.R, R\          the analysis code, as committed (the skill's reference/)
   export_gate\
     export_gate.R               pinned, unchanged
     cell_key.R                  pinned, unchanged (needs the openssl package)
     <name>.schema.json          chosen, unchanged
     <name>.policy.json          chosen, unchanged
-  staging\                      the pipeline's aggregates; the gate only reads it
-  export\                       only on a pass: the schema's files and receipt.json
-  .diagnostics\                 the gate's report; never exported
+  out\real\
+    staging\                    the pipeline's aggregates; the gate only reads it
+    export\                     only on a pass: the schema's files and receipt.json
+    .diagnostics\               the gate's report; never exported
+    run_record.json             commit, key epoch, versions; never exported
 ```
 
 ## 6. Export (researcher)
 
-On a pass, the researcher reviews `export\`, zips it and sends it out through MONA's own
-export. Never include `staging\` or `.diagnostics\`. Outside MONA, the import checks each
+On a pass, the researcher reviews `out\real\export\`, zips it and sends it out through
+MONA's own export. Never include `staging\`, `.diagnostics\` or the run record. Outside MONA, the import checks each
 file against `receipt.json` ([export-gate.md](export-gate.md), "Importing an export").
 The agent sees the files only after a human has approved them for model access
 ([operator-review.md](operator-review.md)). On a refusal, the researcher tells the agent

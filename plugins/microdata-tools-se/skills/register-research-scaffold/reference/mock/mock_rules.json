@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "sources": {
+    "lisa": {
+      "unit": "person",
+      "population": { "age_min": 15 },
+      "rows_per_unit": { "mean": 1, "reason": "LISA Individer: one row per resident aged 15 or older each year (the delivered table is \"Individer, 15 år och äldre\")" },
+      "columns": {
+        "PersonNr": { "attribute": "person_key" },
+        "Kon": { "attribute": "sex", "map": { "male": "1", "female": "2" } }
+      }
+    }
+  }
+}

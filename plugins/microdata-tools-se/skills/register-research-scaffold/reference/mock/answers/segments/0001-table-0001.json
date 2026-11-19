@@ -1,0 +1,123 @@
+{
+  "data": {
+    "items": [
+      {
+        "coded": "yes",
+        "column": "Kon",
+        "identifier": false,
+        "length": 1,
+        "period": {
+          "end": "2024-01-01",
+          "start": "1990-01-01"
+        },
+        "role": "code",
+        "sensitive": false,
+        "table": "scb/lisa/individer",
+        "table_name": "Individer",
+        "type": "integer",
+        "value_set": {
+          "classification": null,
+          "hash": "fbb0272fd75f50f380f272c3dac045caa823d0d5eaad6e05cdf3e96ff4b7be81",
+          "hierarchical": false,
+          "n_items": 2,
+          "names": [
+            "Kon",
+            "Kön"
+          ]
+        },
+        "variable": "scb/lisa/kon",
+        "wording": "Personens kön."
+      },
+      {
+        "coded": "no",
+        "column": "PersonNr",
+        "identifier": true,
+        "length": 12,
+        "period": {
+          "end": "2024-01-01",
+          "start": "1990-01-01"
+        },
+        "role": "measure",
+        "sensitive": false,
+        "table": "scb/lisa/individer",
+        "table_name": "Individer",
+        "type": "text",
+        "variable": "scb/lisa/personnr",
+        "wording": "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten."
+      },
+      {
+        "column": "dispinkhb04",
+        "identifier": false,
+        "period": {
+          "end": "2020-01-01",
+          "start": "2011-01-01"
+        },
+        "role": "measure",
+        "sensitive": false,
+        "table": "scb/lisa/individer",
+        "table_name": "Individer",
+        "type": "integer",
+        "variable": "scb/lisa/disponibel-inkomst"
+      },
+      {
+        "coded": "no",
+        "column": "DispInkHB04",
+        "identifier": false,
+        "period": {
+          "end": "2024-01-01",
+          "start": "2020-01-01"
+        },
+        "role": "measure",
+        "sensitive": false,
+        "table": "scb/lisa/individer",
+        "table_name": "Individer",
+        "type": "integer",
+        "variable": "scb/lisa/disponibel-inkomst",
+        "wording": "Beräknad disponibel inkomst.\nHushållets disponibla inkomst, definition 2004. En beskrivning av hur disponibel inkomst skapas  finns i \"Relaterad information\".\nFrån 2020 ingår även nordiska inkomster"
+      },
+      {
+        "column": "dispinkhb04",
+        "period": {
+          "end": "2025-01-01",
+          "start": "2024-01-01"
+        },
+        "role": "measure",
+        "sensitive": false,
+        "table": "scb/lisa/individer",
+        "table_name": "Individer",
+        "variable": "scb/lisa/disponibel-inkomst"
+      },
+      {
+        "column": "kon",
+        "period": {
+          "end": "2025-01-01",
+          "start": "2024-01-01"
+        },
+        "role": "measure",
+        "sensitive": false,
+        "table": "scb/lisa/individer",
+        "table_name": "Individer",
+        "variable": "scb/lisa/kon"
+      },
+      {
+        "column": "personnr",
+        "identifier": true,
+        "period": {
+          "end": "2025-01-01",
+          "start": "2024-01-01"
+        },
+        "role": "measure",
+        "table": "scb/lisa/individer",
+        "table_name": "Individer",
+        "variable": "scb/lisa/personnr"
+      }
+    ],
+    "next_cursor": null
+  },
+  "meta": {
+    "api_version": "7.0.0",
+    "catalog_version": "0.90.0",
+    "generation": "b626a5d55b0d7ee0a21673e36083ac3496d3821bf0e373ca6503faf7b9ac3100",
+    "project_schema_version": "6.3.0"
+  }
+}

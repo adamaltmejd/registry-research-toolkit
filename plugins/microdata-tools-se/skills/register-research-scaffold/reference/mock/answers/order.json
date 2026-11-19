@@ -1,0 +1,93 @@
+{
+  "data": {
+    "catalog": {
+      "catalog_version": "0.90.0",
+      "generation_id": "b626a5d55b0d7ee0a21673e36083ac3496d3821bf0e373ca6503faf7b9ac3100",
+      "schema_version": "18"
+    },
+    "clips": [],
+    "entries": [
+      {
+        "binding": 0,
+        "classification": null,
+        "delivered_table": "Individer, 15 år och äldre",
+        "display_name": null,
+        "length": 1,
+        "period": {
+          "end": "2023-01-01",
+          "start": "2021-01-01"
+        },
+        "provider": "scb",
+        "register": "scb/lisa",
+        "release": null,
+        "source": "lisa",
+        "spelling": "Kon",
+        "table": "scb/lisa/individer",
+        "table_name": "Individer",
+        "type": "integer",
+        "value_set": {
+          "hash": "fbb0272fd75f50f380f272c3dac045caa823d0d5eaad6e05cdf3e96ff4b7be81",
+          "n_items": 2
+        },
+        "variable": "scb/lisa/kon",
+        "variable_name": "Kön"
+      },
+      {
+        "binding": 1,
+        "classification": null,
+        "delivered_table": "Individer, 15 år och äldre",
+        "display_name": null,
+        "length": null,
+        "period": {
+          "end": "2023-01-01",
+          "start": "2021-01-01"
+        },
+        "provider": "scb",
+        "register": "scb/lisa",
+        "release": null,
+        "source": "lisa",
+        "spelling": "DispInkHB04",
+        "table": "scb/lisa/individer",
+        "table_name": "Individer",
+        "type": "integer",
+        "value_set": null,
+        "variable": "scb/lisa/disponibel-inkomst",
+        "variable_name": "Disponibel inkomst"
+      }
+    ],
+    "findings": [],
+    "manual": [],
+    "project": {
+      "name": "reference-income-by-sex",
+      "project_hash": "37827d91eb975cd938ae01c8e4957d1f296cb00dd0853415c86e8c7caa64b6de",
+      "reg_meta_version": "reg_meta/v0.90.0",
+      "schema_version": "6.3.0"
+    },
+    "row_keys": [
+      {
+        "columns": [
+          {
+            "spelling": "PersonNr",
+            "variable": "scb/lisa/personnr",
+            "variable_name": "Personnummer"
+          }
+        ],
+        "delivered_table": "Individer, 15 år och äldre",
+        "period": {
+          "end": "2023-01-01",
+          "start": "2021-01-01"
+        },
+        "release": null,
+        "source": "lisa",
+        "table": "scb/lisa/individer",
+        "table_name": "Individer"
+      }
+    ]
+  },
+  "meta": {
+    "api_version": "7.0.0",
+    "catalog_version": "0.90.0",
+    "generation": "b626a5d55b0d7ee0a21673e36083ac3496d3821bf0e373ca6503faf7b9ac3100",
+    "project_schema_version": "6.3.0"
+  }
+}

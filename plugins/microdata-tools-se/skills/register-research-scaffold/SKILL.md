@@ -1,23 +1,22 @@
 ---
 name: register-research-scaffold
 description: Scaffold a small batch-based Swedish register-data research project from a
-  research brief and documented source contracts. Creates Git-tracked investigation
-  tickets, separate local and restricted execution, mock validation, evidence
-  provenance, and local reporting. Supports MONA (a steward's extract in, the toolkit export
-  gate out) and other processing servers; does not authorize microdata access, transfer,
-  or server execution.
+  research brief and documented source contracts, starting from the skill's lean R
+  reference project: question tickets, separate local and restricted execution,
+  `reg-mock` inputs, a disclosure stage and the export gate. Supports MONA (a steward's
+  extract in, the toolkit export gate out) and other processing servers; does not
+  authorize microdata access, transfer, or server execution.
 ---
 
 # Register research scaffold
 
-Create the smallest working project that answers the user's first research questions and
-demonstrates the workflow below. Preserve an existing reference project; create a
-separate project when requested. Use the chosen language/build tools, not the reference
-project's stack by default. Do not build a custom workflow framework, research-record
-database, RAG service or independent mock generator for an MVP. Use an established
-dependency-aware build tool when incremental execution is needed; keep its choice
-independent of the data-processing engine. Do not configure hosted Git or transfer data
-through it without an explicit request.
+Create the smallest working project that answers the user's first research questions,
+starting from the R reference project in [reference/](reference/) (below). Preserve a
+user's existing project; create a separate project when requested. A different stack
+(Python with DuckDB, say) keeps the reference's stages and boundaries in its own tools.
+Do not build a custom workflow framework, research-record database, RAG service or
+independent mock generator. Do not configure hosted Git or transfer data through it
+without an explicit request.
 
 Read [contracts.md](references/contracts.md) before implementation. Read
 [execution.md](references/execution.md) when wiring batches, packaging, and transfers.
@@ -75,23 +74,56 @@ when requested.
 
 ## Scaffold only what the first batch needs
 
-Provide:
+The first scaffold is [reference/](reference/) adapted to the user's first question:
+about 150 lines of the project's own code. The reference orders LISA Individer
+2021–2022 from the global catalog and publishes persons and mean disposable income by
+sex and year. Copy it to the project folder, `PROJECT.md` as the project's `CLAUDE.md`
+or `AGENTS.md`, then:
 
-- Concise project instructions recording actual boundaries, chosen tools and commands.
-- A documented source adapter, configured external real/mock input directories, and
-  analysis/configuration files for one small batch.
-- Markdown question tickets with YAML frontmatter and dependency links; use filesystem
-  search and metadata, not a separate database.
-- A small operator-run `sync.sh up|down` for flexible servers: sync the project with
-  shared exclusions, keep Git history local, and run/review remotely by hand. Only
-  disclosure-checked, human-approved real aggregates may return to agent-readable
-  storage or enter Git. Use bounded current code/output locations rather than
-  accumulating remote run directories.
-- A simple local HTML view of tickets, batch state, tables and evidence. Paper and
-  slides are researcher-facing build targets too; prototype outputs must be visibly
-  labelled mock and need not imitate a completed manuscript.
-- A short runbook stating what was checked locally and what still requires restricted
-  compute or the researcher.
+1. Replace `project_data.json` with the user's order (`register-project` skill), and
+   `mock/` with its saved answers, rules and compiled spec (`register-mock-data` skill).
+   Set the paths in `config.R`; the mock and key folders stay outside the project.
+2. Fill `export_gate/`: `export_gate.R` and the chosen schema and policy from the
+   `reg_meta` tag [export-gate.md](references/export-gate.md) names, checked against its
+   SHA-256, and `cell_key.R` copied unchanged from [scripts/](scripts/cell_key.R).
+   Record each file's version and SHA-256 in the instructions' pin table. Commit all four.
+3. Rewrite for the question: the source adapter (`R/inputs.R`), the analysis
+   (`R/analysis.R`), the cells, statistics and person-id column in `R/disclosure.R`
+   (its suppress, perturb, round order stays), and the reader and id column in
+   `make_keys.R` (a steward's extract keys persons by `LopNr`). One Markdown ticket
+   per question in `questions/`.
+4. Run `Rscript make_keys.R` once and `Rscript run.R` on the mocks until the gate passes.
+
+Keep the parts that carry a rule, whatever the question:
+
+- `run.R` picks the mode once from which input folder exists, prints it and never
+  falls back; mock and real runs write to separate `out/<mode>/` folders.
+- A mock input must be listed in `reg-mock`'s `mock_manifest.json` and carry its
+  `reg_mock` Parquet metadata; a real input must not carry it.
+- An analysis returns person-level rows, never counts or statistics. The one disclosure
+  stage (`R/disclosure.R`) is the only code that makes a publishable number: suppress,
+  perturb with `ck_perturb()`, round ([export-gate.md](references/export-gate.md), "The
+  disclosure policy").
+- The staging writer (`R/staging.R`) writes every file the schema declares, exactly its
+  columns and types, into a fresh staging folder; the gate call is the run's last step.
+- The key file and the run record (with its `key_epoch`) stay outside the export; the
+  key file outside the project.
+
+Build later, when the need arrives:
+
+- Before the first export is imported: the import check against `receipt.json`
+  ([export-gate.md](references/export-gate.md), "Importing an export"). No export is
+  read until that check exists and passes.
+- After a first real export: a local HTML view of tickets and results, paper and slides.
+  Mock outputs are visibly labelled mock.
+- When a run's time matters: a dependency-aware build tool (`targets` in R), per
+  [execution.md](references/execution.md), "Incremental builds".
+- On a server other than MONA: the operator's `sync.sh`
+  ([operator-review.md](references/operator-review.md)).
+
+Do not build a ticket validator, a hash manifest of the mock inputs (`reg-mock` output
+is fixed by the committed spec and seed and labels itself), or a test that the gate
+refuses a bad file (the gate's own case corpus covers it).
 
 Remote artifacts are exactly the aggregate files the chosen export-gate schema declares:
 one Parquet file per schema file, a suppressed cell null (never zero), plus the gate's
@@ -99,18 +131,18 @@ one Parquet file per schema file, a suppressed cell null (never zero), plus the 
 human-only previews may be generated before approval, but models must not see their
 contents until approval.
 
-Routine execution includes only active processing, assertions and selected analyses.
-Completed investigations remain tracked and discoverable but do not run unless selected.
-Preserve original executable code and execution revision. Promote construction rules or
-analyses still needed by current research into maintained code rather than archiving
-live dependencies.
+Routine execution includes only active analyses. A closed ticket stays in Git and its
+code at its execution revision; promote what current research still needs into
+maintained code rather than archiving live dependencies.
 
 The mock generator is `reg-mock` (the `register-mock-data` skill), not part of this
-skill or a new subsystem to build. Consume its outputs: the generated files in the
-configured mock input directory, and the committed `mock_spec.json` that declares them.
-For a trial without it, the brief may provide an independent wholly invented mock
-sample; keep it separate from unit fixtures and identify its limitations. Never derive
-unit fixtures from mock data or restricted records.
+skill or a new subsystem to build. For a trial without it, the brief may provide an
+independent wholly invented mock sample; keep it separate from unit fixtures and
+identify its limitations. Never derive unit fixtures from mock data or restricted
+records.
+
+The reference pins catalog `reg_meta/v0.90.0` and the gate version in
+[export-gate.md](references/export-gate.md); a gate update changes both together.
 
 ## Verification proportional to risk
 
@@ -149,10 +181,9 @@ source/configuration/lockfiles free of individual data and stage specific paths.
 from the commit, not a dirty working directory. Record answers in later commits
 referencing that execution revision; a mock pass is not an empirical answer.
 
-Demonstrate one complete local batch transfer roundtrip, a rejection case at the release
-boundary, and that a closed investigation is excluded from default execution yet can be
-selected at its original revision. Use Git plus ticket status and a recorded command; do
-not build an archival subsystem.
+Demonstrate one local mock run from the commit that ends in a gate pass, with its run
+record. Use Git plus ticket status and a recorded command; do not build an archival
+subsystem.
 
 Report usable project path, skill version, execution commit, checks, and operator
 prerequisites. Leave restricted connections, execution, downloads and approval of real

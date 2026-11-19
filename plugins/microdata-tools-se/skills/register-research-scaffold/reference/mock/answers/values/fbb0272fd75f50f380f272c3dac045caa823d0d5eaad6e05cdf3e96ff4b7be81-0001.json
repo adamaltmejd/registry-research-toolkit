@@ -1,0 +1,40 @@
+{
+  "data": {
+    "items": [
+      {
+        "child_count": null,
+        "code": "1",
+        "label": "Man",
+        "level": 1,
+        "parent": null,
+        "sentinel": false
+      },
+      {
+        "child_count": null,
+        "code": "2",
+        "label": "Kvinna",
+        "level": 1,
+        "parent": null,
+        "sentinel": false
+      }
+    ],
+    "next_cursor": null,
+    "total": 2,
+    "value_set": {
+      "classification": null,
+      "hash": "fbb0272fd75f50f380f272c3dac045caa823d0d5eaad6e05cdf3e96ff4b7be81",
+      "hierarchical": false,
+      "n_items": 2,
+      "names": [
+        "Kon",
+        "Kön"
+      ]
+    }
+  },
+  "meta": {
+    "api_version": "7.0.0",
+    "catalog_version": "0.90.0",
+    "generation": "b626a5d55b0d7ee0a21673e36083ac3496d3821bf0e373ca6503faf7b9ac3100",
+    "project_schema_version": "6.3.0"
+  }
+}

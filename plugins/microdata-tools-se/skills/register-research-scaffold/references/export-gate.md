@@ -158,7 +158,7 @@ export_gate(
 
 ## A Python pipeline
 
-The gate is R even when the pipeline is not. With the scaffold's Python/DuckDB stack,
+The gate is R even when the pipeline is not. With a Python/DuckDB stack,
 `run.py` writes the staging Parquet files and exits; the gate then runs as its own R
 step:
 
@@ -210,8 +210,8 @@ Check that `Rscript` is on the path where `run.py` runs.
 
 Run the same call last in every local mock run (the Preflight packages, including
 SHA-256), so the pipeline's final step is exercised before any handoff. A mock pass is
-not disclosure clearance. Keep one rejection case in the small fixture suite: a mock run
-the gate refuses, leaving no export.
+not disclosure clearance. Do not add a test that the gate refuses a bad file: the gate's
+own case corpus covers it.
 
 ## Importing an export
 
