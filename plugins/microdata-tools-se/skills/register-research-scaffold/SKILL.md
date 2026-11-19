@@ -33,9 +33,10 @@ gate passed and a human reviewed. The agent works locally on code, catalog metad
 mock data. A project whose data a data steward delivers runs in this order
 ([mona.md](references/mona.md) has who does what):
 
-1. Add the steward's catalog to the project's `.mcp.json` as `steward-catalog` and
-   record in the project instructions that it is the catalog to use
-   (`register-metadata-search` skill, `references/data-stewards.md`).
+1. Add the steward's catalog to the project as its `steward-catalog` server, in
+   `.mcp.json` (Claude Code) or `.codex/config.toml` (Codex), and record in the project
+   instructions that it is the catalog to use (`register-metadata-search` skill,
+   `references/data-stewards.md`).
 2. Draft and validate `project_data.json` with the `register-project` skill.
 3. Generate mock inputs from it with the `register-mock-data` skill (`reg-mock`).
 4. Build and run the pipeline locally on the mocks, ending with `export_gate.R`.

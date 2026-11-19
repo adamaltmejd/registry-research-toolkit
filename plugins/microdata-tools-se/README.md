@@ -70,9 +70,9 @@ A steward runs the toolkit release it pins, which can be older than the global
 catalog's; the project, `reg-mock`, `extract.R` and the export gate follow that release.
 
 Some stewards sit behind Cloudflare Access: `/api/context` then redirects to a sign-in
-page or answers `403`. Ask the steward for a service token and set it in your own shell
-environment; the project's server reads it from there, never from a project file (the
-reference has the configuration).
+page or answers `403`. Ask the steward for a service token and keep it in a Git-ignored
+file in that project, loaded into the environment the agent starts from, never in your
+shell profile or a committed file (the reference has the configuration).
 
 ## Scope
 

@@ -25,11 +25,18 @@ catalog's answers, write the rules and compile them into `mock_spec.json`, gener
   `project_data.json`.
 - The answers come from the catalog the project orders from, over MCP:
   - a steward's catalog (the project's `steward-catalog` server,
-    `https://<steward-host>/mcp`) with mode
-    `materialize`, which gives the delivery's own file and column names;
+    `https://<steward-host>/mcp`) with mode `materialize`, which gives the delivery's
+    own file and column names;
   - the global catalog (`https://reg-meta.vqv.uk/mcp`) with mode `order`. Files then
     follow the standard names: the table's public id with `_` for `/` and `-`, one file
     per year (`scb_lsum_individer_sociala_agi_ku_2019`).
+- `reg-mock fetch` calls the catalog itself; it does not use the agent's MCP servers.
+  For a steward behind Cloudflare Access it reads `CF_ACCESS_HOST` (the steward's host
+  name), `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET` from the environment, the
+  project's Git-ignored `.envrc` (`register-metadata-search` skill,
+  `references/data-stewards.md`), and sends the pair only to that host, only over https.
+  Without them such a steward is refused as `access_required`; a half-set or unsendable
+  pair as `access_credentials`.
 - The project must validate first (`register-project` skill).
 
 ## 1. Save the answers

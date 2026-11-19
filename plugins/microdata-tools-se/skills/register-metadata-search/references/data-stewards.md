@@ -102,10 +102,23 @@ answers a redirect to a `cloudflareaccess.com` sign-in page, or `403`, instead o
 The user must ask the steward for access to its catalog for an agent: a Cloudflare
 Access service token (a client id and a client secret).
 
-The token is the user's secret: it is never written into a project file, and the agent
-never asks for its value. The project's server reads it from two environment variables
-the user sets in their own shell profile, `STEWARD_CF_CLIENT_ID` and
-`STEWARD_CF_CLIENT_SECRET`. In `.mcp.json`:
+The token is the user's secret: it is never committed, and the agent never asks for its
+value or reads the file that holds it. It belongs to this project's steward only, so it
+lives in the project, not in the user's shell profile: with two protected stewards,
+a profile-wide token would be sent to the wrong one. The user keeps it in a file at the
+project root that Git ignores, `.envrc` (add the line `.envrc` to `.gitignore` and
+commit that first):
+
+```sh
+export CF_ACCESS_HOST=<steward-host>
+export CF_ACCESS_CLIENT_ID=<client id>
+export CF_ACCESS_CLIENT_SECRET=<client secret>
+```
+
+and loads it into the shell the agent starts from, in the project: `direnv` does that
+on entering the folder, or by hand `set -a; . ./.envrc; set +a` before starting the
+agent. The project's server reads the pair from that environment; `reg-mock fetch`
+reads all three (`register-mock-data` skill). In `.mcp.json`:
 
 ```json
 {
@@ -114,8 +127,8 @@ the user sets in their own shell profile, `STEWARD_CF_CLIENT_ID` and
       "type": "http",
       "url": "https://<steward-host>/mcp",
       "headers": {
-        "CF-Access-Client-Id": "${STEWARD_CF_CLIENT_ID}",
-        "CF-Access-Client-Secret": "${STEWARD_CF_CLIENT_SECRET}"
+        "CF-Access-Client-Id": "${CF_ACCESS_CLIENT_ID}",
+        "CF-Access-Client-Secret": "${CF_ACCESS_CLIENT_SECRET}"
       }
     }
   }
@@ -123,7 +136,7 @@ the user sets in their own shell profile, `STEWARD_CF_CLIENT_ID` and
 ```
 
 In Codex's `.codex/config.toml`, the same server takes
-`env_http_headers = { "CF-Access-Client-Id" = "STEWARD_CF_CLIENT_ID", "CF-Access-Client-Secret" = "STEWARD_CF_CLIENT_SECRET" }`.
+`env_http_headers = { "CF-Access-Client-Id" = "CF_ACCESS_CLIENT_ID", "CF-Access-Client-Secret" = "CF_ACCESS_CLIENT_SECRET" }`.
 
 Without a token, the user can still browse the steward's site in a signed-in browser,
 but the agent cannot use its catalog.
