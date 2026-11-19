@@ -6,7 +6,7 @@ bundles four skills:
 
   | Component                    | Purpose                                                                                                                                             |
   | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `catalog` MCP server         | The hosted register metadata catalog: the global catalog `https://reg-meta.vqv.uk/mcp` by default, or a data steward's catalog (below).             |
+  | `catalog` MCP server         | The hosted global register metadata catalog, `https://reg-meta.vqv.uk/mcp`. A data steward's catalog is added per project (below).                 |
   | `register-metadata-search`   | Skill: how to query variables, value codes and schemas with the catalog tools.                                                                      |
   | `register-project`           | Skill: drafting and validating a `project_data.json` data order, and answering questions about a project.                                           |
   | `register-mock-data`         | Skill: local mock data shaped like the project's delivery, with `reg-mock`.                                                                         |
@@ -46,8 +46,8 @@ The default catalog is the global one, `https://reg-meta.vqv.uk/mcp`: what the d
 holders deliver. A data steward holds an extract of that data in MONA and runs its own
 deployment of the catalog at `https://<steward-host>/mcp`. Its catalog adds the
 steward's holdings (the tables, years and columns it holds, under its own file names)
-and writes the MONA order file for a project (`materialize_order`). Point the plugin at
-a steward's catalog when your project's data comes from that steward.
+and writes the MONA order file for a project (`materialize_order`). Use a steward's
+catalog when your project's data comes from that steward.
 
 The simplest way is to tell the agent, for example "use the plugin with the
 `<steward-host>` steward". The `register-metadata-search` skill's
@@ -56,20 +56,23 @@ has the steps it follows:
 
 1. Check that `https://<steward-host>/api/context` answers JSON naming the steward
    (`data.steward_config.presentation`) and its release (`data.reg_meta_version`).
-2. Set the plugin option `catalog_url` to `https://<steward-host>/mcp`: in Claude Code,
-   `/plugin configure microdata-tools-se@microdata-tools-se`, then restart. In Codex,
-   add the URL as your own server in `~/.codex/config.toml`
-   (`[mcp_servers.steward_catalog]`, `url = "https://<steward-host>/mcp"`).
-3. Confirm: a catalog tool's `meta.catalog_version` matches the release `/api/context`
-   reported, and `materialize_order` no longer answers `holdings_unavailable`.
+2. Add the steward's catalog to the project, not to your machine: a server named
+   `steward-catalog` with URL `https://<steward-host>/mcp` in the project's `.mcp.json`
+   (Claude Code) or `.codex/config.toml` (Codex), committed with the project. The
+   plugin's own `catalog` server stays on the global catalog, so your other projects
+   are unaffected. The project's `CLAUDE.md` or `AGENTS.md` records that the agent uses
+   `steward-catalog` for every catalog question.
+3. Restart the agent in the project and confirm: a `steward-catalog` tool's
+   `meta.catalog_version` matches the release `/api/context` reported, and
+   `materialize_order` does not answer `holdings_unavailable`.
 
 A steward runs the toolkit release it pins, which can be older than the global
 catalog's; the project, `reg-mock`, `extract.R` and the export gate follow that release.
 
 Some stewards sit behind Cloudflare Access: `/api/context` then redirects to a sign-in
-page or answers `403`. The plugin option cannot reach those. Ask the steward for a
-service token and add the catalog as your own MCP server with its headers (the reference
-has the command).
+page or answers `403`. Ask the steward for a service token and keep it in a Git-ignored
+file in that project, loaded into the environment the agent starts from, never in your
+shell profile or a committed file (the reference has the configuration).
 
 ## Scope
 
@@ -81,7 +84,7 @@ variables, value codes, documentation), not microdata.
 
 MONA contains personal data. No agent runs on MONA, and row-level data never leaves it:
 only aggregates that pass the export gate and a human's review. The plugin never handles
-row-level data, and the catalog holds none. Queries go to the catalog server you set;
+row-level data, and the catalog holds none. Queries go to the catalog server the agent calls;
 see [PRIVACY.md](PRIVACY.md).
 
 ## Support

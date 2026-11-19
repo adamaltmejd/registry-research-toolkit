@@ -14,7 +14,7 @@ later):
 Check the version line in the copy and record its SHA-256. In `reg_meta/v0.87.3` the file
 is `51d6f810ef0c93faccb69f748382b6cdce93243af838788f9165e094a103869a`, the default
 `aggregates` schema `8160f4cb2250b5d22e609bf0a58935a221bd61ec407dd0403e2ccdd0537f1f93`
-and its `aggregates-min5` policy
+and its policy (internal name `aggregates-min5`)
 `e3c0835c7963efa39f035216087c08b7558ab5f3887c3ae7bbae2ed0f0098f5c`. A newer gate
 version is a deliberate update of this pin, not something to pick up silently.
 
@@ -27,9 +27,11 @@ accepts: 0.6.0 accepts everything the shipped schemas and policies use.
 
 - `export_gate.R`, byte for byte as the toolkit ships it. Never edit, wrap or
   concatenate it into project code: every receipt names its version.
-- The schema and its policy, `<name>.schema.json` and `<name>.policy.json`. Default
-  `aggregates`: long-form counts, means, quantiles and regression coefficients by
-  groups, with the default policy `aggregates-min5`; both unchanged from the toolkit.
+- The schema and its policy, by file name in the toolkit's `reg_export_gate/schemas/`.
+  Default: `schemas/aggregates.schema.json` (long-form counts, means, quantiles and
+  regression coefficients by groups) with `schemas/aggregates.policy.json`, whose
+  internal policy name is `aggregates-min5` (there is no `aggregates-min5.policy.json`);
+  both unchanged from the toolkit.
   The toolkit's other pairs (`trial`, `mock-stats`) are for trials and local mock
   statistics, not a project's outputs. If the project needs a different policy, see
   "The disclosure policy" below.
@@ -44,7 +46,7 @@ README's step 1).
 The gate only checks. The pipeline does the protecting: it suppresses, rounds and
 perturbs before writing, and the gate refuses what still breaks the policy. The toolkit
 ships cited defaults, and every disclosure parameter is configurable per project. The
-default `aggregates-min5` policy sets:
+default policy (`schemas/aggregates.policy.json`, named `aggregates-min5`) sets:
 
 - a floor of 5, for every published count and every statistic's true support;
 - cell-key perturbation of counts (D 5, V 6.5, js 4), applied by the pipeline; the gate
