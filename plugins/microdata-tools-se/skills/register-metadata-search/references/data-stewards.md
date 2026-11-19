@@ -8,7 +8,8 @@ the `<steward-host>` steward"), or when a task needs what only a steward's catal
 The plugin's default catalog is the global one, `https://reg-meta.vqv.uk/mcp`: what the
 data holders (SCB, Socialstyrelsen and others) deliver. A data steward holds an extract
 of that data in MONA for its researchers, and runs its own deployment of the same server
-on its own host. Its catalog answers every tool the global one does, and adds:
+on its own host. Its catalog has the same tools as the global one but answers only for
+what the steward holds (below), and adds:
 
 - **Holdings**: the tables, years and columns the steward holds, under its own file and
   column names. `segments` lists the steward's files; `search` adds a `steward` list of
@@ -23,6 +24,26 @@ Use the steward's catalog when the project's data comes from that steward's hold
 The steward runs the toolkit release it pins, which can be older than the global
 catalog's: every response's `meta.catalog_version` names it, and the project, `reg-mock`,
 `extract.R` and the export gate follow that release.
+
+## What a steward's catalog answers
+
+Only what the steward holds. A register the steward lacks is not listed.
+
+- **`not_found`** on a steward's catalog means the steward does not hold it, not that it
+  does not exist.
+- **Held, not orderable.** A table the steward holds but cannot be ordered yet is still
+  shown: `show`, `search` and `segments` mark it `not_orderable`, and `show` and
+  `segments` list its files under `not_orderable` with a `reason`:
+  - `row_key_held`: the columns that identify its rows are on hold.
+  - `table_unknown`: the steward has not stated which years the file covers.
+  - `no_orderable_column`: none of its columns can be ordered.
+
+  Tell the user to ask the steward (its `order_instructions` from `/api/context` say how
+  to reach them). Do not enter the table as a manual source and do not guess its columns.
+- **Anything outside the steward's holdings**, such as what else the researcher could
+  order or what a register the steward lacks contains: switch to the plugin's own
+  `catalog` server (the global catalog), and say in the answer which catalog each fact
+  came from. Data found only there cannot be put in this steward's order.
 
 ## The catalog URL
 
@@ -91,10 +112,10 @@ url = "https://<steward-host>/mcp"
 
 Then record the choice in the project's agent instructions (`CLAUDE.md` or
 `AGENTS.md`): "This is a `<steward name>` project: use the `steward-catalog` server's
-tools for every catalog question, not the plugin's `catalog`." Both servers are loaded
-in such a project; the rule is to use the steward's for everything, since it answers
-every tool the global one does and adds the holdings. In a project without a
-`steward-catalog` server, use the plugin's `catalog`.
+tools for questions about the steward's holdings; for anything outside them, use the
+plugin's `catalog` (the global catalog) and say which catalog each fact came from."
+Both servers are loaded in such a project. In a project without a `steward-catalog`
+server, use the plugin's `catalog`.
 
 ## Confirming it worked
 
