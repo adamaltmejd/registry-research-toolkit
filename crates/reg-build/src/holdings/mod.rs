@@ -345,6 +345,8 @@ fn amend_report(path: &Path, key: &str, value: serde_json::Value) -> Result<()> 
 }
 
 fn compiler_digest() -> String {
+    // Every file of this module, and every source file the holdings compile calls into.
+    // New entries go last: the digest is order-sensitive.
     let sources = [
         include_str!("mod.rs"),
         include_str!("input.rs"),
@@ -370,6 +372,17 @@ fn compiler_digest() -> String {
         include_str!("relations.sql"),
         include_str!("../curation.rs"),
         include_str!("../link/curated.rs"),
+        include_str!("cumulative.rs"),
+        include_str!("verify_mappings.rs"),
+        include_str!("../error.rs"),
+        include_str!("../findings.rs"),
+        include_str!("../../../reg-readers/src/lib.rs"),
+        include_str!("../../../reg-core/src/digest.rs"),
+        include_str!("../../../reg-core/src/interval.rs"),
+        include_str!("../../../reg-core/src/issue.rs"),
+        include_str!("../../../reg-core/src/manifest.rs"),
+        include_str!("../../../reg-core/src/placement.rs"),
+        include_str!("../../../reg-core/src/project.rs"),
     ];
     reg_core::sha256_hex(env!("CARGO_PKG_VERSION").to_owned() + &sources.concat())
 }

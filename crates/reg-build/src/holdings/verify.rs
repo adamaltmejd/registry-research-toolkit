@@ -3,6 +3,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use reg_core::days;
+use reg_core::manifest::StorageFamily;
 use rusqlite::Connection;
 
 use super::{compile, input, keys, meta, open, references};
@@ -414,10 +415,20 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
             "SELECT 1 FROM holding_column WHERE (disposition IN ('hold','unmap') AND trim(reason)='') OR (disposition='hold' AND trim(follow_up)='')",
             "holdings_column_disposition_invalid: blank reason or follow-up",
         ),
-        (
-            "SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id WHERE lower(c.storage_type) NOT IN ('tinyint','smallint','int','bigint','bit','decimal','numeric','real','float','money','smallmoney','char','nchar','varchar','nvarchar','text','ntext','date','datetime','datetime2','smalldatetime','datetimeoffset','time')",
-            "holdings_storage_unsafe: unsupported orderable storage type",
-        ),
+    ] {
+        no_rows(&db, sql, code)?;
+    }
+    for storage_type in rows(
+        &db,
+        "SELECT DISTINCT c.storage_type FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id WHERE c.storage_type IS NOT NULL",
+        [],
+        |r| r.get::<_, String>(0),
+    )? {
+        if StorageFamily::of(&storage_type).is_none() {
+            return Err("holdings_storage_unsafe: unsupported orderable storage type".into());
+        }
+    }
+    for (sql, code) in [
         (
             "SELECT 1 FROM holding_table h JOIN holding_column c ON c.id=h.period_column_id WHERE c.holding_id!=h.id",
             "holdings_period_column_invalid: foreign column",

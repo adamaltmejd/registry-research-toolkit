@@ -1808,7 +1808,7 @@ The standing target is every held column orderable (maintainer, 2026-10-16), but
 unmatched count is tracked coverage work, not a publication gate (Operator S1). Report
 mapped/unmatched counts before and after each build, never remove unmatched columns from
 the denominator. Under the intersection rule, partial coverage yields clips and notices
-and never a publication refusal; an empty intersection yields an unmatched notice.
+and never a publication refusal; an empty intersection yields a `mapping_missing` notice.
 
 Historical-spelling fallbacks are variable/window lookup: a table explicitly serving a
 variable can serve its other historical delivered spellings in that table, only over
@@ -2071,7 +2071,7 @@ that a held row key's stamped column holds count once, under the key:
 | `column_unmapped` | column disposition `unmap` | no |
 | `column_held` | column disposition `hold`, or a `mapping_held` notice | yes |
 | `ambiguous` | an `ambiguous_delivered_owners` or `ambiguous_catalog_segment` notice | yes |
-| `unmatched` | an `unmatched` or `mapping_missing` notice | yes |
+| `unmatched` | a `mapping_missing` notice | yes |
 | `other` | none of these | yes |
 
 A gap is work still owed; the rest are accounted for (a parent delivers them, or a
@@ -2408,7 +2408,7 @@ column is offered as an implicit time supplier only where an active declaration 
 implicit period dimension. Missing physical components require an explicit, located
 table-key hold and follow-up; it must be the table's sole key declaration, without a
 scoped `period`. Its columns remain held, not unmatched, and never become orderable
-placements. New exported columns remain ordinary unmatched notices. Semantic `role` is
+placements. New exported columns remain ordinary `mapping_missing` notices. Semantic `role` is
 retained from the reference or supplemental occurrence; it does not by itself make an
 identifier required. Carried copies must be declared entity/time components, including
 received keys the reference catalog does not curate as row keys. They grant no additional ordered
