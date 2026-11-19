@@ -93,9 +93,12 @@ Stage exactly the columns the schema declares for each file, nothing more:
 `cell_key.R` is the toolkit's helper, shipped with this skill. Copy it into the project
 unchanged, as `export_gate/cell_key.R`, and record its `CELL_KEY_VERSION` and SHA-256 in
 the project instructions beside the gate's. Its record keys are a secret key file that
-stays on MONA, outside the project folder that is synced or exported. The keys come from
-a cryptographic generator, the `openssl` R package, the helper's one package requirement
-(install it on MONA from the configured repository; without it key creation refuses as
+stays on MONA, outside the project folder that is synced or exported, readable by its
+owner only: the helper writes it with mode 0600, and on Windows, where file modes do not
+apply, it belongs in a folder only the researcher can read. The keys come from a
+cryptographic generator, the `openssl` R package, which also checks the p-table's
+SHA-256: it is the helper's one package requirement on every R version (install it on
+MONA from the configured repository; without it the helper refuses as
 `cell_key_openssl_missing`). The researcher creates the key file once with
 `ck_keys_create(<all person ids in the extract>, <path>)`; this is key epoch 1.
 Persons it lacks are refused (`cell_key_missing_ids`); `ck_keys_extend()` adds keys for

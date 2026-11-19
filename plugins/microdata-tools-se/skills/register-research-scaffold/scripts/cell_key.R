@@ -131,34 +131,85 @@ ck_stop <- function(code, message) {
 # Record keys from the operating system's cryptographic generator (openssl),
 # never R's generator, so no seed can reproduce them. Four random bytes per key,
 # the top six bits masked off: 2^26 divides 2^32, so every key is equally likely.
-ck_draw <- function(n) {
+# openssl is the helper's one package: record keys and the p-table's SHA-256.
+ck_openssl <- function() {
   if (!requireNamespace("openssl", quietly = TRUE)) {
     ck_stop(
       "cell_key_openssl_missing",
       paste(
-        "record keys need the openssl R package;",
+        "the cell-key helper needs the openssl R package;",
         "install it with install.packages(\"openssl\")"
       )
     )
   }
+}
+
+ck_draw <- function(n) {
+  ck_openssl()
   b <- matrix(as.integer(openssl::rand_bytes(4L * n)), nrow = 4L)
   b[1L, ] + 256L * b[2L, ] + 65536L * b[3L, ] + 16777216L * bitwAnd(b[4L, ], 3L)
 }
 
+# Person ids as text, one text per distinct id: character and factor ids as
+# they are, integer ids in full, and double ids only when whole and below 2^53,
+# where "%.0f" writes each distinct value differently. Anything else could give
+# two persons one key, so it is refused.
+ck_id_text <- function(x) {
+  if (is.character(x) || is.factor(x)) {
+    return(as.character(x))
+  }
+  if (is.integer(x) && is.null(attr(x, "class"))) {
+    return(as.character(x))
+  }
+  if (is.double(x) && is.null(attr(x, "class"))) {
+    ok <- is.na(x) | (is.finite(x) & x == round(x) & abs(x) < 2^53)
+    if (all(ok)) {
+      return(ifelse(is.na(x), NA_character_, sprintf("%.0f", x)))
+    }
+  }
+  ck_stop(
+    "cell_key_bad_id",
+    paste(
+      "person ids must be character, integer, or whole numbers below 2^53;",
+      "convert the id column to character"
+    )
+  )
+}
+
 ck_ids <- function(ids) {
-  ids <- unique(as.character(ids))
+  ids <- unique(ck_id_text(ids))
   if (anyNA(ids) || any(ids == "")) {
     ck_stop("cell_key_bad_id", "a person id is missing or empty")
   }
   ids
 }
 
+# Write to a temporary file beside the key file, created owner-only (umask
+# 077, so mode 0600 before any content), read it back, and only then rename it
+# over the key file. Any warning or mismatch keeps the old file and refuses.
+# On Windows the umask has no effect: the folder's access rights apply.
 ck_keys_write <- function(keys, path) {
   tmp <- tempfile("cell_key_", tmpdir = dirname(path), fileext = ".tmp")
-  utils::write.csv(keys, tmp, row.names = FALSE)
-  if (!file.rename(tmp, path)) {
-    unlink(tmp)
-    ck_stop("cell_key_write_failed", "could not write the key file")
+  old_umask <- Sys.umask("077")
+  on.exit(Sys.umask(old_umask), add = TRUE)
+  ok <- tryCatch(
+    {
+      withCallingHandlers(
+        utils::write.csv(keys, tmp, row.names = FALSE),
+        warning = function(w) stop(conditionMessage(w))
+      )
+      back <- ck_keys_read(tmp)
+      nrow(back) == nrow(keys) && identical(back$id, keys$id) &&
+        identical(back$key, as.integer(keys$key))
+    },
+    error = function(e) FALSE
+  )
+  if (!ok || !file.rename(tmp, path)) {
+    unlink(tmp, expand = FALSE)
+    ck_stop(
+      "cell_key_write_failed",
+      "could not write the key file; the previous key file is unchanged"
+    )
   }
 }
 
@@ -176,7 +227,7 @@ ck_with_lock <- function(path, update) {
       )
     )
   }
-  on.exit(unlink(lock, recursive = TRUE), add = TRUE)
+  on.exit(unlink(lock, recursive = TRUE, expand = FALSE), add = TRUE)
   update()
 }
 
@@ -248,17 +299,9 @@ ck_keys_extend <- function(ids, path) {
   })
 }
 
-# SHA-256 as export_gate.R gets it: tools::sha256sum (R >= 4.5), else digest.
 ck_sha256 <- function(text) {
-  bytes <- charToRaw(enc2utf8(text))
-  tools_ns <- asNamespace("tools")
-  if (exists("sha256sum", envir = tools_ns, inherits = FALSE)) {
-    return(unname(get("sha256sum", envir = tools_ns)(bytes = bytes)))
-  }
-  if (!requireNamespace("digest", quietly = TRUE)) {
-    ck_stop("cell_key_sha256_missing", "SHA-256 needs R >= 4.5 or the digest package")
-  }
-  digest::digest(bytes, algo = "sha256", serialize = FALSE)
+  ck_openssl()
+  paste(as.character(unclass(openssl::sha256(charToRaw(enc2utf8(text))))), collapse = "")
 }
 
 # The embedded p-table, after its hash and every policy property are checked.
@@ -306,7 +349,12 @@ ck_cells <- function(frame, by) {
   if (length(by) == 0) {
     return(rep(1L, nrow(frame)))
   }
-  codes <- lapply(unname(as.list(frame[by])), function(x) match(x, unique(x)))
+  # A factor by its level codes: an explicit NA level and a missing value differ.
+  value <- function(x) if (is.factor(x)) as.integer(x) else x
+  codes <- lapply(unname(as.list(frame[by])), function(x) {
+    x <- value(x)
+    match(x, unique(x))
+  })
   key <- do.call(paste, c(codes, list(sep = ".")))
   match(key, unique(key))
 }
@@ -329,7 +377,7 @@ ck_perturb <- function(data, by, id, keys, min_cell_count = 5L) {
     ck_stop("cell_key_bad_column", "a by or id column is not in data")
   }
   persons <- unique(data[c(by, id)])
-  ids <- as.character(persons[[id]])
+  ids <- ck_id_text(persons[[id]])
   if (anyNA(ids)) {
     ck_stop("cell_key_bad_id", "a person id is missing")
   }
