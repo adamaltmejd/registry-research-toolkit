@@ -8,3 +8,8 @@ KEY_FILE <- c(
 )
 SCHEMA <- "export_gate/aggregates.schema.json"
 POLICY <- "export_gate/aggregates.policy.json"
+
+# The delivery: every file the order delivers and its stored column names, from the
+# order answer (a steward's: materialize_order). reg-mock mirrors them.
+LISA_FILES <- sprintf("scb_lisa_individer_%d.parquet", 2021:2022)
+LISA_COLUMNS <- c(person_id = "PersonNr", sex = "Kon", income = "DispInkHB04")

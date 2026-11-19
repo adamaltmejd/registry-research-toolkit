@@ -1,13 +1,14 @@
-# Q001: disposable income by sex and year. An analysis returns person-level rows
-# (one per person and cell, with the values the statistics need), never counts or
-# statistics: only the disclosure stage turns persons into publishable numbers.
+# Q001: household disposable income by sex and year, averaged over persons. An
+# analysis returns person-level rows (one per person and cell, with the values the
+# statistics need), never counts or statistics: only the disclosure stage turns
+# persons into publishable numbers.
 income_by_sex <- function(lisa) {
-  stopifnot(!anyNA(lisa$PersonNr), !anyDuplicated(lisa[c("PersonNr", "year")]))
-  sex <- unname(c("1" = "man", "2" = "woman")[as.character(lisa$Kon)])
+  stopifnot(!anyNA(lisa$person_id), !anyDuplicated(lisa[c("person_id", "year")]))
+  sex <- unname(c("1" = "man", "2" = "woman")[as.character(lisa$sex)])
   data.frame(
-    PersonNr = lisa$PersonNr,
+    person_id = lisa$person_id,
     year = lisa$year,
     group_1 = ifelse(is.na(sex), "unknown", sex),
-    income = lisa$DispInkHB04
+    income = lisa$income
   )
 }

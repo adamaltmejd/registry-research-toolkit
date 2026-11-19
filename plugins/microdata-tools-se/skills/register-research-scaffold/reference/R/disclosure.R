@@ -5,13 +5,13 @@ MIN_CELL <- 5L
 
 disclose <- function(persons, table, keys) {
   by <- c("year", "group_1")
-  counts <- ck_perturb(persons, by, "PersonNr", keys, MIN_CELL)
+  counts <- ck_perturb(persons, by, "person_id", keys, MIN_CELL)
   epoch <- attr(counts, "key_epoch")
   counts$table <- table
 
   # A mean rests on the persons with a value, so its support is counted on them.
   valued <- persons[!is.na(persons$income), ]
-  stats <- ck_perturb(valued, by, "PersonNr", keys, MIN_CELL)
+  stats <- ck_perturb(valued, by, "person_id", keys, MIN_CELL)
   means <- aggregate(income ~ year + group_1, valued, mean)
   stats <- merge(stats, means, by = by, all.x = TRUE, sort = TRUE)
   stats$value <- ifelse(stats$n_true < MIN_CELL, NA_real_, signif(stats$income, 4))

@@ -11,6 +11,8 @@ catalog, one question, run on MONA, results through the export gate.
   gate refusal only by its category code.
 - Row-level data never leaves MONA. Every result leaves as the export gate's
   `out/real/export/` folder, after the researcher has reviewed it.
+- The agent reads an export only after the researcher has approved those exact files
+  for model access. A gate pass or MONA's export approval is not that approval.
 - Mock and real runs write to `out/mock/` and `out/real/`; `run.R` picks the mode from
   which input folder exists (`config.R`) and never falls back to the other.
 
@@ -28,10 +30,19 @@ Rscript make_keys.R   # once per mode: the cell-key file, outside the project
 Rscript run.R         # a run: inputs, analysis, disclosure, staging, export gate
 ```
 
-On MONA the researcher uploads the committed project with `export_gate/`, sets
-`REAL_DIR` and the real key file in `config.R`, runs `make_keys.R` once and `run.R`
-for each batch, reviews `out/real/export/` and exports it through MONA's own export.
-`out/real/run_record.json` (commit, key epoch, versions) stays on MONA.
+Before MONA:
+
+- `LISA_FILES` and `LISA_COLUMNS` in `config.R` name the delivery's files and stored
+  column names, from the order answer (a steward's: `materialize_order`). The mocks
+  mirror them; a real run refuses a missing or extra file.
+- `git rev-parse HEAD > SOURCE_COMMIT` from a clean checkout, just before upload: the
+  upload has no `.git`, and a real run reads its commit from this file.
+
+On MONA the researcher uploads the committed project with `export_gate/` and
+`SOURCE_COMMIT`, sets `REAL_DIR` and the real key file in `config.R`, runs
+`make_keys.R` once and `run.R` for each batch, reviews `out/real/export/` and exports
+it through MONA's own export. `out/real/run_record.json` (commit, key epoch,
+versions) stays on MONA.
 
 ## Pins
 

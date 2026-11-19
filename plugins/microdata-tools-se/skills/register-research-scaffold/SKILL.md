@@ -87,10 +87,10 @@ or `AGENTS.md`, then:
    `reg_meta` tag [export-gate.md](references/export-gate.md) names, checked against its
    SHA-256, and `cell_key.R` copied unchanged from [scripts/](scripts/cell_key.R).
    Record each file's version and SHA-256 in the instructions' pin table. Commit all four.
-3. Rewrite for the question: the source adapter (`R/inputs.R`), the analysis
-   (`R/analysis.R`), the cells, statistics and person-id column in `R/disclosure.R`
-   (its suppress, perturb, round order stays), and the reader and id column in
-   `make_keys.R` (a steward's extract keys persons by `LopNr`). One Markdown ticket
+3. Rewrite for the question: the delivered files and column names in `config.R`
+   (from the order answer; a steward's extract keys persons by `LopNr`), the source
+   adapter (`R/inputs.R`), the analysis (`R/analysis.R`) and the cells and statistics
+   in `R/disclosure.R` (its suppress, perturb, round order stays). One Markdown ticket
    per question in `questions/`.
 4. Run `Rscript make_keys.R` once and `Rscript run.R` on the mocks until the gate passes.
 
