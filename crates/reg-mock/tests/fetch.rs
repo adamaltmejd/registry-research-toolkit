@@ -121,18 +121,10 @@ fn fetch_saves_every_page_after_a_rate_limit() {
     assert_eq!(saved, expected);
 }
 
-/// A steward behind Cloudflare Access: the call carries both Access headers only to the
-/// host `CF_ACCESS_HOST` names, and a call that meets the login redirect is refused as
-/// `access_required`, and a reply that echoes the credentials back is printed with them redacted. A token for plain http to a remote host
-/// (even one hidden behind a loopback prefix in the user-info) is refused before any
-/// request. A regression that sends the token to another host, drops the headers,
-/// follows the redirect, trusts the URL prefix or echoes the secret fails here.
-#[test]
-fn fetch_sends_access_headers_only_to_the_steward() {
-    let listener = TcpListener::bind("127.0.0.1:0").expect("a local port");
-    listener.set_nonblocking(true).expect("nonblocking");
-    let url = format!("http://{}/mcp", listener.local_addr().expect("bound"));
-    let seen = std::thread::spawn(move || {
+/// Answers three calls: the login redirect, or an echo of the Access headers for a
+/// credentialed call. Returns the request headers seen, lowercased.
+fn access_stub(listener: TcpListener) -> std::thread::JoinHandle<Vec<String>> {
+    std::thread::spawn(move || {
         let mut seen = Vec::new();
         for _ in 0..3 {
             // A deadline, so a client that never connects fails the test instead of hanging it.
@@ -186,7 +178,21 @@ fn fetch_sends_access_headers_only_to_the_steward() {
             seen.push(headers.to_ascii_lowercase());
         }
         seen
-    });
+    })
+}
+
+/// A steward behind Cloudflare Access: the call carries both Access headers only to the
+/// host `CF_ACCESS_HOST` names, and a call that meets the login redirect is refused as
+/// `access_required`, and a reply that echoes the credentials back is printed with them redacted. A token for plain http to a remote host
+/// (even one hidden behind a loopback prefix in the user-info) is refused before any
+/// request. A regression that sends the token to another host, drops the headers,
+/// follows the redirect, trusts the URL prefix or echoes the secret fails here.
+#[test]
+fn fetch_sends_access_headers_only_to_the_steward() {
+    let listener = TcpListener::bind("127.0.0.1:0").expect("a local port");
+    listener.set_nonblocking(true).expect("nonblocking");
+    let url = format!("http://{}/mcp", listener.local_addr().expect("bound"));
+    let seen = access_stub(listener);
     let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("reg-mock-access");
     std::fs::create_dir_all(&dir).expect("a directory");
     let project = dir.join("project.json");
