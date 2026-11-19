@@ -97,6 +97,10 @@ pub enum SearchHit {
         #[schema(required = true)]
         description: Option<String>,
         period: Period,
+        /// On a data holder's catalog, `true` when the holder holds it only in files no order
+        /// can draw on yet; `show` says why. Absent otherwise.
+        #[serde(skip_serializing_if = "super::is_false")]
+        not_orderable: bool,
     },
     Table {
         fqid: String,
@@ -104,6 +108,9 @@ pub enum SearchHit {
         register_name: String,
         role: String,
         period: Period,
+        /// As on a register hit.
+        #[serde(skip_serializing_if = "super::is_false")]
+        not_orderable: bool,
     },
     Variable {
         fqid: String,
@@ -222,7 +229,7 @@ fn search_origin(
         Ok(id) => id,
         Err(err) if paired && err.kind() == Code::NotFound => {
             // A register in the other database has no matches in this group.
-            server.catalog.connect_for_ref(params["register"])?;
+            server.catalog.connect_for_shown_ref(params["register"])?;
             return Ok(SearchPage {
                 items: vec![],
                 next_cursor: None,
@@ -333,13 +340,23 @@ fn search_filter(server: &Server, conn: &Connection, held: bool) -> Result<Strin
             JOIN variable hv ON hv.pid = hm.variable_pid
             JOIN tbl ht ON ht.pid = hm.table_pid
             WHERE (?4 IS NULL OR (hm.start < ?5 AND ?4 < hm.end))";
+        // A table only blocked files route to shows too (`Catalog::shows`), over the
+        // years those files hold: a table some placement holds is already in `from`.
+        let blocked = "FROM held.holding_blocked hb
+            JOIN held.holding_route hr ON hr.holding_id = hb.holding_id
+            JOIN tbl bt ON bt.pid = hr.table_pid
+            WHERE bt.pid NOT IN (SELECT table_pid FROM held.holding_mapping)
+              AND (?4 IS NULL OR EXISTS (SELECT 1 FROM held.holding_period hp
+              WHERE hp.holding_id = hb.holding_id AND hp.start < ?5 AND ?4 < hp.end))";
         (
             format!(
                 " AND (i.kind NOT IN ('register', 'table', 'variable')
             OR (i.kind, i.entity_id) IN (
                 SELECT 'variable', hv.id {from}
                 UNION ALL SELECT 'table', ht.id {from}
-                UNION ALL SELECT 'register', ht.register_id {from}))"
+                UNION ALL SELECT 'register', ht.register_id {from}
+                UNION ALL SELECT 'table', bt.id {blocked}
+                UNION ALL SELECT 'register', bt.register_id {blocked}))"
             ),
             "i.kind IN ('register', 'table', 'variable') OR ",
         )
@@ -432,6 +449,7 @@ fn hit(
                 let fqid: String = row.get(0)?;
                 Ok(SearchHit::Register {
                     period: server.hull("register", &fqid, row.get(3)?, row.get(4)?),
+                    not_orderable: server.catalog.blocked("register", &fqid),
                     fqid,
                     name: row.get(1)?,
                     description: row.get(2)?,
@@ -449,6 +467,7 @@ fn hit(
                 let fqid: String = row.get(0)?;
                 Ok(SearchHit::Table {
                     period: server.hull("table", &fqid, row.get(4)?, row.get(5)?),
+                    not_orderable: server.catalog.blocked("table", &fqid),
                     fqid,
                     name: row.get(1)?,
                     register_name: row.get(2)?,

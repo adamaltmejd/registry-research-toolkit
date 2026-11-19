@@ -250,6 +250,12 @@ fn write(
         &held.rename_targets,
         &spaces,
     )?;
+    for (holding, reason) in orderable::blocked(&db)? {
+        db.execute(
+            "INSERT INTO holding_blocked VALUES (?,?)",
+            params![holding, reason],
+        )?;
+    }
     let mut generation = crate::sha256_file(&input::path(root, &pin.config)?)?.0;
     for part in [
         &base_generation,
@@ -343,6 +349,7 @@ fn compiler_digest() -> String {
         include_str!("mod.rs"),
         include_str!("input.rs"),
         include_str!("keys.rs"),
+        include_str!("orderable.rs"),
         include_str!("references.rs"),
         include_str!("compile.rs"),
         include_str!("verify.rs"),

@@ -721,3 +721,12 @@ pub fn openapi(version: &str) -> OpenApi {
         ))
         .build()
 }
+
+/// Serde's skip test for a flag shown only when set.
+#[expect(
+    clippy::trivially_copy_pass_by_ref,
+    reason = "serde passes a reference"
+)]
+pub(crate) fn is_false(flag: &bool) -> bool {
+    !flag
+}

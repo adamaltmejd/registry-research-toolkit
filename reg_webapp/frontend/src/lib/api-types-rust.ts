@@ -541,6 +541,11 @@ export interface components {
             /** @description A register's or table's name, a variable's or class version's label. */
             name: string;
         };
+        /** @description A data holder's note on a held row key, and where it follows the hold up. */
+        Hold: {
+            follow_up: string | null;
+            hold: string;
+        };
         HoldingsIdentity: {
             generation: string;
             owner: string;
@@ -667,6 +672,17 @@ export interface components {
             variable: string | null;
             /** @description The name of `variable`, as `show` gives it; `null` when `variable` is null or names no catalog variable. */
             variable_name: string | null;
+        };
+        /** @description A file the data holder holds that no order can draw on yet, and why. */
+        NotOrderable: {
+            /** @description The held file, as `segments` names files. */
+            file: string;
+            /** @description The data holder's own notes on each held row key, as written. */
+            holds?: components["schemas"]["Hold"][];
+            /** @description What the reason means. */
+            message: string;
+            /** @description `row_key_held`, `table_unknown` or `no_orderable_column`. */
+            reason: string;
         };
         /** @description One delivery behind this row. */
         Occurrence: {
@@ -1079,12 +1095,19 @@ export interface components {
             description: string | null;
             fqid: string;
             name: string;
+            /**
+             * @description On a data holder's catalog, `true` when the holder holds it only in files no order
+             *     can draw on yet; `show` says why. Absent otherwise.
+             */
+            not_orderable?: boolean;
             period: components["schemas"]["Period"];
             /** @enum {string} */
             type: "register";
         } | {
             fqid: string;
             name: string;
+            /** @description As on a register hit. */
+            not_orderable?: boolean;
             period: components["schemas"]["Period"];
             register_name: string;
             role: string;
@@ -1178,6 +1201,11 @@ export interface components {
         SegmentPage: {
             items: components["schemas"]["Segment"][];
             next_cursor: string | null;
+            /**
+             * @description On a data holder's catalog, for a table it holds only in files no order can draw
+             *     on yet: those files, and why. Absent otherwise.
+             */
+            not_orderable?: components["schemas"]["NotOrderable"][];
         };
         /** @description A summary tagged by `kind`. Every kind but `root` and `class_families` carries the resolved `fqid`, so a bare-name request gets the id back. */
         Show: {
@@ -1197,6 +1225,8 @@ export interface components {
             /** @enum {string} */
             kind: "register";
             name: string;
+            /** @description As on `ShowRegisterRef`. */
+            not_orderable?: boolean;
             period: components["schemas"]["Period"];
             /** @description The register's own series breaks; a table's are on the table. Absent when none. */
             series_breaks?: components["schemas"]["ShowSeriesBreak"][];
@@ -1216,6 +1246,8 @@ export interface components {
             /** @enum {string} */
             kind: "table";
             name: string;
+            /** @description As on `ShowTable`. */
+            not_orderable?: components["schemas"]["NotOrderable"][];
             /** @description The register's fqid. */
             register: string;
             /** @description Absent when none, and on a data holder's catalog. */
@@ -1371,6 +1403,8 @@ export interface components {
             description?: string | null;
             fqid: string;
             name: string;
+            /** @description As on `ShowRegisterRef`. */
+            not_orderable?: boolean;
             /** @description The periods its dated tables are delivered, merged, in start order. Gaps stay gaps. */
             periods: components["schemas"]["Period"][];
             /**
@@ -1392,6 +1426,12 @@ export interface components {
         ShowRegisterRef: {
             fqid: string;
             name: string;
+            /**
+             * @description On a data holder's catalog, `true` when the holder holds the register only in
+             *     files no order can draw on yet (each table's `not_orderable` says why). Absent
+             *     otherwise.
+             */
+            not_orderable?: boolean;
             period: components["schemas"]["Period"];
         };
         /** @description A register's set; `show` at its fqid has the axes and member facets. */
@@ -1456,6 +1496,11 @@ export interface components {
             fqid: string;
             implicit: boolean;
             name: string;
+            /**
+             * @description On a data holder's catalog, the files the holder holds this table in that no order
+             *     can draw on yet, and why. Absent when none.
+             */
+            not_orderable?: components["schemas"]["NotOrderable"][];
             period: components["schemas"]["Period"];
             role: string;
             /**

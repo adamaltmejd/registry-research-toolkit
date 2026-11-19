@@ -118,3 +118,10 @@ CREATE TABLE holding_notice_candidate (
  PRIMARY KEY(notice_id,table_pid,variable_pid)
 ) STRICT, WITHOUT ROWID;
 CREATE INDEX holding_notice_candidate_logical ON holding_notice_candidate(table_pid,variable_pid);
+-- Each held table that no order can draw on although columns are still to place
+-- (crates/DESIGN.md, "Orderable columns"): a reader shows its routed catalog tables as
+-- held but not orderable, with this reason.
+CREATE TABLE holding_blocked (
+ holding_id INTEGER PRIMARY KEY REFERENCES holding_table(id),
+ reason TEXT NOT NULL CHECK(reason IN ('row_key_held','table_unknown','no_orderable_column'))
+) STRICT;

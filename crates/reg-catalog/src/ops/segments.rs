@@ -14,6 +14,7 @@ use super::{
     Cache, Operation, Param, Params, Period, Server, Type, component, cursor, days, flag, limit,
     refs,
 };
+use crate::holdings::NotOrderable;
 use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
@@ -47,6 +48,10 @@ pub struct SegmentPage {
     items: Vec<Segment>,
     #[schema(required = true)]
     next_cursor: Option<String>,
+    /// On a data holder's catalog, for a table it holds only in files no order can draw
+    /// on yet: those files, and why. Absent otherwise.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    not_orderable: Vec<NotOrderable>,
 }
 
 /// One row of the variable's per-period list: a column of one table over one period
@@ -164,7 +169,7 @@ impl Segment {
 }
 
 fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect_for_ref(params["ref"])?;
+    let conn = server.catalog.connect_for_shown_ref(params["ref"])?;
     let given = params["ref"];
     let hit = refs::resolve(&conn, given)?;
     let named = params.list("variable");
@@ -185,6 +190,16 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
             let id = refs::table(&conn, given)?;
             let pid: String =
                 conn.query_row("SELECT pid FROM tbl WHERE id = ?", [id], |row| row.get(0))?;
+            // Its variables are not held here: none has a row to list.
+            let not_orderable = server.catalog.not_orderable(&pid).to_vec();
+            if !not_orderable.is_empty() {
+                return Ok(serde_json::to_value(SegmentPage {
+                    items: vec![],
+                    next_cursor: None,
+                    not_orderable,
+                })
+                .expect("a page serializes"));
+            }
             (variable_pids(server, named)?, Some(pid))
         }
         (kind, true) => {
@@ -221,7 +236,15 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
         Some(cursor::token(server, params, "", offset + limit, ""))
     });
     let items = served(server, &origins, page, evidence)?;
-    Ok(serde_json::to_value(SegmentPage { items, next_cursor }).expect("a page serializes"))
+    let not_orderable = table
+        .as_deref()
+        .map_or_else(Vec::new, |t| server.catalog.not_orderable(t).to_vec());
+    Ok(serde_json::to_value(SegmentPage {
+        items,
+        next_cursor,
+        not_orderable,
+    })
+    .expect("a page serializes"))
 }
 
 /// The origins a variable's list reads: `catalog` (the catalog's own connection), or on

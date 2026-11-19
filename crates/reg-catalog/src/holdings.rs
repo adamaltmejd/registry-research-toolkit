@@ -48,15 +48,86 @@ pub(crate) struct Possession {
     /// group to the steward's reader, so that member reads as a plain variable
     /// (maintainer 2026-11-11, #2410).
     sets: HashSet<String>,
+    /// Shown though nothing placed holds them: the tables only blocked files route to,
+    /// and the registers and providers above them, with the years those files hold.
+    blocked: Blocked,
+    /// Each such table's blocked files.
+    not_orderable: HashMap<String, Vec<NotOrderable>>,
+}
+
+#[derive(Default)]
+struct Blocked {
+    tables: HashMap<String, Vec<Span>>,
+    registers: HashMap<String, Vec<Span>>,
+    providers: HashMap<String, Vec<Span>>,
+}
+
+/// A file the data holder holds that no order can draw on yet, and why.
+#[derive(Clone, Serialize, ToSchema)]
+pub struct NotOrderable {
+    /// The held file, as `segments` names files.
+    pub file: String,
+    /// `row_key_held`, `table_unknown` or `no_orderable_column`.
+    pub reason: String,
+    /// What the reason means.
+    pub message: &'static str,
+    /// The data holder's own notes on each held row key, as written.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub holds: Vec<Hold>,
+}
+
+/// A data holder's note on a held row key, and where it follows the hold up.
+#[derive(Clone, Serialize, ToSchema)]
+pub struct Hold {
+    pub hold: String,
+    #[schema(required = true)]
+    pub follow_up: Option<String>,
+}
+
+impl NotOrderable {
+    fn new(file: String, reason: &str, keys: &str) -> Self {
+        let message = match reason {
+            "row_key_held" => {
+                "Held by the data holder, but not orderable yet: the columns that identify \
+                 its rows are on hold. Ask the data holder."
+            }
+            "table_unknown" => {
+                "Held by the data holder, but not orderable yet: the data holder has not \
+                 stated which years the file covers. Ask the data holder."
+            }
+            _ => {
+                "Held by the data holder, but not orderable yet: none of its columns can be \
+                 ordered. Ask the data holder."
+            }
+        };
+        let holds = serde_json::from_str::<Vec<serde_json::Value>>(keys)
+            .unwrap_or_default()
+            .iter()
+            .filter_map(|key| {
+                Some(Hold {
+                    hold: key["hold"].as_str()?.to_owned(),
+                    follow_up: key["follow_up"].as_str().map(str::to_owned),
+                })
+            })
+            .collect();
+        Self {
+            file,
+            reason: reason.to_owned(),
+            message,
+            holds,
+        }
+    }
 }
 
 impl Possession {
     fn read(conn: &Connection) -> Result<Self, Error> {
-        // A placement names its table by public id, in either origin.
+        // A placement or a route names its table by public id, in either origin.
         let mut above: HashMap<String, (String, String)> = HashMap::new();
         for origin in ["main", "held"] {
             let mut query = conn.prepare(&format!(
-                "SELECT DISTINCT t.pid, r.pid, p.pid FROM held.holding_mapping m
+                "SELECT DISTINCT t.pid, r.pid, p.pid FROM
+                   (SELECT table_pid FROM held.holding_mapping
+                    UNION SELECT table_pid FROM held.holding_route) m
                    JOIN {origin}.tbl t ON t.pid = m.table_pid
                    JOIN {origin}.register r ON r.id = t.register_id
                    JOIN {origin}.provider p ON p.id = r.provider_id"
@@ -128,7 +199,78 @@ impl Possession {
             .filter(|(_, held)| held.len() >= 2)
             .map(|(set, _)| set)
             .collect();
+        possession.read_blocked(conn, &above)?;
         Ok(possession)
+    }
+
+    /// The catalog tables only blocked files route to (crates/DESIGN.md, "Held tables
+    /// that cannot be ordered"): each with its blocked files, and the years those files
+    /// hold, rolled up to registers and providers nothing placed holds.
+    fn read_blocked(
+        &mut self,
+        conn: &Connection,
+        above: &HashMap<String, (String, String)>,
+    ) -> Result<(), Error> {
+        let mut query = conn.prepare(&format!(
+            "SELECT r.table_pid, {TABLE_LABEL}, b.reason, h.key_requirements, h.id
+             FROM held.holding_blocked b
+               JOIN held.holding_table h ON h.id = b.holding_id
+               JOIN held.holding_route r ON r.holding_id = h.id
+             ORDER BY r.table_pid, 2"
+        ))?;
+        let mut periods =
+            conn.prepare("SELECT start, end FROM held.holding_period WHERE holding_id = ?")?;
+        let found = query
+            .query_map([], |r| {
+                Ok((
+                    r.get::<_, String>(0)?,
+                    r.get::<_, String>(1)?,
+                    r.get::<_, String>(2)?,
+                    r.get::<_, String>(3)?,
+                    r.get::<_, i64>(4)?,
+                ))
+            })?
+            .collect::<rusqlite::Result<Vec<_>>>()?;
+        for (table, file, reason, keys, holding) in found {
+            if self.tables.contains_key(&table) {
+                continue;
+            }
+            let spans = periods
+                .query_map([holding], |r| Ok((r.get(0)?, r.get(1)?)))?
+                .collect::<rusqlite::Result<Vec<Span>>>()?;
+            let (register, provider) = above
+                .get(&table)
+                .ok_or_else(|| Error::internal(format!("blocked route {table} names no table")))?;
+            for (map, pid) in [
+                (&mut self.blocked.tables, &table),
+                (&mut self.blocked.registers, register),
+                (&mut self.blocked.providers, provider),
+            ] {
+                map.entry(pid.clone()).or_default().extend(&spans);
+            }
+            self.not_orderable
+                .entry(table)
+                .or_default()
+                .push(NotOrderable::new(file, &reason, &keys));
+        }
+        for map in [
+            &mut self.blocked.tables,
+            &mut self.blocked.registers,
+            &mut self.blocked.providers,
+        ] {
+            // A register or provider some placement holds is served, not blocked.
+            for spans in map.values_mut() {
+                *spans = reg_core::days::merge(std::mem::take(spans));
+            }
+        }
+        let (registers, providers) = (&self.registers, &self.providers);
+        self.blocked
+            .registers
+            .retain(|pid, _| !registers.contains_key(pid));
+        self.blocked
+            .providers
+            .retain(|pid, _| !providers.contains_key(pid));
+        Ok(())
     }
 
     fn of(&self, kind: &str) -> Option<&HashMap<String, Vec<Span>>> {
@@ -137,6 +279,17 @@ impl Possession {
             "register" => Some(&self.registers),
             "table" => Some(&self.tables),
             "variable" => Some(&self.variables),
+            _ => None,
+        }
+    }
+}
+
+impl Blocked {
+    fn of(&self, kind: &str) -> Option<&HashMap<String, Vec<Span>>> {
+        match kind {
+            "provider" => Some(&self.providers),
+            "register" => Some(&self.registers),
+            "table" => Some(&self.tables),
             _ => None,
         }
     }
@@ -392,6 +545,36 @@ impl Catalog {
         }
     }
 
+    /// Whether `show`, `search` and `segments` show the entity: what `serves` serves,
+    /// and in steward mode also a table only blocked files route to, with its register
+    /// and provider (crates/DESIGN.md, "Held tables that cannot be ordered").
+    #[must_use]
+    pub fn shows(&self, kind: &str, pid: &str) -> bool {
+        self.serves(kind, pid)
+            || self
+                .holdings
+                .as_ref()
+                .and_then(|h| h.possession.blocked.of(kind))
+                .is_some_and(|map| map.contains_key(pid))
+    }
+
+    /// Whether the shown provider, register or table is held only by files no order can
+    /// draw on yet.
+    #[must_use]
+    pub fn blocked(&self, kind: &str, pid: &str) -> bool {
+        !self.serves(kind, pid) && self.shows(kind, pid)
+    }
+
+    /// A shown table's files no order can draw on yet; empty when it has none, outside
+    /// steward mode, or when a placement holds it.
+    #[must_use]
+    pub fn not_orderable(&self, table: &str) -> &[NotOrderable] {
+        self.holdings
+            .as_ref()
+            .and_then(|h| h.possession.not_orderable.get(table))
+            .map_or(&[], Vec::as_slice)
+    }
+
     /// Whether this deployment serves `variable` in `table`: always outside steward
     /// mode; in steward mode only when a placement names that pair.
     #[must_use]
@@ -403,12 +586,16 @@ impl Catalog {
         })
     }
 
-    /// In steward mode, the years a served provider, register, table or variable is
-    /// held, merged and in order; `None` outside steward mode or for another kind.
+    /// In steward mode, the years a shown provider, register, table or variable is
+    /// held, merged and in order: its placements', or for one only blocked files hold,
+    /// those files' periods. `None` outside steward mode or for another kind.
     #[must_use]
     pub fn held_spans(&self, kind: &str, pid: &str) -> Option<&[Span]> {
         let held = &self.holdings.as_ref()?.possession;
-        held.of(kind)?.get(pid).map(Vec::as_slice)
+        held.of(kind)?
+            .get(pid)
+            .or_else(|| held.blocked.of(kind)?.get(pid))
+            .map(Vec::as_slice)
     }
 
     /// The admitted steward's identity; absent in reference-only mode.
@@ -458,10 +645,27 @@ impl Catalog {
     /// # Errors
     /// The usual reference errors, or `catalog_unavailable` for an unreadable file.
     pub fn connect_for_ref(&self, value: &str) -> Result<Connection, Error> {
+        self.connect_admitted(value, Self::serves)
+    }
+
+    /// `connect_for_ref` for `show`, `search` and `segments`, which also admit what
+    /// `shows` shows.
+    ///
+    /// # Errors
+    /// As `connect_for_ref`.
+    pub fn connect_for_shown_ref(&self, value: &str) -> Result<Connection, Error> {
+        self.connect_admitted(value, Self::shows)
+    }
+
+    fn connect_admitted(
+        &self,
+        value: &str,
+        admits: fn(&Self, &str, &str) -> bool,
+    ) -> Result<Connection, Error> {
         let conn = self.origin_for_ref(value)?;
         if self.holdings.is_some() {
             let entity = crate::ops::refs::resolve(&conn, value)?;
-            if !self.serves(&entity.kind, &entity.pid) {
+            if !admits(self, &entity.kind, &entity.pid) {
                 return Err(Error::not_found(value));
             }
         }

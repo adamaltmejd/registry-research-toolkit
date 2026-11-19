@@ -147,6 +147,10 @@
                 "name": {
                   "type": "string"
                 },
+                "not_orderable": {
+                  "description": "On a data holder's catalog, `true` when the holder holds it only in files no order\ncan draw on yet; `show` says why. Absent otherwise.",
+                  "type": "boolean"
+                },
                 "period": {
                   "$ref": "#/$defs/Period"
                 },
@@ -173,6 +177,10 @@
                 },
                 "name": {
                   "type": "string"
+                },
+                "not_orderable": {
+                  "description": "As on a register hit.",
+                  "type": "boolean"
                 },
                 "period": {
                   "$ref": "#/$defs/Period"
@@ -538,6 +546,25 @@
           ],
           "type": "object"
         },
+        "Hold": {
+          "description": "A data holder's note on a held row key, and where it follows the hold up.",
+          "properties": {
+            "follow_up": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "hold": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hold",
+            "follow_up"
+          ],
+          "type": "object"
+        },
         "Meta": {
           "properties": {
             "api_version": {
@@ -569,6 +596,36 @@
             "project_schema_version",
             "generation",
             "catalog_version"
+          ],
+          "type": "object"
+        },
+        "NotOrderable": {
+          "description": "A file the data holder holds that no order can draw on yet, and why.",
+          "properties": {
+            "file": {
+              "description": "The held file, as `segments` names files.",
+              "type": "string"
+            },
+            "holds": {
+              "description": "The data holder's own notes on each held row key, as written.",
+              "items": {
+                "$ref": "#/$defs/Hold"
+              },
+              "type": "array"
+            },
+            "message": {
+              "description": "What the reason means.",
+              "type": "string"
+            },
+            "reason": {
+              "description": "`row_key_held`, `table_unknown` or `no_orderable_column`.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "file",
+            "reason",
+            "message"
           ],
           "type": "object"
         },
@@ -1068,6 +1125,10 @@
                 "name": {
                   "type": "string"
                 },
+                "not_orderable": {
+                  "description": "As on `ShowRegisterRef`.",
+                  "type": "boolean"
+                },
                 "period": {
                   "$ref": "#/$defs/Period"
                 },
@@ -1154,6 +1215,13 @@
                 },
                 "name": {
                   "type": "string"
+                },
+                "not_orderable": {
+                  "description": "As on `ShowTable`.",
+                  "items": {
+                    "$ref": "#/$defs/NotOrderable"
+                  },
+                  "type": "array"
                 },
                 "register": {
                   "description": "The register's fqid.",
@@ -1656,6 +1724,10 @@
             "name": {
               "type": "string"
             },
+            "not_orderable": {
+              "description": "As on `ShowRegisterRef`.",
+              "type": "boolean"
+            },
             "periods": {
               "description": "The periods its dated tables are delivered, merged, in start order. Gaps stay gaps.",
               "items": {
@@ -1711,6 +1783,10 @@
             },
             "name": {
               "type": "string"
+            },
+            "not_orderable": {
+              "description": "On a data holder's catalog, `true` when the holder holds the register only in\nfiles no order can draw on yet (each table's `not_orderable` says why). Absent\notherwise.",
+              "type": "boolean"
             },
             "period": {
               "$ref": "#/$defs/Period"
@@ -1909,6 +1985,13 @@
             },
             "name": {
               "type": "string"
+            },
+            "not_orderable": {
+              "description": "On a data holder's catalog, the files the holder holds this table in that no order\ncan draw on yet, and why. Absent when none.",
+              "items": {
+                "$ref": "#/$defs/NotOrderable"
+              },
+              "type": "array"
             },
             "period": {
               "$ref": "#/$defs/Period"
@@ -2242,6 +2325,25 @@
           ],
           "type": "object"
         },
+        "Hold": {
+          "description": "A data holder's note on a held row key, and where it follows the hold up.",
+          "properties": {
+            "follow_up": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "hold": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hold",
+            "follow_up"
+          ],
+          "type": "object"
+        },
         "Meta": {
           "properties": {
             "api_version": {
@@ -2273,6 +2375,36 @@
             "project_schema_version",
             "generation",
             "catalog_version"
+          ],
+          "type": "object"
+        },
+        "NotOrderable": {
+          "description": "A file the data holder holds that no order can draw on yet, and why.",
+          "properties": {
+            "file": {
+              "description": "The held file, as `segments` names files.",
+              "type": "string"
+            },
+            "holds": {
+              "description": "The data holder's own notes on each held row key, as written.",
+              "items": {
+                "$ref": "#/$defs/Hold"
+              },
+              "type": "array"
+            },
+            "message": {
+              "description": "What the reason means.",
+              "type": "string"
+            },
+            "reason": {
+              "description": "`row_key_held`, `table_unknown` or `no_orderable_column`.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "file",
+            "reason",
+            "message"
           ],
           "type": "object"
         },
@@ -2585,6 +2717,13 @@
                 "string",
                 "null"
               ]
+            },
+            "not_orderable": {
+              "description": "On a data holder's catalog, for a table it holds only in files no order can draw\non yet: those files, and why. Absent otherwise.",
+              "items": {
+                "$ref": "#/$defs/NotOrderable"
+              },
+              "type": "array"
             }
           },
           "required": [

@@ -292,6 +292,43 @@ fn key_holds(keys: &str) -> Vec<(String, Option<String>)> {
         .collect()
 }
 
+/// Why a table is blocked as a whole, if it is: no orderable column and some gap. A
+/// held row key first, then an unknown disposition, else `no_orderable_column`. These
+/// three are the `holding_blocked.reason` values.
+fn block(ordered: u64, by: &BTreeMap<Reason, u64>, key_held: bool) -> Option<&'static str> {
+    (ordered == 0 && by.keys().any(|r| r.gap())).then(|| {
+        if key_held {
+            Reason::RowKeyHeld.as_str()
+        } else if by.contains_key(&Reason::TableUnknown) {
+            Reason::TableUnknown.as_str()
+        } else {
+            "no_orderable_column"
+        }
+    })
+}
+
+/// Each table blocked as a whole, by holding id, with its reason: what the build stores
+/// in `holding_blocked` and verify re-derives.
+pub(crate) fn blocked(db: &Connection) -> Result<BTreeMap<i64, &'static str>> {
+    let mut tables: BTreeMap<i64, (u64, BTreeMap<Reason, u64>)> = BTreeMap::new();
+    for column in columns(db)? {
+        let table = tables.entry(column.table).or_default();
+        match column.reason {
+            None => table.0 += 1,
+            Some(reason) => *table.1.entry(reason).or_default() += 1,
+        }
+    }
+    let mut keys = db.prepare("SELECT key_requirements FROM holding_table WHERE id = ?")?;
+    let mut out = BTreeMap::new();
+    for (id, (ordered, by)) in tables {
+        let held = !key_holds(&keys.query_row([id], |r| r.get::<_, String>(0))?).is_empty();
+        if let Some(reason) = block(ordered, &by, held) {
+            out.insert(id, reason);
+        }
+    }
+    Ok(out)
+}
+
 /// The orderability summary of a compiled holdings file: totals, columns by reason, and
 /// each table with a column that is not orderable. A table with no orderable column and
 /// some gap is blocked as a whole.
@@ -339,14 +376,7 @@ pub(crate) fn summary(db: &Connection) -> Result<Value> {
             Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?))
         })?;
         let holds = key_holds(&keys);
-        let blocked = (*ordered == 0 && by.keys().any(|r| r.gap())).then(|| {
-            let reason = if !holds.is_empty() {
-                Reason::RowKeyHeld.as_str()
-            } else if by.contains_key(&Reason::TableUnknown) {
-                Reason::TableUnknown.as_str()
-            } else {
-                "no_orderable_column"
-            };
+        let blocked = block(*ordered, by, !holds.is_empty()).map(|reason| {
             json!({
                 "reason": reason,
                 "holds": holds.iter().map(|(hold, follow_up)| json!({"hold": hold, "follow_up": follow_up})).collect::<Vec<_>>(),
