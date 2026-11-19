@@ -170,7 +170,8 @@ params = { ref = "ref", kind = "enum(continues|derived_from|label_of)?" }
 result = "Graph {focus, nodes, edges}"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
 note = """The `relation` edges where the ref is subject or object (`relation_subject`, \
-`relation_object`), for a variable, table, register or set. Classification graphs \
+`relation_object`), for a variable, table or register; a set ref is the response's \
+`focus` and its edges are those of its member variables. Classification graphs \
 (versions and correspondences) are not served: a classification ref is `invalid_ref`. \
 `kind` narrows the edges. It absorbs `lineage`, which is `kind = derived_from` with the \
 edge's `at` period."""
