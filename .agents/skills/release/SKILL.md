@@ -81,6 +81,12 @@ version, receipts record it and `export` relies on byte identity per version, so
 different binaries must never ship under one version. Unchanged: leave it, and the
 release ships the same version again.
 
+The plugin's scaffold reference pins the release by hand: set `reg_meta/v<new>` (and
+`reg_meta_version`) in `plugins/microdata-tools-se/skills/register-research-scaffold/`
+`SKILL.md`, `reference/PROJECT.md`, `reference/project_data.json` and
+`reference/mock/answers/order.json`. The reference project must compile with this
+release's `reg-mock`.
+
 **Schema version check.** Compare the DDL and the single version authority with the
 previous release:
 
