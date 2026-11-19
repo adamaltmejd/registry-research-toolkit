@@ -28,23 +28,23 @@ catalog's: every response's `meta.catalog_version` names it, and the project, `r
 ## What a steward's catalog answers
 
 Only what the steward holds: a register the steward lacks is not listed. Classifications,
-value sets, codes and documents are shared reference metadata and are always served.
+value sets, codes and documents are shared reference metadata, served by direct ref (`show`
+on classifications lists only those an orderable column uses).
 
-- **`not_found`** from `show` or `search` on the steward's catalog means the steward does
-  not hold the entity, not that it does not exist. Other tools (`coverage`, `schema`)
-  can answer `not_found` for a held table that cannot be ordered: conclude what the
-  steward holds from `show` or `search`, not from them.
-- **Held, not orderable.** A table the steward holds but cannot be ordered yet is shown
-  when none of its years is orderable: `show`, `search` and `segments` mark it
-  `not_orderable`, and `show` and `segments` list its files under `not_orderable` with
-  a `reason`:
+- **`not_found`** on the steward's catalog means it has nothing orderable under that
+  reference. It does not prove the steward lacks the data, or that it does not exist:
+  whether the steward holds it at all, the steward decides. `coverage` and `schema` can
+  answer `not_found` for a table that `show` lists as not orderable.
+- **Held, not orderable.** A held table that cannot be ordered yet can appear
+  with `not_orderable` in `show`, `search` and `segments` (a table ref plus a variable),
+  its files listed under `not_orderable` with a `reason`:
   - `row_key_held`: the columns that identify its rows are on hold.
   - `table_unknown`: the steward has not stated which years the file covers.
   - `no_orderable_column`: none of its columns can be ordered.
 
-  When a table has some orderable years, only those are listed: a blocked year does not
-  appear, with or without a reason. Do not conclude from its absence that the steward
-  lacks it.
+  A table with some orderable years lists only those, so a blocked year may
+  not appear. Trust `segments` and `coverage` for a single year, not a `search` hit's
+  `period`, and do not conclude from a missing year that the steward lacks it.
 
   Tell the user to ask the steward. Each blocked file's `holds[].follow_up`, when
   present, says where; else the steward's `order_instructions` from `/api/context`, if

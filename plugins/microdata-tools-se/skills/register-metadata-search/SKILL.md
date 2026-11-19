@@ -15,8 +15,9 @@ whose data comes from a data steward adds the steward's catalog as its own
 `steward-catalog` server, which answers the same tools but only for what the steward holds (plus the shared
 classifications, value sets, codes and documents): in such a project use
 `steward-catalog` for the steward's holdings and the plugin's `catalog` for data outside
-them, saying which catalog each fact came from. A `show` or `search` `not_found` there
-means the steward does not hold the entity, and a held table marked `not_orderable` is
+them, saying which catalog each fact came from. A `not_found` there
+means nothing orderable is held under that reference, not that the steward lacks it (ask
+the steward), and a held table marked `not_orderable` is
 not to be entered as a manual source (data-stewards.md). To add one, read [data-stewards.md](references/data-stewards.md).
 `show` with no `ref` lists a catalog's providers. A catalog holds structural metadata —
 registers, tables, variables, value codes, documentation — not microdata.
