@@ -2099,6 +2099,25 @@
           }
         }
       },
+      "Hold": {
+        "type": "object",
+        "description": "A data holder's note on a held row key, and where it follows the hold up.",
+        "required": [
+          "hold",
+          "follow_up"
+        ],
+        "properties": {
+          "follow_up": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hold": {
+            "type": "string"
+          }
+        }
+      },
       "HoldingsIdentity": {
         "type": "object",
         "required": [
@@ -2569,6 +2588,36 @@
           }
         },
         "additionalProperties": false
+      },
+      "NotOrderable": {
+        "type": "object",
+        "description": "A file the data holder holds that no order can draw on yet, and why.",
+        "required": [
+          "file",
+          "reason",
+          "message"
+        ],
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "The held file, as `segments` names files."
+          },
+          "holds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Hold"
+            },
+            "description": "The data holder's own notes on each held row key, as written."
+          },
+          "message": {
+            "type": "string",
+            "description": "What the reason means."
+          },
+          "reason": {
+            "type": "string",
+            "description": "`row_key_held`, `table_unknown` or `no_orderable_column`."
+          }
+        }
       },
       "Occurrence": {
         "type": "object",
@@ -3911,6 +3960,10 @@
               "name": {
                 "type": "string"
               },
+              "not_orderable": {
+                "type": "boolean",
+                "description": "On a data holder's catalog, `true` when the holder holds it only in files no order\ncan draw on yet; `show` says why. Absent otherwise."
+              },
               "period": {
                 "$ref": "#/components/schemas/Period"
               },
@@ -3938,6 +3991,10 @@
               },
               "name": {
                 "type": "string"
+              },
+              "not_orderable": {
+                "type": "boolean",
+                "description": "As on a register hit."
               },
               "period": {
                 "$ref": "#/components/schemas/Period"
@@ -4229,6 +4286,13 @@
               "string",
               "null"
             ]
+          },
+          "not_orderable": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotOrderable"
+            },
+            "description": "On a data holder's catalog, for a table it holds only in files no order can draw\non yet: those files, and why. Absent otherwise."
           }
         }
       },
@@ -4319,6 +4383,10 @@
               "name": {
                 "type": "string"
               },
+              "not_orderable": {
+                "type": "boolean",
+                "description": "As on `ShowRegisterRef`."
+              },
               "period": {
                 "$ref": "#/components/schemas/Period"
               },
@@ -4407,6 +4475,13 @@
               },
               "name": {
                 "type": "string"
+              },
+              "not_orderable": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NotOrderable"
+                },
+                "description": "As on `ShowTable`."
               },
               "register": {
                 "type": "string",
@@ -4903,6 +4978,10 @@
           "name": {
             "type": "string"
           },
+          "not_orderable": {
+            "type": "boolean",
+            "description": "As on `ShowRegisterRef`."
+          },
           "periods": {
             "type": "array",
             "items": {
@@ -4956,6 +5035,10 @@
           },
           "name": {
             "type": "string"
+          },
+          "not_orderable": {
+            "type": "boolean",
+            "description": "On a data holder's catalog, `true` when the holder holds the register only in\nfiles no order can draw on yet (each table's `not_orderable` says why). Absent\notherwise."
           },
           "period": {
             "$ref": "#/components/schemas/Period"
@@ -5158,6 +5241,13 @@
           },
           "name": {
             "type": "string"
+          },
+          "not_orderable": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotOrderable"
+            },
+            "description": "On a data holder's catalog, the files the holder holds this table in that no order\ncan draw on yet, and why. Absent when none."
           },
           "period": {
             "$ref": "#/components/schemas/Period"

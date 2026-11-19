@@ -547,6 +547,26 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     if !conflicts.is_empty() {
         return Err(conflicts.into_iter().collect::<Vec<_>>().join("\n").into());
     }
+    // The stored blocked tables are exactly what the one classifier derives.
+    let stored: BTreeMap<i64, String> = crate::error::rows(
+        &db,
+        "SELECT holding_id, reason FROM holding_blocked",
+        [],
+        |r| Ok((r.get(0)?, r.get(1)?)),
+    )?
+    .into_iter()
+    .collect();
+    let derived = super::orderable::blocked(&db)?;
+    let differs = stored
+        .keys()
+        .chain(derived.keys())
+        .find(|id| stored.get(*id).map(String::as_str) != derived.get(*id).copied());
+    if let Some(id) = differs {
+        return Err(format!(
+            "holdings:table={id}: holdings_blocked_mismatch: stored blocked table differs from the orderability classifier"
+        )
+        .into());
+    }
     Ok(())
 }
 

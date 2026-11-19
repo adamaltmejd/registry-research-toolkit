@@ -1584,7 +1584,8 @@ read-only. Reference browsing uses the catalog alone.
 **A steward deployment serves its holdings only (maintainer, 2026-11-04):** "everything
 shown is held, everything held is shown." There is no scope parameter. A register,
 table, variable or provider with no accepted placement is `not_found` by ref
-(`Catalog::connect_for_ref`, `serves`) and is left out of every list: `show`'s children
+(`Catalog::connect_for_ref`, `serves`) and is left out of every list, except a held table
+no order can draw on yet (see "Held tables that cannot be ordered"): `show`'s children
 and set members (a set's own page included), `schema` and `diff` lines, search hits
 (filtered by public id and the requested interval before ranking, counts and
 pagination), and graph neighbours. A set is served only while two or more of its members
@@ -2090,6 +2091,28 @@ gap}}`) and `tables`, one entry per table with a column that is not orderable
 its physical tables. One classifier (`reg-build/src/holdings/orderable.rs`) serves the
 build, the report and `reg-build diff --holdings`; when an older holdings schema cannot
 answer it, the diff says "orderability: not comparable" and compares the rest.
+
+#### Held tables that cannot be ordered
+
+A held table blocked as a whole is still held, so a steward catalog shows it with its
+reason (#2568; maintainer 2026-11-04: "everything held is shown"). The build stores each
+blocked table and its reason (`row_key_held`, `table_unknown`, `no_orderable_column`) in
+`holding_blocked` (holdings schema 13), from the classifier above; `verify` re-derives
+and compares it (`holdings_blocked_mismatch`). A catalog table that a blocked table routes to and no placement names is
+shown by `show`, `search` and `segments` (`Catalog::shows`, `connect_for_shown_ref`), with
+its register and provider when nothing placed holds them, over the years the blocked
+files hold (an `unknown` file states none, so its table lists no `spans` and its
+`period` stays the catalog's). `show` lists its blocked files under `not_orderable` (file, reason, a fixed
+plain-language message per reason, and the steward's own row-key holds and follow-ups);
+registers and search hits shown only that way carry `not_orderable: true`. Search
+matches such a table or register over the blocked files' years, as its hit reports
+them; a register or table a placement holds matches over its placements only, so a
+period only a blocked table covers finds that table, not its placed register; `segments` on
+such a table lists no rows and the same `not_orderable` files; a `variable` it names
+must be held or documented in that table, else it is `not_found`. Nothing else changes:
+`serves` and every other operation (orders, materialization, coverage, `schema`, the
+context span) still see only placements. An unrouted blocked table has no catalog table
+to show; excluded, superseded and lookup tables are decisions, not gaps, and stay out.
 
 #### Holdings reader renames and rewrites
 
@@ -2796,7 +2819,8 @@ published-catalog SQL census of sampled whole-table orders and their repeat byte
 steward pair the census also reads the holdings file: it samples the reference tables
 the holdings place something in, binds only the variables placed there, and models the
 holdings' own segments and row keys. A held-only sweep there checks that the browse
-root, every register and table page, search and segments name only held ids, since that
+root, every register and table page, search and segments name only held ids (a table a blocked file routes to counts,
+with its register and provider), since that
 filter lives in each reader operation. The holdings release proof is release step 8g
 (`reg-build diff --holdings` against the previous paired release), which compares the
 orderable-column and held-period census and classifies every difference; a failed or

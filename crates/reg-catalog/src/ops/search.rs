@@ -1,6 +1,8 @@
 //! `search`: one ranked FTS5 query over `search` and `search_item`
 //! (crates/DESIGN.md, "Search", rules 1-6).
 
+use std::fmt::Write as _;
+
 use rusqlite::{Connection, OptionalExtension, params};
 use serde::Serialize;
 use serde_json::Value;
@@ -97,6 +99,10 @@ pub enum SearchHit {
         #[schema(required = true)]
         description: Option<String>,
         period: Period,
+        /// On a data holder's catalog, `true` when the holder holds it only in files no order
+        /// can draw on yet; `show` says why. Absent otherwise.
+        #[serde(skip_serializing_if = "super::is_false")]
+        not_orderable: bool,
     },
     Table {
         fqid: String,
@@ -104,6 +110,9 @@ pub enum SearchHit {
         register_name: String,
         role: String,
         period: Period,
+        /// As on a register hit.
+        #[serde(skip_serializing_if = "super::is_false")]
+        not_orderable: bool,
     },
     Variable {
         fqid: String,
@@ -222,7 +231,7 @@ fn search_origin(
         Ok(id) => id,
         Err(err) if paired && err.kind() == Code::NotFound => {
             // A register in the other database has no matches in this group.
-            server.catalog.connect_for_ref(params["register"])?;
+            server.catalog.connect_for_shown_ref(params["register"])?;
             return Ok(SearchPage {
                 items: vec![],
                 next_cursor: None,
@@ -333,13 +342,42 @@ fn search_filter(server: &Server, conn: &Connection, held: bool) -> Result<Strin
             JOIN variable hv ON hv.pid = hm.variable_pid
             JOIN tbl ht ON ht.pid = hm.table_pid
             WHERE (?4 IS NULL OR (hm.start < ?5 AND ?4 < hm.end))";
+        // A table or register only blocked files hold shows too (`Catalog::shows`), over
+        // the years those files hold, as its hit's period reads them (`held_spans`);
+        // one that a placement holds matches over its placements alone, in `from`.
+        // simplify: the blocked spans are inlined as a VALUES list per query; tens on the
+        // stewards today. Attach them as a table if a steward routes thousands.
+        let mut blocked = String::new();
+        for (kind, table) in [("table", "tbl"), ("register", "register")] {
+            let spans = server.catalog.blocked_spans(kind);
+            if spans.is_empty() {
+                continue;
+            }
+            let values = spans
+                .iter()
+                .map(|(pid, span)| {
+                    let (start, end) = span.map_or(("NULL".into(), "NULL".into()), |(s, e)| {
+                        (s.to_string(), e.to_string())
+                    });
+                    format!("('{}', {start}, {end})", pid.replace('\'', "''"))
+                })
+                .collect::<Vec<_>>()
+                .join(", ");
+            write!(
+                blocked,
+                "\n                UNION ALL SELECT '{kind}', b.id FROM {table} b
+                  JOIN (VALUES {values}) s ON s.column1 = b.pid
+                  WHERE ?4 IS NULL OR (s.column2 < ?5 AND ?4 < s.column3)"
+            )
+            .expect("write to String");
+        }
         (
             format!(
                 " AND (i.kind NOT IN ('register', 'table', 'variable')
             OR (i.kind, i.entity_id) IN (
                 SELECT 'variable', hv.id {from}
                 UNION ALL SELECT 'table', ht.id {from}
-                UNION ALL SELECT 'register', ht.register_id {from}))"
+                UNION ALL SELECT 'register', ht.register_id {from}{blocked}))"
             ),
             "i.kind IN ('register', 'table', 'variable') OR ",
         )
@@ -432,6 +470,7 @@ fn hit(
                 let fqid: String = row.get(0)?;
                 Ok(SearchHit::Register {
                     period: server.hull("register", &fqid, row.get(3)?, row.get(4)?),
+                    not_orderable: server.catalog.blocked("register", &fqid),
                     fqid,
                     name: row.get(1)?,
                     description: row.get(2)?,
@@ -449,6 +488,7 @@ fn hit(
                 let fqid: String = row.get(0)?;
                 Ok(SearchHit::Table {
                     period: server.hull("table", &fqid, row.get(4)?, row.get(5)?),
+                    not_orderable: server.catalog.blocked("table", &fqid),
                     fqid,
                     name: row.get(1)?,
                     register_name: row.get(2)?,

@@ -14,6 +14,7 @@ use super::{
     Cache, Operation, Param, Params, Period, Server, Type, component, cursor, days, flag, limit,
     refs,
 };
+use crate::holdings::NotOrderable;
 use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
@@ -47,6 +48,10 @@ pub struct SegmentPage {
     items: Vec<Segment>,
     #[schema(required = true)]
     next_cursor: Option<String>,
+    /// On a data holder's catalog, for a table it holds only in files no order can draw
+    /// on yet: those files, and why. Absent otherwise.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    not_orderable: Vec<NotOrderable>,
 }
 
 /// One row of the variable's per-period list: a column of one table over one period
@@ -164,7 +169,7 @@ impl Segment {
 }
 
 fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect_for_ref(params["ref"])?;
+    let conn = server.catalog.connect_for_shown_ref(params["ref"])?;
     let given = params["ref"];
     let hit = refs::resolve(&conn, given)?;
     let named = params.list("variable");
@@ -185,7 +190,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
             let id = refs::table(&conn, given)?;
             let pid: String =
                 conn.query_row("SELECT pid FROM tbl WHERE id = ?", [id], |row| row.get(0))?;
-            (variable_pids(server, named)?, Some(pid))
+            (variable_pids(server, named, &pid)?, Some(pid))
         }
         (kind, true) => {
             return Err(refs::wrong_kind(given, kind, "not a variable"));
@@ -221,7 +226,15 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
         Some(cursor::token(server, params, "", offset + limit, ""))
     });
     let items = served(server, &origins, page, evidence)?;
-    Ok(serde_json::to_value(SegmentPage { items, next_cursor }).expect("a page serializes"))
+    let not_orderable = table
+        .as_deref()
+        .map_or_else(Vec::new, |t| server.catalog.not_orderable(t).to_vec());
+    Ok(serde_json::to_value(SegmentPage {
+        items,
+        next_cursor,
+        not_orderable,
+    })
+    .expect("a page serializes"))
 }
 
 /// The origins a variable's list reads: `catalog` (the catalog's own connection), or on
@@ -247,13 +260,15 @@ pub(super) fn all(
 
 /// The variables `values` names, each resolved in its own origin (as a ref is), in
 /// pid order without repeats.
-fn variable_pids(server: &Server, values: &[&str]) -> Result<Vec<String>, Error> {
+/// On a steward catalog a variable must be one a request about `table` may name
+/// (`Catalog::connect_for_ref_in`), else it is `not_found`, as an unheld ref is.
+fn variable_pids(server: &Server, values: &[&str], table: &str) -> Result<Vec<String>, Error> {
     // simplify: a connection per named variable (up to 200); resolve against the
     // open origins if table reads show in timing.
     let mut pids = values
         .iter()
         .map(|&value| {
-            let conn = server.catalog.connect_for_ref(value)?;
+            let conn = server.catalog.connect_for_ref_in(value, table)?;
             Ok(refs::expect(&conn, value, &["variable"], "not a variable")?.pid)
         })
         .collect::<Result<Vec<_>, Error>>()?;

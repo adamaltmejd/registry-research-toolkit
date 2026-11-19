@@ -15,8 +15,9 @@ use crate::common::run_all;
 use crate::{artifact, get, rows, target};
 
 /// What the holdings file places, read from it alone: every placed table and variable,
-/// the registers and providers above the tables (their pid prefixes), and the
-/// (variable, table) pairs.
+/// every table a blocked file routes to (shown with its reason, crates/DESIGN.md,
+/// "Held tables that cannot be ordered"), the registers and providers above the tables
+/// (their pid prefixes), and the (variable, table) pairs.
 struct Held {
     ids: HashSet<String>,
     pairs: HashSet<(String, String)>,
@@ -32,9 +33,17 @@ impl Held {
         )
         .into_iter()
         .collect();
+        let blocked: Vec<String> = rows(
+            holdings,
+            "SELECT DISTINCT r.table_pid FROM holding_blocked b
+               JOIN holding_route r ON r.holding_id = b.holding_id",
+            [],
+            |r| r.get(0),
+        );
         let mut ids = HashSet::new();
-        for (variable, table) in &pairs {
-            ids.insert(variable.clone());
+        let placed = pairs.iter().map(|(v, t)| (Some(v), t));
+        for (variable, table) in placed.chain(blocked.iter().map(|t| (None, t))) {
+            ids.extend(variable.cloned());
             let mut parts = table.splitn(3, '/');
             let (provider, register) = (parts.next().unwrap_or(""), parts.next().unwrap_or(""));
             ids.insert(format!("{provider}/{register}"));

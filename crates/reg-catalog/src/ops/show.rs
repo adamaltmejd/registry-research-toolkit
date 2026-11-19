@@ -16,6 +16,7 @@ use reg_core::days::Span;
 use super::{
     Cache, HeldClip, HeldSpace, Operation, Param, Params, Period, Server, Type, component, flag,
 };
+use crate::holdings::NotOrderable;
 use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
@@ -159,6 +160,9 @@ pub enum Show {
         /// The register's own series breaks; a table's are on the table. Absent when none.
         #[serde(skip_serializing_if = "Vec::is_empty")]
         series_breaks: Vec<ShowSeriesBreak>,
+        /// As on `ShowRegisterRef`.
+        #[serde(skip_serializing_if = "super::is_false")]
+        not_orderable: bool,
     },
     Table {
         fqid: String,
@@ -187,6 +191,9 @@ pub enum Show {
         /// The table's series breaks and its releases'. Absent when none.
         #[serde(skip_serializing_if = "Vec::is_empty")]
         series_breaks: Vec<ShowSeriesBreak>,
+        /// As on `ShowTable`.
+        #[serde(skip_serializing_if = "Vec::is_empty")]
+        not_orderable: Vec<NotOrderable>,
     },
     Set {
         fqid: String,
@@ -353,6 +360,11 @@ pub struct ShowRegisterRef {
     fqid: String,
     name: String,
     period: Period,
+    /// On a data holder's catalog, `true` when the holder holds the register only in
+    /// files no order can draw on yet (each table's `not_orderable` says why). Absent
+    /// otherwise.
+    #[serde(skip_serializing_if = "super::is_false")]
+    not_orderable: bool,
 }
 
 /// A provider's register with its variables, so the provider alone lists every
@@ -369,6 +381,9 @@ pub struct ShowProviderRegister {
     /// offers as a filter.
     table_count: usize,
     variables: Vec<ShowProviderVariable>,
+    /// As on `ShowRegisterRef`.
+    #[serde(skip_serializing_if = "super::is_false")]
+    not_orderable: bool,
 }
 
 /// A variable in a provider's register list: what the list shows (the name, and the
@@ -404,6 +419,10 @@ pub struct ShowTable {
     /// Absent when none.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     series_breaks: Vec<ShowSeriesBreak>,
+    /// On a data holder's catalog, the files the holder holds this table in that no order
+    /// can draw on yet, and why. Absent when none.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    not_orderable: Vec<NotOrderable>,
 }
 
 /// Days two or more releases of a table share, with those releases.
@@ -476,7 +495,7 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
         return Ok(serde_json::to_value(Show::ClassFamilies { families }).expect("Show serializes"));
     }
     let conn = match params.get("ref") {
-        Some(value) => server.catalog.connect_for_ref(value)?,
+        Some(value) => server.catalog.connect_for_shown_ref(value)?,
         None => server.catalog.connect()?,
     };
     let shown = match params.get("ref") {
@@ -486,7 +505,7 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
             if let Some(extra) = &extra {
                 union_by_fqid(&mut providers, provider_refs(extra)?, |p| &p.fqid);
             }
-            providers.retain(|p| server.catalog.serves("provider", &p.fqid));
+            providers.retain(|p| server.catalog.shows("provider", &p.fqid));
             let mut registers = served_registers(server, &conn, extra.as_ref(), None)?;
             for provider in &mut providers {
                 provider.registers = registers.remove(&provider.fqid).unwrap_or_default();
@@ -550,6 +569,7 @@ fn register_refs(
                     period: server.hull("register", &fqid, row.get(3)?, row.get(4)?),
                     fqid,
                     name: row.get(2)?,
+                    not_orderable: false,
                 },
             ))
         },
@@ -574,8 +594,9 @@ fn served_registers(
         );
     }
     let mut by_provider: BTreeMap<String, Vec<ShowRegisterRef>> = BTreeMap::new();
-    for (provider, register) in found {
-        if server.catalog.serves("register", &register.fqid) {
+    for (provider, mut register) in found {
+        if server.catalog.shows("register", &register.fqid) {
+            register.not_orderable = server.catalog.blocked("register", &register.fqid);
             by_provider.entry(provider).or_default().push(register);
         }
     }
@@ -642,6 +663,7 @@ fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
                     })
                     .collect(),
                 periods: register_periods(server, conn, &register.fqid)?,
+                not_orderable: register.not_orderable,
                 fqid: register.fqid,
                 name: register.name,
             })
@@ -705,7 +727,7 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
     }
     // Steward mode lists only what the steward holds (`Catalog::serves`); a set
     // keeps its held members and goes when fewer than two are held (#2410).
-    tables.retain(|t| server.catalog.serves("table", &t.fqid));
+    tables.retain(|t| server.catalog.shows("table", &t.fqid));
     for set in &mut sets {
         set.members
             .retain(|member| server.catalog.serves("variable", member));
@@ -727,6 +749,7 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         )?
     };
     Ok(Show::Register {
+        not_orderable: server.catalog.blocked("register", &entity.pid),
         fqid: entity.pid.clone(),
         name,
         description,
@@ -844,6 +867,7 @@ fn register_tables(
                 row.get(8)?,
                 ShowTable {
                     period: server.hull("table", &fqid, row.get(6)?, row.get(7)?),
+                    not_orderable: server.catalog.not_orderable(&fqid).to_vec(),
                     fqid,
                     name: row.get(1)?,
                     role: row.get(2)?,
@@ -971,6 +995,7 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
         row_keys,
         variables,
         series_breaks: series_breaks(server, conn, "table", entity.id)?,
+        not_orderable: server.catalog.not_orderable(&entity.pid).to_vec(),
     })
 }
 
