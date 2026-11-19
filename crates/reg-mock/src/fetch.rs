@@ -9,6 +9,7 @@ use std::time::Duration;
 use reg_core::manifest::Manifest;
 use serde::de::DeserializeOwned;
 use serde_json::{Map, Value, json};
+use ureq::http::Uri;
 
 use crate::Refusal;
 use crate::compile::load_answers;
@@ -46,23 +47,142 @@ const BATCH: usize = 200;
 const ATTEMPTS: u32 = 30;
 const MAX_ANSWER_BYTES: u64 = 256 * 1024 * 1024;
 
+/// A Cloudflare Access service token, sent only to the one steward host it was issued
+/// for. No `Debug` or `Display`: the secret must reach nothing but the request header.
+struct Access {
+    id: String,
+    secret: String,
+}
+
+impl Access {
+    const ID: &'static str = "CF_ACCESS_CLIENT_ID";
+    const SECRET: &'static str = "CF_ACCESS_CLIENT_SECRET";
+    const HOST: &'static str = "CF_ACCESS_HOST";
+
+    /// The token from `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET` (environment
+    /// variables, not flags, so the secret stays out of shell history), for the catalog
+    /// at `url`. `None` when no token is set, or when `url`'s host is not the one named
+    /// by `CF_ACCESS_HOST`: a token exported for one steward never goes to another host.
+    ///
+    /// # Errors
+    ///
+    /// `access_credentials` when only one of the pair is set, a value is not a valid
+    /// header value, or the token would go to `url` over plain http (anything but a
+    /// loopback host) or with user-info in the URL. The error names the variable, never
+    /// its value.
+    fn from_env(url: &str) -> Result<Option<Self>, Refusal> {
+        Self::from_vars(url, |name| std::env::var(name).ok())
+    }
+
+    fn from_vars(url: &str, var: impl Fn(&str) -> Option<String>) -> Result<Option<Self>, Refusal> {
+        let refuse = |message: String| Refusal::new("access_credentials", url, message);
+        let (id, secret) = match (var(Self::ID), var(Self::SECRET)) {
+            (None, None) => return Ok(None),
+            (Some(id), Some(secret)) => (id, secret),
+            _ => {
+                return Err(refuse(format!(
+                    "set both {} and {}, or neither",
+                    Self::ID,
+                    Self::SECRET
+                )));
+            }
+        };
+        for (name, value) in [(Self::ID, &id), (Self::SECRET, &secret)] {
+            if value.is_empty() || !value.bytes().all(|b| (0x21..=0x7e).contains(&b)) {
+                return Err(refuse(format!(
+                    "{name} is empty or has characters a header cannot carry"
+                )));
+            }
+        }
+        let uri: Uri = url
+            .parse()
+            .map_err(|_| refuse("the catalog URL is not a valid URL".to_owned()))?;
+        let host = uri.host().unwrap_or_default();
+        if !var(Self::HOST).is_some_and(|h| h.eq_ignore_ascii_case(host)) {
+            return Ok(None);
+        }
+        let https = uri.scheme_str() == Some("https");
+        if !https && !is_loopback(host) {
+            return Err(refuse(
+                "the catalog URL must be https when an Access token is sent".to_owned(),
+            ));
+        }
+        if uri.authority().is_some_and(|a| a.as_str().contains('@')) {
+            return Err(refuse(
+                "the catalog URL must not carry user-info".to_owned(),
+            ));
+        }
+        Ok(Some(Self { id, secret }))
+    }
+
+    /// `text` with the token's id and secret removed, raw and as JSON-escaped, so no
+    /// diagnostic echoed back by an endpoint can print them.
+    fn redact(&self, text: &str) -> String {
+        let mut text = text.to_owned();
+        for value in [&self.id, &self.secret] {
+            let escaped = Value::from(value.as_str()).to_string();
+            text = text
+                .replace(&escaped[1..escaped.len() - 1], "[redacted]")
+                .replace(value.as_str(), "[redacted]");
+        }
+        text
+    }
+
+    /// Every refusal with the token removed from its location and message.
+    fn redacted(&self, refusals: &[Refusal]) -> Vec<Refusal> {
+        refusals
+            .iter()
+            .map(|r| Refusal::new(r.code, self.redact(&r.at), self.redact(&r.message)))
+            .collect()
+    }
+}
+
+fn is_loopback(host: &str) -> bool {
+    matches!(host, "127.0.0.1" | "localhost" | "[::1]")
+}
+
 /// A catalog's MCP endpoint: the plugin's `catalog_url`.
 pub struct Catalog {
     agent: ureq::Agent,
     url: String,
+    access: Option<Access>,
 }
 
 impl Catalog {
-    #[must_use]
-    pub fn new(url: &str) -> Self {
+    /// A catalog at `url`, with the Access token from the environment when it applies
+    /// to that URL (`Access::from_env`).
+    ///
+    /// # Errors
+    ///
+    /// `access_credentials`, as `Access::from_env`.
+    pub fn from_env(url: &str) -> Result<Self, Refusal> {
+        Ok(Self::new(url, Access::from_env(url)?))
+    }
+
+    /// The token is resolved from the same `url` the calls go to, so it cannot be paired
+    /// with another one.
+    fn new(url: &str, access: Option<Access>) -> Self {
+        // No redirects: Access answers a call without a valid token by redirecting to its
+        // login page, and the token must not follow a redirect to another host. A loopback
+        // catalog is reached directly, never through a proxy from the environment.
+        let loopback = url
+            .parse::<Uri>()
+            .is_ok_and(|u| u.host().is_some_and(is_loopback));
         let agent = ureq::Agent::config_builder()
             .http_status_as_error(false)
+            .max_redirects(0)
+            .proxy(if loopback {
+                None
+            } else {
+                ureq::Proxy::try_from_env()
+            })
             .timeout_global(Some(Duration::from_secs(300)))
             .build()
             .into();
         Self {
             agent,
             url: url.to_owned(),
+            access,
         }
     }
 
@@ -75,6 +195,26 @@ impl Catalog {
     /// `network` for a failed request; `catalog_unreadable` for a reply that is not a
     /// tool result; `catalog_refused`, one per error finding, for the catalog's error.
     pub fn call(&self, tool: &str, arguments: &Value) -> Result<Value, Vec<Refusal>> {
+        self.call_unredacted(tool, arguments)
+            .map_err(|r| self.redacted(r))
+    }
+
+    /// `text` with the token removed; redact the whole text before cutting it short, so
+    /// a value straddling the cut cannot leave its prefix.
+    fn redact(&self, text: &str) -> String {
+        self.access
+            .as_ref()
+            .map_or_else(|| text.to_owned(), |a| a.redact(text))
+    }
+
+    fn redacted(&self, refusals: Vec<Refusal>) -> Vec<Refusal> {
+        match &self.access {
+            Some(access) => access.redacted(&refusals),
+            None => refusals,
+        }
+    }
+
+    fn call_unredacted(&self, tool: &str, arguments: &Value) -> Result<Value, Vec<Refusal>> {
         let body = json!({
             "jsonrpc": "2.0", "id": 1, "method": "tools/call",
             "params": { "name": tool, "arguments": arguments },
@@ -82,15 +222,20 @@ impl Catalog {
         .to_string();
         let network = |e: ureq::Error| vec![Refusal::new("network", &self.url, e.to_string())];
         let mut attempt = 1;
-        let (status, text) = loop {
-            let mut response = self
+        let (status, text, evidence) = loop {
+            let mut request = self
                 .agent
                 .post(&self.url)
                 .header("content-type", "application/json")
-                .header("accept", "application/json, text/event-stream")
-                .send(&body)
-                .map_err(network)?;
+                .header("accept", "application/json, text/event-stream");
+            if let Some(access) = &self.access {
+                request = request
+                    .header("CF-Access-Client-Id", &access.id)
+                    .header("CF-Access-Client-Secret", &access.secret);
+            }
+            let mut response = request.send(&body).map_err(network)?;
             let status = response.status().as_u16();
+            let evidence = access_evidence(&response, status, self.access.is_some());
             if matches!(status, 408 | 429 | 500 | 502 | 503 | 504) && attempt < ATTEMPTS {
                 let wait = response
                     .headers()
@@ -107,11 +252,14 @@ impl Catalog {
                 .limit(MAX_ANSWER_BYTES)
                 .read_to_string()
                 .map_err(network)?;
-            break (status, text);
+            break (status, text, evidence);
         };
         let at = format!("{}: {tool}", self.url);
         let reply: Value = serde_json::from_str(&text).map_err(|_| {
-            let start: String = text.chars().take(300).collect();
+            if evidence {
+                return vec![self.access_refusal(&at, status)];
+            }
+            let start: String = self.redact(&text).chars().take(300).collect();
             vec![Refusal::new(
                 "catalog_unreadable",
                 &at,
@@ -135,11 +283,53 @@ impl Catalog {
                 &at,
                 format!(
                     "HTTP {status}, not a tool result: {}",
-                    reply.to_string().chars().take(300).collect::<String>()
+                    self.redact(&reply.to_string())
+                        .chars()
+                        .take(300)
+                        .collect::<String>()
                 ),
             )]),
         }
     }
+}
+
+impl Catalog {
+    /// The reply is a login redirect or an HTML page, not JSON: the steward is behind
+    /// Cloudflare Access and did not accept the call.
+    fn access_refusal(&self, at: &str, status: u16) -> Refusal {
+        let advice = if self.access.is_some() {
+            "the token was not accepted: check that it is a service token with a policy for this steward and has not expired"
+        } else {
+            "the steward is behind Cloudflare Access: set CF_ACCESS_CLIENT_ID and CF_ACCESS_CLIENT_SECRET to a service token for it, and CF_ACCESS_HOST to the steward's host (the token is sent to no other host)"
+        };
+        Refusal::new(
+            "access_required",
+            at,
+            format!("HTTP {status}, an Access refusal instead of JSON: {advice}"),
+        )
+    }
+}
+
+/// Whether a non-JSON reply came from Cloudflare Access: a redirect to its login domain,
+/// a `cf-access-*` response header, or a 403 to a credentialed request.
+fn access_evidence(
+    response: &ureq::http::Response<ureq::Body>,
+    status: u16,
+    credentialed: bool,
+) -> bool {
+    let login = response
+        .headers()
+        .get("location")
+        .and_then(|v| v.to_str().ok()?.parse::<Uri>().ok())
+        .is_some_and(|u| {
+            u.host()
+                .is_some_and(|h| h.ends_with(".cloudflareaccess.com"))
+        });
+    let header = response
+        .headers()
+        .keys()
+        .any(|k| k.as_str().starts_with("cf-access-"));
+    login || header || (status == 403 && credentialed)
 }
 
 /// The catalog's error document as refusals: its code, message and remediation, then one
@@ -183,6 +373,15 @@ fn catalog_refusals(at: &str, document: &Value) -> Vec<Refusal> {
 /// or `load_answers`'s refusal for the saved set (`mixed_generations` when the catalog
 /// was redeployed during the fetch).
 pub fn fetch(
+    catalog: &Catalog,
+    project: &Value,
+    mode: Mode,
+    out: &Path,
+) -> Result<usize, Vec<Refusal>> {
+    fetch_answers(catalog, project, mode, out).map_err(|r| catalog.redacted(r))
+}
+
+fn fetch_answers(
     catalog: &Catalog,
     project: &Value,
     mode: Mode,

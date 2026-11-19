@@ -120,3 +120,135 @@ fn fetch_saves_every_page_after_a_rate_limit() {
     }
     assert_eq!(saved, expected);
 }
+
+/// Answers three calls: the login redirect, or an echo of the Access headers for a
+/// credentialed call. Returns the request headers seen, lowercased.
+fn access_stub(listener: TcpListener) -> std::thread::JoinHandle<Vec<String>> {
+    std::thread::spawn(move || {
+        let mut seen = Vec::new();
+        for _ in 0..3 {
+            // A deadline, so a client that never connects fails the test instead of hanging it.
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+            let mut stream = loop {
+                match listener.accept() {
+                    Ok((stream, _)) => break stream,
+                    Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => {
+                        assert!(std::time::Instant::now() < deadline, "no connection");
+                        std::thread::sleep(std::time::Duration::from_millis(20));
+                    }
+                    Err(e) => panic!("accept: {e}"),
+                }
+            };
+            stream.set_nonblocking(false).expect("blocking");
+            stream
+                .set_read_timeout(Some(std::time::Duration::from_secs(20)))
+                .expect("a read timeout");
+            let mut reader = BufReader::new(stream.try_clone().expect("a stream"));
+            let mut headers = String::new();
+            loop {
+                let mut line = String::new();
+                let read = reader.read_line(&mut line).expect("a header");
+                if read == 0 || line == "\r\n" {
+                    break;
+                }
+                headers.push_str(&line);
+            }
+            // A credentialed call gets a reply that echoes the credentials back, as a
+            // misbehaving endpoint might; any other call meets the login redirect.
+            let echo: String = headers
+                .lines()
+                .filter(|l| l.to_ascii_lowercase().starts_with("cf-access-"))
+                .collect::<Vec<_>>()
+                .join("\n");
+            if echo.is_empty() {
+                write!(
+                    stream,
+                    "HTTP/1.1 302 Found\r\nlocation: https://team.cloudflareaccess.com/login\r\n\
+                     content-length: 0\r\nconnection: close\r\n\r\n"
+                )
+            } else {
+                write!(
+                    stream,
+                    "HTTP/1.1 200 OK\r\ncontent-type: text/plain\r\n\
+                     content-length: {}\r\nconnection: close\r\n\r\n{echo}",
+                    echo.len()
+                )
+            }
+            .expect("a reply");
+            seen.push(headers.to_ascii_lowercase());
+        }
+        seen
+    })
+}
+
+/// A steward behind Cloudflare Access: the call carries both Access headers only to the
+/// host `CF_ACCESS_HOST` names, and a call that meets the login redirect is refused as
+/// `access_required`, and a reply that echoes the credentials back is printed with them redacted. A token for plain http to a remote host
+/// (even one hidden behind a loopback prefix in the user-info) is refused before any
+/// request. A regression that sends the token to another host, drops the headers,
+/// follows the redirect, trusts the URL prefix or echoes the secret fails here.
+#[test]
+fn fetch_sends_access_headers_only_to_the_steward() {
+    let listener = TcpListener::bind("127.0.0.1:0").expect("a local port");
+    listener.set_nonblocking(true).expect("nonblocking");
+    let url = format!("http://{}/mcp", listener.local_addr().expect("bound"));
+    let seen = access_stub(listener);
+    let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("reg-mock-access");
+    std::fs::create_dir_all(&dir).expect("a directory");
+    let project = dir.join("project.json");
+    std::fs::write(&project, "{}").expect("the project");
+    let run = |catalog: &str, token_host: Option<&str>| {
+        let mut command = Command::new(env!("CARGO_BIN_EXE_reg-mock"));
+        command
+            .args([
+                "fetch",
+                "--catalog",
+                catalog,
+                "--mode",
+                "order",
+                "--project",
+            ])
+            .arg(&project)
+            .arg("--out")
+            .arg(&dir)
+            .env_remove("CF_ACCESS_CLIENT_ID")
+            .env_remove("CF_ACCESS_CLIENT_SECRET")
+            .env_remove("CF_ACCESS_HOST");
+        if let Some(host) = token_host {
+            command
+                .env("CF_ACCESS_CLIENT_ID", "id-123.access")
+                .env("CF_ACCESS_CLIENT_SECRET", "s3cret-value")
+                .env("CF_ACCESS_HOST", host);
+        }
+        command.output().expect("runs")
+    };
+    let without = run(&url, None);
+    let other_host = run(&url, Some("steward.example"));
+    let steward = run(&url, Some("127.0.0.1"));
+    let userinfo = run("http://127.0.0.1@evil.example/mcp", Some("evil.example"));
+    let seen = seen.join().expect("the stub");
+    assert!(!seen[0].contains("cf-access-client"));
+    assert!(!seen[1].contains("cf-access-client"));
+    assert!(seen[2].contains("cf-access-client-id: id-123.access\r\n"));
+    assert!(seen[2].contains("cf-access-client-secret: s3cret-value\r\n"));
+    for run in [without, other_host] {
+        assert_eq!(run.status.code(), Some(2));
+        let stderr = String::from_utf8_lossy(&run.stderr);
+        assert!(stderr.contains("\"code\":\"access_required\""), "{stderr}");
+    }
+    assert_eq!(steward.status.code(), Some(2));
+    let stderr = String::from_utf8_lossy(&steward.stderr);
+    assert!(
+        stderr.contains("\"code\":\"catalog_unreadable\""),
+        "{stderr}"
+    );
+    assert!(stderr.contains("[redacted]"), "{stderr}");
+    assert!(!stderr.contains("s3cret-value") && !stderr.contains("id-123.access"));
+    assert_eq!(userinfo.status.code(), Some(2));
+    let stderr = String::from_utf8_lossy(&userinfo.stderr);
+    assert!(
+        stderr.contains("\"code\":\"access_credentials\""),
+        "{stderr}"
+    );
+    assert!(!stderr.contains("s3cret-value"));
+}

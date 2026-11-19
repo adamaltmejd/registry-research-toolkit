@@ -97,6 +97,18 @@ It sends only the project document and reads metadata only.
   The hosted rate limit (60 calls, then one a second) answers 429 with `Retry-After`,
   which fetch waits out, up to 30 times a call. #2448 would fold the values calls
   into one.
+- **Cloudflare Access** (#2569): `CF_ACCESS_CLIENT_ID`, `CF_ACCESS_CLIENT_SECRET` and
+  `CF_ACCESS_HOST` (the steward's host name) are environment variables, not flags, to
+  keep the secret out of shell history. Every call to the URL whose parsed host equals
+  `CF_ACCESS_HOST` carries the pair as `CF-Access-Client-Id` and
+  `CF-Access-Client-Secret`; a fetch from the same shell to any other host (the public
+  catalog) sends nothing. The token goes only over https, or to a loopback host reached
+  directly (no proxy from the environment), and never with user-info in the URL: any
+  other case is refused as `access_credentials` before a request. Redirects are not
+  followed. Both values are removed from every refusal before it prints, raw and
+  JSON-escaped. A reply is refused as `access_required` only on Access evidence (a
+  redirect to `*.cloudflareaccess.com`, a `cf-access-*` response header, or a 403 to a
+  credentialed call); any other non-JSON reply stays `catalog_unreadable`.
 - **All or nothing**: the earlier answers (`order.json`, `manifest.json`, `segments/`,
   `values/`) are replaced only once every answer has arrived, and the saved set is then
   read as compile reads it, so a catalog redeployed during the fetch is refused there
@@ -105,7 +117,8 @@ It sends only the project document and reads metadata only.
   then one per error-level item of its `issues` (`project_invalid`) or `findings`
   (`order_blocked`), at its project path; `network` for a failed request;
   `catalog_unreadable` for a reply that is not a tool result (a wrong URL, a proxy's
-  page).
+  page); `access_required` for an Access refusal (above); `access_credentials` for a half-set,
+  malformed or unsendable token.
 
 ## Compile
 
