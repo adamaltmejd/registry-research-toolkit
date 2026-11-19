@@ -13,6 +13,7 @@ use utoipa::ToSchema;
 
 use reg_core::days::Span;
 use reg_core::hex;
+use reg_core::issue::Period;
 
 use crate::{Catalog, Code, Error, connect, read_meta};
 
@@ -51,10 +52,10 @@ pub(crate) struct Possession {
     /// Shown though nothing placed holds them: the tables only blocked files route to,
     /// and the registers and providers above them, with the years those files hold.
     blocked: Blocked,
-    /// Each such table's blocked files.
+    /// Each catalog table's blocked files, whether or not a placement also holds it.
     not_orderable: HashMap<String, Vec<NotOrderable>>,
-    /// (variable, table) pairs the catalog documents in such a table: the variables a
-    /// request may name there although no placement holds them.
+    /// (variable, table) pairs the catalog documents in a table only blocked files route
+    /// to: the variables a request may name there although no placement holds them.
     blocked_pairs: HashSet<(String, String)>,
 }
 
@@ -72,6 +73,13 @@ pub struct NotOrderable {
     pub file: String,
     /// `row_key_held`, `table_unknown` or `no_orderable_column`.
     pub reason: String,
+    /// The years the file holds; absent when the data holder states none
+    /// (`table_unknown`).
+    // Filled from `days` by `Server::not_orderable`.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub spans: Vec<Period>,
+    #[serde(skip)]
+    days: Vec<Span>,
     /// What the reason means.
     pub message: &'static str,
     /// The data holder's own notes on each held row key, as written.
@@ -88,7 +96,7 @@ pub struct Hold {
 }
 
 impl NotOrderable {
-    fn new(file: String, reason: &str, keys: &str) -> Self {
+    fn new(file: String, reason: &str, keys: &str, days: Vec<Span>) -> Self {
         let message = match reason {
             "row_key_held" => {
                 "Held by the data holder, but not orderable yet: the columns that identify \
@@ -116,8 +124,22 @@ impl NotOrderable {
         Self {
             file,
             reason: reason.to_owned(),
+            spans: Vec::new(),
+            days,
             message,
             holds,
+        }
+    }
+
+    /// This file with its years as result periods.
+    pub(crate) fn dated(&self, period: impl Fn(i64, i64) -> Period) -> Self {
+        Self {
+            spans: self
+                .days
+                .iter()
+                .map(|&(start, end)| period(start, end))
+                .collect(),
+            ..self.clone()
         }
     }
 }
@@ -206,9 +228,10 @@ impl Possession {
         Ok(possession)
     }
 
-    /// The catalog tables only blocked files route to (crates/DESIGN.md, "Held tables
-    /// that cannot be ordered"): each with its blocked files, and the years those files
-    /// hold, rolled up to registers and providers nothing placed holds.
+    /// Every catalog table a blocked file routes to, with its blocked files and the years
+    /// each holds (crates/DESIGN.md, "Held tables that cannot be ordered"); and the tables
+    /// only blocked files route to, with those years rolled up to the registers and
+    /// providers nothing placed holds.
     fn read_blocked(
         &mut self,
         conn: &Connection,
@@ -221,8 +244,9 @@ impl Possession {
                JOIN held.holding_route r ON r.holding_id = h.id
              ORDER BY r.table_pid, 2"
         ))?;
-        let mut periods =
-            conn.prepare("SELECT start, end FROM held.holding_period WHERE holding_id = ?")?;
+        let mut periods = conn.prepare(
+            "SELECT start, end FROM held.holding_period WHERE holding_id = ? ORDER BY start, end",
+        )?;
         let found = query
             .query_map([], |r| {
                 Ok((
@@ -235,26 +259,29 @@ impl Possession {
             })?
             .collect::<rusqlite::Result<Vec<_>>>()?;
         for (table, file, reason, keys, holding) in found {
-            if self.tables.contains_key(&table) {
-                continue;
-            }
-            let spans = periods
-                .query_map([holding], |r| Ok((r.get(0)?, r.get(1)?)))?
-                .collect::<rusqlite::Result<Vec<Span>>>()?;
-            let (register, provider) = above
-                .get(&table)
-                .ok_or_else(|| Error::internal(format!("blocked route {table} names no table")))?;
-            for (map, pid) in [
-                (&mut self.blocked.tables, &table),
-                (&mut self.blocked.registers, register),
-                (&mut self.blocked.providers, provider),
-            ] {
-                map.entry(pid.clone()).or_default().extend(&spans);
+            let spans = reg_core::days::merge(
+                periods
+                    .query_map([holding], |r| Ok((r.get(0)?, r.get(1)?)))?
+                    .collect::<rusqlite::Result<Vec<Span>>>()?,
+            );
+            // A table a placement holds is served over its placements; its blocked
+            // files are listed, not rolled up.
+            if !self.tables.contains_key(&table) {
+                let (register, provider) = above.get(&table).ok_or_else(|| {
+                    Error::internal(format!("blocked route {table} names no table"))
+                })?;
+                for (map, pid) in [
+                    (&mut self.blocked.tables, &table),
+                    (&mut self.blocked.registers, register),
+                    (&mut self.blocked.providers, provider),
+                ] {
+                    map.entry(pid.clone()).or_default().extend(&spans);
+                }
             }
             self.not_orderable
                 .entry(table)
                 .or_default()
-                .push(NotOrderable::new(file, &reason, &keys));
+                .push(NotOrderable::new(file, &reason, &keys, spans));
         }
         for map in [
             &mut self.blocked.tables,
@@ -273,7 +300,7 @@ impl Possession {
         self.blocked
             .providers
             .retain(|pid, _| !providers.contains_key(pid));
-        let tables = serde_json::to_string(&self.not_orderable.keys().collect::<Vec<_>>())
+        let tables = serde_json::to_string(&self.blocked.tables.keys().collect::<Vec<_>>())
             .expect("pids serialize");
         for origin in ["main", "held"] {
             let mut query = conn.prepare(&format!(
@@ -604,10 +631,10 @@ impl Catalog {
         out
     }
 
-    /// A shown table's files no order can draw on yet; empty when it has none, outside
-    /// steward mode, or when a placement holds it.
-    #[must_use]
-    pub fn not_orderable(&self, table: &str) -> &[NotOrderable] {
+    /// A shown table's files no order can draw on yet, whether or not a placement also
+    /// holds it; empty when it has none or outside steward mode. Their `spans` are
+    /// unfilled: `Server::not_orderable` dates them.
+    pub(crate) fn not_orderable(&self, table: &str) -> &[NotOrderable] {
         self.holdings
             .as_ref()
             .and_then(|h| h.possession.not_orderable.get(table))

@@ -867,7 +867,7 @@ fn register_tables(
                 row.get(8)?,
                 ShowTable {
                     period: server.hull("table", &fqid, row.get(6)?, row.get(7)?),
-                    not_orderable: server.catalog.not_orderable(&fqid).to_vec(),
+                    not_orderable: server.not_orderable(&fqid),
                     fqid,
                     name: row.get(1)?,
                     role: row.get(2)?,
@@ -995,7 +995,7 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
         row_keys,
         variables,
         series_breaks: series_breaks(server, conn, "table", entity.id)?,
-        not_orderable: server.catalog.not_orderable(&entity.pid).to_vec(),
+        not_orderable: server.not_orderable(&entity.pid),
     })
 }
 

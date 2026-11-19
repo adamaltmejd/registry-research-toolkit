@@ -620,6 +620,13 @@
             "reason": {
               "description": "`row_key_held`, `table_unknown` or `no_orderable_column`.",
               "type": "string"
+            },
+            "spans": {
+              "description": "The years the file holds; absent when the data holder states none\n(`table_unknown`).",
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
             }
           },
           "required": [
@@ -2399,6 +2406,13 @@
             "reason": {
               "description": "`row_key_held`, `table_unknown` or `no_orderable_column`.",
               "type": "string"
+            },
+            "spans": {
+              "description": "The years the file holds; absent when the data holder states none\n(`table_unknown`).",
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
             }
           },
           "required": [
@@ -2719,7 +2733,7 @@
               ]
             },
             "not_orderable": {
-              "description": "On a data holder's catalog, for a table it holds only in files no order can draw\non yet: those files, and why. Absent otherwise.",
+              "description": "On a data holder's catalog, when the list names a table (a table ref, or a\nvariable ref with `table`) that the holder holds in files no order can draw on\nyet, whether or not other files of it are orderable: those files, their years and\nwhy. Absent otherwise.",
               "items": {
                 "$ref": "#/$defs/NotOrderable"
               },

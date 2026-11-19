@@ -42,9 +42,9 @@ on classifications lists only those an orderable column uses).
   - `table_unknown`: the steward has not stated which years the file covers.
   - `no_orderable_column`: none of its columns can be ordered.
 
-  A table with some orderable years lists only those, so a blocked year may
-  not appear. Trust `segments` and `coverage` for a single year, not a `search` hit's
-  `period`, and do not conclude from a missing year that the steward lacks it.
+  A table with some orderable years has only those in its `period`, and lists its
+  blocked files under `not_orderable` in `show` and `segments`, each with the years it
+  holds (`spans`).
 
   Tell the user to ask the steward. Each blocked file's `holds[].follow_up`, when
   present, says where; else the steward's `order_instructions` from `/api/context`, if

@@ -2102,7 +2102,8 @@ and compares it (`holdings_blocked_mismatch`). A catalog table that a blocked ta
 shown by `show`, `search` and `segments` (`Catalog::shows`, `connect_for_shown_ref`), with
 its register and provider when nothing placed holds them, over the years the blocked
 files hold (an `unknown` file states none, so its table lists no `spans` and its
-`period` stays the catalog's). `show` lists its blocked files under `not_orderable` (file, reason, a fixed
+`period` stays the catalog's). `show` lists its blocked files under `not_orderable`
+(file, reason, the years the file holds as `spans`, absent for `unknown`, a fixed
 plain-language message per reason, and the steward's own row-key holds and follow-ups);
 registers and search hits shown only that way carry `not_orderable: true`. Search
 matches such a table or register over the blocked files' years, as its hit reports
@@ -2113,6 +2114,12 @@ must be held or documented in that table, else it is `not_found`. Nothing else c
 `serves` and every other operation (orders, materialization, coverage, `schema`, the
 context span) still see only placements. An unrouted blocked table has no catalog table
 to show; excluded, superseded and lookup tables are decisions, not gaps, and stay out.
+
+A table a placement holds that blocked files also route to lists those files the same
+way under `not_orderable`, in `show` and `segments`, each with its years. Its own `period`,
+`spans`, rows and search matches stay its placements', so a blocked year beside an
+orderable one is shown only there. It carries no `not_orderable: true` mark, and a request
+about it may name only held variables.
 
 #### Holdings reader renames and rewrites
 
