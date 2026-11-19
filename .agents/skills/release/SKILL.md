@@ -81,12 +81,6 @@ version, receipts record it and `export` relies on byte identity per version, so
 different binaries must never ship under one version. Unchanged: leave it, and the
 release ships the same version again.
 
-The plugin's scaffold reference pins the release by hand: set `reg_meta/v<new>` (and
-`reg_meta_version`) in `plugins/microdata-tools-se/skills/register-research-scaffold/`
-`SKILL.md`, `reference/PROJECT.md`, `reference/project_data.json` and
-`reference/mock/answers/order.json`. The reference project must compile with this
-release's `reg-mock`.
-
 **Schema version check.** Compare the DDL and the single version authority with the
 previous release:
 
@@ -413,6 +407,21 @@ The global catalog has no public `/api`. Over `https://reg-meta.vqv.uk/mcp`, cal
 with no `ref`: it must answer and its `meta.catalog_version` must equal the version
 passed in step 8a. Compare `meta.generation` with the build report's `generation_id`.
 Record what the check exercised in the release notes.
+
+Then move the plugin's scaffold reference to the release, in a PR: its pin is set by
+hand, and its saved answers can only be fetched once the release serves the catalog. In
+`plugins/microdata-tools-se/skills/register-research-scaffold/`, set `reg_meta/vX.Y.Z`
+in `SKILL.md` and `reference/PROJECT.md` and `reg_meta_version` in
+`reference/project_data.json`. The version enters the project hash, so don't edit
+`reference/mock/answers/` by hand: from `reference/`, refresh them and confirm the
+project compiles with this release's `reg-mock`:
+
+```sh
+reg-mock fetch --catalog https://reg-meta.vqv.uk/mcp --project project_data.json \
+  --mode order --out mock/answers
+reg-mock compile --project project_data.json --rules mock/mock_rules.json \
+  --answers mock/answers --out mock/mock_spec.json
+```
 
 ## Error recovery
 

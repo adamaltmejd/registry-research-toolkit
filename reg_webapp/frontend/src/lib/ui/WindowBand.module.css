@@ -35,6 +35,10 @@
 .thumb[data-focus-visible] {
   box-shadow: var(--focus-ring);
 }
+.thumb[data-disabled] {
+  opacity: var(--opacity-disabled);
+  cursor: default;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .thumb {

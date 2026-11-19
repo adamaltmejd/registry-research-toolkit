@@ -52,10 +52,10 @@ segment page for each column, and every page of each value set, unchanged. It re
 the answers saved before only once all have arrived, and waits out the hosted rate
 limit, so a large project takes about a second per call beyond the first 60. A refusal
 is JSON on stderr, exit 2, as for compile; `catalog_refused` items carry the catalog's
-own findings. A `catalog_mismatch` among them means `--catalog` is the wrong server:
-fetch again from the URL of the catalog the project's `catalog` names, without editing
-the project. Fix any other finding in the project (`register-project` skill) and fetch
-again.
+own findings. One at `/catalog`, whose message names two catalogs, means `--catalog`
+is the wrong server: fetch again from the URL of the catalog the project's `catalog`
+names, without editing the project (for the global catalog, with `--mode order`). Fix
+any other finding in the project (`register-project` skill) and fetch again.
 
 Commit `mock/answers/`: compile reads only these files, so the mock never depends on
 the network again. Save again whenever the project changes; compile refuses answers saved
