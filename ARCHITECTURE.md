@@ -217,7 +217,9 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   manual items: a source or binding entered by hand (`manual` in place of `table` or
   `variable`) for data the catalog does not document. Schema 6.3.0 adds optional
   `releases` on a catalog source, naming the releases that serve days two of the
-  table's releases share. `reg-core` accepts
+  table's releases share. Schema 7.0.0 adds the required top-level `catalog`
+  (`global` or a steward id); a server refuses a project naming another catalog with
+  `catalog_mismatch`. `reg-core` accepts
   exactly its `SCHEMA_VERSION` and refuses any other with an
   `unsupported_schema_version` issue rather than migrating it
   ([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). Pre-v1 there are no

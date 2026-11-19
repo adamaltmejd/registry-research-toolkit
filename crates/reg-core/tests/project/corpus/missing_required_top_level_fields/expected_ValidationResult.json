@@ -15,6 +15,12 @@
     {
       "level": "error",
       "code": "missing_required_field",
+      "path": "/catalog",
+      "message": "required top-level field 'catalog' is missing"
+    },
+    {
+      "level": "error",
+      "code": "missing_required_field",
       "path": "/name",
       "message": "required top-level field 'name' is missing"
     },

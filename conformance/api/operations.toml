@@ -41,7 +41,7 @@
 # cursor encodes (generation_id, last key), so a cursor from another generation is
 # `stale_cursor`.
 
-api_version = "7.0.0"
+api_version = "7.1.0"
 
 [[operation]]
 name = "search"
@@ -341,6 +341,7 @@ document = "doc, title, heading, page"
 [shape.Context]
 period_span = "Period | null; the hull of the periods served (steward: the years held); timeless periods left out, null when none remains or the hull is open at both ends"
 reg_meta_version = "string; the server's version, which seeds a new project's reg_meta_version"
+catalog = "string; the catalog served, `global` or the steward id, which seeds a new project's catalog (`validate`, `order` and `materialize_order` refuse a project naming another: `catalog_mismatch`)"
 steward_config = "paired mode only: StewardConfig {presentation: {id, name, long_name?, description?, order_instructions?}, logo (SVG markup), spaces [{id, name}] in the steward's order (one implicit space, the owner id and presentation name, when it declares none)}; admission refuses a presentation without string id and name; runtime reads no steward TOML"
 
 [shape.Show]

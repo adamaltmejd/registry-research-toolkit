@@ -15,7 +15,8 @@ whose data comes from a data steward adds the steward's catalog as its own
 `steward-catalog` server, which answers the same tools but only for what the steward holds (plus the shared
 classifications, value sets, codes and documents): in such a project use
 `steward-catalog` for the steward's holdings and the plugin's `catalog` for data outside
-them, saying which catalog each fact came from. A `not_found` there
+them, saying which catalog each fact came from; a `project_data.json` names its own in
+`catalog` (`register-project` skill). A `not_found` there
 means nothing orderable is held under that reference, not that the steward lacks it (ask
 the steward), and a held table marked `not_orderable` is
 not to be entered as a manual source (data-stewards.md). To add one, read [data-stewards.md](references/data-stewards.md).
@@ -71,6 +72,10 @@ A failed call is an MCP tool error carrying `{error, meta}`, where `error` is
 - `invalid_cursor`, `stale_cursor`: restart the listing without `cursor`.
 - `holdings_unavailable`: `materialize_order` on a catalog without holdings (the global
   one); use the steward's catalog.
+- `catalog_mismatch`: the project's `catalog` names another catalog. `validate` answers
+  it as its one issue, `order` and `materialize_order` as the one finding of
+  `order_blocked`. Ask the server of the catalog the project names; don't edit the
+  project's `catalog`.
 - `project_unnamed`, `order_manual_only`: `materialize_order` needs a project `name` and
   at least one catalog source.
 - `docs_unavailable`: the catalog has no documents.

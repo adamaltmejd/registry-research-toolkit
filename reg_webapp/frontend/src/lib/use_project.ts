@@ -38,12 +38,17 @@ const layoutOf = (draft: ProjectData) =>
 
 /** The project's one catalog check, shared by the page and the banner across
  * route changes: `order`, 350 ms after the last edit WASM accepted. */
-export function useProjectCheck(): ProjectCheck {
+export function useProjectCheck(served: string | null): ProjectCheck {
   const { draft, raw } = useProject();
   const [attempt, setAttempt] = useState(0);
   const resource = useAsyncResource(
     // A draft with no tables is "Empty": the catalog would refuse to order it.
-    draft && draft.sources.length > 0 ? `${raw}:${attempt}` : null,
+    // One drafted on another catalog is still checked, so the page names that.
+    draft &&
+      (draft.sources.length > 0 ||
+        (served !== null && draft.catalog !== served))
+      ? `${raw}:${attempt}`
+      : null,
     async (signal) => {
       await new Promise<void>((resolve, reject) => {
         const timer = setTimeout(resolve, 350);
@@ -115,7 +120,15 @@ export function projectVerdict(
   select: boolean,
 ): Verdict {
   if (!draft) return "problems";
-  if (draft.sources.length === 0) return "empty";
+  // An empty draft is checked only when it names another catalog (useProjectCheck);
+  // a check of it that did not run says so, with Retry.
+  if (
+    draft.sources.length === 0 &&
+    !check.loading &&
+    !check.data &&
+    !check.error
+  )
+    return "empty";
   if (check.loading) return "checking";
   if (check.error || !check.data) return "unchecked";
   if (check.data.order === null) {

@@ -1,6 +1,7 @@
 {
-  "schema_version": "6.3.0",
+  "schema_version": "7.0.0",
   "reg_meta_version": "reg_meta/v1.0.0",
+  "catalog": "global",
   "name": "closed_root",
   "sources": [],
   "object/key~": {

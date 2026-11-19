@@ -70,7 +70,8 @@ fn sampled_whole_table_orders_agree_with_census() {
     // database's files place it under, else the catalog's (crates/DESIGN.md,
     // "Project semantic validation", #2409).
     let artifact = artifact();
-    let (sampled, open_start) = census(&artifact.base(), artifact.holdings().as_ref());
+    let catalog = artifact.catalog.as_deref().unwrap_or("global");
+    let (sampled, open_start) = census(&artifact.base(), artifact.holdings().as_ref(), catalog);
     let blocked = sampled.iter().filter(|t| t.blocked).count();
     eprintln!(
         "release order: {} tables sampled, {blocked} blocked",
@@ -270,7 +271,7 @@ fn candidates(db: &Connection, holdings: Option<&Connection>) -> Vec<(String, Op
 /// in, each bound to the variables placed in it: a table bound to an unheld variable
 /// is blocked, so a sample of all tables would leave the order checks covering little.
 #[allow(clippy::too_many_lines)]
-fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64) {
+fn census(db: &Connection, holdings: Option<&Connection>, catalog: &str) -> (Vec<Sampled>, i64) {
     let pids = candidates(db, holdings);
     // (table, variable, database) of every placement of a declared, unheld key component.
     let key_pairs: HashSet<(String, String, String)> = holdings
@@ -370,7 +371,7 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
             label: space
                 .as_ref()
                 .map_or_else(|| pid.clone(), |space| format!("{pid} in {space}")),
-            project: project(pid, space.as_deref(), &period, &variables),
+            project: project(catalog, pid, space.as_deref(), &period, &variables),
             bindings: variables.len(),
             mcp: sampled.len() < MCP_TABLES,
             blocked,
@@ -606,11 +607,19 @@ fn placed(holdings: &Connection, pid: &str, space: &str) -> HashSet<String> {
     .collect()
 }
 
-/// The whole-table project; on a steward pair it names the sampled database.
-fn project(pid: &str, space: Option<&str>, period: &Value, variables: &[String]) -> Value {
+/// The whole-table project on `catalog`; on a steward pair it names the sampled
+/// database.
+fn project(
+    catalog: &str,
+    pid: &str,
+    space: Option<&str>,
+    period: &Value,
+    variables: &[String],
+) -> Value {
     let mut project = json!({
-        "schema_version": "6.3.0",
+        "schema_version": reg_core::project::SCHEMA_VERSION,
         "reg_meta_version": "0.64.0",
+        "catalog": catalog,
         "name": "Release order",
         "sources": [{
             "name": "s",

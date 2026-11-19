@@ -59,9 +59,9 @@
     "manual": [],
     "project": {
       "name": "reference-income-by-sex",
-      "project_hash": "faed7d993a8a4d9d2a7e860b466cd2757fe8ba845c3f97acce92553ad7a72485",
+      "project_hash": "1470c18b9b78880a85c993722d5e214a1022af83595e299664dca8ed6efa1463",
       "reg_meta_version": "reg_meta/v0.90.0",
-      "schema_version": "6.3.0"
+      "schema_version": "7.0.0"
     },
     "row_keys": [
       {
@@ -85,9 +85,9 @@
     ]
   },
   "meta": {
-    "api_version": "7.0.0",
+    "api_version": "7.1.0",
     "catalog_version": "0.90.0",
     "generation": "b626a5d55b0d7ee0a21673e36083ac3496d3821bf0e373ca6503faf7b9ac3100",
-    "project_schema_version": "6.3.0"
+    "project_schema_version": "7.0.0"
   }
 }

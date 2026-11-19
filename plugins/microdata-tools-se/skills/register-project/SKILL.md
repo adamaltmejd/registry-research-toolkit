@@ -22,7 +22,10 @@ the `register-metadata-search` skill.
    project, the project's `steward-catalog` server, for the steward's holdings
    (`register-metadata-search` skill, `references/data-stewards.md`); otherwise the
    plugin's `catalog`. Data found only in the global catalog cannot go in a steward's
-   order. Set `reg_meta_version` (required) to the serving
+   order. Set `catalog` (required) to that catalog's id: `meta.steward.owner` from one of
+   its responses, or `global` when `meta` has no `steward`. `validate`, `order` and
+   `materialize_order` refuse the project on any other catalog's server
+   (`catalog_mismatch`). Set `reg_meta_version` (required) to the serving
    catalog's release tag, `reg_meta/vX.Y.Z`. Read `meta.catalog_version` from a catalog
    tool response and format its release version `X.Y.Z` as that tag. If it is not a
    release version (for example, `dev`), ask which catalog release to use. Never infer it
@@ -114,15 +117,15 @@ ordinary variables: `scb/flergenreg/ateranvant-personnr` and the per-parent
 `aterpnrfar`, `aterpnrmor` and adoptive variants, code `1` for a reused personnummer and
 `0` for not. Bind them when needed. `SenPNr` is only in `sos/lova`.
 
-A minimal document, checked against catalog 0.87.1 (set `schema_version` and
-`reg_meta_version` as in step
-1). `sources` is a list, each source holds its own `bindings`, and `period` is a range in
-one source and a year list in the other:
+A minimal document on the global catalog (set `schema_version`, `reg_meta_version` and
+`catalog` as in step 1). `sources` is a list, each source holds its own `bindings`, and
+`period` is a range in one source and a year list in the other:
 
 ```json
 {
-  "schema_version": "6.3.0",
-  "reg_meta_version": "reg_meta/v0.87.1",
+  "schema_version": "7.0.0",
+  "reg_meta_version": "reg_meta/vX.Y.Z",
+  "catalog": "global",
   "name": "example",
   "sources": [
     {
@@ -150,7 +153,11 @@ one source and a year list in the other:
 ## Questions about my project
 
 1. Read the user's `project_data.json`. Each server reads one `schema_version` exactly;
-   if `validate` returns `unsupported_schema_version`, say so and stop.
+   if `validate` returns `unsupported_schema_version`, say so and stop. Its `catalog`
+   names the server to ask: `global` the plugin's `catalog`, a steward's id the project's
+   `steward-catalog` server. `catalog_mismatch` means the call went to the other one:
+   switch servers. Moving a project to another catalog is the user's decision, made by
+   editing `catalog`; never change it to make a check pass.
 2. Call `order` with `operation: "order"` and the document as `project`. It returns the
    logical order: per source, the table, the period and the entries, each with the
    spelling delivered, and the `manual` list of columns entered by hand. Ambiguous

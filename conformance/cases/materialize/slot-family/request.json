@@ -1,8 +1,9 @@
 {
   "note": "Fails if a family's members collapse, follow export or declaration order instead of slot index, lose their topology, or repeat the row key.",
   "project": {
-    "schema_version": "6.3.0",
+    "schema_version": "7.0.0",
     "reg_meta_version": "0.71.0",
+    "catalog": "fixture",
     "name": "Slot family",
     "sources": [
       {

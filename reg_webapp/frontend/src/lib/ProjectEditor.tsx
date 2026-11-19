@@ -82,10 +82,16 @@ export function ProjectEditor({
     !databases.some((space) => space.id === database);
   // A saved window outside this deployment's catalog span is clamped into it at
   // open, so the exported project never keeps decades the catalog cannot hold (#1037).
+  // A project drafted on another catalog is left as it is: its span is not this
+  // one's, and the check reports the mismatch.
   const open = (text: string) => {
     projectStore.open(text);
     const bounds = windowBounds(context);
-    if (bounds.enforced && projectStore.draft)
+    if (
+      bounds.enforced &&
+      projectStore.draft &&
+      projectStore.draft.catalog === context?.catalog
+    )
       windowStore.clampTo(bounds.min, bounds.max);
   };
   const replace = (action: () => void) => {

@@ -445,9 +445,14 @@ fn materialize_tool_matches_http() {
     let old = request("api/order-errors/request.json")["requests"][0]["body"].clone();
     let mut unnamed = project.clone();
     unnamed["name"] = json!(" \t ");
+    // On the global server a steward project is `catalog_mismatch`; a global one
+    // reaches the holdings refusal.
+    let mut global = project.clone();
+    global["catalog"] = json!("global");
     let manual_only = json!({
         "schema_version": project["schema_version"],
         "reg_meta_version": project["reg_meta_version"],
+        "catalog": project["catalog"],
         "name": "Manual only",
         "sources": [{
             "name": "nya",
@@ -469,7 +474,7 @@ fn materialize_tool_matches_http() {
         (steward, &old),
         (steward, &unnamed),
         (steward, &manual_only),
-        (reference_only, &project),
+        (reference_only, &global),
     ] {
         let (status, http) =
             client::json(port, "POST", "/api/project/materialize", &[], Some(body)).unwrap();

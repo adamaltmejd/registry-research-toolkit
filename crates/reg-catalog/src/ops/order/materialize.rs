@@ -34,6 +34,12 @@ type Days = (i64, i64);
 
 /// `POST /api/project/materialize`.
 pub(super) fn materialize(server: &Server, params: &Params) -> Result<Value, Error> {
+    let project = super::structural(&project(params)?)?;
+    // Before any other refusal: a project on another catalog is answered by that
+    // catalog's server, whatever this one holds.
+    if let Some(mismatch) = super::catalog_mismatch(server, &project) {
+        return Err(super::blocked(server, vec![mismatch])?);
+    }
     let (Some(held), Some(steward)) =
         (server.catalog.connect_holdings()?, server.catalog.steward())
     else {
@@ -43,7 +49,6 @@ pub(super) fn materialize(server: &Server, params: &Params) -> Result<Value, Err
             vec![],
         ));
     };
-    let project = super::structural(&project(params)?)?;
     if project.name.trim().is_empty() {
         return Err(Error::new(
             Code::ProjectUnnamed,

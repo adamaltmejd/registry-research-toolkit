@@ -22,6 +22,15 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
   binding names a three-segment binding FQID in `variable`. The optional top-level
   `window: {"from": <year>, "to": <year>}` is the study period the semantic layer
   measures a source period against; absent means the full history.
+- **`catalog`** is a required top-level string (schema 7.0.0 on): the catalog the
+  project is drafted on and ordered from, `global` or a steward id (#2566). The
+  structural layer checks the shape only: absent is `missing_required_field`, a
+  non-string or `null` is `invalid_field_type`, and a string outside the slug grammar
+  (`is_slug`; `global` is one) is `invalid_slug`. This crate keeps no list of stewards:
+  whether the id is the serving catalog's is `catalog_mismatch`, in `reg-catalog`
+  ([../DESIGN.md](../DESIGN.md), "Project semantic validation"). It names the catalog
+  by id only: the URL is the user's deployment config, and `reg_meta_version` already
+  records the release.
 - **`extract_format`** is an optional top-level string (schema 5.2.0 on): `dta`,
   `parquet` or `csv`. Absent means the order authoring default (`dta`), which the order
   file resolves; the default is never written into the project. The structural layer
@@ -120,7 +129,12 @@ panels, never a filename in the order file (a manual source's mock files take it
 name, since it has no other id; [../reg-mock/DESIGN.md](../reg-mock/DESIGN.md)). The catalog's tables are logical (the same table over many
 years and deliveries), so a `table` names the grain the researcher thinks in, and the
 order check joins it to what is delivered ([../DESIGN.md](../DESIGN.md), "The logical
-order"); this contract stays independent of holdings, and the document has no steward.
+order"). The selection stays independent of holdings, but the document names its
+catalog (`catalog`). 5.0.0 dropped the 4.x `steward` field when the order stopped at
+the catalog and had no holdings stage to read it; 7.0.0 restores the binding because
+holdings are back (a steward server's `validate` and `order` run the holdings stage)
+and because each catalog validates a document against its own content, so a document
+of global ids validates `ok` everywhere and nothing else says which catalog checks it.
 
 Every source carries an explicit period. Dated selections use finite periods. Bare
 `"_default"` selects a timeless table's data; whether the table is timeless is the

@@ -88,7 +88,9 @@ saves into `DIR` every answer compile reads (below), each a `tools/call`'s
 with sorted keys so a re-fetch of an unchanged catalog is byte-identical and its diff
 reviewable. `URL` is a catalog's MCP endpoint, the plugin's `catalog_url`: mode `order`
 works on any catalog, `materialize` on a steward's, which knows the delivery's names.
-It sends only the project document and reads metadata only.
+It sends only the project document and reads metadata only. A URL serving another
+catalog than the project's `catalog` fails the fetch with the server's
+`catalog_mismatch`; fetch has no check of its own.
 
 - **Calls** (`fetch.rs`): the order answer; `segments` once per table with up to 200 of
   the variables the order reads there, and once per row-key (materialize: unbound)

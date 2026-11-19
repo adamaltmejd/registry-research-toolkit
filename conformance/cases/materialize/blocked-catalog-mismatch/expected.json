@@ -1,0 +1,10 @@
+{
+  "findings": [
+    {
+      "level": "error",
+      "code": "catalog_mismatch",
+      "path": "/catalog",
+      "message": "This project is for the 'global' catalog, and this is the 'fixture' catalog. Check and order it on the 'global' catalog."
+    }
+  ]
+}

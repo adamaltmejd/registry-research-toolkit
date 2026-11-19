@@ -164,6 +164,7 @@ export function createProject(context: Context): void {
   const bounds = windowBounds(context);
   projectStore.newProject({
     reg_meta_version: regMetaReleaseTag(context.reg_meta_version),
+    catalog: context.catalog,
     window: clampYearWindow(
       windowStore.value ?? defaultStudyWindow(bounds),
       bounds.min,

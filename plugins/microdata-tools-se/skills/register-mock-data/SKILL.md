@@ -23,7 +23,8 @@ catalog's answers, write the rules and compile them into `mock_spec.json`, gener
   `reg_meta/v*` GitHub release; the download and SHA-256 check are in the repository
   README's Mock data section. Use the release that matches `reg_meta_version` in
   `project_data.json`.
-- The answers come from the catalog the project orders from, over MCP:
+- The answers come from the catalog the project orders from, the one its `catalog`
+  names, over MCP (a server for another catalog refuses with `catalog_mismatch`):
   - a steward's catalog (the project's `steward-catalog` server,
     `https://<steward-host>/mcp`) with mode `materialize`, which gives the delivery's
     own file and column names;
@@ -51,7 +52,10 @@ segment page for each column, and every page of each value set, unchanged. It re
 the answers saved before only once all have arrived, and waits out the hosted rate
 limit, so a large project takes about a second per call beyond the first 60. A refusal
 is JSON on stderr, exit 2, as for compile; `catalog_refused` items carry the catalog's
-own findings: fix the project (`register-project` skill) and fetch again.
+own findings. One at `/catalog`, whose message names two catalogs, means `--catalog`
+is the wrong server: fetch again from the URL of the catalog the project's `catalog`
+names, without editing the project (for the global catalog, with `--mode order`). Fix
+any other finding in the project (`register-project` skill) and fetch again.
 
 Commit `mock/answers/`: compile reads only these files, so the mock never depends on
 the network again. Save again whenever the project changes; compile refuses answers saved

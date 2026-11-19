@@ -1327,7 +1327,7 @@ with `--catalog <steward>` ("Holdings").
 
 ## The logical order
 
-`order` runs the order check of design v4 §9 on a 6.3.0 project and returns the logical
+`order` runs the order check of design v4 §9 on a 7.0.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
 implementation in `reg-catalog`, which is what makes their results identical, except
@@ -1459,7 +1459,7 @@ and `sun2000niva`.
 {
   "data": {
     "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
-    "project": {"name": "income-panel", "schema_version": "6.3.0",
+    "project": {"name": "income-panel", "schema_version": "7.0.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
@@ -1512,7 +1512,7 @@ and `sun2000niva`.
        "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
     ]
   },
-  "meta": {"api_version": "7.0.0", "project_schema_version": "6.3.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"api_version": "7.1.0", "project_schema_version": "7.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1542,7 +1542,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
       ]
     }
   },
-  "meta": {"api_version": "7.0.0", "project_schema_version": "6.3.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"api_version": "7.1.0", "project_schema_version": "7.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -2490,7 +2490,7 @@ promised (the runner deliberately has no `ORDER BY`).
 holdings pair come from startup configuration, with no request owner override. Add
 optional `extract_format = dta|parquet|csv` to project schema 5.2.0 ("Project document
 5.2.0"), defaulting to `dta` in order authoring. `project.rs::SCHEMA_VERSION` admits
-6.3.0 exactly; every other version is `unsupported_schema_version`. Older projects are
+7.0.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
 compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
 absent, use the authoring default without inserting it before project hashing. The
@@ -2849,6 +2849,30 @@ delivered (#2220). Each entry also carries the column name the held files use ov
 days, split where that name changes, as row keys already do: a held file can name a
 column otherwise than the catalog (`AvgAr` for `avgar`). Days several differently named
 columns deliver at once (a slot family's members) keep the catalog spelling (#2409).
+
+**The project's catalog.** Once the document passes structural validation, and
+before any other refusal (`materialize_order`'s `holdings_unavailable` included),
+`validate`, `order` and `materialize_order` compare the project's `catalog` with the
+one served (the steward's id, or `global` with no holdings; `context` reports it). A
+difference is one error, `catalog_mismatch` at `/catalog`, reported alone: every other
+finding would answer for a catalog the project is not on. reg-core keeps no list of
+stewards, so this is also the only check that the named one exists. Moving a project to
+another catalog is a hand edit of the field, not a feature. `reg-mock fetch` needs no
+check of its own: it asks the server, which refuses. The SPA leaves a project drafted
+on another catalog as it is (no study-window clamp at open) and checks it even when it
+has no tables, so the mismatch is shown.
+
+### Project document 7.0.0
+
+`schema_version` `7.0.0` adds the required top-level `catalog`: `global` or a steward
+id, the catalog the project is drafted on and ordered from (#2566; design note and
+maintainer ruling 2026-11-19). It reverses 5.0.0's removal of `steward`
+([reg-core/DESIGN.md](reg-core/DESIGN.md), "Logical selection, not physical delivery").
+The field names the catalog by id only, never its URL (the user's MCP configuration)
+or a version (`reg_meta_version` records the release). The structural layer checks its
+shape (`missing_required_field`, `invalid_field_type`, `invalid_slug`); the comparison
+is above. Every `project_hash` changes. A 6.3.0 document is re-authored by setting
+`schema_version` and adding `catalog`; 6.3.0 below holds otherwise.
 
 ### Project document 6.3.0
 

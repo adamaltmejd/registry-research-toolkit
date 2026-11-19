@@ -396,6 +396,27 @@ fn held_names(
     out
 }
 
+/// `catalog_mismatch` when the project's `catalog` is not this server's: its steward
+/// id, or `global` with no holdings. reg-core keeps no list of stewards, so this is
+/// also the only check that the named one exists. [`check`] reports it alone: every
+/// other finding would answer for a catalog the project is not on.
+fn catalog_mismatch(server: &Server, project: &ProjectData) -> Option<Issue> {
+    let here = server.catalog.id();
+    (project.catalog != here).then(|| {
+        Issue::new(
+            IssueLevel::Error,
+            "catalog_mismatch",
+            "/catalog",
+            format!(
+                "This project is for the {0} catalog, and this is the {1} catalog. \
+                 Check and order it on the {0} catalog.",
+                reg_core::quote(&project.catalog),
+                reg_core::quote(&here)
+            ),
+        )
+    })
+}
+
 /// The structurally valid project, or `project_invalid` with its issues.
 fn structural(value: &Value) -> Result<ProjectData, Error> {
     reg_core::project::check(value).map_err(|result| {
@@ -732,6 +753,17 @@ struct Checked {
 ///
 /// `internal_error` when a catalog query fails; never for a finding.
 pub fn check(
+    server: &Server,
+    project: &ProjectData,
+) -> Result<Result<LogicalOrder, Vec<Issue>>, Error> {
+    match catalog_mismatch(server, project) {
+        Some(mismatch) => Ok(Err(vec![mismatch])),
+        None => order_check(server, project),
+    }
+}
+
+/// [`check`] on the project's own catalog.
+fn order_check(
     server: &Server,
     project: &ProjectData,
 ) -> Result<Result<LogicalOrder, Vec<Issue>>, Error> {

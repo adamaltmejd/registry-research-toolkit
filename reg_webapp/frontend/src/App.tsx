@@ -54,7 +54,7 @@ export function App() {
     return () => icon.remove();
   }, [brand, logo]);
   const route = useRoute();
-  const validation = useProjectCheck();
+  const validation = useProjectCheck(context.data?.catalog ?? null);
   const registerFqid =
     route.name === "catalog-node" ? registerOfPath(route.fqidPath) : null;
   // A provider's own page lists all its registers' variables.

@@ -185,6 +185,7 @@ fn an_order_draws_from_one_database() {
     let mut project = json!({
         "schema_version": reg_core::project::SCHEMA_VERSION,
         "reg_meta_version": "0.79.0",
+        "catalog": "fixture",
         "name": "Two databases",
         "sources": [source("late", 2021)],
     });

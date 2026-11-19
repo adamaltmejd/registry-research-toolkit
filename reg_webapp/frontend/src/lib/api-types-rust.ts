@@ -383,6 +383,11 @@ export interface components {
         ColumnRole: "ordered" | "row_key" | "carried";
         /** @description What the site shell shows. Catalog identity is in every response's `meta`. */
         Context: {
+            /**
+             * @description The catalog served, `global` or the steward id, which seeds a new project's
+             *     `catalog`.
+             */
+            catalog: string;
             period_span: components["schemas"]["Period"] | null;
             /** @description The server's version, which seeds a new project's `reg_meta_version`. */
             reg_meta_version: string;
@@ -867,6 +872,12 @@ export interface components {
         ProjectColumnType: "integer" | "decimal" | "text" | "date" | "datetime" | "boolean" | "geometry" | "uuid" | "binary" | "identifier";
         /** @description The top-level `project_data.json` document. */
         ProjectData: {
+            /**
+             * @description The catalog the project is drafted on and ordered from: `global`, or a steward
+             *     id. `validate`, `order` and `materialize_order` refuse a document whose catalog
+             *     is not the one serving them (`catalog_mismatch`).
+             */
+            catalog: string;
             /**
              * @description The extract file format. Absent means the order authoring default, `dta`, which
              *     the order file resolves; it is never inserted here. An explicit `null` is

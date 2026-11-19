@@ -30,6 +30,9 @@ pub struct Context {
     period_span: Option<Period>,
     /// The server's version, which seeds a new project's `reg_meta_version`.
     reg_meta_version: String,
+    /// The catalog served, `global` or the steward id, which seeds a new project's
+    /// `catalog`.
+    catalog: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(value_type = crate::holdings::StewardConfig)]
     steward_config: Option<Value>,
@@ -62,6 +65,7 @@ impl Context {
                 _ => None,
             },
             reg_meta_version: version.to_owned(),
+            catalog: catalog.id(),
             steward_config: catalog.steward_config(),
         })
     }

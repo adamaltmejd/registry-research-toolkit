@@ -125,15 +125,18 @@ Then record the choice in the project's agent instructions (`CLAUDE.md` or
 tools for questions about the steward's holdings; for anything outside them, use the
 plugin's `catalog` (the global catalog) and say which catalog each fact came from."
 Both servers are loaded in such a project. In a project without a `steward-catalog`
-server, use the plugin's `catalog`.
+server, use the plugin's `catalog`. The project's `project_data.json` records the same
+choice in `catalog`: the steward's id here, `global` otherwise (`register-project`
+skill).
 
 ## Confirming it worked
 
 After restarting the agent in the project, call `show` with no `ref` on the
-`steward-catalog` server and check `meta.catalog_version` against the `reg_meta_version`
-that `/api/context` reported. Then `order` with `operation: "materialize_order"` on any
-small project: a steward answers an order file or an `order_blocked`/`project_invalid`
-naming the project's problems, never `holdings_unavailable`. If no `steward-catalog`
+`steward-catalog` server and check `meta.steward.owner` against the `data.catalog` that
+`/api/context` reported. Then `order` with `operation: "materialize_order"` on a small
+project whose `catalog` names that steward: a steward answers an order file or an
+`order_blocked`/`project_invalid` naming the project's problems, never
+`holdings_unavailable` or `catalog_mismatch`. If no `steward-catalog`
 tools are listed, the server has not been approved or the agent was started outside the
 project.
 
