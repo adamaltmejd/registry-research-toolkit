@@ -21,7 +21,8 @@ the `register-metadata-search` skill.
    of the catalog you order from. Order from the catalog the data comes from: in a steward's
    project, the project's `steward-catalog` server, for the steward's holdings
    (`register-metadata-search` skill, `references/data-stewards.md`); otherwise the
-   plugin's `catalog`. Set `reg_meta_version` (required) to the serving
+   plugin's `catalog`. Data found only in the global catalog cannot go in a steward's
+   order. Set `reg_meta_version` (required) to the serving
    catalog's release tag, `reg_meta/vX.Y.Z`. Read `meta.catalog_version` from a catalog
    tool response and format its release version `X.Y.Z` as that tag. If it is not a
    release version (for example, `dev`), ask which catalog release to use. Never infer it
@@ -66,7 +67,9 @@ the `register-metadata-search` skill.
    database. The researcher joins the extracts later, outside this toolkit. A steward
    with one database needs no `linkage`.
 5. Data the catalog does not document can be entered by hand, but only after `resolve`,
-   `search` and `show` find no variable or table for it: a catalog binding is checked
+   `search` and `show` find no variable or table for it (a steward's table that `show`
+   marks `not_orderable` is documented: tell the user to ask the steward, never enter it
+   by hand): a catalog binding is checked
    and extracted, a manual one is neither. A column the delivery has that a documented
    table lacks is a binding `{"manual": {"column": "<delivery name>", "type": "<type>"}}`
    in that table's source; the source keeps at least one catalog binding. A file or
