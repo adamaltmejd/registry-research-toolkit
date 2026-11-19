@@ -75,11 +75,11 @@ the checked tables itself and hashes what it wrote, so only checked data is expo
 any change to the staged files requires rechecking. The gate's detailed report stays in
 `.diagnostics/` on the data side; only the files and the receipt are exported, and a
 refusal tells the agent only its category code. Exercise the same gate locally on mocks,
-with one rejection case in the small fixture suite. The gate only checks: the pipeline
-suppresses, rounds and perturbs counts before writing it. The toolkit ships cited
-defaults (the `aggregates` schema and `aggregates-min5` policy) and every disclosure
-parameter is configurable per project ([export-gate.md](export-gate.md), "The
-disclosure policy"). Never loosen a policy to make a failing run pass; change one only
+with one rejection case in the small fixture suite. The gate only checks: the
+pipeline's one disclosure stage suppresses, perturbs counts (the toolkit's `cell_key.R`)
+and rounds before writing. The toolkit ships cited defaults (the `aggregates` schema and
+`aggregates-min5` policy) and every disclosure parameter is configurable per project
+([export-gate.md](export-gate.md), "The disclosure policy"). Never loosen a policy to make a failing run pass; change one only
 when the researcher asks. Until the project's outputs are shaped to a schema and policy
 the researcher has chosen, report disclosure integration as pending and keep real release
 disabled.

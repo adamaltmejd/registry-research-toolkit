@@ -73,6 +73,7 @@ A project folder on MONA:
   <the analysis code, as committed>
   export_gate\
     export_gate.R               pinned, unchanged
+    cell_key.R                  pinned, unchanged
     <name>.schema.json          chosen, unchanged
     <name>.policy.json          chosen, unchanged
   staging\                      the pipeline's aggregates; the gate only reads it
@@ -100,11 +101,11 @@ coefficients by groups. Shape the pipeline's outputs to it, a first batch includ
 the whole flow, gate included, runs end to end on mocks. A file the project does not use
 is written with zero rows. `trial` and `mock-stats` are not for a project's outputs.
 
-The gate only checks; the pipeline suppresses, rounds and perturbs. The default policy
-is a motivated, cited set (a floor of 5, cell-key perturbation of counts, 4 significant
-digits, a regression small-group check, no dominance check), and every parameter is
-configurable per project. [export-gate.md](export-gate.md), "The disclosure policy",
-lists them and says where a project sets its own. The agent lists the files and columns
-the analysis needs and shapes outputs to the schema; it changes a policy only when the
-researcher asks, and never to make a failing run pass. A policy or schema outside the
-toolkit's shipped files is the researcher's to review before real release.
+The gate only checks; the pipeline suppresses, perturbs (`cell_key.R`) and rounds. The
+default policy is a motivated, cited set (a floor of 5, cell-key perturbation of counts,
+4 significant digits, a regression small-group check, no dominance check), and every
+parameter is configurable per project. [export-gate.md](export-gate.md), "The disclosure
+policy", lists them and says where a project sets its own. The agent lists the files and
+columns the analysis needs and shapes outputs to the schema; it changes a policy only
+when the researcher asks, and never to make a failing run pass. A policy or schema
+outside the toolkit's shipped files is the researcher's to review before real release.
