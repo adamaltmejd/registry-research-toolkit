@@ -680,6 +680,14 @@ impl Catalog {
         self.connect_admitted(value, Self::shows)
     }
 
+    /// `connect_for_ref` without the possession check: the ref need only exist.
+    ///
+    /// # Errors
+    /// As `connect_for_ref`, but never `not_found` for an unheld entity.
+    pub(crate) fn connect_for_any_ref(&self, value: &str) -> Result<Connection, Error> {
+        self.connect_admitted(value, |_, _, _| true)
+    }
+
     fn connect_admitted(
         &self,
         value: &str,
