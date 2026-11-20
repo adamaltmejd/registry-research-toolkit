@@ -4820,7 +4820,7 @@
             },
             "extract_format": {
               "$ref": "#/$defs/ProjectExtractFormat",
-              "description": "The project's format, resolved to `dta` when it states none."
+              "description": "The project's format, resolved to `parquet` when it states none."
             },
             "files": {
               "description": "By first appearance in the order, then name.",

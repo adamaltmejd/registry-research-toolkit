@@ -32,7 +32,7 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
   by id only: the URL is the user's deployment config, and `reg_meta_version` already
   records the release.
 - **`extract_format`** is an optional top-level string (schema 5.2.0 on): `dta`,
-  `parquet` or `csv`. Absent means the order authoring default (`dta`), which the order
+  `parquet` or `csv`. Absent means the order authoring default (`parquet`), which the order
   file resolves; the default is never written into the project. The structural layer
   refuses a non-string, including explicit `null` (`invalid_field_type`), and a string
   outside the three (`invalid_enum_value`).

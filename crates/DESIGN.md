@@ -2499,7 +2499,7 @@ promised (the runner deliberately has no `ORDER BY`).
 `order` MCP tool. The hosted request is only `project`; the serving steward and pinned
 holdings pair come from startup configuration, with no request owner override. Add
 optional `extract_format = dta|parquet|csv` to project schema 5.2.0 ("Project document
-5.2.0"), defaulting to `dta` in order authoring. `project.rs::SCHEMA_VERSION` admits
+5.2.0"), defaulting to `parquet` in order authoring. `project.rs::SCHEMA_VERSION` admits
 7.0.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
 compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
@@ -2689,7 +2689,7 @@ open-ended ranges (`row-filter-disjoint`, `row-filter-open-ended` runner cases).
 NULL/unparseable period values do not pass a filter. Unfilterable pooled holdings report
 that all rows are included; they do not pretend that selecting columns restricts rows.
 
-The researcher default is `.dta`; the manifest always specifies its format and the
+The default is Parquet; the manifest always specifies its format and the
 runner supplies no default. Preserve Stata aliases, exact large-number handling,
 precision/range refusals and preflight checks. A logical inference cannot override the
 actual SQL storage/writer contract. Expected schema metadata makes storage drift a
@@ -2708,7 +2708,7 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 `conformance/cases/materialize/`.
 
 - `version` is the integer `4`; the runner refuses v3. Absent `extract_format` resolves
-  to `dta` in the manifest only; the project and its hash are untouched. `stata_name` is
+  to `parquet` in the manifest only; the project and its hash are untouched. `stata_name` is
   the v3 rule byte for byte, emitted only on a `dta` order.
 - Provenance: `catalog.generation` is the served pair (`meta.generation`),
   `base_generation` the reference catalog's `generation_id`, `holdings.generation` the
@@ -2970,7 +2970,7 @@ Nothing else changes: 5.2.0 below holds otherwise.
 `parquet` or `csv`: the file format of the order's extract files, one per project. It is
 a string; an explicit `null` is `invalid_field_type`, any other string is
 `invalid_enum_value`, both at `/extract_format`. Absent means the authoring default
-`dta`. The order file resolves that default ("From a logical order to physical files");
+`parquet`. The order file resolves that default ("From a logical order to physical files");
 it is never written into the project, so the project hash covers only what the
 researcher wrote (an absent field hashes as `null`, like every absent optional).
 

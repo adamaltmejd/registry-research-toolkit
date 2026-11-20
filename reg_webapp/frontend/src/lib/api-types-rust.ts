@@ -596,7 +596,7 @@ export interface components {
         Manifest: {
             /** @description Every requested variable the order delivers less of than requested. */
             clips: components["schemas"]["ManifestClip"][];
-            /** @description The project's format, resolved to `dta` when it states none. */
+            /** @description The project's format, resolved to `parquet` when it states none. */
             extract_format: components["schemas"]["ProjectExtractFormat"];
             /** @description By first appearance in the order, then name. */
             files: components["schemas"]["ManifestFile"][];
@@ -884,7 +884,7 @@ export interface components {
              */
             catalog: string;
             /**
-             * @description The extract file format. Absent means the order authoring default, `dta`, which
+             * @description The extract file format. Absent means the order authoring default, `parquet`, which
              *     the order file resolves; it is never inserted here. An explicit `null` is
              *     `invalid_field_type`.
              */

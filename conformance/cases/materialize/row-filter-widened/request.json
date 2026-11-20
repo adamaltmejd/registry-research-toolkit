@@ -2,6 +2,7 @@
   "note": "Fails if row_filter_widened is reported to a source whose own request the year filter does not widen (#2207 F9): a asks for 2018-H1, which the Year filter widens to 2018; b asks for 2017, whole years already, and is told only of the union.",
   "project": {
     "schema_version": "7.0.0",
+    "extract_format": "dta",
     "reg_meta_version": "0.71.0",
     "catalog": "fixture",
     "name": "Row filter widened",

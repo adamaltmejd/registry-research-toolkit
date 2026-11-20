@@ -17,7 +17,7 @@
     },
     "extract_format": {
       "$ref": "#/$defs/ProjectExtractFormat",
-      "description": "The extract file format. Absent means the order authoring default, `dta`, which\nthe order file resolves; it is never inserted here. An explicit `null` is\n`invalid_field_type`."
+      "description": "The extract file format. Absent means the order authoring default, `parquet`, which\nthe order file resolves; it is never inserted here. An explicit `null` is\n`invalid_field_type`."
     },
     "linkage": {
       "$ref": "#/$defs/ProjectLinkage",

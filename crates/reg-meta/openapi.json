@@ -2290,7 +2290,7 @@
           },
           "extract_format": {
             "$ref": "#/components/schemas/ProjectExtractFormat",
-            "description": "The project's format, resolved to `dta` when it states none."
+            "description": "The project's format, resolved to `parquet` when it states none."
           },
           "files": {
             "type": "array",
@@ -3216,7 +3216,7 @@
           },
           "extract_format": {
             "$ref": "#/components/schemas/ProjectExtractFormat",
-            "description": "The extract file format. Absent means the order authoring default, `dta`, which\nthe order file resolves; it is never inserted here. An explicit `null` is\n`invalid_field_type`."
+            "description": "The extract file format. Absent means the order authoring default, `parquet`, which\nthe order file resolves; it is never inserted here. An explicit `null` is\n`invalid_field_type`."
           },
           "linkage": {
             "$ref": "#/components/schemas/ProjectLinkage",

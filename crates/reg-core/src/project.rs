@@ -180,7 +180,7 @@ pub struct ProjectData {
     #[serde(default)]
     #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub window: Option<StudyWindow>,
-    /// The extract file format. Absent means the order authoring default, `dta`, which
+    /// The extract file format. Absent means the order authoring default, `parquet`, which
     /// the order file resolves; it is never inserted here. An explicit `null` is
     /// `invalid_field_type`.
     #[serde(default)]

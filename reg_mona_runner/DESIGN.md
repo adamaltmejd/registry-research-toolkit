@@ -126,9 +126,9 @@ nothing.
 
 The researcher picks one format per project (`extract_format`,
 [../crates/reg-core/DESIGN.md](../crates/reg-core/DESIGN.md)); the order carries it and
-every file of the order is written in it. Stata is the default because most SWECOV
-researchers use it; CSV keeps every value as text but its reader guesses the types back,
-losing a leading-zero code, a date or a large id. What each SQL type becomes:
+every file of the order is written in it. Parquet is the default. CSV keeps every value
+as text but its reader guesses the types back, losing a leading-zero code, a date or a
+large id. What each SQL type becomes:
 
   | SQL type                                                   | R value fetched | `.dta` (format 118)                       | `.parquet`             | `.csv`                |
   | ---------------------------------------------------------- | --------------- | ----------------------------------------- | ---------------------- | --------------------- |

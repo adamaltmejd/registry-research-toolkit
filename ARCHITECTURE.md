@@ -209,7 +209,7 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   `meta.project_schema_version` names the one the server admits. Schema 5.1.0 added
   optional boolean `follow_successor` on variable bindings; absent or false keeps the bound variable's own history. Schema 5.2.0 adds
   optional top-level `extract_format` (`dta`, `parquet`, `csv`); absent means the order
-  authoring default `dta`, resolved by the order file and never inserted into the
+  authoring default `parquet`, resolved by the order file and never inserted into the
   project. Schema 6.0.0 makes the binding `type` an optional override in catalog type
   names and drops the subtype and format fields. Schema 6.1.0 adds optional top-level
   `linkage.database`, the steward database an order draws from. Schema 6.2.0 adds

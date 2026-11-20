@@ -464,7 +464,7 @@ note = "crates/DESIGN.md, \"The logical order\", has the fields and two examples
 
 [shape.Manifest]
 version = "integer; 4"
-extract_format = "\"dta\" | \"parquet\" | \"csv\"; the project's, `dta` when it states none"
+extract_format = "\"dta\" | \"parquet\" | \"csv\"; the project's, `parquet` when it states none"
 provenance = "{mode \"steward_holdings\", steward, catalog {release, schema, generation (the served pair, meta.generation)}, holdings {owner, generation}, base_generation (the reference catalog's generation_id), project {schema_version, project_hash, name}}"
 files = "[{name, schema, table, delivery (string | null), partition?, projection?, row_filter? {column, encoding (\"date\" | \"year\" | \"yyyymm\" | \"yyyymmdd\"), ranges [{from?, to?}] (inclusive ISO days)}, columns [{name, stata_name? (dta only), storage {type, length, precision, scale}, role (\"ordered\" | \"row_key\" | \"carried\"), refs [{source, binding (integer | null), table, variable, period Period, spelling}], slot? {family?, kind, index}}]}]"
 clips = "[{source, binding, variable, requested [Period], ordered [Period]}]"
