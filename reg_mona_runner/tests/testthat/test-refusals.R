@@ -14,12 +14,12 @@ test_that("an export root without orders/ is a setup failure (2)", {
 
 test_that("an order that is not JSON is refused (3)", {
   # Regression: a truncated upload reaches the shape checks or the database.
-  base <- export_root(text = list(`900` = "{\"version\": 4, \"files\": ["))
+  base <- export_root(text = list(`900` = "{\"version\": 5, \"files\": ["))
   expect_identical(run_runner(base)$status, 3L)
   expect_refused(base, "900", 3L)
 })
 
-test_that("a manifest version other than 4 is refused (4)", {
+test_that("a manifest version other than 5 is refused (4)", {
   # Regression: a retired v3 order, whose entries this runner no longer reads,
   # fails as malformed (6) instead of as stale, or a v4 shape is read under
   # another version's semantics.
@@ -59,6 +59,17 @@ test_that("an unknown field anywhere in a compact manifest is refused (6)", {
   )
   expect_identical(run_runner(base)$status, 6L)
   expect_refused(base, "900", 6L)
+})
+
+test_that("a spell table's row filter passes the manifest checks (2)", {
+  # Regression: the closed filter key set refuses the server's `end_column` (6),
+  # so no spell table can be ordered. Admitted, the order fails only at the
+  # connection this suite never configures.
+  base <- export_root(
+    text = list(`900` = order_text("spell-overlap", identity))
+  )
+  expect_identical(run_runner(base)$status, 2L)
+  expect_refused(base, "900", 2L)
 })
 
 test_that("an unknown top-level field is refused (6)", {

@@ -573,7 +573,11 @@ impl Context<'_> {
             let file_years: Vec<Period> =
                 built.file.years.iter().map(|&y| year_period(y)).collect();
             for column in &file.columns {
-                let row_filter = file.row_filter.as_ref().filter(|f| f.column == column.name);
+                // A spell's end is written like its start, so each mock row is a spell
+                // inside its year and overlaps the ranges its start falls in.
+                let row_filter = file.row_filter.as_ref().filter(|f| {
+                    f.column == column.name || f.end_column.as_ref() == Some(&column.name)
+                });
                 // The runner's period column: a row key placing no variable. It has no
                 // row filter when the order covers the whole delivery.
                 if column.refs.is_empty() {

@@ -1,7 +1,7 @@
 # Design: the MONA extract runner (`reg_mona_runner`)
 
 `extract.R` turns order files into extract files inside MONA. It reads the MONA order
-file (version 4) that `materialize_order` writes, whose contract is
+file (version 5) that `materialize_order` writes, whose contract is
 [../crates/DESIGN.md](../crates/DESIGN.md) ("MONA order file") and
 `crates/reg-core/src/manifest.rs`. A steward's data manager runs it by hand; no agent
 and no network reach MONA, so the script is one self-contained file that gets uploaded
@@ -77,8 +77,8 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
    order gives every such column a `stata_name`, so this is a backstop) or a full name
    longer than a variable label holds (80 characters).
 4. Extract each file with one `SELECT`, fetched in chunks of 100,000 rows into the
-   order's one format (below), then write `run_log.csv` (file, rows, columns, filter;
-   the file name's extension is the format).
+   order's one format (below), then write `run_log.csv` (file, rows, columns, filter,
+   rows_without_period; the file name's extension is the format).
 
 On success the order moves to `orders/archive/<nr>_<YYYY-MM-DD>.json`. On failure the
 order stays in `orders/` and its export folder holds only `error_log.csv` (code,
@@ -105,9 +105,15 @@ encoding's grain:
 A bound is the ISO day truncated to the encoding's digits, which is the contract's
 widening: a finer bound covers its whole year or month. `date` compares days, so a
 datetime keeps every time of a bound day. A NULL or unparseable period value matches no
-range and is left out of a filtered file; an unfiltered file keeps every row. Another
-type for an encoding (a date column read as `year`) is refused before any query rather
-than guessed.
+range and is left out of a filtered file, and a second query counts those rows for
+`run_log.csv` (`rows_without_period`, empty for an unfiltered file, which keeps every
+row). Another type for an encoding (a date column read as `year`) is refused before any
+query rather than guessed.
+
+A spell filter (`end_column`) keeps a row whose spell overlaps any range: the start
+(`column`) on or before the range's `to`, and the end NULL as stored (an open spell) or
+on or after its `from`, both columns read by the one encoding. An unparseable end is not
+open and fails a `from` bound; a NULL or unparseable start matches no range.
 
 ## CSV
 
@@ -199,7 +205,7 @@ Stable; the process exits with the code of the first order, in name order, that 
   | 0    | every order extracted (or no orders)                                                                                                            |
   | 2    | setup: a package not installable, no `orders/` folder, no connection, no archive                                                                |
   | 3    | the order is not JSON                                                                                                                           |
-  | 4    | `version` is not 4                                                                                                                              |
+  | 4    | `version` is not 5                                                                                                                              |
   | 5    | `provenance.mode` is not `steward_holdings`, or another steward's order                                                                         |
   | 6    | malformed manifest: unknown or missing field, bad value, unsafe file name, a null storage type                                                  |
   | 7    | a table not in its schema, a missing column, storage drift, a wrong period type, a column the format cannot hold (SQL type, `.dta` name, label) |

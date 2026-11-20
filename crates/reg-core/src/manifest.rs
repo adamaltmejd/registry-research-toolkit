@@ -10,7 +10,7 @@ use crate::issue::{Issue, Period};
 use crate::project::ExtractFormat;
 
 /// The manifest `version` this crate writes; the runner refuses every other.
-pub const MANIFEST_VERSION: u32 = 4;
+pub const MANIFEST_VERSION: u32 = 5;
 
 /// The order file: one file per table and delivery, with its columns.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -106,12 +106,15 @@ pub struct File {
     pub columns: Vec<Column>,
 }
 
-/// Keep a row whose period value lies in any range.
+/// Keep a row whose period value lies in any range; with `end_column`, a row whose
+/// spell from `column` to `end_column` overlaps any range (a NULL end is open).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
 pub struct RowFilter {
     pub column: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub end_column: Option<String>,
     pub encoding: Encoding,
     /// Sorted and disjoint.
     pub ranges: Vec<Range>,

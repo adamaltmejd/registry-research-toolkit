@@ -1,0 +1,16 @@
+# Synthetic spell table: each row is a spell from Start to End (NULL while open),
+# both yyyymmdd. Appended to holdings.toml.
+[[table]]
+physical_name = "Spells"
+disposition = "dated"
+delivery = "2015..2020"
+table_pids = ["demo/spells/s"]
+period_column = "Start"
+period_end_column = "End"
+period_encoding = "yyyymmdd"
+locator = "fixture:spells"
+
+[[table.key]]
+entity = ["demo/spells/id"]
+time = []
+locator = "fixture:spells-key"

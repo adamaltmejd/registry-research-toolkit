@@ -1,0 +1,22 @@
+{
+  "note": "Fails if a spell table's row filter loses its end column (#2608): an order for 2018 from a table with spell start and end columns must keep the spells that overlap 2018, so the filter names Start and End and keeps both bounds; the runner reads a NULL End as an open spell.",
+  "project": {
+    "schema_version": "8.0.0",
+    "extract_format": "dta",
+    "reg_meta_version": "0.71.0",
+    "catalog": "fixture",
+    "name": "Spell overlap",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/spells/s",
+        "period": 2018,
+        "bindings": [
+          {
+            "variable": "demo/spells/benefit"
+          }
+        ]
+      }
+    ]
+  }
+}

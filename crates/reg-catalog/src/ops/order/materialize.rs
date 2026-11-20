@@ -119,6 +119,8 @@ struct Holding {
     projection: Option<String>,
     /// (column id, name, encoding).
     period_column: Option<(i64, String, String)>,
+    /// A spell table's end column; `period_column` is then the spell start.
+    period_end_column: Option<String>,
     keys: String,
     held: Vec<Days>,
 }
@@ -716,8 +718,9 @@ fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
         &format!(
             "SELECT h.physical_name, h.schema_name, h.file_name, h.delivery, h.partition,
                 h.projection_token, p.id, p.name, h.period_encoding, h.key_requirements,
-                {}
+                {}, e.name
              FROM holding_table h LEFT JOIN holding_column p ON p.id = h.period_column_id
+             LEFT JOIN holding_column e ON e.id = h.period_end_column_id
              WHERE h.id = ?",
             crate::holdings::TABLE_LABEL
         ),
@@ -734,6 +737,7 @@ fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
                     (Some(id), Some(column), Some(encoding)) => Some((id, column, encoding)),
                     _ => None,
                 },
+                period_end_column: r.get(11)?,
                 keys: r.get(9)?,
                 label: r.get(10)?,
                 held: vec![],
@@ -1419,6 +1423,7 @@ fn row_filter(
     let last = holding.held.last().map_or(i64::MAX, |d| d.1);
     Some(RowFilter {
         column: column.clone(),
+        end_column: holding.period_end_column.clone(),
         encoding,
         ranges: ranges
             .iter()

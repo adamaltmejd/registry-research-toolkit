@@ -1,0 +1,88 @@
+{
+  "version": 5,
+  "extract_format": "dta",
+  "provenance": {
+    "mode": "steward_holdings",
+    "steward": "fixture",
+    "catalog": {
+      "release": "dev",
+      "schema": "18"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "project": {
+      "schema_version": "8.0.0",
+      "name": "Spell overlap"
+    }
+  },
+  "files": [
+    {
+      "name": "spells",
+      "schema": "dbo",
+      "table": "Spells",
+      "delivery": "2015..2020",
+      "row_filter": {
+        "column": "Start",
+        "end_column": "End",
+        "encoding": "yyyymmdd",
+        "ranges": [
+          {
+            "from": "2018-01-01",
+            "to": "2018-12-31"
+          }
+        ]
+      },
+      "columns": [
+        {
+          "name": "Benefit",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "ordered",
+          "refs": [
+            {
+              "source": "s",
+              "binding": 0,
+              "table": "demo/spells/s",
+              "variable": "demo/spells/benefit",
+              "period": {
+                "start": "2018-01-01",
+                "end": "2019-01-01"
+              },
+              "spelling": "Benefit"
+            }
+          ]
+        },
+        {
+          "name": "Id",
+          "storage": {
+            "type": "int",
+            "length": null,
+            "precision": 10,
+            "scale": 0
+          },
+          "role": "row_key",
+          "refs": [
+            {
+              "source": "s",
+              "binding": null,
+              "table": "demo/spells/s",
+              "variable": "demo/spells/id",
+              "period": {
+                "start": "2018-01-01",
+                "end": "2019-01-01"
+              },
+              "spelling": "Id"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": []
+}

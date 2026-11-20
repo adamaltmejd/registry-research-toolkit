@@ -839,6 +839,12 @@ pub(super) fn write(
                     "holdings_period_column_invalid: column and encoding must be paired".into(),
                 );
             }
+            if authored.period_end_column.is_some()
+                && (authored.period_column.is_none()
+                    || authored.period_end_column == authored.period_column)
+            {
+                return Err("holdings_period_column_invalid: a spell end column needs a distinct start column".into());
+            }
             authored_schema(authored, &table)?;
             let file_name = reg_resolve::slugify(&match &table.schema {
                 Some(schema) => format!("{schema}_{}", table.name),
@@ -893,6 +899,7 @@ pub(super) fn write(
                 }
             }
             let mut period_column = None;
+            let mut period_end_column = None;
             for column in &table.columns {
                 let result = (|| -> Result<()> {
                     count_columns += 1;
@@ -958,6 +965,9 @@ pub(super) fn write(
                     {
                         period_column = Some(cid);
                     }
+                    if authored.period_end_column.as_ref() == Some(&column.name) {
+                        period_end_column = Some(cid);
+                    }
                     let owed = column_periods(decision, &spans)?;
                     for mapping in decision.into_iter().flat_map(|c| &c.mapping) {
                         if let Some(reason) = &mapping.hold {
@@ -1015,14 +1025,16 @@ pub(super) fn write(
                 })();
                 result.map_err(|error| format!("column={}: {error}", column.ordinal))?;
             }
-            if authored.period_column.is_some() && period_column.is_none() {
+            if authored.period_column.is_some() && period_column.is_none()
+                || authored.period_end_column.is_some() && period_end_column.is_none()
+            {
                 return Err(
                     "holdings_period_column_invalid: declared row-period column is absent".into(),
                 );
             }
             tx.execute(
-                "UPDATE holding_table SET period_column_id=?,period_encoding=? WHERE id=?",
-                params![period_column, authored.period_encoding, id],
+                "UPDATE holding_table SET period_column_id=?,period_end_column_id=?,period_encoding=? WHERE id=?",
+                params![period_column, period_end_column, authored.period_encoding, id],
             )?;
             Ok(())
         })();

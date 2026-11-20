@@ -1055,10 +1055,14 @@ export interface components {
             /** @description The register's fqid. */
             register: string;
         };
-        /** @description Keep a row whose period value lies in any range. */
+        /**
+         * @description Keep a row whose period value lies in any range; with `end_column`, a row whose
+         *     spell from `column` to `end_column` overlaps any range (a NULL end is open).
+         */
         RowFilter: {
             column: string;
             encoding: components["schemas"]["Encoding"];
+            end_column?: string | null;
             /** @description Sorted and disjoint. */
             ranges: components["schemas"]["RowFilterRange"][];
         };

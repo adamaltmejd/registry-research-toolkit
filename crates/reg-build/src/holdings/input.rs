@@ -80,6 +80,8 @@ pub(super) struct Table {
     pub projection_of: Option<String>,
     pub projection_token: Option<String>,
     pub period_column: Option<String>,
+    /// A spell table's end column; `period_column` is then the spell start.
+    pub period_end_column: Option<String>,
     pub period_encoding: Option<String>,
     #[serde(default)]
     pub column: Vec<Column>,

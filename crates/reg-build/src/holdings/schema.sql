@@ -35,6 +35,9 @@ CREATE TABLE holding_table (
  projection_token TEXT,
  period_column_id INTEGER REFERENCES holding_column(id),
  period_encoding TEXT CHECK(period_encoding IN ('date','year','yyyymm','yyyymmdd')),
+ -- A spell table's end column: period_column_id is then the spell start (crates/DESIGN.md,
+ -- "Spell tables", under "MONA order file").
+ period_end_column_id INTEGER REFERENCES holding_column(id),
  reason TEXT,
  CHECK((disposition = 'dated') = (delivery IS NOT NULL)),
  CHECK(release IS NULL OR disposition = 'dated'),
@@ -42,6 +45,7 @@ CREATE TABLE holding_table (
  CHECK(partition IS NULL OR projection_of IS NULL),
  CHECK((projection_of IS NULL) = (projection_token IS NULL)),
  CHECK((period_column_id IS NULL) = (period_encoding IS NULL)),
+ CHECK(period_end_column_id IS NULL OR period_column_id IS NOT NULL),
  -- A schema-keyed steward may hold one name in two schemas; the reader refuses a
  -- duplicate name (or schema and name), so a NULL schema needs no tighter key here.
  UNIQUE(schema_name, physical_name)

@@ -82,7 +82,7 @@ EXIT <- c(
   ok = 0L,
   setup = 2L, # steward configuration, export root, packages or database connection
   json = 3L, # the order is not JSON
-  version = 4L, # manifest version is not 4
+  version = 4L, # manifest version is not 5
   mode = 5L, # not a steward_holdings order for this steward
   manifest = 6L, # unknown field, missing or malformed field, unsafe file name
   # table or column not found in its schema, a column stored otherwise than the
@@ -280,8 +280,14 @@ check_iso_day <- function(x, where) {
 }
 
 check_filter <- function(f, where) {
-  check_object(f, where, c("column", "encoding", "ranges"))
+  check_object(f, where, c("column", "encoding", "ranges"), "end_column")
   check_name(f$column, paste0(where, ".column"))
+  if (!is.null(f$end_column)) {
+    check_name(f$end_column, paste0(where, ".end_column"))
+    if (identical(f$end_column, f$column)) {
+      refuse("manifest", where, ".end_column is its start column")
+    }
+  }
   check_enum(f$encoding, paste0(where, ".encoding"), ENCODINGS)
   if (!is_array(f$ranges) || !length(f$ranges)) {
     refuse("manifest", where, ".ranges is not a non-empty array")
@@ -431,12 +437,12 @@ check_manifest <- function(doc) {
     refuse("manifest", "the order is not a JSON object")
   }
   v <- doc$version
-  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 4)) {
+  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 5)) {
     refuse(
       "version",
       "manifest version ",
       format(v),
-      " is not supported; this runner reads version 4"
+      " is not supported; this runner reads version 5"
     )
   }
   p <- doc$provenance
@@ -526,7 +532,12 @@ describe_filter <- function(f) {
     },
     ""
   )
-  paste0(f$column, " (", f$encoding, "): ", paste(ranges, collapse = " OR "))
+  column <- if (is.null(f$end_column)) {
+    f$column
+  } else {
+    paste0(f$column, "..", f$end_column, " overlapping")
+  }
+  paste0(column, " (", f$encoding, "): ", paste(ranges, collapse = " OR "))
 }
 
 # ---- SQL --------------------------------------------------------------------------
@@ -867,79 +878,51 @@ bound <- function(day, encoding) {
   as.integer(substr(digits, 1L, width))
 }
 
-# One batch per file: the SELECT is assembled server-side from QUOTENAME()d
-# identifiers and run by sp_executesql with the filter bounds as parameters,
-# bound from R.
-select_batch <- function(file, types) {
-  quoted <- function(name) paste0("QUOTENAME(", sql_text(name), ")")
-  # A template's fixed text as N'...' literals around the quoted column at each
-  # @col; the templates are this script's constants, never manifest text.
-  splice <- function(template, col) {
-    parts <- strsplit(paste0(template, " "), "@col", fixed = TRUE)[[1]]
-    parts[length(parts)] <- sub(" $", "", parts[length(parts)])
-    paste(paste0("N'", parts, "'"), collapse = paste0(" + ", col, " + "))
-  }
-  selected <- vapply(
-    seq_along(file$columns),
-    function(j) {
-      splice(
-        select_expr(types$type[j], types$max_length[j]),
-        quoted(file$columns[j])
-      )
-    },
-    ""
-  )
-  filter_type <- types$type[length(types$type)]
-  select <- paste0(
-    "N'SELECT ' + ",
-    paste(selected, collapse = " + N', ' + "),
-    " + N' FROM ' + ",
-    quoted(file$schema),
-    " + N'.' + ",
-    quoted(file$table)
-  )
-  declared <- character()
-  params <- list()
+# A name as a T-SQL expression quoting it as an identifier.
+sql_quoted <- function(name) paste0("QUOTENAME(", sql_text(name), ")")
+
+# A template's fixed text as N'...' literals around the quoted column at each
+# @col; the templates are this script's constants, never manifest text.
+sql_splice <- function(template, col) {
+  parts <- strsplit(paste0(template, " "), "@col", fixed = TRUE)[[1]]
+  parts[length(parts)] <- sub(" $", "", parts[length(parts)])
+  paste(paste0("N'", parts, "'"), collapse = paste0(" + ", col, " + "))
+}
+
+# The filter's period values as T-SQL text: `start` (the period column, or a
+# spell's start), and for a spell `end` and `end_raw`, the end column as stored,
+# whose NULL is an open spell. The filter columns follow the file's columns in
+# `types` (extract_order resolves them there).
+# simplify: only NULL is open (a high sentinel end passes anyway); a blank or
+# low-sentinel open end fails a `from` bound. Declare a sentinel once a steward
+# table needs one.
+filter_keys <- function(file, types) {
   f <- file$filter
-  if (!is.null(f)) {
-    key <- period_key(f$encoding, filter_type, file$table, f$column)
-    key_sql <- splice(key$expr, quoted(f$column))
-    terms <- character()
-    for (r in f$ranges) {
-      parts <- character()
-      for (side in c("from", "to")) {
-        if (is.null(r[[side]])) {
-          next
-        }
-        name <- sprintf("@p%d", length(params) + 1L)
-        params[[length(params) + 1L]] <- bound(r[[side]], f$encoding)
-        declared <- c(declared, paste(name, key$type))
-        parts <- c(
-          parts,
-          paste0(
-            key_sql,
-            " + N' ",
-            if (side == "from") ">=" else "<=",
-            " ",
-            name,
-            "'"
-          )
-        )
-      }
-      if (!length(parts)) {
-        parts <- paste0(key_sql, " + N' IS NOT NULL'")
-      }
-      terms <- c(
-        terms,
-        paste0("N'(' + ", paste(parts, collapse = " + N' AND ' + "), " + N')'")
-      )
-    }
-    select <- paste0(
-      select,
-      " + N' WHERE ' + ",
-      paste(terms, collapse = " + N' OR ' + ")
-    )
+  n <- length(file$columns)
+  key <- period_key(f$encoding, types$type[n + 1L], file$table, f$column)
+  keys <- list(
+    type = key$type,
+    start = sql_splice(key$expr, sql_quoted(f$column))
+  )
+  if (!is.null(f$end_column)) {
+    end <- period_key(f$encoding, types$type[n + 2L], file$table, f$end_column)
+    keys$end <- sql_splice(end$expr, sql_quoted(f$end_column))
+    keys$end_raw <- sql_quoted(f$end_column)
   }
+  keys
+}
+
+sql_from <- function(file) {
+  paste0(
+    " + N' FROM ' + ",
+    sql_quoted(file$schema),
+    " + N'.' + ",
+    sql_quoted(file$table)
+  )
+}
+
+# `select` run by sp_executesql with `declared` parameters bound from R.
+sql_batch <- function(select, declared, params) {
   exec <- if (length(params)) {
     paste0(
       "EXEC sp_executesql @sql, N'",
@@ -959,6 +942,97 @@ select_batch <- function(file, types) {
       exec
     ),
     params = params
+  )
+}
+
+# One batch per file: the SELECT is assembled server-side from QUOTENAME()d
+# identifiers and run by sp_executesql with the filter bounds as parameters,
+# bound from R. A plain filter keeps a row whose period value lies in a range; a
+# spell filter keeps a row whose spell overlaps one: start on or before the
+# range's end, and an end that is NULL (open) or on or after its start. A NULL or
+# unreadable period value (a spell's start) passes no range.
+select_batch <- function(file, types) {
+  selected <- vapply(
+    seq_along(file$columns),
+    function(j) {
+      sql_splice(
+        select_expr(types$type[j], types$max_length[j]),
+        sql_quoted(file$columns[j])
+      )
+    },
+    ""
+  )
+  select <- paste0(
+    "N'SELECT ' + ",
+    paste(selected, collapse = " + N', ' + "),
+    sql_from(file)
+  )
+  declared <- character()
+  params <- list()
+  f <- file$filter
+  if (!is.null(f)) {
+    keys <- filter_keys(file, types)
+    terms <- character()
+    for (r in f$ranges) {
+      parts <- character()
+      for (side in c("from", "to")) {
+        if (is.null(r[[side]])) {
+          next
+        }
+        name <- sprintf("@p%d", length(params) + 1L)
+        params[[length(params) + 1L]] <- bound(r[[side]], f$encoding)
+        declared <- c(declared, paste(name, keys$type))
+        parts <- c(
+          parts,
+          if (side == "to") {
+            paste0(keys$start, " + N' <= ", name, "'")
+          } else if (is.null(keys$end)) {
+            paste0(keys$start, " + N' >= ", name, "'")
+          } else {
+            paste0(
+              "N'(' + ",
+              keys$end_raw,
+              " + N' IS NULL OR ' + ",
+              keys$end,
+              " + N' >= ",
+              name,
+              ")'"
+            )
+          }
+        )
+      }
+      # Without an upper bound nothing else tests the start for NULL.
+      if (is.null(r$to) && (!is.null(keys$end) || !length(parts))) {
+        parts <- c(parts, paste0(keys$start, " + N' IS NOT NULL'"))
+      }
+      terms <- c(
+        terms,
+        paste0("N'(' + ", paste(parts, collapse = " + N' AND ' + "), " + N')'")
+      )
+    }
+    select <- paste0(
+      select,
+      " + N' WHERE ' + ",
+      paste(terms, collapse = " + N' OR ' + ")
+    )
+  }
+  sql_batch(select, declared, params)
+}
+
+# The count of a filtered file's rows that pass no range for a NULL or
+# unreadable period value (a spell's start): an aggregate the run log reports.
+null_period_batch <- function(file, types) {
+  keys <- filter_keys(file, types)
+  sql_batch(
+    paste0(
+      "N'SELECT CAST(COUNT_BIG(*) AS float) AS n'",
+      sql_from(file),
+      " + N' WHERE ' + ",
+      keys$start,
+      " + N' IS NULL'"
+    ),
+    character(),
+    list()
   )
 }
 
@@ -1322,21 +1396,16 @@ extract_order <- function(path, out, db) {
   # column fails fast.
   resolved <- lapply(files, function(f) {
     resolve_table(con, f$schema, f$table)
-    # The filter column last, so select_batch finds its type there.
+    # The filter columns after the file's, where filter_keys finds their types.
     types <- resolve_columns(
       con,
       f$schema,
       f$table,
-      c(f$columns, f$filter$column)
+      c(f$columns, f$filter$column, f$filter$end_column)
     )
     check_storage(f, types)
     if (!is.null(f$filter)) {
-      period_key(
-        f$filter$encoding,
-        types$type[length(types$type)],
-        f$table,
-        f$filter$column
-      )
+      filter_keys(f, types)
     }
     check_format(f, types, format)
     types
@@ -1345,17 +1414,39 @@ extract_order <- function(path, out, db) {
     file = character(),
     rows = numeric(),
     columns = integer(),
-    filter = character()
+    filter = character(),
+    rows_without_period = numeric()
   )
   for (i in order(vapply(files, `[[`, "", "name"), method = "radix")) {
     f <- files[[i]]
     rows <- extract_file(con, f, resolved[[i]], format, out)
     say("  ", f$name, ": ", format(rows, scientific = FALSE), " rows")
+    # Rows a filter leaves out for a NULL period value, counted so the order's
+    # requester learns of them (an aggregate; NA for an unfiltered file).
+    dropped <- if (is.null(f$filter)) {
+      NA_real_
+    } else {
+      as.numeric(query(
+        con,
+        null_period_batch(f, resolved[[i]])$sql,
+        paste0("counting ", f$name, "'s rows without a period value")
+      )$n)
+    }
+    if (!is.na(dropped) && dropped > 0) {
+      say(
+        "  ",
+        f$name,
+        ": ",
+        format(dropped, scientific = FALSE),
+        " rows left out for a missing period value"
+      )
+    }
     log[nrow(log) + 1L, ] <- list(
       f$name,
       rows,
       length(f$columns),
-      describe_filter(f$filter)
+      describe_filter(f$filter),
+      dropped
     )
   }
   write_csv(log, file.path(out, "run_log.csv"))

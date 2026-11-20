@@ -3797,7 +3797,7 @@
       },
       "RowFilter": {
         "type": "object",
-        "description": "Keep a row whose period value lies in any range.",
+        "description": "Keep a row whose period value lies in any range; with `end_column`, a row whose\nspell from `column` to `end_column` overlaps any range (a NULL end is open).",
         "required": [
           "column",
           "encoding",
@@ -3809,6 +3809,12 @@
           },
           "encoding": {
             "$ref": "#/components/schemas/Encoding"
+          },
+          "end_column": {
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "ranges": {
             "type": "array",

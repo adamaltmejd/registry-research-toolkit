@@ -2277,7 +2277,7 @@ Placement, contested cells, column windows and the logical order's row keys read
 the chosen space's tables (the steward row-key cache is keyed by table and space), so
 every file of an order comes from one database and `row_keys` names the key it carries.
 Each file's `schema` already names it through the steward config, so the order file
-stays version 4 with no new field: the MONA runner refuses unknown fields, and a
+needs no new field: the MONA runner refuses unknown fields, and a
 single-space steward's orders change only in `project_hash`.
 
 There is no cross-database order: no option, flag or key-file field. A researcher who
@@ -2382,7 +2382,7 @@ catalog's half-open day convention:
 
   | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
   | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, optional `release` (the catalog name of the primary release the file is), `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
+  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, optional `release` (the catalog name of the primary release the file is), `partition`, optional `projection_of` and `projection_token`, optional `period_column_id`, `period_end_column_id` (a spell table, "Spell tables") and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
   | `holding_route`   | `holding_id`, public `table_pid`: the table's default logical routes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
   | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                   |
   | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot family/kind/index as topology evidence, `disposition` (`candidate`, `hold`, `unmap`) with its reason and follow-up issue. Includes every exported column, even when it maps to nothing.                                                                                                                                                                                                                                                                    |
@@ -2691,8 +2691,25 @@ widen to the encoded grain and are reported. `row_filter = {column, encoding, ra
 keeps sorted disjoint ranges joined with OR; each range has optional inclusive
 `from`/`to` bounds. Omit a bound when it cuts no held day. Preserve interrupted and
 open-ended ranges (`row-filter-disjoint`, `row-filter-open-ended` runner cases).
-NULL/unparseable period values do not pass a filter. Unfilterable pooled holdings report
-that all rows are included; they do not pretend that selecting columns restricts rows.
+NULL/unparseable period values do not pass a filter; `run_log.csv` counts the rows a
+filtered file leaves out for one (`rows_without_period`), and the order carries no
+finding for them (#2608).
+
+**Spell tables (#2608).** A table whose rows are spells from a start date to an end date
+declares `period_column` (the start) and `period_end_column` (the end), sharing one
+`period_encoding` (`holding_table.period_end_column_id`). Its filter adds `end_column`
+and keeps a row whose spell overlaps a range: start on or before the range's `to` and
+an end that is NULL (an open spell) or on or after its `from`. An omitted bound drops
+that test, so a filter whose ranges reach the delivery's first held day keeps every
+spell that started by the range's end. A spell's NULL or unreadable start passes no
+range and is counted like a NULL period value. A row key with `period_key = "column"`
+reads its time from the start. A high sentinel end (`9999-12-31`, `99991231`) already
+passes as open; there is no sentinel declaration (simplify: a blank or low-sentinel
+open end is dropped; declare a sentinel when a steward table needs one).
+
+
+Unfilterable pooled holdings report that all rows are included; they do not pretend
+that selecting columns restricts rows.
 
 The manifest always specifies its format, the project's; neither the server nor the
 runner supplies a default. Preserve Stata aliases, exact large-number handling,
