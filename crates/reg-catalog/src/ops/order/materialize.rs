@@ -400,6 +400,9 @@ fn build(
     physical.sort_by(|a, b| (&a.path, a.key()).cmp(&(&b.path, b.key())));
     let mut all: Vec<Issue> = Vec::new();
     for finding in &order.findings {
+        if absent_unheld(server, &project.sources, &clips, &finding.issue) {
+            continue;
+        }
         if !held_as_stated(server, held, project, space, &finding.issue)? {
             all.push(finding.issue.clone());
         }
@@ -416,6 +419,38 @@ fn build(
         clips,
         findings: all,
     }))
+}
+
+/// A logical `variable_absent_from_files` in a year its binding's clip removes whole: the
+/// logical check names files missing inside a year the catalog delivers in part, and the
+/// steward holds none of that year (#2603).
+fn absent_unheld(
+    server: &Server,
+    sources: &[reg_core::project::Source],
+    clips: &[Clip],
+    f: &Issue,
+) -> bool {
+    let Some(period) = f
+        .period
+        .as_ref()
+        .filter(|_| f.code == "variable_absent_from_files")
+    else {
+        return false;
+    };
+    clips.iter().any(|c| {
+        sources
+            .iter()
+            .position(|s| s.name() == c.source)
+            .is_some_and(|s| f.path == format!("/sources/{s}/bindings/{}", c.binding))
+            && overlap(
+                &[period.days(server.open)],
+                &c.ordered
+                    .iter()
+                    .map(|p| p.days(server.open))
+                    .collect::<Vec<_>>(),
+            )
+            .is_empty()
+    })
 }
 
 /// Whether `issue` is a `binding_type_differs` whose binding's type override is of the
@@ -990,7 +1025,7 @@ fn clip(
                 .then(|| f.period.as_ref().map(|p| p.days(open)))
                 .flatten()
             else {
-                kept.extend((!absent_unheld(&f, &path, &held, open)).then_some(f));
+                kept.push(f);
                 continue;
             };
             let release = lane_gaps.iter().find(|(g, _)| *g == f).map(|(_, r)| r);
@@ -1047,17 +1082,6 @@ fn clip(
         }
     }
     clips
-}
-
-/// A `variable_absent_from_files` of the binding at `path` in a year the steward holds
-/// none of: the logical check names files missing inside a year it delivers in part, and
-/// that year is this stage's clip (#2603).
-fn absent_unheld(f: &Issue, path: &str, held: &[Days], open: Days) -> bool {
-    f.path == path
-        && f.code == "variable_absent_from_files"
-        && f.period
-            .as_ref()
-            .is_some_and(|p| overlap(&[p.days(open)], held).is_empty())
 }
 
 /// Add each declared key of the holding over the days the file extracts: the key column joins

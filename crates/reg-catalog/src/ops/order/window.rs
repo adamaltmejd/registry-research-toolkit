@@ -916,41 +916,20 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
         .collect())
 }
 
-/// The variables a `continues` edge links to `pid` either way, base or held, each with its
-/// id as `segments` keys it (a variable only the holdings database defines by its negated
-/// held id).
+/// The variables a `continues` edge links to `pid` either way, with their ids (reference
+/// catalog only: [`covering`] names none on a steward's server).
 fn linked(scope: &Scope, pid: &str) -> Result<Vec<(i64, String)>, Error> {
-    let edge = |origin: &str| {
-        format!(
-            "SELECT CASE WHEN s.pid = ?1 THEN o.pid ELSE s.pid END
-             FROM {origin}relation r JOIN {origin}variable s ON s.id = r.subject_id
-               JOIN {origin}variable o ON o.id = r.object_id
-             WHERE r.kind = 'continues' AND r.subject_kind = 'variable'
-               AND r.object_kind = 'variable' AND (s.pid = ?1 OR o.pid = ?1)"
-        )
-    };
-    let mut linked: Vec<String> = rows(scope.conn, &edge(""), [pid], |row| row.get(0))?;
-    if scope.composed {
-        linked.extend(rows(scope.conn, &edge("held."), [pid], |row| row.get(0))?);
-    }
-    let linked_json = serde_json::to_string(&linked).expect("strings serialize");
-    let mut linked_ids: Vec<(i64, String)> = rows(
+    Ok(rows(
         scope.conn,
-        "SELECT id, pid FROM main.variable WHERE pid IN (SELECT value FROM json_each(?1))",
-        [&linked_json],
+        "SELECT CASE WHEN s.pid = ?1 THEN o.id ELSE s.id END,
+                CASE WHEN s.pid = ?1 THEN o.pid ELSE s.pid END
+         FROM main.relation r JOIN main.variable s ON s.id = r.subject_id
+           JOIN main.variable o ON o.id = r.object_id
+         WHERE r.kind = 'continues' AND r.subject_kind = 'variable'
+           AND r.object_kind = 'variable' AND (s.pid = ?1 OR o.pid = ?1)",
+        [pid],
         |row| Ok((row.get(0)?, row.get(1)?)),
-    )?;
-    if scope.composed {
-        linked_ids.extend(rows(
-            scope.conn,
-            "SELECT -hv.id, hv.pid FROM held.variable hv
-             WHERE hv.pid IN (SELECT value FROM json_each(?1))
-               AND NOT EXISTS (SELECT 1 FROM main.variable bv WHERE bv.pid = hv.pid)",
-            [&linked_json],
-            |row| Ok((row.get(0)?, row.get(1)?)),
-        )?);
-    }
-    Ok(linked_ids)
+    )?)
 }
 
 /// The variables that have data in a serving table on clipped `days` and that the catalog
@@ -974,22 +953,11 @@ fn covering(
         "SELECT DISTINCT exact FROM ({}) WHERE variable_id = ?1 AND table_id = ?2",
         segments(scope)
     );
-    // Same-column candidates by folded name through `segment_fold`, base or held.
-    let mut same_sql = "SELECT DISTINCT s.variable_id, v.pid FROM main.name_fold f
+    // Same-column candidates by folded name through `segment_fold`.
+    let same_sql = "SELECT DISTINCT s.variable_id, v.pid FROM main.name_fold f
            JOIN main.segment s ON s.fold_id = f.id
            JOIN main.variable v ON v.id = s.variable_id
-         WHERE f.folded IN (SELECT value FROM json_each(?1)) AND s.table_id = ?2"
-        .to_owned();
-    if scope.composed {
-        same_sql.push_str(
-            " UNION SELECT COALESCE(bv.id, -hv.id), hv.pid FROM held.name_fold f
-               JOIN held.segment s ON s.fold_id = f.id
-               JOIN held.tbl ht ON ht.id = s.table_id JOIN main.tbl bt ON bt.pid = ht.pid
-               JOIN held.variable hv ON hv.id = s.variable_id
-               LEFT JOIN main.variable bv ON bv.pid = hv.pid
-             WHERE f.folded IN (SELECT value FROM json_each(?1)) AND bt.id = ?2",
-        );
-    }
+         WHERE f.folded IN (SELECT value FROM json_each(?1)) AND s.table_id = ?2";
     let mut found = Vec::new();
     for (k, s) in scope.serving.iter().enumerate() {
         let here = overlap(&s.requested, std::slice::from_ref(days));
@@ -1009,7 +977,7 @@ fn covering(
         folds.dedup();
         let mut candidates: Vec<(i64, String)> = rows(
             scope.conn,
-            &same_sql,
+            same_sql,
             rusqlite::params![
                 serde_json::to_string(&folds).expect("strings serialize"),
                 s.table.id
@@ -1115,11 +1083,9 @@ fn entries(
     // By boundary day, each once: two releases' time lines share their unshared days.
     let mut changes: Vec<(&String, String)> = Vec::new();
     for line in &timelines {
-        let mut typed_before = false;
         for pair in line.windows(2) {
-            typed_before |= pair[0].last.dtype.is_some();
             let from = &pair[1].days.0;
-            if let Some(text) = changed(pair[0].last, pair[1].last, from, typed_before) {
+            if let Some(text) = changed(pair[0].last, pair[1].last, from) {
                 changes.push((from, text));
             }
         }
@@ -1173,14 +1139,13 @@ fn entries(
     (entries, change)
 }
 
-/// What changes between two adjacent forms from day `from`, in plain sentences (column
+/// What changes between two adjacent forms from day `from`, as a plain sentence (column
 /// name, type, codes), or `None` when spelling, type and value set agree. A type stated
-/// on one side only reads as stated or no longer stated (#2603); `typed_before` says
-/// whether an earlier form of the time line stated one.
-fn changed(before: &Piece, after: &Piece, from: &str, typed_before: bool) -> Option<String> {
+/// on one side only reads as stated or not stated from that day, which needs no
+/// knowledge of years outside the request (#2603).
+fn changed(before: &Piece, after: &Piece, from: &str) -> Option<String> {
     let when = words::plain_start(from);
     let mut what = Vec::new();
-    let mut stated = None;
     if before.spelling != after.spelling {
         what.push(format!(
             "the column name changes from {} to {}",
@@ -1189,28 +1154,14 @@ fn changed(before: &Piece, after: &Piece, from: &str, typed_before: bool) -> Opt
     }
     match (&before.dtype, &after.dtype) {
         (Some(a), Some(b)) if a != b => what.push(format!("the type changes from {a} to {b}")),
-        (Some(_), None) => what.push("the type is no longer stated".to_owned()),
-        (None, Some(b)) => {
-            // `when` is a year or month unless the form starts mid-month.
-            let at = if from.ends_with("-01") { "in" } else { "on" };
-            let first = if typed_before {
-                "stated again"
-            } else {
-                "first stated"
-            };
-            stated = Some(format!("The type is {first} {at} {when} ({b})."));
-        }
+        (Some(_), None) => what.push("the type is not stated".to_owned()),
+        (None, Some(b)) => what.push(format!("the type is stated ({b})")),
         _ => {}
     }
     if before.valueset != after.valueset {
         what.push("the codes change".to_owned());
     }
-    let mut sentences: Vec<String> = Vec::new();
-    if !what.is_empty() {
-        sentences.push(format!("From {when}, {}.", what.join(", ")));
-    }
-    sentences.extend(stated);
-    (!sentences.is_empty()).then(|| sentences.join(" "))
+    (!what.is_empty()).then(|| format!("From {when}, {}.", what.join(", ")))
 }
 
 /// The result periods of inclusive ISO intervals.

@@ -1420,9 +1420,8 @@ the order check's to state in its own tests; the rules that shape them:
   `preliminary_data`, a warning.
 - `form_change` names what changes at each boundary in plain words: the column name, the
   type, or the codes (a different value set). A type stated on one side only reads
-  as stated, not as a change from "not stated": "The type is first stated in 2016 (text).", or
-  "stated again" after an earlier stated form, and "From 2019, the type is no longer
-  stated." (#2603).
+  as stated or not stated from that day, not as a change from "not stated": "From 2016,
+  the type is stated (text).", "From 2019, the type is not stated." (#2603).
 - Variables are register-scoped, so members of different registers never share a row-key
   variable. Which keys join is the researcher's call; the catalog stores no identifier
   kind, so the order check does not compare panel members' keys.
