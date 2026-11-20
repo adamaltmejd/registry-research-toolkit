@@ -379,7 +379,7 @@ fn materialize(
                 scope.table,
                 span(scope.server, days)
             );
-            for (other, table, has) in covering(&at, days)? {
+            for (other, table, has) in covering(&at, days, &lanes)? {
                 let has = words::plain(&periods(scope.server, &has));
                 write!(message, " {other} has data in {table} for {has}.").expect("a String write");
             }
@@ -897,7 +897,11 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
 /// links to this one: a `continues` edge either way, or the same delivered column (by
 /// folded name) in that table. Each with the table and the days it has there, so a
 /// `period_clipped` can name it (#2603). Nothing is guessed from similar names.
-fn covering(at: &Located, days: &Interval) -> Result<Vec<(String, String, Vec<Interval>)>, Error> {
+fn covering(
+    at: &Located,
+    days: &Interval,
+    lanes: &[(String, Interval)],
+) -> Result<Vec<(String, String, Vec<Interval>)>, Error> {
     let scope = at.scope;
     let pid = &at.variable.pid;
     let edge = |origin: &str| {
@@ -919,7 +923,7 @@ fn covering(at: &Located, days: &Interval) -> Result<Vec<(String, String, Vec<In
         segments(scope)
     );
     let sql = format!(
-        "SELECT pid, start, end, fold FROM ({}) WHERE table_id = ?2 AND variable_id <> ?1
+        "SELECT pid, start, end, fold, release FROM ({}) WHERE table_id = ?2 AND variable_id <> ?1
            AND state <> 'ambiguous' AND start < ?4 AND end > ?3
          ORDER BY pid, start",
         segments(scope)
@@ -936,7 +940,7 @@ fn covering(at: &Located, days: &Interval) -> Result<Vec<(String, String, Vec<In
             rusqlite::params![at.variable.id, s.table.id],
             |row| row.get(0),
         )?;
-        let candidates: Vec<(String, i64, i64, String)> = rows(
+        let candidates: Vec<(String, i64, i64, String, Option<String>)> = rows(
             scope.conn,
             &sql,
             rusqlite::params![
@@ -945,14 +949,26 @@ fn covering(at: &Located, days: &Interval) -> Result<Vec<(String, String, Vec<In
                 super::day(&hull.0),
                 super::day(&hull.1) + 1
             ],
-            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
+            |row| {
+                Ok((
+                    row.get(0)?,
+                    row.get(1)?,
+                    row.get(2)?,
+                    row.get(3)?,
+                    row.get(4)?,
+                ))
+            },
         )?;
         let mut by: Vec<(String, Vec<Interval>)> = Vec::new();
-        for (other, start, end, fold) in candidates {
+        for (other, start, end, fold, release) in candidates {
             if !folds.contains(&fold) && !linked.contains(&other) {
                 continue;
             }
-            let has = overlap(&here, &[interval(start, end)]);
+            let mut has = overlap(&here, &[interval(start, end)]);
+            // A release's own segment serves only the shared days the source selects it on.
+            if let Some(release) = &release {
+                has = gaps(&has, not_selected(lanes, release));
+            }
             if has.is_empty() {
                 continue;
             }
@@ -968,11 +984,23 @@ fn covering(at: &Located, days: &Interval) -> Result<Vec<(String, String, Vec<In
     Ok(found)
 }
 
+/// The shared days the source selects other releases on and not `release` (half-open
+/// gaps of [`served`]'s lanes): days where `release`'s own segments are not read.
+fn not_selected(lanes: &[(String, Interval)], release: &str) -> Vec<Interval> {
+    let (own, other): (Vec<_>, Vec<_>) = lanes.iter().partition(|(name, _)| name == release);
+    gaps(
+        &merge(other.into_iter().map(|(_, d)| d.clone()).collect()),
+        own.into_iter().map(|(_, d)| d.clone()).collect(),
+    )
+}
+
 /// `variable_absent_from_files`: the primary releases (the delivered files) of a serving
-/// table that the variable has no data in at all, on requested days no `period_clipped`
-/// reports: a gap inside a requested year the binding delivers on some day (#2389) that
-/// whole files make. One info per table and year, naming the files' periods (#2603). A gap
-/// inside a file, or with no file, still gives nothing.
+/// table that the variable has no segment in, neither its own nor a releaseless one, on
+/// requested days the source reads that file and no other finding reports: a gap inside
+/// a requested year the binding delivers on some day (#2389) that whole files make. One
+/// info per table and requested year, naming the files' periods; a file crossing a year
+/// boundary counts in each year it misses (#2603). A gap inside a file, or with no file,
+/// still gives nothing.
 fn absent_from_files(
     at: &Located,
     wanted: &[Interval],
@@ -984,53 +1012,60 @@ fn absent_from_files(
     if ordered.is_empty() {
         return Ok(Vec::new());
     }
-    let base = "SELECT start, end FROM main.release
-                WHERE table_id = ?1 AND is_primary = 1 AND start IS NOT NULL";
+    let base = "SELECT r.start AS start, r.end AS end, n.body AS name FROM main.release r
+                JOIN main.text n ON n.id = r.name_text
+                WHERE r.table_id = ?1 AND r.is_primary = 1 AND r.start IS NOT NULL";
     let sql = if scope.composed {
         format!(
-            "SELECT DISTINCT start, end FROM ({base} UNION ALL
-               SELECT r.start, r.end FROM held.release r JOIN held.tbl ht ON ht.id = r.table_id
-                 JOIN main.tbl bt ON bt.pid = ht.pid
+            "SELECT DISTINCT start, end, name FROM ({base} UNION ALL
+               SELECT r.start, r.end, n.body FROM held.release r
+                 JOIN held.text n ON n.id = r.name_text
+                 JOIN held.tbl ht ON ht.id = r.table_id JOIN main.tbl bt ON bt.pid = ht.pid
                WHERE bt.id = ?1 AND r.is_primary = 1 AND r.start IS NOT NULL)
-             ORDER BY start, end"
+             ORDER BY start, end, name"
         )
     } else {
-        format!("SELECT DISTINCT start, end FROM ({base}) ORDER BY start, end")
+        format!("SELECT DISTINCT start, end, name FROM ({base}) ORDER BY start, end, name")
     };
     let holds = format!(
         "SELECT EXISTS (SELECT 1 FROM ({}) WHERE variable_id = ?1 AND table_id = ?2
-           AND start < ?4 AND end > ?3)",
+           AND start < ?4 AND end > ?3 AND (release IS NULL OR release = ?5))",
         segments(scope)
     );
-    // Days ordered (from any serving table) or already reported, and a named release's
-    // own (its `period_clipped` above).
-    let mut quiet: Vec<Interval> = removed.to_vec();
-    quiet.extend(ordered.iter().cloned());
-    quiet.extend(lanes.iter().map(|(_, d)| d.clone()));
-    let quiet = merge(quiet);
+    // Days ordered (from any serving table; on a named release's own shared days its
+    // `period_clipped` above reports them) or reported as a clip.
+    let quiet = merge(removed.iter().chain(ordered).cloned().collect());
     let unit = super::Unit::of(&days(scope.requested));
     let mut by: std::collections::BTreeMap<(i32, usize), Vec<Interval>> =
         std::collections::BTreeMap::new();
     for (k, s) in scope.serving.iter().enumerate() {
-        let releases: Vec<(i64, i64)> = rows(scope.conn, &sql, [s.table.id], |row| {
-            Ok((row.get(0)?, row.get(1)?))
+        let releases: Vec<(i64, i64, String)> = rows(scope.conn, &sql, [s.table.id], |row| {
+            Ok((row.get(0)?, row.get(1)?, row.get(2)?))
         })?;
         let open = overlap(&s.requested, wanted);
-        for (start, end) in releases {
+        for (start, end, name) in releases {
             let file = interval(start, end);
-            let hit = gaps(&overlap(&open, std::slice::from_ref(&file)), quiet.clone());
-            let Some(first) = hit.first() else {
+            let mut away = quiet.clone();
+            away.extend(not_selected(lanes, &name));
+            let hit = gaps(&overlap(&open, std::slice::from_ref(&file)), away);
+            if hit.is_empty() {
                 continue;
-            };
+            }
             let held: bool = scope.conn.query_row(
                 &holds,
-                rusqlite::params![at.variable.id, s.table.id, start, end],
+                rusqlite::params![at.variable.id, s.table.id, start, end, name],
                 |row| row.get(0),
             )?;
-            if !held {
-                by.entry((unit.year(super::day(&first.0)), k))
-                    .or_default()
-                    .push(file);
+            if held {
+                continue;
+            }
+            for (lo, hi) in &hit {
+                for year in unit.year(super::day(lo))..=unit.year(super::day(hi)) {
+                    let files = by.entry((year, k)).or_default();
+                    if !files.contains(&file) {
+                        files.push(file.clone());
+                    }
+                }
             }
         }
     }

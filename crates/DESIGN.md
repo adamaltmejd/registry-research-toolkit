@@ -1439,16 +1439,19 @@ the order check's to state in its own tests; the rules that shape them:
   `requested` less the reported gaps, so `requested` less `ordered` names exactly the
   units the findings report (#2392; maintainer, PR #2389, 2026-11-10: the server fixes
   the gaps). One such gap is named, without changing the clip or the entries: where it
-  is whole delivered files (primary releases of a serving table the variable has no
-  segment in, such as three of four quarterly files), `variable_absent_from_files` is
-  one info per table and year naming those files' periods (COS ruling 2026-11-20,
-  #2603). A gap inside a file, or where no file is delivered, still gives nothing.
+  is whole delivered files (primary releases of a serving table, read on the days the
+  source selects them, that the variable has no segment in, such as three of four
+  quarterly files), `variable_absent_from_files` is one info per table and requested
+  year naming those files' periods; a file crossing a year boundary counts in each year
+  it misses (COS ruling 2026-11-20, #2603). A gap inside a file, or where no file is
+  delivered, still gives nothing.
 - A `period_clipped` names another variable that has data in a serving table on the
   clipped days when the catalog links the two: a `continues` edge either way, or the
   same delivered column (the folded column name) in that table. Each is named with the
-  days it has there, which may be only part of the clip. Nothing is guessed from similar
-  names (COS ruling 2026-11-20, #2603). A followed binding (`follow_successor`) rebuilds
-  its clips over the whole chain and names none.
+  days it has there (a release's own segment only on days the source selects that
+  release), which may be only part of the clip. Nothing is guessed from similar names
+  (COS ruling 2026-11-20, #2603). A followed binding (`follow_successor`) rebuilds its
+  clips over the whole chain and names none.
 - Finding messages write their days in plain words at their grain: `2019`, `2018 to
   2019`, school years as `2004/2005`, months for a part year (`July to December 2018`),
   else days; an open end as `2019 onwards` or `every year through 2019`, and "any
