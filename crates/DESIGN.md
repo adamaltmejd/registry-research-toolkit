@@ -1393,10 +1393,14 @@ the order check's to state in its own tests; the rules that shape them:
 - `variable_replaced` reports an incoming `continues` edge. By default it is a warning
   and the edge is not followed. Opt-in refusal can raise it to an error (below).
 - Design §9 blocks only the `ambiguous` window kind. A preliminary segment orders with a
-  warning (selecting an edition is deferred until curation), and a class-version
-  ambiguity the binding does not pin is a warning.
-- `classification_version_ambiguous` warns when an unpinned binding spans multiple
-  curated versions. `classification_incompatible` blocks at the binding's
+  warning (selecting an edition is deferred until curation), and two class versions on
+  one day that the binding does not pin are a warning.
+- `classification_version_ambiguous` warns when two served pieces of an unpinned binding
+  carry different class versions on the same day, one finding per run of such days, with
+  those days as its period. Versions that follow each other in time give no finding from
+  this check (maintainer ruling 2026-11-20, #2602: a pin there would drop the other
+  years): each entry names its version, and `form_change` reports the codes changing.
+  The message does not advise a pin. `classification_incompatible` blocks at the binding's
   `classification` field when the pinned version has no compatible curated windows. A
   pin preserves `ambiguous_window` refusals, including ambiguous segments that state no
   version; it cannot turn them into coverage clips.

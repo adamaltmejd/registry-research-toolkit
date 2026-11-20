@@ -93,15 +93,17 @@ the `catalog-search` skill.
    pipeline reads Parquet.
 7. Call `order` with `operation: "validate"` and the document as `project`. Fix every
    issue whose `level` is `error` and validate again until `ok` is true; report the
-   warnings to the user. A `classification_version_ambiguous` warning means the variable
-   carries several versions of a code list (municipality codes, say) over the period and
-   the catalog cannot tell which one the delivered codes follow. Pin one with the
-   binding's `classification`, a version id `class/<family>/<version>` (`show class`
-   lists the families and versions). A pin delivers only the years where the variable
-   carries that version and clips the rest (`period_clipped`); a version it has no codes
-   from over the period is a `classification_incompatible` error. To cover several
-   versions, split the source by period and pin each. Ignore the warning when the column
-   is only carried along, not used to join or recode across years.
+   warnings to the user. A variable whose code list (municipality codes, say) changes
+   version over the years gives no warning: each order entry names the version of its
+   years in `classification`, and a `form_change` info says when the codes change. A
+   `classification_version_ambiguous` warning means the variable carries two versions
+   on the same days, in the period the warning names (two releases of one table ordered
+   for a year they share); each entry still names its own version. The binding's
+   `classification`, a version id `class/<family>/<version>` (`show class` lists the
+   families and versions), keeps one version only: it delivers the years where the
+   variable carries that version and clips the rest (`period_clipped`), so do not pin to
+   silence a warning. A version the variable has no codes from over the period is a
+   `classification_incompatible` error.
 8. Save the file as `project_data.json` in the project folder.
 9. On a steward's catalog, `order` with `operation: "materialize_order"` returns the MONA
    order file the steward's extract runner reads: one file per table and delivery, its
