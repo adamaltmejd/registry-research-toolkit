@@ -43,6 +43,14 @@ project_dir <- function() {
 setwd(project_dir())
 say("project folder:", getwd())
 
+# ---- Prepare ----
+mock <- nzchar(Sys.getenv("REGMETA_MOCK"))
+mode <- if (mock) "mock" else "real"
+say("==== MODE:", toupper(mode), "====")
+if (mock && nzchar(DATA_DIR) && dir.exists(DATA_DIR)) {
+  stop("a mock run where the delivered data exists (", DATA_DIR, ")")
+}
+
 staging <- file.path(".regmeta", "staging")
 export <- file.path("output", "export")
 review <- file.path("output", "review")
@@ -54,19 +62,13 @@ dir.create(
 )
 dir.create("output", showWarnings = FALSE)
 # Nothing from an earlier run may look current, whatever fails below: this comes
-# before every check, and uses nothing the checks load.
+# before every other check. Only a mock run where the real data is has stopped
+# already, with the real run's output untouched.
 unlink(c(export, review, manifest), recursive = TRUE)
 if (any(file.exists(c(export, review, manifest)))) {
   stop("could not remove the previous run's output")
 }
 
-# ---- Prepare ----
-mock <- nzchar(Sys.getenv("REGMETA_MOCK"))
-mode <- if (mock) "mock" else "real"
-say("==== MODE:", toupper(mode), "====")
-if (mock && nzchar(DATA_DIR) && dir.exists(DATA_DIR)) {
-  stop("a mock run where the delivered data exists (", DATA_DIR, ")")
-}
 data_dir <- if (mock) file.path(".regmeta", "mock-data") else DATA_DIR
 if (!nzchar(data_dir) || !dir.exists(data_dir)) {
   stop(
@@ -168,40 +170,56 @@ export_gate(
 )
 
 # ---- After a pass: reading copies and the record of what ran. Neither leaves. ----
-dir.create(review)
-for (file in list.files(export, pattern = "\\.parquet$")) {
-  write.csv(
-    arrow::read_parquet(file.path(export, file)),
-    file.path(review, sub("\\.parquet$", ".csv", file)),
-    row.names = FALSE
-  )
-}
-# Sorted by bytes, so the id does not depend on the machine's locale.
-ran <- c("run.R", file.path("src", sort(list.files("src"), method = "radix")))
-hashes <- vapply(ran, file_hash, "")
-source_id <- substr(
-  sha256(charToRaw(paste0(ran, ":", hashes, collapse = "\n"))),
-  1,
-  8
-)
-keys <- Sys.getenv("REGMETA_KEYS")
-jsonlite::write_json(
-  list(
-    mode = mode,
-    time = format(Sys.time(), tz = "UTC", usetz = TRUE),
-    source_id = source_id,
-    files = as.list(hashes),
-    export_gate = EXPORT_GATE_VERSION,
-    cell_key = CELL_KEY_VERSION,
-    r = as.character(getRversion()),
-    packages = lapply(setNames(nm = PACKAGES), function(p) {
-      as.character(packageVersion(p))
-    }),
-    key_epoch = if (file.exists(keys)) ck_keys_read(keys)$key_epoch[[1]] else NA
-  ),
-  manifest,
-  auto_unbox = TRUE,
-  pretty = TRUE
+# A failure here removes the export too: a run that did not finish leaves nothing.
+tryCatch(
+  {
+    dir.create(review)
+    for (file in list.files(export, pattern = "\\.parquet$")) {
+      write.csv(
+        arrow::read_parquet(file.path(export, file)),
+        file.path(review, sub("\\.parquet$", ".csv", file)),
+        row.names = FALSE
+      )
+    }
+    # Sorted by bytes, so the id does not depend on the machine's locale.
+    ran <- c(
+      "run.R",
+      file.path("src", sort(list.files("src"), method = "radix"))
+    )
+    hashes <- vapply(ran, file_hash, "")
+    source_id <- substr(
+      sha256(charToRaw(paste0(ran, ":", hashes, collapse = "\n"))),
+      1,
+      8
+    )
+    keys <- Sys.getenv("REGMETA_KEYS")
+    jsonlite::write_json(
+      list(
+        mode = mode,
+        time = format(Sys.time(), tz = "UTC", usetz = TRUE),
+        source_id = source_id,
+        files = as.list(hashes),
+        export_gate = EXPORT_GATE_VERSION,
+        cell_key = CELL_KEY_VERSION,
+        r = as.character(getRversion()),
+        packages = lapply(setNames(nm = PACKAGES), function(p) {
+          as.character(packageVersion(p))
+        }),
+        key_epoch = if (file.exists(keys)) {
+          ck_keys_read(keys)$key_epoch[[1]]
+        } else {
+          NA
+        }
+      ),
+      manifest,
+      auto_unbox = TRUE,
+      pretty = TRUE
+    )
+  },
+  error = function(e) {
+    unlink(c(export, review, manifest), recursive = TRUE)
+    stop(e)
+  }
 )
 say("export:", export, "| reading copies:", review)
 say("==== SOURCE ID:", source_id, "====")

@@ -54,7 +54,7 @@ Its `mock/` is a project's `.regmeta/mock/`.
 4. **Pipeline** (`src/pipeline.R`). Per input, a `format = "file"` target for its files
    that always runs, and one that reads them; then one target per analysis and per
    disclosed result, and each result named in `release_tables()`. Every disclosure step
-   takes `cell_key_epoch`, so a new key epoch runs it again.
+   takes `cell_keys`, so a new key epoch runs it again.
 
 `src/` is flat and holds only text files that run on the server: no subfolders, no
 tests, no notes. `run.R` (but for `PACKAGES`), `src/staging.R` and the four pinned

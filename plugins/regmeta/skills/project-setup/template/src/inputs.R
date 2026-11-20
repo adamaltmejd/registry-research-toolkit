@@ -53,10 +53,8 @@ read_source <- function(name, files = source_files(name)) {
 check_inputs <- function() {
   dir <- Sys.getenv("REGMETA_DATA")
   mock <- Sys.getenv("REGMETA_MODE") == "mock"
-  files <- unlist(lapply(SOURCES, function(s) unname(s$files)))
-  if (anyDuplicated(files)) {
-    stop("SOURCES names a file twice")
-  }
+  # Two sources can share one file.
+  files <- unique(unlist(lapply(SOURCES, function(s) unname(s$files))))
   absent <- files[!file.exists(file.path(dir, files))]
   if (length(absent)) {
     stop("not in the input folder: ", paste(absent, collapse = ", "))

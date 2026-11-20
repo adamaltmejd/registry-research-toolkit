@@ -7,8 +7,9 @@ to an agent-executed default build.
 
 ## Transfer contract
 
-For a flexible server, provide a small `sync.sh up|down [--dry-run]` around rsync. Both
-directions use the same simple root .gitignore exclusions and explicitly omit .git. Keep
+For a flexible server, provide a small `sync.sh up|down [--dry-run]` around rsync. The
+upload uses the root .gitignore as its exclusions and explicitly omits .git; the download
+copies only the checked `output/export/` folder, which that file excludes. Keep
 Git history local; approved real aggregate results may be tracked. Exclude mock results,
 caches, private intermediates, raw logs, environments and machine configuration. Raw
 inputs live outside the project; mock inputs are in its Git-ignored `.regmeta/`. Do not claim full Git-ignore support: use simple

@@ -76,8 +76,8 @@ configuration. A local fake-data simulation can test the transfer sequence witho
 network connection.
 
 Keep the same project layout locally and remotely. A short `sync.sh up|down [--dry-run]`
-may wrap rsync in either direction using the root .gitignore as shared exclusions, plus
-an explicit .git exclusion. Keep this file to simple rsync-compatible exclude patterns;
+may wrap rsync: the upload with the root .gitignore as its exclusions plus an explicit
+.git exclusion, the download of the checked `output/export/` folder only. Keep this file to simple rsync-compatible exclude patterns;
 rsync does not implement full Git-ignore semantics. If advanced Git rules become
 necessary, use Git to select files rather than writing a custom parser. Real results are
 eligible only after disclosure checking and human review. Do not delete destination

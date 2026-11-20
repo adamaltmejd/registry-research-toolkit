@@ -18,11 +18,11 @@ income_by_sex <- function(lisa) {
 }
 
 # The disclosure stage for this question: suppress, perturb, round.
-# `epoch` is the pipeline's `cell_key_epoch`: a new key epoch runs this step again.
-disclose_income_by_sex <- function(persons, epoch) {
+# `keys` is the pipeline's `cell_keys` target, taken only as a dependency: a new key
+# epoch or key file runs this step again.
+disclose_income_by_sex <- function(persons, keys) {
   by <- c("year", "group_1")
   counts <- perturbed_counts(persons, by)
-  stopifnot(attr(counts, "key_epoch") == epoch)
   counts$table <- "income_by_sex"
 
   # A mean rests on the persons with a value, so its support is counted on them.

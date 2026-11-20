@@ -104,7 +104,9 @@ in `src/disclosure.R` creates the key file on the first run (key epoch 1) and ad
 for persons it lacks, in the same epoch; existing keys never change. A new epoch
 (`ck_keys_create(..., new_epoch = TRUE)`) replaces every key, so a table published
 under two epochs loses its protection. Make one only on the researcher's explicit
-request. Deleting the project folder on MONA deletes the keys and has the same effect.
+request. Deleting the project folder on MONA deletes the keys and has the same effect. A key
+file that goes missing on its own stops the run (`.regmeta/cell_keys.made` records that
+one was made): restore it, or the researcher decides to start over.
 The run writes the `key_epoch` to `output/run_manifest.json`, never to staging or the
 export. A local mock run makes its own key file from the mock person ids.
 

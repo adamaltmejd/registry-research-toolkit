@@ -7,6 +7,12 @@
 DATA_DIR <- "" # the delivered files' absolute folder
 # -----------------------------------------------------------------------------
 
+# A scan that fails leaves no summary from an earlier one.
+out <- file.path(getwd(), "data_summary.csv")
+unlink(out)
+if (file.exists(out)) {
+  stop("could not remove the previous ", out)
+}
 if (!nzchar(DATA_DIR) || !dir.exists(DATA_DIR)) {
   stop("DATA_DIR does not exist: '", DATA_DIR, "'")
 }
@@ -115,6 +121,5 @@ other <- data.frame(
   ordinal_position = blank(NA_integer_),
   row_count = blank(NA_real_)
 )
-out <- file.path(getwd(), "data_summary.csv")
 utils::write.csv(rbind(summary, other), out, row.names = FALSE, na = "")
 cat("wrote", out, "\n")

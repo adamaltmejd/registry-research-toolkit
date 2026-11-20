@@ -10,7 +10,7 @@ for (f in setdiff(
 
 always <- targets::tar_cue(mode = "always")
 list(
-  targets::tar_target(cell_key_epoch, key_epoch(), cue = always),
+  targets::tar_target(cell_keys, key_state(), cue = always),
   targets::tar_target(
     lisa_files,
     source_files("lisa"),
@@ -21,7 +21,7 @@ list(
   targets::tar_target(income_rows, income_by_sex(lisa)),
   targets::tar_target(
     income_result,
-    disclose_income_by_sex(income_rows, cell_key_epoch)
+    disclose_income_by_sex(income_rows, cell_keys)
   ),
   targets::tar_target(release, release_tables(income_result))
 )
