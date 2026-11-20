@@ -92,10 +92,8 @@ pub(super) fn segments(scope: &Scope) -> String {
             "SELECT {ids}, x.start AS start, x.end AS end, sp.exact AS exact, \
              x.dtype AS dtype, x.length AS length, vs.hash AS vs_hash, vs.n_items AS vs_n, \
              cv.pid AS cv_pid, COALESCE(x.sensitive, 0) AS sensitive, x.state AS state, \
-             rn.body AS release, vv.pid AS pid, nf.folded AS fold
+             rn.body AS release
              FROM {db}.segment x {joins} JOIN {db}.spelling sp ON sp.id = x.spelling_id
-             JOIN {db}.name_fold nf ON nf.id = sp.fold_id
-             JOIN {db}.variable vv ON vv.id = x.variable_id
              LEFT JOIN {db}.release rl ON rl.id = x.release_id
              LEFT JOIN {db}.text rn ON rn.id = rl.name_text
              LEFT JOIN {db}.valueset vs ON vs.id = x.valueset_id
@@ -239,15 +237,21 @@ fn held_class_version(conn: &Connection, pin: &str) -> Result<Option<String>, Er
 /// One binding over its source's serving tables, with its `variable_absent_from_files`
 /// findings against the whole binding's clips.
 pub(super) fn binding(scope: &Scope, b: usize, binding: &CatalogBinding) -> Result<Outcome, Error> {
-    let mut out = check(scope, b, binding)?;
+    let mut out = check(scope, b, binding, false)?;
     let missing = std::mem::take(&mut out.missing);
     out.findings
         .extend(super::absent::findings(scope, b, &missing, &out.removed));
     Ok(out)
 }
 
-/// [`binding`] before its file findings: a followed binding's hops run this.
-pub(super) fn check(scope: &Scope, b: usize, binding: &CatalogBinding) -> Result<Outcome, Error> {
+/// [`binding`] before its file findings: a followed binding's hops run this with `hop`,
+/// whose clips are not final until the whole chain is checked.
+pub(super) fn check(
+    scope: &Scope,
+    b: usize,
+    binding: &CatalogBinding,
+    hop: bool,
+) -> Result<Outcome, Error> {
     let (variable, findings) = refs(
         scope.conn,
         scope.composed,
@@ -296,7 +300,7 @@ pub(super) fn check(scope: &Scope, b: usize, binding: &CatalogBinding) -> Result
             return Ok(outcome);
         }
     }
-    materialize(scope, b, binding, &variable, outcome)
+    materialize(scope, b, binding, &variable, outcome, hop)
 }
 
 #[allow(clippy::too_many_lines)]
@@ -306,6 +310,7 @@ fn materialize(
     binding: &CatalogBinding,
     variable: &Variable,
     mut outcome: Outcome,
+    hop: bool,
 ) -> Result<Outcome, Error> {
     let at = Located { scope, b, variable };
     let mut pieces = Vec::new();
@@ -406,8 +411,14 @@ fn materialize(
             ));
         }
     }
+    // An ordinary binding's clips are final here, so their files need no lookup.
+    let settled = if hop {
+        ordered.clone()
+    } else {
+        merge([ordered.as_slice(), removed.as_slice()].concat())
+    };
     outcome.missing =
-        super::absent::files(scope, variable.id, &variable.pid, &wanted, &ordered, &lanes)?;
+        super::absent::files(scope, variable.id, &variable.pid, &wanted, &settled, &lanes)?;
     outcome.removed = removed;
     // Coverage per named release: a shared day another release serves would hide this
     // one's gap in the union above (days none serves are clipped there already).

@@ -156,7 +156,7 @@ fn materialize(
                 .map_or(scope.table, |s| s.table.pid.as_str()),
             ..*scope
         };
-        let checked = window::check(&part, b, current)?;
+        let checked = window::check(&part, b, current, true)?;
         out.findings.extend(checked.findings);
         out.missing.extend(checked.missing);
         out.entries.extend(checked.entries);
