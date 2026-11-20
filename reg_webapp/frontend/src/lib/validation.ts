@@ -82,6 +82,7 @@ const TITLES: Readonly<Record<string, string>> = {
   column_window_unavailable: "This column leaves out some requested years",
   held_key_missing: "The row identifier is not available",
   held_key_ambiguous: "The row identifier is in more than one column",
+  held_key_spell_varies: "Earlier spells keep their row identifier in another column",
   file_name_unsafe: "This table's file name cannot be used",
   physical_schema_missing: "This table has no single location",
   rows_unfiltered: "Some rows from other years are included",

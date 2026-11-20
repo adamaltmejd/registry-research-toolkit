@@ -2767,7 +2767,10 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   adds the physical period column once as a `row_key` with no references. A requirement
   on hold or uncovered is `held_key_missing`, a key two columns place over the same day
   `held_key_ambiguous`; both block the order. A key placed in one column for some years
-  and another for the rest joins each over its own years. `reg-build holdings` already
+  and another for the rest joins each over its own years. A spell table's filter also
+  returns spells that started before the requested days, back to the delivery's first held
+  day; when the key sits in another column on those earlier days the order is blocked with
+  `held_key_spell_varies` (simplify: it does not join the earlier key columns). `reg-build holdings` already
   refuses an uncovered or overlapping key (`holdings_key_missing`,
   `holdings_key_ambiguous`), and a hold holds the whole table, so in an admitted pair
   both guard a foreign artifact only.

@@ -859,7 +859,11 @@ period_key <- function(encoding, data_type, table, column) {
     valid <- switch(
       encoding,
       year = NULL,
-      yyyymm = paste0(n, " % 100 BETWEEN 1 AND 12"),
+      yyyymm = paste0(
+        "TRY_CONVERT(date, CAST(",
+        n,
+        " AS varchar(20)) + ''01'', 112) IS NOT NULL"
+      ),
       yyyymmdd = paste0(
         "TRY_CONVERT(date, CAST(",
         n,

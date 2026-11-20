@@ -1080,6 +1080,15 @@ fn keys(
     // its whole delivery. Only days its tables deliver hold rows: a calendar-year file
     // of a table delivered each autumn needs no key for the spring.
     let extracted = on_delivered(&extracted(holding, draft), &draft.delivered);
+    // A spell filter also returns spells that started earlier, back to the delivery's
+    // first held day; their rows need the key column of the day they started in.
+    let spells_from = holding.period_end_column.as_ref().map(|_| {
+        let end = extracted.last().map_or(i64::MIN, |d| d.1);
+        on_delivered(
+            &overlap(&holding.held, &[(i64::MIN, end)]),
+            &draft.delivered,
+        )
+    });
     let per_source: Vec<usize> = draft.days.keys().copied().collect();
     for (r, requirement) in requirements.iter().enumerate() {
         let scope: Vec<Days> = match requirement["period"].as_str() {
@@ -1156,6 +1165,28 @@ fn keys(
                              Leave out those years.",
                             holding.label,
                             distinct.len()
+                        ),
+                    );
+                    issue.variable = Some((*variable).to_owned());
+                    findings.push(issue);
+                    continue;
+                }
+                // simplify: refused rather than joining each earlier key column; join
+                // them once a steward's spell table moves its key between columns.
+                if let Some(spells_from) = &spells_from
+                    && found.iter().any(|(column, _, d, ..)| {
+                        !overlap(&overlap(spells_from, &scope), &[*d]).is_empty()
+                            && !over.iter().any(|o| o.0 == *column)
+                    })
+                {
+                    let mut issue = block(
+                        "held_key_spell_varies",
+                        format!(
+                            "Table {:?} has its row identifier {variable} in another column \
+                             for spells that began before the years requested, so it cannot \
+                             be ordered for them. Order it from the start of its delivery, \
+                             or leave it out.",
+                            holding.label
                         ),
                     );
                     issue.variable = Some((*variable).to_owned());
