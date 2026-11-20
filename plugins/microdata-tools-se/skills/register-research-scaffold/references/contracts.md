@@ -5,6 +5,9 @@ framework. Use simple files and existing tools.
 
 ## Questions
 
+A ticket is written when the user asks for a research question to be added (the skill's
+stage 2), one ticket per question. The agent does not propose questions.
+
 Each Markdown ticket has stable id, title, status and depends_on frontmatter. Add
 evidence/run references and supersession links when available. Tickets are plain
 Markdown: no validator. Keep question, rationale, method, answer, evidence and
@@ -25,7 +28,8 @@ same encoding or identifiers. Distinguish absent rows, missing values, zero, con
 classifications and suppression. Keep source-validity bounds separate from analysis
 eligibility; valid out-of-sample cohorts must not fail global assertions.
 
-Preserve appropriate reference-project lookups, recording revision and provenance. Read
+When the user names an earlier project or repository as a source, preserve its relevant
+lookups and record where each came from. Read nothing the user has not named. Read
 only needed columns/partitions. A bridge for an existing input format stays narrow and
 inside restricted compute; never export individual-level bridge files.
 
@@ -113,7 +117,7 @@ or unsupported statistical quantities do.
 
 ## Local interface
 
-Built after a first real export, not in the first scaffold. Generate offline-capable
+Built after a first real export, not in the scaffold. Generate offline-capable
 HTML from canonical ticket/result files, not a second state store or server platform.
 Escape prose, filenames and labels. Show batch status, question, answer/uncertainty,
 provenance, result table/figure and next action. Separate remote output, local renders

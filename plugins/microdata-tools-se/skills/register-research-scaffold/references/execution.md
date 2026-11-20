@@ -29,7 +29,7 @@ outputs, private intermediates, logs, environments and machine-specific configur
 Disclosure-checked, human-approved real aggregate results and local renders may be
 tracked in Git. Mock runs must never overwrite real outputs; missing real results must
 never make a paper or slide build use mock results. Refuse input/output overlap. Source
-readers must not alter reference-project inputs or stores.
+readers must not alter their inputs.
 
 ## MONA
 
@@ -100,7 +100,7 @@ check alone never grants that approval.
 
 ## Incremental builds
 
-Not in the first scaffold: add one when a run's time matters. Use an established
+Not in the scaffold: add one when a run's time matters. Use an established
 dependency-aware tool (for example targets in R or pytask for a Python/file-based
 pipeline) rather than writing a cache manager. A Makefile may expose
 convenient commands; if Make is the dependency engine, explicitly handle

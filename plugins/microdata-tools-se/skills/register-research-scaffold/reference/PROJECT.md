@@ -1,11 +1,17 @@
 # Reference: disposable income by sex
 
-The project's instructions (copy as `CLAUDE.md` or `AGENTS.md`). A worked example of
-the `register-research-scaffold` skill: LISA Individer 2021 to 2022 from the global
-catalog, one question, run on MONA, results through the export gate.
+The project's instructions (copy as `CLAUDE.md` or `AGENTS.md`). This is the scaffold
+of the `register-research-scaffold` skill as its stage 1 leaves it: the skill's
+example, LISA Individer 2021 to 2022 from the global catalog and one example question
+(`q001`), run on MONA, results through the export gate. The example is not the user's
+research. It stays until the user asks for a research question to be added (the skill's
+stage 2); the first one replaces it.
 
 ## Boundaries
 
+- The agent reads only this project folder and the sources the user names. It does not
+  open neighbouring folders, other repositories or the user's other projects unless the
+  user points to them.
 - The agent works locally on code, catalog metadata and `reg-mock` data. It never runs
   on MONA, never reads the extract, the key file or an unreviewed export, and learns a
   gate refusal only by its category code.
@@ -63,4 +69,5 @@ Never edit these files. A newer gate is a deliberate update of this table.
 ## Questions
 
 One Markdown ticket per question in `questions/`; status in its frontmatter. Closed
-tickets stay in Git.
+tickets stay in Git. The agent adds a question only when the user asks for one and names
+it (the skill's stage 2). It does not propose questions or start one on its own.

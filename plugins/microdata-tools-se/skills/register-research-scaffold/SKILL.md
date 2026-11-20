@@ -1,22 +1,38 @@
 ---
 name: register-research-scaffold
-description: Scaffold a small batch-based Swedish register-data research project from a
-  research brief and documented source contracts, starting from the skill's lean R
-  reference project: question tickets, separate local and restricted execution,
-  `reg-mock` inputs, a disclosure stage and the export gate. Supports MONA (a steward's
-  extract in, the toolkit export gate out) and other processing servers; does not
-  authorize microdata access, transfer, or server execution.
+description: Set up a small batch-based Swedish register-data research project from the
+  skill's lean R reference project, copied unchanged and run on mock data until the
+  export gate passes: separate local and restricted execution, `reg-mock` inputs, a
+  disclosure stage and the export gate. Adds a research question to the project only
+  when the user asks for one. Supports MONA (a steward's extract in, the toolkit export
+  gate out) and other processing servers; does not authorize microdata access, transfer,
+  or server execution.
 ---
 
 # Register research scaffold
 
-Create the smallest working project that answers the user's first research questions,
-starting from the R reference project in [reference/](reference/) (below). Preserve a
-user's existing project; create a separate project when requested. A different stack
-(Python with DuckDB, say) keeps the reference's stages and boundaries in its own tools.
-Do not build a custom workflow framework, research-record database, RAG service or
-independent mock generator. Do not configure hosted Git or transfer data through it
-without an explicit request.
+The skill has two stages.
+
+- **Stage 1, the scaffold**, is what the skill does when invoked. It copies the R
+  reference project in [reference/](reference/) unchanged into the project folder, sets
+  up the catalog and the pins, runs the pipeline on mock data until the export gate
+  passes, then stops and reports.
+- **Stage 2, a research question**, runs only when the user asks for a research question
+  to be added. It adapts the project to that one question.
+
+Rules for both stages:
+
+- Read only the project folder and the sources the user names. Do not open neighbouring
+  folders, other repositories or the user's other projects unless the user points to
+  them. This skill's own files and the catalog tools are always available.
+- Do not start stage 2 on your own, and do not propose research questions. During
+  stage 1, ask nothing about research questions, populations or outputs.
+- Preserve a user's existing project; create a separate project when requested. A
+  different stack (Python with DuckDB, say) keeps the reference's stages and boundaries
+  in its own tools.
+- Do not build a custom workflow framework, research-record database, RAG service or
+  independent mock generator. Do not configure hosted Git or transfer data through it
+  without an explicit request.
 
 Read [contracts.md](references/contracts.md) before implementation. Read
 [execution.md](references/execution.md) when wiring batches, packaging, and transfers.
@@ -43,22 +59,13 @@ mock data. A project whose data a data steward delivers runs in this order
 5. The steward materializes the order and runs `extract.R` on MONA; the researcher runs
    the same pipeline on the extract, reviews the gate's export and sends it out.
 
-Steps 2 to 4 need no MONA access, so a project can be complete and tested before its
-extract exists.
+Stage 1 does step 1, and steps 3 and 4 on the reference's own order. Stage 2 does steps
+2 to 4 for the user's question. Steps 2 to 4 need no MONA access, so a project can be
+complete and tested before its extract exists.
 
-## Establish the research and execution boundary
+## The execution boundary
 
-Read supplied source code/documentation and applicable instructions. Establish
-entity/grain, keys, source definitions, measurement timing, population, missingness and
-output questions. Record exact reference-repository commits and relevant paths. Do not
-inspect microdata, restricted caches or credentials merely to infer a schema. Source
-code is evidence of an intended contract, not confirmation of real data.
-
-Distinguish approved choices from proposed choices. Ask about ambiguity that changes the
-estimand or population; otherwise state a reversible assumption. A prototype can run on
-mocks while questions remain open. Keep unresolved scientific definitions, source
-coverage and disclosure policy visibly pending; do not label real-data integration
-verified.
+Do not inspect microdata, restricted caches or credentials merely to infer a schema.
 
 Server connections are researcher-operated. Do not request or use the researcher's SSH
 access, inspect private connection configuration, or download results for them. Prepare
@@ -72,27 +79,84 @@ running tools connected to a hosted model. Never configure automatic GitHub
 synchronization. Git records history locally; add approved institutional remotes only
 when requested.
 
-## Scaffold only what the first batch needs
+## Stage 1: the scaffold
 
-The first scaffold is [reference/](reference/) adapted to the user's first question:
-about 150 lines of the project's own code. The reference orders LISA Individer
-2021–2022 from the global catalog and publishes persons and mean disposable income by
-sex and year. Copy it to the project folder, `PROJECT.md` as the project's `CLAUDE.md`
-or `AGENTS.md`, then:
+Ask the user only what setup needs: where the project lives, and whether its data comes
+from a data steward (and that steward's host) or from the global catalog. Ask nothing
+about research questions, populations or outputs.
 
-1. Replace `project_data.json` with the user's order (`register-project` skill), and
-   `mock/` with its saved answers, rules and compiled spec (`register-mock-data` skill).
-   Set the paths in `config.R`; the mock and key folders stay outside the project.
-2. Fill `export_gate/`: `export_gate.R` and the chosen schema and policy from the
-   `reg_meta` tag [export-gate.md](references/export-gate.md) names, checked against its
-   SHA-256, and `cell_key.R` copied unchanged from [scripts/](scripts/cell_key.R).
-   Record each file's version and SHA-256 in the instructions' pin table. Commit all four.
-3. Rewrite for the question: the delivered files and column names in `config.R`
+1. Copy [reference/](reference/) unchanged into the project folder, with `PROJECT.md`
+   as the project's `CLAUDE.md` or `AGENTS.md`. Change no code, order, mock file or
+   ticket. The project keeps the reference's example until stage 2: LISA Individer
+   2021–2022 from the global catalog, and the ticket `q001`, persons and mean disposable
+   income by sex and year. In a folder that already holds files, overwrite none; ask
+   where a name collides.
+2. Set up the catalog. For a steward's project, add the steward's catalog as the
+   `steward-catalog` server in the project's `.mcp.json` (Claude Code) or
+   `.codex/config.toml` (Codex), and record it in the project instructions, following
+   the `register-metadata-search` skill's `references/data-stewards.md`. A project on
+   the global catalog needs no server: the plugin's `catalog` is already there.
+3. Set the pins. Fill `export_gate/`: `export_gate.R` and the default schema and policy
+   from the `reg_meta` tag the project's `reg_meta_version` names
+   ([export-gate.md](references/export-gate.md)), and `cell_key.R` copied unchanged from
+   [scripts/](scripts/cell_key.R). Check each file's version and SHA-256 against the pin
+   table in the project instructions; a file that differs is the wrong file, so do not
+   edit the table to match it. Use the `reg-mock` release the same tag names.
+4. Generate the mock inputs from the committed `mock/mock_spec.json` with
+   `reg-mock generate` (the command is in the project instructions). The reference
+   ships its saved answers and compiled spec, so this needs no catalog call. The mock
+   and key folders stay outside the project, where `config.R` puts them.
+5. Commit. A new project folder gets `git init` first: a mock run reads its commit. In
+   a folder that is already a Git repository, ask before committing. Commit the copied
+   files and the four files in `export_gate/`.
+6. Run `Rscript make_keys.R mock` once and `Rscript run.R mock` until the gate passes.
+   A failure here is a setup fault (a missing R package, the wrong `reg-mock` release, a
+   path): fix the setup, not the reference's code, the schema or the policy.
+7. Stop and report: the project path, the files that exist, the pins, the commit and the
+   mock run's result. Say that the project holds the reference's example order and
+   question, not the user's. With a steward's catalog, tell the user to restart the
+   session in the project and approve the `steward-catalog` server before any catalog
+   work; the tools are not loaded until then. Say that a research question is added when
+   the user asks for one. Do not propose one, and do not continue to stage 2.
+
+## Stage 2: a research question, on request
+
+This stage runs only when the user asks for a research question to be added and names
+the question. The agent does not start it on its own and does not propose questions. It
+handles one question per request, with one Markdown ticket per question in `questions/`,
+and stops when that question runs on mock data.
+
+In a steward's project, check first that the `steward-catalog` tools are loaded. If they
+are not, ask the user to restart the session in the project and stop.
+
+1. Establish what the question needs, from the user and from the sources the user
+   names: entity and grain, keys, source definitions, measurement timing, population,
+   missingness and the outputs. Source code the user points to is evidence of an
+   intended contract, not confirmation of real data. Distinguish approved choices from
+   proposed choices. Ask about ambiguity that changes the estimand or population;
+   otherwise state a reversible assumption. Keep unresolved scientific definitions,
+   source coverage and disclosure policy visibly pending; do not label real-data
+   integration verified.
+2. Write the ticket, `questions/<id>-<short-name>.md`
+   ([contracts.md](references/contracts.md), "Questions"). The project's first question
+   replaces the example: delete `q001` and its code as the steps below replace them. A
+   later question adds to the project and leaves earlier questions in place.
+3. Put the question's data in the order: `project_data.json` with the
+   `register-project` skill, on the project's catalog, then `mock/` with its saved
+   answers, rules and compiled spec (`register-mock-data` skill). In a steward's project
+   the steward's release sets `reg_meta_version`; when it differs from the pinned one,
+   replace `export_gate/` and the `reg-mock` binary from that release's tag and update
+   the pin table in the same commit.
+4. Adapt the code to the question: the delivered files and column names in `config.R`
    (from the order answer; a steward's extract keys persons by `LopNr`), the source
-   adapter (`R/inputs.R`), the analysis (`R/analysis.R`) and the cells and statistics
-   in `R/disclosure.R` (its suppress, perturb, round order stays). One Markdown ticket
-   per question in `questions/`.
-4. Run `Rscript make_keys.R mock` once and `Rscript run.R mock` until the gate passes.
+   adapter (`R/inputs.R`), the analysis (`R/analysis.R`), the cells and statistics in
+   `R/disclosure.R` (its suppress, perturb, round order stays) and the calls in `run.R`.
+5. Generate the mock inputs again, commit, and run `Rscript run.R mock` until the gate
+   passes. A prototype can run on mocks while parts of the question remain open.
+6. Stop and report: the ticket, what changed, the commit, the mock run's result and what
+   is still pending. The ticket's answer stays pending: a mock run is not an answer.
+
+## What every project keeps
 
 Keep the parts that carry a rule, whatever the question:
 
@@ -138,7 +202,7 @@ code at its execution revision; promote what current research still needs into
 maintained code rather than archiving live dependencies.
 
 The mock generator is `reg-mock` (the `register-mock-data` skill), not part of this
-skill or a new subsystem to build. For a trial without it, the brief may provide an
+skill or a new subsystem to build. For a trial without it, the user may provide an
 independent wholly invented mock sample; keep it separate from unit fixtures and
 identify its limitations. Never derive unit fixtures from mock data or restricted
 records.

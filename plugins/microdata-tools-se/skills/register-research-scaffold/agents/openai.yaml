@@ -1,4 +1,4 @@
 interface:
   display_name: "Register research scaffold"
-  short_description: "Scaffold a batch-based register research MVP"
-  default_prompt: "Use $register-research-scaffold to create a small register-data research project with local mock validation and restricted batch execution."
+  short_description: "Set up a register research project scaffold"
+  default_prompt: "Use $register-research-scaffold to set up a register-data research project scaffold and run it on mock data until the export gate passes."
