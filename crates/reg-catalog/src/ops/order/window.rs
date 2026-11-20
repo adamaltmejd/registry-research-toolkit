@@ -916,19 +916,10 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
         .collect())
 }
 
-/// The variables that have data in a serving table on clipped `days` and that the catalog
-/// links to this one: a `continues` edge either way, or the same delivered column (by
-/// folded name) in that table. Each with the table and the days it has there as the
-/// order reads them (`served`: release selection and shadowing), so a `period_clipped`
-/// can name it (#2603); with `lane`, only in that named release. Nothing is guessed from
-/// similar names.
-fn covering(
-    at: &Located,
-    days: &Interval,
-    lane: Option<&str>,
-) -> Result<Vec<(String, String, Vec<Interval>)>, Error> {
-    let scope = at.scope;
-    let pid = &at.variable.pid;
+/// The variables a `continues` edge links to `pid` either way, base or held, each with its
+/// id as `segments` keys it (a variable only the holdings database defines by its negated
+/// held id).
+fn linked(scope: &Scope, pid: &str) -> Result<Vec<(i64, String)>, Error> {
     let edge = |origin: &str| {
         format!(
             "SELECT CASE WHEN s.pid = ?1 THEN o.pid ELSE s.pid END
@@ -943,25 +934,64 @@ fn covering(
         linked.extend(rows(scope.conn, &edge("held."), [pid], |row| row.get(0))?);
     }
     let linked_json = serde_json::to_string(&linked).expect("strings serialize");
-    // Inline (not a CTE used twice), so each read reaches the segment indexes.
+    let mut linked_ids: Vec<(i64, String)> = rows(
+        scope.conn,
+        "SELECT id, pid FROM main.variable WHERE pid IN (SELECT value FROM json_each(?1))",
+        [&linked_json],
+        |row| Ok((row.get(0)?, row.get(1)?)),
+    )?;
+    if scope.composed {
+        linked_ids.extend(rows(
+            scope.conn,
+            "SELECT -hv.id, hv.pid FROM held.variable hv
+             WHERE hv.pid IN (SELECT value FROM json_each(?1))
+               AND NOT EXISTS (SELECT 1 FROM main.variable bv WHERE bv.pid = hv.pid)",
+            [&linked_json],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )?);
+    }
+    Ok(linked_ids)
+}
+
+/// The variables that have data in a serving table on clipped `days` and that the catalog
+/// links to this one: a `continues` edge either way, or the same delivered column (by
+/// folded name) in that table. Each with the table and the days it has there as the
+/// order reads them (`served`: release selection and shadowing), so a `period_clipped`
+/// can name it (#2603); with `lane`, only in that named release. Nothing is guessed from
+/// similar names. On a steward's server, only days the steward holds it are named.
+fn covering(
+    at: &Located,
+    days: &Interval,
+    lane: Option<&str>,
+) -> Result<Vec<(String, String, Vec<Interval>)>, Error> {
+    let scope = at.scope;
+    let linked_ids = linked(scope, &at.variable.pid)?;
     let own_sql = format!(
         "SELECT DISTINCT exact FROM ({}) WHERE variable_id = ?1 AND table_id = ?2",
         segments(scope)
     );
-    let sql = format!(
-        "SELECT DISTINCT variable_id, pid FROM ({}) WHERE table_id = ?2 AND variable_id <> ?1
-           AND start < ?4 AND end > ?3
-           AND (pid IN (SELECT value FROM json_each(?5))
-                OR fold IN (SELECT value FROM json_each(?6)))
-         ORDER BY pid",
-        segments(scope)
-    );
+    // Same-column candidates by folded name through `segment_fold`, base or held.
+    let mut same_sql = "SELECT DISTINCT s.variable_id, v.pid FROM main.name_fold f
+           JOIN main.segment s ON s.fold_id = f.id
+           JOIN main.variable v ON v.id = s.variable_id
+         WHERE f.folded IN (SELECT value FROM json_each(?1)) AND s.table_id = ?2"
+        .to_owned();
+    if scope.composed {
+        same_sql.push_str(
+            " UNION SELECT COALESCE(bv.id, -hv.id), hv.pid FROM held.name_fold f
+               JOIN held.segment s ON s.fold_id = f.id
+               JOIN held.tbl ht ON ht.id = s.table_id JOIN main.tbl bt ON bt.pid = ht.pid
+               JOIN held.variable hv ON hv.id = s.variable_id
+               LEFT JOIN main.variable bv ON bv.pid = hv.pid
+             WHERE f.folded IN (SELECT value FROM json_each(?1)) AND bt.id = ?2",
+        );
+    }
     let mut found = Vec::new();
     for (k, s) in scope.serving.iter().enumerate() {
         let here = overlap(&s.requested, std::slice::from_ref(days));
-        let Some(hull) = reg_core::hull(&here) else {
+        if here.is_empty() {
             continue;
-        };
+        }
         let mut folds: Vec<String> = rows(
             scope.conn,
             &own_sql,
@@ -973,22 +1003,22 @@ fn covering(
         .collect();
         folds.sort();
         folds.dedup();
-        let candidates: Vec<(i64, String)> = rows(
+        let mut candidates: Vec<(i64, String)> = rows(
             scope.conn,
-            &sql,
+            &same_sql,
             rusqlite::params![
-                at.variable.id,
-                s.table.id,
-                super::day(&hull.0),
-                super::day(&hull.1) + 1,
-                linked_json,
                 serde_json::to_string(&folds).expect("strings serialize"),
+                s.table.id
             ],
             |row| Ok((row.get(0)?, row.get(1)?)),
         )?;
+        candidates.extend(linked_ids.iter().cloned());
+        candidates.retain(|(id, _)| *id != at.variable.id);
+        candidates.sort_by(|a, b| a.1.cmp(&b.1));
+        candidates.dedup();
         for (other_id, other) in candidates {
-            let is_linked = linked.contains(&other);
-            let has: Vec<Interval> = served(scope, k, other_id)?
+            let is_linked = linked_ids.iter().any(|(_, p)| *p == other);
+            let mut has: Vec<Interval> = served(scope, k, other_id)?
                 .pieces
                 .iter()
                 .filter(|p| p.state != "ambiguous")
@@ -996,6 +1026,17 @@ fn covering(
                 .filter(|p| is_linked || folds.contains(&reg_core::fold_identity(&p.spelling)))
                 .flat_map(|p| overlap(&here, std::slice::from_ref(&p.days)))
                 .collect();
+            // On a steward's server, only the days the steward holds it in this table.
+            if scope.composed && !has.is_empty() {
+                let held: Vec<Interval> = rows(
+                    scope.conn,
+                    "SELECT start, end FROM held.holding_mapping
+                     WHERE table_pid = ?1 AND variable_pid = ?2 ORDER BY start",
+                    rusqlite::params![s.table.pid, other],
+                    |row| Ok(interval(row.get(0)?, row.get(1)?)),
+                )?;
+                has = overlap(&merge(has), &merge(held));
+            }
             if !has.is_empty() {
                 found.push((other, s.table.pid.clone(), merge(has)));
             }
