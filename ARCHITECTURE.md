@@ -208,9 +208,7 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   `schema_version`, versioned apart from the API (`meta.api_version`); every response's
   `meta.project_schema_version` names the one the server admits. Schema 5.1.0 added
   optional boolean `follow_successor` on variable bindings; absent or false keeps the bound variable's own history. Schema 5.2.0 adds
-  optional top-level `extract_format` (`dta`, `parquet`, `csv`); absent means the order
-  authoring default `parquet`, resolved by the order file and never inserted into the
-  project. Schema 6.0.0 makes the binding `type` an optional override in catalog type
+  top-level `extract_format` (`dta`, `parquet`, `csv`), optional until 8.0.0. Schema 6.0.0 makes the binding `type` an optional override in catalog type
   names and drops the subtype and format fields. Schema 6.1.0 adds optional top-level
   `linkage.database`, the steward database an order draws from. Schema 6.2.0 adds
   manual items: a source or binding entered by hand (`manual` in place of `table` or
@@ -218,7 +216,8 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   `releases` on a catalog source, naming the releases that serve days two of the
   table's releases share. Schema 7.0.0 adds the required top-level `catalog`
   (`global` or a steward id); a server refuses a project naming another catalog with
-  `catalog_mismatch`. `reg-core` accepts
+  `catalog_mismatch`. Schema 8.0.0 makes `extract_format` required: no reader supplies
+  a format for a project that states none. `reg-core` accepts
   exactly its `SCHEMA_VERSION` and refuses any other with an
   `unsupported_schema_version` issue rather than migrating it
   ([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). Pre-v1 there are no

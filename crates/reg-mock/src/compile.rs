@@ -359,7 +359,7 @@ pub fn compile(project: &Value, rules: &Rules, answers: &Answers) -> Result<Spec
              answers again for this project_data.json",
         )]);
     }
-    let format = project.extract_format.unwrap_or(ExtractFormat::Parquet);
+    let format = project.extract_format;
     let ctx = Context {
         project: &project,
         answers,

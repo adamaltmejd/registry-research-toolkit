@@ -180,7 +180,7 @@
     "mode": "steward_holdings",
     "project": {
       "name": "Row filter widened",
-      "schema_version": "7.0.0"
+      "schema_version": "8.0.0"
     },
     "steward": "fixture"
   },

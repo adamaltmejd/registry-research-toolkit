@@ -27,14 +27,15 @@ use crate::grammar::{Date, PeriodToken, iso};
 use crate::project::{ColumnType, ExtractFormat};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
-const PROJECT_REQUIRED: [&str; 5] = [
+const PROJECT_REQUIRED: [&str; 6] = [
     "schema_version",
     "reg_meta_version",
     "catalog",
     "name",
+    "extract_format",
     "sources",
 ];
-const PROJECT_OPTIONAL: [&str; 4] = ["panels", "window", "extract_format", "linkage"];
+const PROJECT_OPTIONAL: [&str; 3] = ["panels", "window", "linkage"];
 const SOURCE_KEYS: [&str; 6] = ["name", "table", "manual", "period", "releases", "bindings"];
 const MANUAL_ORIGIN_KEYS: [&str; 2] = ["provider", "register"];
 const MANUAL_BINDING_KEYS: [&str; 2] = ["manual", "display_name"];
@@ -419,7 +420,13 @@ fn check_top_level(root: &Map<String, Value>, issues: &mut Issues) {
             );
         }
     }
-    for field in ["schema_version", "reg_meta_version", "catalog", "name"] {
+    for field in [
+        "schema_version",
+        "reg_meta_version",
+        "catalog",
+        "name",
+        "extract_format",
+    ] {
         if get(root, field).is_some_and(|v| !v.is_string()) {
             issues.error(
                 "invalid_field_type",
@@ -442,7 +449,6 @@ fn check_top_level(root: &Map<String, Value>, issues: &mut Issues) {
             ),
         );
     }
-    optional_string(root, "extract_format", "", "extract_format", issues);
     if let Some(format) = get(root, "extract_format").and_then(Value::as_str)
         && ExtractFormat::parse(format).is_none()
     {

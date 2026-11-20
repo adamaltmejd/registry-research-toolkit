@@ -19,7 +19,7 @@ pub const MANIFEST_VERSION: u32 = 4;
 pub struct Manifest {
     /// Always 4.
     pub version: u32,
-    /// The project's format, resolved to `parquet` when it states none.
+    /// The project's `extract_format`.
     pub extract_format: ExtractFormat,
     pub provenance: Provenance,
     /// By first appearance in the order, then name.

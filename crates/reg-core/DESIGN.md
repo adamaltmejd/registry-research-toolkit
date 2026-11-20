@@ -31,11 +31,11 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
   ([../DESIGN.md](../DESIGN.md), "Project semantic validation"). It names the catalog
   by id only: the URL is the user's deployment config, and `reg_meta_version` already
   records the release.
-- **`extract_format`** is an optional top-level string (schema 5.2.0 on): `dta`,
-  `parquet` or `csv`. Absent means the order authoring default (`parquet`), which the order
-  file resolves; the default is never written into the project. The structural layer
-  refuses a non-string, including explicit `null` (`invalid_field_type`), and a string
-  outside the three (`invalid_enum_value`).
+- **`extract_format`** is a required top-level string (required from schema 8.0.0):
+  `dta`, `parquet` or `csv`, the format each delivered file is written in. It has no
+  default, so no reader has to agree on one. The structural layer refuses an absent
+  field (`missing_required_field`), a non-string, including explicit `null`
+  (`invalid_field_type`), and a string outside the three (`invalid_enum_value`).
 - **`linkage`** is an optional top-level closed object (schema 6.1.0 on),
   `{"database": <string>}`: the steward database the order draws from. The structural
   layer checks the shape only; whether the steward needs one and whether the id is one

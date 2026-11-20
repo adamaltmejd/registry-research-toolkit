@@ -1,10 +1,11 @@
 {
   "note": "The selection of contested-owner, which on this steward blocks with `mapping_missing` (2018) beside an info `rows_unfiltered`, but drafted on the global catalog and posted to the steward `fixture`. Fails if materialize, validate or order stops refusing a project drafted on another catalog with exactly one `catalog_mismatch` at /catalog (#2566), or lists the order check's findings beside it. Oracle: the project's `catalog` and the served steward id.",
   "project": {
-    "schema_version": "7.0.0",
+    "schema_version": "8.0.0",
     "reg_meta_version": "0.90.0",
     "catalog": "global",
     "name": "Drafted on global",
+    "extract_format": "parquet",
     "sources": [
       {
         "name": "a",

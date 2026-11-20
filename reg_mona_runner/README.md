@@ -3,7 +3,7 @@
 `extract.R` extracts a steward's orders inside MONA. Each order is an order file
 (version 4) that the steward's catalog wrote for one sub-project; the script writes the
 ordered columns into that sub-project's export folder, in the format the researcher
-chose for the project: Parquet (the default), Stata `.dta` or CSV. Run it by hand in
+chose for the project: Parquet, Stata `.dta` or CSV. Run it by hand in
 MONA. Use the copy at the `reg_meta` tag the steward pins:
 `https://raw.githubusercontent.com/adamaltmejd/registry-research-toolkit/reg_meta/vX.Y.Z/reg_mona_runner/extract.R`.
 

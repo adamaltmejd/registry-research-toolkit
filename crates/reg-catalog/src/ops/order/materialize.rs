@@ -294,7 +294,7 @@ fn build(
         &lane_gaps,
         &mut findings,
     );
-    let format = project.extract_format.unwrap_or(ExtractFormat::Parquet);
+    let format = project.extract_format;
     let base = server.catalog.connect()?;
     let mut files = Vec::new();
     let mut names: BTreeMap<String, String> = BTreeMap::new();
