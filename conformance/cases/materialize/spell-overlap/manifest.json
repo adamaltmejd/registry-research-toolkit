@@ -50,7 +50,7 @@
               "table": "demo/spells/s",
               "variable": "demo/spells/benefit",
               "period": {
-                "start": "2018-01-01",
+                "start": "2015-01-01",
                 "end": "2019-01-01"
               },
               "spelling": "Benefit"

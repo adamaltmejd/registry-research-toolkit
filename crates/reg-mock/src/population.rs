@@ -250,18 +250,42 @@ pub fn day_in(year: i32, rng: &mut Rng) -> i64 {
     start + i64::try_from(rng.below(u64::try_from(len).expect("positive"))).expect("fits")
 }
 
-/// A spell spanning all of `year`: it starts up to a year before it and ends up to a
-/// year after it, or is open (`None`) one time in ten. It overlaps every range that
-/// meets `year`, so it passes any row filter the year passes.
+/// A spell that starts in `year` and overlaps one of `ranges` (inclusive day numbers,
+/// an absent bound no limit): it ends on or after a day drawn in a range at or after
+/// the start of `year`, up to a year later, or is open (`None`) one time in ten. A
+/// row filter of those ranges passes it.
 ///
 /// # Panics
 ///
-/// Never: a draw below 365 fits an `i64`.
-pub fn spell_around(year: i32, rng: &mut Rng) -> (i64, Option<i64>) {
+/// Never: draws are below spans that fit an `i64`.
+pub fn spell_in(
+    year: i32,
+    ranges: &[(Option<i64>, Option<i64>)],
+    rng: &mut Rng,
+) -> (i64, Option<i64>) {
     let first = days_from_civil(year, 1, 1);
     let last = days_from_civil(year + 1, 1, 1) - 1;
-    let start = first - i64::try_from(rng.below(365)).expect("fits");
-    let end = (!rng.chance(0.1)).then(|| last + i64::try_from(rng.below(365)).expect("fits"));
+    let below = |rng: &mut Rng, n: i64| -> i64 {
+        i64::try_from(rng.below(u64::try_from(n).expect("positive"))).expect("fits")
+    };
+    let spans: Vec<(i64, i64)> = ranges
+        .iter()
+        .map(|&(lo, hi)| {
+            let lo = lo.map_or(first, |d| d.max(first));
+            (lo, hi.unwrap_or(lo.max(last)))
+        })
+        .filter(|(lo, hi)| lo <= hi)
+        .collect();
+    // A row year after every range has no spell that overlaps one; the compiler gives
+    // a spell file no year past its request, so this keeps the row's own year.
+    let (lo, hi) = if spans.is_empty() {
+        (first, last)
+    } else {
+        spans[usize::try_from(below(rng, i64::try_from(spans.len()).expect("fits"))).expect("fits")]
+    };
+    let day = lo + below(rng, hi - lo + 1);
+    let start = first + below(rng, day.min(last) - first + 1);
+    let end = (!rng.chance(0.1)).then(|| day + below(rng, 365));
     (start, end)
 }
 

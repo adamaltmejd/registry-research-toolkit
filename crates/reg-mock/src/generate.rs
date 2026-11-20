@@ -7,7 +7,7 @@ use reg_core::manifest::Encoding;
 use reg_core::project::{ColumnType, ExtractFormat};
 
 use crate::Refusal;
-use crate::population::{Demography, Exit, Population, day_in, spell_around, year_of};
+use crate::population::{Demography, Exit, Population, day_in, spell_in, year_of};
 use crate::rng::Rng;
 use crate::spec::{Attribute, Spec, SpecColumn, SpecFile, Unit};
 
@@ -239,6 +239,14 @@ fn rows(
             Some(Attribute::SpellStart | Attribute::SpellEnd)
         )
     });
+    let ranges: Vec<(Option<i64>, Option<i64>)> = file
+        .spells
+        .iter()
+        .map(|r| {
+            let day = |iso: &Option<String>| iso.as_deref().and_then(reg_core::iso_day_number);
+            (day(&r.from), day(&r.to))
+        })
+        .collect();
     let years = if file.years.is_empty() {
         vec![last]
     } else {
@@ -284,7 +292,7 @@ fn rows(
             for _ in 0..n {
                 // One pair per row, shared by its start and end columns.
                 let unit = &Unit_ {
-                    spell: spells.then(|| spell_around(unit.year, &mut spell_rng)),
+                    spell: spells.then(|| spell_in(unit.year, &ranges, &mut spell_rng)),
                     ..*unit
                 };
                 let mut row = Vec::with_capacity(kinds.len());

@@ -2707,6 +2707,14 @@ reads its time from the start. A high sentinel end (`9999-12-31`, `99991231`) al
 passes as open; there is no sentinel declaration (simplify: a blank or low-sentinel
 open end is dropped; declare a sentinel when a steward table needs one).
 
+The filter also returns spells that started before the requested days, so a spell
+table is resolved as if the order had requested its spell window: from the delivery's
+first held day to the request's end. Bindings, keys, slot families, coverage and
+findings come out as for an ordinary order over those years: a binding or key placed
+in one column for some years and another for the rest joins each column over its own
+years, and a year the binding has no column for is a `coverage_gap`. Only the row
+filter keeps the requested days.
+
 
 Unfilterable pooled holdings report that all rows are included; they do not pretend
 that selecting columns restricts rows.
@@ -2767,13 +2775,9 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   adds the physical period column once as a `row_key` with no references. A requirement
   on hold or uncovered is `held_key_missing`, a key two columns place over the same day
   `held_key_ambiguous`; both block the order. A key placed in one column for some years
-  and another for the rest joins each over its own years. A spell table's filter also
-  returns spells that started before the requested days, so a spell table's keys and
-  bindings are resolved over its spell window, from the delivery's first held day to the
-  widened request end: every key declaration over it joins its columns, and a key or
-  binding the window places in more than one column blocks the order
-  (`spell_column_varies`; simplify: refused rather than joined per start day). `reg-build
-  holdings` already refuses an uncovered or overlapping key (`holdings_key_missing`,
+  and another for the rest joins each over its own years. A spell table's keys are
+  resolved over its spell window (above). `reg-build holdings` already refuses an
+  uncovered or overlapping key (`holdings_key_missing`,
   `holdings_key_ambiguous`), and a hold holds the whole table, so in an admitted pair
   both guard a foreign artifact only.
 - A stored `file_name` failing `safe_file_name` or colliding with another file's when

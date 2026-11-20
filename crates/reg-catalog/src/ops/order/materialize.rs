@@ -10,7 +10,7 @@
 //! is the union of its requested days, at the encoding's grain. Every refusal is a
 //! located finding; nothing partial is returned.
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, btree_map};
 
 use reg_core::IssueLevel;
 use reg_core::days::{merge, minus, overlap};
@@ -181,7 +181,8 @@ fn build(
     // The holdings gap findings of an entry of one release, with that release: a shared
     // day another release delivers does not hide them ([`clip`]).
     let mut lane_gaps: Vec<(Issue, String)> = Vec::new();
-    let mut spell_tables: BTreeMap<i64, Holding> = BTreeMap::new();
+    // Per holding seen, its first held day when it is a spell table.
+    let mut spell_tables: BTreeMap<i64, Option<i64>> = BTreeMap::new();
     for (e, entry) in order.entries.iter().enumerate() {
         let s = index[entry.source.as_str()];
         let days = entry.period.days(open);
@@ -207,47 +208,47 @@ fn build(
             )
         });
         binding.1.push(days);
-        // A spell table returns every spell that started in its spell window, so the
-        // binding is resolved over that window and must sit in one column of it.
+        // A spell table returns every spell that overlaps the request, so its
+        // placements are resolved as if the entry had requested its spell window: from
+        // the table's first held day to the request's end. Only the row filter keeps
+        // the requested days.
+        let mut spells = BTreeSet::new();
+        let mut resolved = days;
         for p in &placements {
-            let table = match spell_tables.entry(p.holding) {
-                std::collections::btree_map::Entry::Occupied(e) => e.into_mut(),
-                std::collections::btree_map::Entry::Vacant(e) => {
-                    e.insert(holding(held, p.holding)?)
-                }
-            };
-            let Some(window) = spell_window(table, days.1) else {
-                continue;
-            };
-            let columns: BTreeSet<i64> = self::placements(
+            if let btree_map::Entry::Vacant(e) = spell_tables.entry(p.holding) {
+                let table = holding(held, p.holding)?;
+                e.insert(spell_window(&table, days.1).map(|w| w.0));
+            }
+            if let Some(first) = spell_tables[&p.holding] {
+                spells.insert(p.holding);
+                resolved.0 = resolved.0.min(first);
+            }
+        }
+        let placements = if spells.is_empty() {
+            placements
+        } else {
+            let wide = self::placements(
                 held,
                 &entry.table,
                 &entry.variable,
-                window,
+                resolved,
                 entry.release.as_deref(),
                 space,
-            )?
-            .iter()
-            .filter(|w| w.holding == p.holding)
-            .map(|w| w.column)
-            .collect();
-            let issue = Issue {
-                source: Some(entry.source.clone()),
-                variable: Some(entry.variable.clone()),
-                ..Issue::new(
-                    IssueLevel::Error,
-                    "spell_column_varies",
-                    format!("/sources/{s}/bindings/{}", entry.binding),
-                    spell_column_varies(&table.label, &entry.variable),
-                )
-            };
-            if columns.len() > 1 && !findings.contains(&issue) {
-                findings.push(issue);
-            }
-        }
+            )?;
+            placements
+                .into_iter()
+                .filter(|p| !spells.contains(&p.holding))
+                .chain(wide.into_iter().filter(|p| spells.contains(&p.holding)))
+                .collect()
+        };
         let lane_held = binding.2.entry(entry.release.clone()).or_default();
         for p in &placements {
-            let piece = (days.0.max(p.days.0), days.1.min(p.days.1));
+            let over = if spells.contains(&p.holding) {
+                resolved
+            } else {
+                days
+            };
+            let piece = (over.0.max(p.days.0), over.1.min(p.days.1));
             lane_held.push(piece);
             let draft = drafts.entry(p.holding).or_insert_with(|| Draft {
                 first: (s, entry.binding, e),
@@ -255,7 +256,10 @@ fn build(
                 source: entry.source.clone(),
                 ..Draft::default()
             });
-            draft.days.entry(s).or_default().push(piece);
+            let asked = (days.0.max(p.days.0), days.1.min(p.days.1));
+            if asked.0 < asked.1 {
+                draft.days.entry(s).or_default().push(asked);
+            }
             draft.tables.insert(entry.table.clone());
             let stored = stored(held, p.column)?;
             let slot_index = stored
@@ -269,7 +273,13 @@ fn build(
                 .entry(p.column)
                 .or_insert_with(|| (key, Role::Ordered, vec![]));
             column.0 = column.0.min(key);
-            column.2.push(reference(server, entry, piece));
+            let mut reference = reference(server, entry, piece);
+            // A spell piece before the request is not the entry's: it is spelled by its
+            // stored column, as a row key is.
+            if piece.1 <= days.0 {
+                reference.spelling.clone_from(&stored.name);
+            }
+            column.2.push(reference);
             if let Some(caveat) = &p.caveat {
                 findings.push(Issue {
                     source: Some(entry.source.clone()),
@@ -296,7 +306,7 @@ fn build(
             server,
             s,
             entry,
-            days,
+            resolved,
             space,
             &placements,
             &mut findings,
@@ -1160,17 +1170,6 @@ fn keys(
                     .iter()
                     .filter(|(_, _, d, ..)| !overlap(&days, &[*d]).is_empty())
                     .collect();
-                if holding.period_end_column.is_some()
-                    && over.iter().map(|o| o.0).collect::<BTreeSet<_>>().len() > 1
-                {
-                    let mut issue = block(
-                        "spell_column_varies",
-                        spell_column_varies(&holding.label, variable),
-                    );
-                    issue.variable = Some((*variable).to_owned());
-                    findings.push(issue);
-                    continue;
-                }
                 // Two columns are ambiguous only over a day both place the key; a key
                 // in one column for some years and another for the rest is not.
                 let distinct: BTreeSet<i64> = over
@@ -1300,16 +1299,6 @@ fn key_scope(requirement: &Value) -> Result<Vec<Days>, Error> {
             Ok((super::day(&lo), super::day(&hi) + 1))
         })
         .collect()
-}
-
-/// The `spell_column_varies` message: a spell table places `variable` in more than one
-/// column over its spell window, so some returned spells would lack it.
-fn spell_column_varies(table: &str, variable: &str) -> String {
-    format!(
-        "Table {table:?} has {variable} in more than one column for the spells an order of \
-         it can return (spells that began before the years requested), so it cannot be \
-         ordered. Leave it out."
-    )
 }
 
 /// A key's mapping: (column id, table, days, carried, column name, caveat).

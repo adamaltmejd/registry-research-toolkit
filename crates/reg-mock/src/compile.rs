@@ -585,6 +585,9 @@ impl Context<'_> {
                 }
             }
             built.file.years = years.into_iter().collect();
+            if let Some(filter) = file.row_filter.as_ref().filter(|f| f.end_column.is_some()) {
+                built.file.spells.clone_from(&filter.ranges);
+            }
             // Each file year, not their span: a gap year's value sets are not extracted.
             let file_years: Vec<Period> =
                 built.file.years.iter().map(|&y| year_period(y)).collect();
@@ -1080,7 +1083,7 @@ fn within(period: Period, bounds: &Period) -> Period {
 }
 
 /// The attribute a row-filter column writes: the row's year, or a spell's start or
-/// end, which are drawn together so each mock spell overlaps its row's year.
+/// end, which are drawn together so each mock spell overlaps a filter range.
 fn period_attribute(filter: &manifest::RowFilter, name: &str) -> Option<Attribute> {
     let end = filter.end_column.as_deref();
     if end == Some(name) {
@@ -1146,6 +1149,7 @@ impl Built {
                 population: Population::default(),
                 rows_per_unit: 1.0,
                 years,
+                spells: Vec::new(),
                 columns: Vec::new(),
             },
             column_sources: Vec::new(),

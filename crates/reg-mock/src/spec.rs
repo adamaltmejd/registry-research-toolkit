@@ -4,7 +4,7 @@
 
 use std::collections::BTreeMap;
 
-use reg_core::manifest::{Encoding, Storage};
+use reg_core::manifest::{Encoding, Range, Storage};
 use reg_core::project::{ColumnType, ExtractFormat};
 use serde::{Deserialize, Serialize};
 
@@ -59,6 +59,9 @@ pub struct SpecFile {
     /// The years the file holds, ascending; empty for a timeless table.
     #[serde(default)]
     pub years: Vec<i32>,
+    /// A spell table's row-filter ranges: each row's spell overlaps one of them.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub spells: Vec<Range>,
     pub columns: Vec<SpecColumn>,
 }
 
@@ -156,7 +159,7 @@ pub enum Attribute {
     /// The row's year, in the column's own encoding.
     Year,
     /// A spell table's start and end (NULL while open), in the column's own encoding:
-    /// one pair per row that spans the row's year, so it overlaps any range in it.
+    /// one pair per row that starts in the row's year and overlaps a row-filter range.
     SpellStart,
     SpellEnd,
 }
