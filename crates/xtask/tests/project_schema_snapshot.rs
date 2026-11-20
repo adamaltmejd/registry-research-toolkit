@@ -73,8 +73,7 @@ fn project_schema_is_current() {
         .replace(&format!("\"{PREFIX}"), "\"#/$defs/")
         + "\n";
 
-    let path =
-        root.join("plugins/regmeta/skills/project-data/project_data.schema.json");
+    let path = root.join("plugins/regmeta/skills/project-data/project_data.schema.json");
     if std::env::var_os("REG_META_BLESS").is_some() {
         std::fs::write(&path, &rendered).unwrap();
     }
