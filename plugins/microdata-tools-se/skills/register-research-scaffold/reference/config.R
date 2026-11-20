@@ -1,7 +1,8 @@
 # Machine paths, all outside the project folder. The researcher sets REAL_DIR and
 # the real key file on MONA; locally only the mock paths exist. The mock folders
-# carry the project folder's name (run.R and make_keys.R run from that folder), so
-# two projects under one parent folder never share them.
+# carry the project folder's name (run.R and make_keys.R run from that folder; the
+# physical name, as `pwd -P` gives it), so two projects under one parent folder
+# never share them.
 PROJECT <- basename(getwd())
 REAL_DIR <- "<the folder the steward's extract lands in>"
 MOCK_DIR <- file.path("..", paste0(PROJECT, "-mock")) # reg-mock generate --out

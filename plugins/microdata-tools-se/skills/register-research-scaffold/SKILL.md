@@ -164,11 +164,21 @@ are not, ask the user to restart the session in the project and stop.
 5. Update the project instructions (`CLAUDE.md` or `AGENTS.md`) to match: the title,
    the paragraph about the example, the commands, the names under "Before MONA" and the
    pin table.
-6. Replace the mock inputs and the mock keys. Delete the project's two mock folders,
-   `../<project>-mock` and `../<project>-mock-keys`, and nothing else: `reg-mock
-   generate` leaves the earlier order's files in place, and a run refuses an input
-   folder with extra files; the earlier mock keys do not cover the new persons, and
-   `make_keys.R` refuses where a key file exists. Then run `reg-mock generate` and
+6. Replace the mock inputs and the mock keys. `reg-mock generate` leaves the earlier
+   order's files in place, and a run refuses an input folder with extra files; the
+   earlier mock keys do not cover the new persons, and `make_keys.R` refuses where a key
+   file exists. So delete the project's two mock folders, `../<project>-mock` and
+   `../<project>-mock-keys`, and nothing else, but first confirm they are this
+   project's mocks. List the two folders without opening the key file:
+   - the mock folder holds `mock_manifest.json` and only the files it lists;
+   - the manifest's `project` is `project.name` in `mock/mock_spec.json` at the commit
+     the mocks were generated from (`git show <commit>:mock/mock_spec.json`);
+   - the key folder holds only `cell_keys.csv`;
+   - both folder names are the ones the stage 1 report gave, and they carry the
+     project folder's physical name (`pwd -P`).
+
+   If any check fails, for example after the project folder was renamed, delete
+   nothing: stop and ask the user. Then run `reg-mock generate` and
    `Rscript make_keys.R mock`. This applies to mock data only. Never delete or recreate
    a real input folder or a real key file: a new real key epoch is the researcher's
    explicit decision.
