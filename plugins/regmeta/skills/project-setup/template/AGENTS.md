@@ -17,7 +17,7 @@ A register research project. `RESEARCH.md` says what it studies.
 ```text
 RESEARCH.md        what the project studies
 project_data.json  the data: the order, and what is delivered
-run.R              the runner; uploaded once, not edited
+run.R              the runner; uploaded once; only its settings block changes
 rproject.toml, rv/, .Rprofile, air.toml, jarl.toml   local R tooling; never uploaded
 src/               everything that runs on the server: flat, text only
 tests/             local tests on small fixtures

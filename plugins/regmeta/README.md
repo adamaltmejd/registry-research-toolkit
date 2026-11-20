@@ -16,7 +16,9 @@ bundles five skills:
 Start a project with `project-setup`. The catalog tools need nothing beyond the plugin.
 Mock data needs the `reg-mock` binary (the [repository README's Mock data
 section](https://github.com/adamaltmejd/registry-research-toolkit#mock-data)), and a
-project's pipeline and export gate need R where they run.
+project's pipeline and export gate need R where they run. Locally the project template
+uses [rv](https://github.com/A2-ai/rv) for packages, [air](https://posit-dev.github.io/air/)
+for formatting and [jarl](https://jarl.etiennebacher.com/) for linting.
 
 ## Install
 

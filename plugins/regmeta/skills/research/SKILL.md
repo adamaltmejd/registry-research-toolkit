@@ -53,8 +53,8 @@ Its `mock/` is a project's `.regmeta/mock/`.
    each result named in `release_tables()`.
 
 `src/` is flat and holds only text files that run on the server: no subfolders, no
-tests, no notes. `run.R`, `src/staging.R` and the four pinned files (`export_gate.R`,
-`cell_key.R`, the schema and the policy) are not edited. The export is the schema's
+tests, no notes. `run.R` (but for `PACKAGES`), `src/staging.R` and the four pinned
+files (`export_gate.R`, `cell_key.R`, the schema and the policy) are not edited. The export is the schema's
 Parquet files and `receipt.json`; tables and figures are made locally from them.
 
 ## Packages and data.table
@@ -108,7 +108,7 @@ A batch is the committed `src/` at one commit.
    [operator-review.md](references/operator-review.md).
 
 `run.R` is uploaded once. Tell the researcher when a batch needs it again (a changed
-data folder, schema, policy or pin).
+data folder, package list, schema, policy or pin).
 
 ## Results
 

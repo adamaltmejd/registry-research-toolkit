@@ -2,5 +2,5 @@
 # redundant_equals: its fix turns dt[flag == TRUE] into dt[flag], and data.table then
 # looks `flag` up outside the table instead of filtering rows by the column.
 ignore = ["redundant_equals"]
-# The pinned toolkit files are not the project's code.
-exclude = ["src/export_gate.R", "src/cell_key.R"]
+# The pinned toolkit files and rv's scripts are not the project's code.
+exclude = ["src/export_gate.R", "src/cell_key.R", "rv/"]

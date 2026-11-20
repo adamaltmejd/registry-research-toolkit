@@ -1,3 +1,4 @@
 [format]
-# The pinned toolkit files are never reformatted: a run checks their hashes.
-exclude = ["src/export_gate.R", "src/cell_key.R"]
+# The pinned toolkit files are never reformatted: a run checks their hashes. rv/ is
+# rv's own.
+exclude = ["src/export_gate.R", "src/cell_key.R", "rv/"]

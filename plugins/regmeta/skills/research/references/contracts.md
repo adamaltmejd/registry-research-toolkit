@@ -25,7 +25,7 @@ same encoding or identifiers. Distinguish absent rows, missing values, zero, con
 classifications and suppression. Keep source-validity bounds separate from analysis
 eligibility; valid out-of-sample cohorts must not fail global assertions.
 
-Preserve appropriate reference-project lookups, recording revision and provenance. Read
+Keep lookup tables the project takes from elsewhere, recording revision and provenance. Read
 only needed columns/partitions. A bridge for an existing input format stays narrow and
 inside restricted compute; never export individual-level bridge files.
 

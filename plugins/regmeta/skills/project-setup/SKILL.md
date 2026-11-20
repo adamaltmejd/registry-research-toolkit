@@ -62,7 +62,8 @@ results/   approved real exports, by date
 3. **The pipeline**, copied unchanged from [template/](template/): `run.R` and
    `src/pipeline.R`, `src/inputs.R`, `src/disclosure.R`, `src/staging.R`. Set `DATA_DIR`
    in `run.R` to the delivered files' absolute folder, with forward slashes, or leave it
-   empty until the data is delivered. Nothing else in `run.R` is edited.
+   empty until the data is delivered. Later only `PACKAGES` changes, when the project
+   adds a package.
 4. **The pinned files**, in `src/`: `cell_key.R` copied from
    [scripts/cell_key.R](scripts/cell_key.R), and `export_gate.R`,
    `aggregates.schema.json` and `aggregates.policy.json` from the toolkit at the
@@ -78,7 +79,8 @@ results/   approved real exports, by date
      then always a mock run: `Rscript run.R`.
    - Formatting with [air](https://posit-dev.github.io/air/) and linting with
      [jarl](https://jarl.etiennebacher.com/): copy [template/air.toml](template/air.toml)
-     and [template/jarl.toml](template/jarl.toml). Both leave the pinned files alone.
+     and [template/jarl.toml](template/jarl.toml). Both leave the pinned files and `rv/`
+     alone.
 
    If `rv`, `air` or `jarl` is not installed, say which and give the user the install
    command to run; do not install tools yourself. Without rv, skip `.Rprofile`: a mock
