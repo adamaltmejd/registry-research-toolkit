@@ -71,9 +71,9 @@ results/   approved real exports, by date
 5. **`.gitignore`**, from [template/gitignore](template/gitignore), and the empty
    `tests/` and `.regmeta/` folders. Add to an existing `.gitignore`; do not replace it.
 6. **`AGENTS.md`**, from [template/AGENTS.md](template/AGENTS.md), with the project's
-   values filled in. It holds pointers, not explanations: keep it that short. For Claude
-   Code also write a `CLAUDE.md` with the one line `@AGENTS.md`. Add to an existing
-   instructions file; do not replace it. For a server other than MONA, rewrite the batch
+   values filled in. It holds pointers, not explanations: keep it that short. If the
+   project already has an instructions file (`AGENTS.md` or `CLAUDE.md`), add to it; do
+   not replace it or write a second one. For a server other than MONA, rewrite the batch
    section from the `research` skill's `references/operator-review.md`.
 
 The template is R, and reads Parquet files. For a project in another language, write
