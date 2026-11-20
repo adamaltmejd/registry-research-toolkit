@@ -26,7 +26,7 @@ pub(super) struct Missing {
 /// The files of `scope`'s serving tables that variable `id` (`pid`) has no segment in,
 /// neither its own release's nor a releaseless one, over the `wanted` days the source
 /// reads each (`lanes`: the shared days each named release serves), less the days the
-/// check orders from any serving table.
+/// check orders from any serving table. Only releases meeting those days are read.
 pub(super) fn files(
     scope: &Scope,
     id: i64,
@@ -35,19 +35,20 @@ pub(super) fn files(
     ordered: &[Interval],
     lanes: &[(String, Interval)],
 ) -> Result<Vec<Missing>, Error> {
-    if ordered.is_empty() {
+    let left = gaps(wanted, ordered.to_vec());
+    if left.is_empty() {
         return Ok(Vec::new());
     }
     let base = "SELECT r.start AS start, r.end AS end, n.body AS name FROM main.release r
                 JOIN main.text n ON n.id = r.name_text
-                WHERE r.table_id = ?1 AND r.is_primary = 1 AND r.start IS NOT NULL";
+                WHERE r.table_id = ?1 AND r.is_primary = 1 AND r.start < ?3 AND r.end > ?2";
     let sql = if scope.composed {
         format!(
             "SELECT DISTINCT start, end, name FROM ({base} UNION ALL
                SELECT r.start, r.end, n.body FROM held.release r
                  JOIN held.text n ON n.id = r.name_text
                  JOIN held.tbl ht ON ht.id = r.table_id JOIN main.tbl bt ON bt.pid = ht.pid
-               WHERE bt.id = ?1 AND r.is_primary = 1 AND r.start IS NOT NULL)
+               WHERE bt.id = ?1 AND r.is_primary = 1 AND r.start < ?3 AND r.end > ?2)
              ORDER BY start, end, name"
         )
     } else {
@@ -60,15 +61,22 @@ pub(super) fn files(
     );
     let mut found = Vec::new();
     for s in scope.serving {
-        let releases: Vec<(i64, i64, String)> = rows(scope.conn, &sql, [s.table.id], |row| {
-            Ok((row.get(0)?, row.get(1)?, row.get(2)?))
-        })?;
-        let open = overlap(&s.requested, wanted);
+        let open = overlap(&s.requested, &left);
+        let Some((lo, hi)) = reg_core::hull(&open) else {
+            continue;
+        };
+        let releases: Vec<(i64, i64, String)> = rows(
+            scope.conn,
+            &sql,
+            params![s.table.id, day(&lo), day(&hi) + 1],
+            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+        )?;
         for (start, end, name) in releases {
             let file = interval(start, end);
-            let mut away = ordered.to_vec();
-            away.extend(not_selected(lanes, &name));
-            let hit = gaps(&overlap(&open, std::slice::from_ref(&file)), away);
+            let hit = gaps(
+                &overlap(&open, std::slice::from_ref(&file)),
+                not_selected(lanes, &name),
+            );
             if hit.is_empty() {
                 continue;
             }

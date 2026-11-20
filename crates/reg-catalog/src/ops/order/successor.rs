@@ -88,6 +88,18 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &CatalogBinding) -> Resu
             out.findings.push(finding);
             break;
         };
+        // Days between this hop's end and the successor's start: no hop reads their files.
+        if *at > end.max(lower) {
+            let skipped = overlap(scope.requested, &[interval(end.max(lower), *at)]);
+            out.missing.extend(super::absent::files(
+                scope,
+                id,
+                &current.variable,
+                &skipped,
+                &[],
+                &[],
+            )?);
+        }
         lower = end.max(*at).max(lower);
         current.variable.clone_from(successor);
         first = false;
