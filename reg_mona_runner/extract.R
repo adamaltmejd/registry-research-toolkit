@@ -843,17 +843,31 @@ select_expr <- function(type, max_length) {
 
 # The period value a filter compares, as T-SQL text around `@col` (the quoted
 # column), and the type its bounds take. year, yyyymm and yyyymmdd read the
-# column as an integer (TRY_CAST, so an unparseable value is NULL and excluded);
+# column as an integer (TRY_CAST, so an unparseable value is NULL and excluded),
+# and a yyyymmdd that is no calendar day or a yyyymm that is no month is NULL too;
 # date reads it as a day, so a datetime keeps every time of its day. Blank text
 # is NULL first: SQL Server casts '' to 1900-01-01 or 0, which would pass a range
-# or escape the rows_without_period count.
+# or escape the rows_without_period count. The filter and that count read this
+# one value.
 period_key <- function(encoding, data_type, table, column) {
   value <- if (data_type %in% TEXT_TYPES) "NULLIF(LTRIM(RTRIM(@col)), '''')" else "@col"
   if (encoding == "date" && data_type %in% c(DATE_TYPES, TEXT_TYPES)) {
     return(list(expr = paste0("TRY_CAST(", value, " AS date)"), type = "date"))
   }
   if (encoding != "date" && data_type %in% c(NUMBER_TYPES, TEXT_TYPES)) {
-    return(list(expr = paste0("TRY_CAST(", value, " AS bigint)"), type = "bigint"))
+    n <- paste0("TRY_CAST(", value, " AS bigint)")
+    valid <- switch(
+      encoding,
+      year = NULL,
+      yyyymm = paste0(n, " % 100 BETWEEN 1 AND 12"),
+      yyyymmdd = paste0(
+        "TRY_CONVERT(date, CAST(",
+        n,
+        " AS varchar(20)), 112) IS NOT NULL"
+      )
+    )
+    expr <- if (is.null(valid)) n else paste0("CASE WHEN ", valid, " THEN ", n, " END")
+    return(list(expr = expr, type = "bigint"))
   }
   refuse(
     "resolve",
