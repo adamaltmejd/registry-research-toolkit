@@ -184,9 +184,9 @@ are not, ask the user to restart the session in the project and stop.
    nothing: stop and ask the user. The checks cannot tell apart two projects with the
    same folder name and the same spec, so when they pass, name the two folders by their
    full paths and ask the user to confirm the deletion. Without that confirmation,
-   delete nothing. Then run `reg-mock generate` and `Rscript make_keys.R mock`. This applies to mock data only. Never delete or recreate
-   a real input folder or a real key file: a new real key epoch is the researcher's
-   explicit decision.
+   delete nothing. Then run `reg-mock generate` and `Rscript make_keys.R mock`. This
+   applies to mock data only. Never delete or recreate a real input folder or a real
+   key file: a new real key epoch is the researcher's explicit decision.
 7. Commit, and run `Rscript run.R mock` until the gate passes. A prototype can run on
    mocks while parts of the question remain open.
 8. Stop and report: the ticket, what changed, the commit, the mock run's result and what
