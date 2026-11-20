@@ -2503,9 +2503,9 @@ required from project schema 8.0.0 ("Project document 8.0.0"), so materializatio
 resolves no default. `project.rs::SCHEMA_VERSION` admits
 8.0.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
-compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
-absent, use the authoring default without inserting it before project hashing. The
-manifest always carries the resolved format. This preserves the researcher-selected
+compatibility"; ARCHITECTURE.md, "Project schema version"). A project that states no
+format is refused with `missing_required_field` at `/extract_format`. The manifest
+always carries the project's format. This preserves the researcher-selected
 one-format-per-project contract (`reg_mona_runner/DESIGN.md`, "Types per format") and
 the hand-off in `steward.json.order_instructions`: the researcher sends only
 `project_data.json`; the coordinator reviews it and generates/downloads `order.json`.
