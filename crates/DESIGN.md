@@ -1443,9 +1443,9 @@ the order check's to state in its own tests; the rules that shape them:
   source selects them, that the variable has no segment in, such as three of four
   quarterly files), `variable_absent_from_files` is one info per table and requested
   year naming those files' periods, judged against the whole binding's clips (a followed
-  binding's too, after its hops); a file crossing a year boundary counts in each year it
-  misses (COS ruling 2026-11-20, #2603). A gap inside a file, or where no file is
-  delivered, still gives nothing.
+  binding's too, after its hops; the files between two hops are not read); a file
+  crossing a year boundary counts in each year it misses (COS ruling 2026-11-20,
+  #2603). A gap inside a file, or where no file is delivered, still gives nothing.
 - A `period_clipped` names another variable that has data in a serving table on the
   clipped days when the catalog links the two: a `continues` edge either way, or the
   same delivered column (the folded column name) in that table. Each is named with the

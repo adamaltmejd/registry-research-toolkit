@@ -88,18 +88,9 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &CatalogBinding) -> Resu
             out.findings.push(finding);
             break;
         };
-        // Days between this hop's end and the successor's start: no hop reads their files.
-        if *at > end.max(lower) {
-            let skipped = overlap(scope.requested, &[interval(end.max(lower), *at)]);
-            out.missing.extend(super::absent::files(
-                scope,
-                id,
-                &current.variable,
-                &skipped,
-                &[],
-                &[],
-            )?);
-        }
+        // simplify: no hop reads the files between this hop's end and the successor's
+        // start, so a file missing there gets no `variable_absent_from_files`; check them
+        // when a hop can route days its variable has no segment on.
         lower = end.max(*at).max(lower);
         current.variable.clone_from(successor);
         first = false;

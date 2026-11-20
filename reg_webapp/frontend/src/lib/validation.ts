@@ -62,7 +62,7 @@ const TITLES: Readonly<Record<string, string>> = {
   series_break: "Series break during the study years",
   binding_type_differs: "The type in the project differs from the catalog",
   period_clipped: "Years not available",
-  variable_absent_from_files: "Some files do not contain this variable",
+  variable_absent_from_files: "Variable unavailable in some files",
   preliminary_data: "The requested data are preliminary",
   variable_replaced: "Variable has a successor",
   sensitive_variables: "Some variables may contain sensitive personal data",
