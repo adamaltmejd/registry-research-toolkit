@@ -2,20 +2,21 @@
 
 Agent plugin for working with Swedish administrative register microdata (SCB,
 Socialstyrelsen, and other holders). It declares the hosted catalog MCP server and
-bundles four skills:
+bundles five skills:
 
   | Component                    | Purpose                                                                                                                                             |
   | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `catalog` MCP server         | The hosted global register metadata catalog, `https://reg-meta.vqv.uk/mcp`. A data steward's catalog is added per project (below).                 |
-  | `catalog-search`   | Skill: how to query variables, value codes and schemas with the catalog tools.                                                                      |
-  | `project-data`           | Skill: drafting and validating a `project_data.json` data order, and answering questions about a project.                                           |
-  | `mock-data`         | Skill: local mock data shaped like the project's delivery, with `reg-mock`.                                                                         |
-  | `project-setup` | Skill: scaffolding a batch-based register research project with mock validation, restricted execution (MONA or another server) and the export gate. |
+  | `catalog-search`             | Skill: how to query variables, value codes and schemas with the catalog tools.                                                                      |
+  | `project-data`               | Skill: a project's `project_data.json`, as a data order or written from a summary of delivered data, and questions about it.                        |
+  | `mock-data`                  | Skill: local mock data shaped like the project's delivery, with `reg-mock`.                                                                         |
+  | `project-setup`              | Skill: sets up a project folder, new or existing: research spec, run script, pipeline layout, pinned export gate, agent instructions.               |
+  | `research`                   | Skill: the work in a set-up project: questions, analyses, mock runs, batches for MONA or another server, and importing approved results.            |
 
-The catalog tools need nothing beyond the plugin. Mock data needs the `reg-mock` binary
-(the [repository README's Mock data
+Start a project with `project-setup`. The catalog tools need nothing beyond the plugin.
+Mock data needs the `reg-mock` binary (the [repository README's Mock data
 section](https://github.com/adamaltmejd/registry-research-toolkit#mock-data)), and a
-project's export gate needs R where the pipeline runs.
+project's pipeline and export gate need R where they run.
 
 ## Install
 

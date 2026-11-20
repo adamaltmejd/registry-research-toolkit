@@ -1,193 +1,107 @@
 ---
 name: project-setup
-description: Scaffold a small batch-based Swedish register-data research project from a
-  research brief and documented source contracts, starting from the skill's lean R
-  reference project: question tickets, separate local and restricted execution,
-  `reg-mock` inputs, a disclosure stage and the export gate. Supports MONA (a steward's
-  extract in, the toolkit export gate out) and other processing servers; does not
-  authorize microdata access, transfer, or server execution.
+description: Set up a Swedish register research project folder so an agent can work in
+  it, in a new folder or around an existing project. Writes the research spec, the
+  run script and pipeline layout, the pinned export gate and the agent instructions,
+  then hands over to the data order and mock data. Use when the user starts a register
+  project, or wants an existing one organized for mock runs, batches and gated exports.
 ---
 
-# Register research scaffold
+# Project setup
 
-Create the smallest working project that answers the user's first research questions,
-starting from the R reference project in [reference/](reference/) (below). Preserve a
-user's existing project; create a separate project when requested. A different stack
-(Python with DuckDB, say) keeps the reference's stages and boundaries in its own tools.
-Do not build a custom workflow framework, research-record database, RAG service or
-independent mock generator. Do not configure hosted Git or transfer data through it
-without an explicit request.
+Setup prepares the folder. It does no research: it proposes no research questions,
+writes no analysis and runs no pipeline. The `research` skill does that work afterwards,
+and the first mock run happens there.
 
-Read [contracts.md](references/contracts.md) before implementation. Read
-[execution.md](references/execution.md) when wiring batches, packaging, and transfers.
-Read [operator-review.md](references/operator-review.md) when preparing human-operated
-transfer and model-access approval. Read [export-gate.md](references/export-gate.md)
-when wiring the disclosure stage (`scripts/cell_key.R`, which needs the `openssl` R
-package) or the final release stage: the toolkit's export gate, its pinned version and
-how a MONA project calls it. Read [mona.md](references/mona.md) for a project on MONA.
+The row-level data is on a server no agent runs on (MONA, or a private server). The
+agent works in the project folder, on code, catalog metadata and mock data. Read only
+the project folder and the sources the user names. Never ask for or use the user's
+server access.
 
-## On MONA
+## 1. Look, then ask
 
-No agent runs on MONA, and row-level data never leaves it: only aggregates the export
-gate passed and a human reviewed. The agent works locally on code, catalog metadata and
-mock data. A project whose data a data steward delivers runs in this order
-([mona.md](references/mona.md) has who does what):
+Look at the folder first: is it a Git repository and is it clean, and which of
+`AGENTS.md` or `CLAUDE.md`, `RESEARCH.md`, `project_data.json`, `run.R`, `src/` and
+other code exist. Then ask only for what the folder does not answer, in one round:
 
-1. Add the steward's catalog to the project as its `steward-catalog` server, in
-   `.mcp.json` (Claude Code) or `.codex/config.toml` (Codex), and record in the project
-   instructions that it is the catalog to use (`catalog-search` skill,
-   `references/data-stewards.md`).
-2. Draft and validate `project_data.json` with the `project-data` skill.
-3. Generate mock inputs from it with the `mock-data` skill (`reg-mock`).
-4. Build and run the pipeline locally on the mocks, ending with `export_gate.R`.
-5. The steward materializes the order and runs `extract.R` on MONA; the researcher runs
-   the same pipeline on the extract, reviews the gate's export and sends it out.
+1. Is this a new project or an existing one? The folder the agent was started in is the
+   project folder.
+2. What is the research about, in a few sentences? Skip it if `RESEARCH.md` says.
+3. Does it run on MONA? If so, the project code (`P` and four digits). If not, where.
+4. Is the data delivered? If so, the absolute folder the files are in, and their format.
+5. Which catalog: the global one, or a data steward's host?
 
-Steps 2 to 4 need no MONA access, so a project can be complete and tested before its
-extract exists.
+Do not ask about populations, estimands, outcomes or outputs. Those belong to a
+question, later.
 
-## Establish the research and execution boundary
+## 2. Git
 
-Read supplied source code/documentation and applicable instructions. Establish
-entity/grain, keys, source definitions, measurement timing, population, missingness and
-output questions. Record exact reference-repository commits and relevant paths. Do not
-inspect microdata, restricted caches or credentials merely to infer a schema. Source
-code is evidence of an intended contract, not confirmation of real data.
+- **An empty folder**: `git init`, and one commit when setup is done.
+- **A clean Git repository**: work in it, one commit per step below.
+- **Uncommitted changes**: stop. Ask the user to commit or set them aside first.
+- **Files but no Git**: stop and ask the user how to proceed.
 
-Distinguish approved choices from proposed choices. Ask about ambiguity that changes the
-estimand or population; otherwise state a reversible assumption. A prototype can run on
-mocks while questions remain open. Keep unresolved scientific definitions, source
-coverage and disclosure policy visibly pending; do not label real-data integration
-verified.
+Add no remote and push nothing unless the user asks.
 
-Server connections are researcher-operated. Do not request or use the researcher's SSH
-access, inspect private connection configuration, or download results for them. Prepare
-placeholders, operator commands and local mock simulations; the researcher supplies
-server details privately. Restricted compute has no remote model access. No AI
-invocation or model API dependency belongs in the batch runner. Keep agent-readable
-local inputs to code, documentation, clearly fake data, and aggregate releases
-explicitly approved by a human for model access. An automatic disclosure pass alone
-never authorizes loading real outputs into model context, including through locally
-running tools connected to a hosted model. Never configure automatic GitHub
-synchronization. Git records history locally; add approved institutional remotes only
-when requested.
+## 3. What setup writes
 
-## Scaffold only what the first batch needs
+```text
+AGENTS.md  RESEARCH.md  project_data.json  run.R
+src/       flat, text only: what runs on the server
+tests/     local tests on small fixtures
+output/    a run's export, review copies, manifest and diagnostics (ignored)
+results/   approved real exports, by date
+.regmeta/  mock rules (committed); mock data, keys, staging, cache (ignored)
+```
 
-The first scaffold is [reference/](reference/) adapted to the user's first question:
-about 150 lines of the project's own code. The reference orders LISA Individer
-2021–2022 from the global catalog and publishes persons and mean disposable income by
-sex and year. Copy it to the project folder, `PROJECT.md` as the project's `CLAUDE.md`
-or `AGENTS.md`, then:
+1. **`RESEARCH.md`**, from [template/RESEARCH.md](template/RESEARCH.md): the user's
+   answers, half a page. Leave what is not known as "not decided".
+2. **The catalog.** For a data steward's host, follow the `catalog-search` skill's
+   `references/data-stewards.md`. The global catalog needs nothing.
+3. **The pipeline**, copied unchanged from [template/](template/): `run.R` and
+   `src/pipeline.R`, `src/inputs.R`, `src/disclosure.R`, `src/staging.R`. Set `DATA_DIR`
+   in `run.R` to the delivered files' absolute folder, with forward slashes, or leave it
+   empty until the data is delivered. Nothing else in `run.R` is edited.
+4. **The pinned files**, in `src/`: `cell_key.R` copied from
+   [scripts/cell_key.R](scripts/cell_key.R), and `export_gate.R`,
+   `aggregates.schema.json` and `aggregates.policy.json` from the toolkit at the
+   `reg_meta` tag of the catalog release in use (the `research` skill's
+   `references/export-gate.md` has the address). Check each file's SHA-256 against
+   `PINS` in `run.R`. If one differs, stop and report it: never edit a pin to match.
+5. **`.gitignore`**, from [template/gitignore](template/gitignore), and the empty
+   `tests/` and `.regmeta/` folders. Add to an existing `.gitignore`; do not replace it.
+6. **`AGENTS.md`**, from [template/AGENTS.md](template/AGENTS.md), with the project's
+   values filled in. It holds pointers, not explanations: keep it that short. For Claude
+   Code also write a `CLAUDE.md` with the one line `@AGENTS.md`. Add to an existing
+   instructions file; do not replace it. For a server other than MONA, rewrite the batch
+   section from the `research` skill's `references/operator-review.md`.
 
-1. Replace `project_data.json` with the user's order (`project-data` skill), and
-   `mock/` with its saved answers, rules and compiled spec (`mock-data` skill).
-   Set the paths in `config.R`; the mock and key folders stay outside the project.
-2. Fill `export_gate/`: `export_gate.R` and the chosen schema and policy from the
-   `reg_meta` tag [export-gate.md](references/export-gate.md) names, checked against its
-   SHA-256, and `cell_key.R` copied unchanged from [scripts/](scripts/cell_key.R).
-   Record each file's version and SHA-256 in the instructions' pin table. Commit all four.
-3. Rewrite for the question: the delivered files and column names in `config.R`
-   (from the order answer; a steward's extract keys persons by `LopNr`), the source
-   adapter (`R/inputs.R`), the analysis (`R/analysis.R`) and the cells and statistics
-   in `R/disclosure.R` (its suppress, perturb, round order stays). One Markdown ticket
-   per question in `questions/`.
-4. Run `Rscript make_keys.R mock` once and `Rscript run.R mock` until the gate passes.
+The template is R, and reads Parquet files. For a project in another language, write
+everything but the pipeline, and tell the user that its run script and gate call are
+theirs to write (`references/export-gate.md` in the `research` skill, "A Python pipeline").
 
-Keep the parts that carry a rule, whatever the question:
+## 4. An existing project
 
-- `run.R mock|real` first removes that mode's earlier export, using nothing sourced,
-  then checks the mode's input folder and never falls back; mock and real runs write
-  to separate `out/<mode>/` folders. A file's year comes from the order answer
-  (`LISA_FILES` in `config.R`), never from its name.
-- A mock input must be listed in `reg-mock`'s `mock_manifest.json` and carry its
-  `reg_mock` Parquet metadata; a real input must not carry it.
-- An analysis returns person-level rows, never counts or statistics. The one disclosure
-  stage (`R/disclosure.R`) is the only code that makes a publishable number: suppress,
-  perturb with `ck_perturb()`, round ([export-gate.md](references/export-gate.md), "The
-  disclosure policy").
-- The staging writer (`R/staging.R`) writes every file the schema declares, exactly its
-  columns and types, into a fresh staging folder; the gate call is the run's last step.
-- The key file and the run record (with its `key_epoch`) stay outside the export; the
-  key file outside the project.
+Do the same steps around the code that is there, in dialogue with the user:
 
-Build later, when the need arrives:
+1. List the code files and what each does. Propose where each goes: what runs on the
+   server into `src/` (flat, no subfolders), tests into `tests/`, the rest left alone.
+2. Agree on the plan before moving anything. Move one group at a time, fix the paths the
+   move breaks, and commit each step.
+3. Do not rewrite an analysis. Wiring existing code into `src/pipeline.R` and the
+   disclosure stage is work for the `research` skill, one analysis at a time.
 
-- Before the first export is imported: the import check against `receipt.json`
-  ([export-gate.md](references/export-gate.md), "Importing an export"). No export is
-  read until that check exists and passes.
-- After a first real export: a local HTML view of tickets and results, paper and slides.
-  Mock outputs are visibly labelled mock.
-- When a run's time matters: a dependency-aware build tool (`targets` in R), per
-  [execution.md](references/execution.md), "Incremental builds".
-- On a server other than MONA: the operator's `sync.sh`
-  ([operator-review.md](references/operator-review.md)).
+Never delete a file the user has not agreed to delete.
 
-Do not build a ticket validator, a hash manifest of the mock inputs (`reg-mock` output
-is fixed by the committed spec and seed and labels itself), or a test that the gate
-refuses a bad file (the gate's own case corpus covers it).
+## 5. Hand over
 
-Remote artifacts are exactly the aggregate files the chosen export-gate schema declares:
-one Parquet file per schema file, a suppressed cell null (never zero), plus the gate's
-`receipt.json`. Render tables and figures locally from those files; deterministic
-human-only previews may be generated before approval, but models must not see their
-contents until approval.
+Setup ends with the data, in this order:
 
-Routine execution includes only active analyses. A closed ticket stays in Git and its
-code at its execution revision; promote what current research still needs into
-maintained code rather than archiving live dependencies.
+1. The `project-data` skill writes `project_data.json`. If the data is delivered, it
+   starts from a data summary the user makes on the server; if not, from the first
+   order.
+2. The `mock-data` skill writes mock files shaped like the delivery.
 
-The mock generator is `reg-mock` (the `mock-data` skill), not part of this
-skill or a new subsystem to build. For a trial without it, the brief may provide an
-independent wholly invented mock sample; keep it separate from unit fixtures and
-identify its limitations. Never derive unit fixtures from mock data or restricted
-records.
-
-The reference pins catalog `reg_meta/v0.91.0` and the gate version in
-[export-gate.md](references/export-gate.md); a gate update changes both together.
-
-## Verification proportional to risk
-
-Keep these jobs separate:
-
-- Unit tests run locally only, on minimal hand-authored fixtures. Add a test only for a
-  named failure not already protected. Prefer extending a focused test. Do not test
-  every helper, mirror implementation details, or add large snapshots/combinatorial
-  matrices.
-- The actual pipeline must run locally on mock inputs before every remote handoff. The
-  same data assertions run on mock and real inputs. Fix mock contracts rather than
-  adding mock-only bypasses. Assertions protect design requirements; diagnostics answer
-  open questions.
-- When a transfer artifact exists, execute that exact artifact against mock data in an
-  isolated directory. This can also satisfy the full mock-pipeline gate; avoid two
-  identical full runs.
-- Every remote batch must invoke the toolkit's export gate as its final computational
-  stage, before any result becomes downloadable: on MONA, the pinned `export_gate.R`
-  with the project's chosen schema and policy (see
-  [export-gate.md](references/export-gate.md)). This is mandatory on MONA and other
-  servers; see the release contract. The same call runs last in every local mock run.
-  Keep real release disabled until the project's outputs are shaped to the chosen
-  schema and policy. Local success does not establish real coverage, findings, performance or
-  disclosure clearance.
-
-Use relevant tests/targets while iterating; run the complete small suite and full mock
-gate on the final execution revision. Record commands, results and runtime. At batch
-completion consolidate obsolete/redundant tests, retaining meaningful regressions and
-independent scientific/disclosure checks. Do not impose coverage percentages or
-arbitrary test-count quotas.
-
-## Finish with evidence
-
-Commit executable inputs when the user has authorized a committed-code trial. Keep
-source/configuration/lockfiles free of individual data and stage specific paths. Run
-from the commit, not a dirty working directory. Record answers in later commits
-referencing that execution revision; a mock pass is not an empirical answer.
-
-Demonstrate one local mock run from the commit that ends in a gate pass, with its run
-record. Use Git plus ticket status and a recorded command; do not build an archival
-subsystem.
-
-Report usable project path, skill version, execution commit, checks, and operator
-prerequisites. Leave restricted connections, execution, downloads and approval of real
-results to the researcher. Scaffolding for a real project permits source-led
-preparation; it does not authorize exposing microdata to the agent.
+Then report: what was written, what is still missing (an empty `DATA_DIR`, an undecided
+part of `RESEARCH.md`), and that the `research` skill takes the first question. Nothing
+has run yet, and nothing in the folder has been checked against real data.

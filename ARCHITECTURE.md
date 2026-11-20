@@ -85,7 +85,7 @@ registry-research-toolkit/
   reg_mona_runner/  # MONA extract runner: order file -> extracts inside MONA (R)
   reg_export_gate/  # export gate: MONA check of outputs before export (R), schemas
   conformance/      # contract corpus, run against the Rust server
-  plugins/          # the regmeta agent plugin (hosted MCP, skills incl. the scaffold)
+  plugins/          # the regmeta agent plugin (hosted MCP, five skills)
   reg_webapp/
     edge/           # global hosted MCP edge worker
 ```

@@ -13,7 +13,7 @@ women aged 15 or older, by year?
 
 ## Method
 
-`R/analysis.R` (`income_by_sex`): one row per person and year. Published as persons
+`src/income_by_sex.R` (`income_by_sex`): one row per person and year. Published as persons
 per sex and year (`counts.parquet`) and the mean over persons with a value
 (`statistics.parquet`), through the disclosure stage.
 

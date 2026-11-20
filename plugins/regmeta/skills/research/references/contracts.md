@@ -32,7 +32,7 @@ inside restricted compute; never export individual-level bridge files.
 ## Batch and run
 
 A batch names tickets and required processing/configuration. Each run has a unique
-evidence ID and records source commit, batch/configuration/lock hashes, data mode,
+evidence ID and records source commit (on MONA, the run's source id), batch/configuration/lock hashes, data mode,
 input-release identifiers, software versions, completed checks and artifact hashes. Keep
 research history and evidence tracking locally. A run ID does not require a persistent
 remote directory: remote current code, candidate outputs and downloadable outputs may be
@@ -42,7 +42,7 @@ commit. Do not export raw paths, IDs, values or exception dumps as provenance.
 Machine-specific paths can remain in private local configuration.
 
 Execution source must be committed. Transfer only declared sources from the recorded
-commit and verify runtime/dependencies rather than importing untracked helpers. The run
+commit (on MONA, every file in `src/`) and verify runtime/dependencies rather than importing untracked helpers. The run
 and later ticket answer can be different commits. Keep execution commits reachable in
 history or a retained batch tag.
 
@@ -113,7 +113,7 @@ or unsupported statistical quantities do.
 
 ## Local interface
 
-Built after a first real export, not in the first scaffold. Generate offline-capable
+Built after a first real export, not at setup. Generate offline-capable
 HTML from canonical ticket/result files, not a second state store or server platform.
 Escape prose, filenames and labels. Show batch status, question, answer/uncertainty,
 provenance, result table/figure and next action. Separate remote output, local renders

@@ -33,11 +33,12 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 then install `regmeta` from the plugin marketplace UI.
 
 The plugin connects to the hosted catalog MCP server at `https://reg-meta.vqv.uk/mcp`
-(or a data steward's catalog, as a setting) and bundles four skills:
-`catalog-search`, which documents its tools, `project-data`, for drafting
-a `project_data.json`, `mock-data`, for local mock data, and
-`project-setup`, for a research project that runs on MONA. The plugin
-README's "Data stewards" section says when and how to use a steward's catalog.
+(or a data steward's catalog, as a setting) and bundles five skills:
+`catalog-search`, which documents its tools, `project-data`, for a project's
+`project_data.json`, `mock-data`, for local mock data, `project-setup`, which sets up a
+research project folder, and `research`, for the work in it: analyses, mock runs,
+batches for MONA and gated exports. The plugin README's "Data stewards" section says
+when and how to use a steward's catalog.
 
 ## Quick start
 

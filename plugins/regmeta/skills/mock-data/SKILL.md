@@ -11,8 +11,11 @@ description: Generate local mock register data from a project_data.json with
 `reg-mock` writes files shaped like the project's delivery: the same file and
 column names, the runner's types and format (`.dta`, Parquet or CSV), drawn from a
 simulated population built from SCB's public demography. It reads catalog metadata only,
-never a data row; every key is synthetic. A pipeline switches between real and mock data
-by its input directory alone.
+never a data row; every key is synthetic. A project's pipeline reads them in a mock run
+(`REGMETA_MOCK=1 Rscript run.R`), in place of the delivered files.
+
+The paths below are a project's as `project-setup` lays it out: answers, rules and spec
+in `.regmeta/mock/`, committed; the generated files in `.regmeta/mock-data/`, ignored.
 
 Three steps, each leaving a file the researcher can review and commit: save the
 catalog's answers, write the rules and compile them into `mock_spec.json`, generate.
@@ -44,7 +47,7 @@ catalog's answers, write the rules and compile them into `mock_spec.json`, gener
 
 ```bash
 reg-mock fetch --catalog <catalog-mcp-url> --project project_data.json \
-  --mode order|materialize --out mock/answers
+  --mode order|materialize --out .regmeta/mock/answers
 ```
 
 `fetch` sends the project to the catalog's MCP tools and saves the order answer, every
@@ -57,14 +60,14 @@ is the wrong server: fetch again from the URL of the catalog the project's `cata
 names, without editing the project (for the global catalog, with `--mode order`). Fix
 any other finding in the project (`project-data` skill) and fetch again.
 
-Commit `mock/answers/`: compile reads only these files, so the mock never depends on
+Commit `.regmeta/mock/answers/`: compile reads only these files, so the mock never depends on
 the network again. Save again whenever the project changes; compile refuses answers saved
 for another version of it (`answers_stale`).
 
 ## 2. Write the rules and compile
 
 The catalog cannot say who a table holds or how many rows a person has. Write that in
-`mock/mock_rules.json`, one entry per project source, and give the reason for each
+`.regmeta/mock/mock_rules.json`, one entry per project source, and give the reason for each
 choice so the researcher can judge it:
 
 ```json
@@ -112,8 +115,8 @@ choice so the researcher can judge it:
   `codes` on a manual column is refused (`codes_in_project`): edit the project's.
 
 ```bash
-reg-mock compile --project project_data.json --rules mock/mock_rules.json \
-  --answers mock/answers --out mock/mock_spec.json
+reg-mock compile --project project_data.json --rules .regmeta/mock/mock_rules.json \
+  --answers .regmeta/mock/answers --out .regmeta/mock/mock_spec.json
 ```
 
 A refusal is JSON on stderr, exit 2: every problem at once, each with a `code`, where
@@ -124,13 +127,13 @@ and columns, and commit both.
 ## 3. Generate
 
 ```bash
-reg-mock generate --spec mock/mock_spec.json --out <mock-input-dir> \
+reg-mock generate --spec .regmeta/mock/mock_spec.json --out .regmeta/mock-data \
   [--seed 1] [--persons 10000]
 ```
 
 The same spec, seed and size give the same bytes. More than 1 000 000 persons needs
-`--allow-large`. Keep the output out of Git, beside the real-input directory the
-pipeline is configured with. Each file states it is mock data (the `.dta` label, Parquet
+`--allow-large`. Delete `.regmeta/mock-data/` before generating again: `generate` leaves
+files from an earlier spec in place. Each file states it is mock data (the `.dta` label, Parquet
 metadata) and `mock_manifest.json` lists the files and row counts.
 
 ## Limits

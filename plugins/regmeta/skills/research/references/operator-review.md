@@ -10,8 +10,8 @@ to an agent-executed default build.
 For a flexible server, provide a small `sync.sh up|down [--dry-run]` around rsync. Both
 directions use the same simple root .gitignore exclusions and explicitly omit .git. Keep
 Git history local; approved real aggregate results may be tracked. Exclude mock results,
-caches, private intermediates, raw logs, environments and machine configuration. Raw and
-mock inputs live outside the project. Do not claim full Git-ignore support: use simple
+caches, private intermediates, raw logs, environments and machine configuration. Raw
+inputs live outside the project; mock inputs are in its Git-ignored `.regmeta/`. Do not claim full Git-ignore support: use simple
 exclude patterns, or Git's file selection if advanced rules become necessary.
 
 1. Test the committed source locally on approved mock inputs, then upload with
@@ -34,7 +34,7 @@ The helper only copies files: no remote execution, automatic approval or deletio
 default. Review and remove obsolete source/output files explicitly. A sync is not a
 merge; avoid concurrent runs or local edits that a download would overwrite. Fixed
 remote paths retain current data/cache only. MONA keeps its separate manual
-upload/export workflow.
+upload/export workflow ([mona.md](mona.md)).
 
 ## Alternative local review
 

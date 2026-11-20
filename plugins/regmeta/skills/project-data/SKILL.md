@@ -1,14 +1,17 @@
 ---
 name: project-data
-description: Draft a project_data.json register data order with the catalog MCP tools,
-  or answer questions about an existing project file.
+description: Write and maintain a register project's project_data.json with the catalog
+  MCP tools. It is the data order, and the record of what a project holds. Use to draft
+  or change an order, to describe data that is already delivered (from a data summary
+  made on the server), or to answer questions about a project file.
 ---
 
 # Register projects
 
-A `project_data.json` lists the register columns a study orders: each source is one
-table over a period, and each binding is one variable delivered from it. The agent
-drafts and checks the file. The document's schema is
+A `project_data.json` lists the register columns a study uses: each source is one
+table over a period, and each binding is one variable delivered from it. A project that
+waits for data sends it as its order; a project whose data is delivered writes the same
+file from what it holds ("Delivered data" below). The agent drafts and checks the file. The document's schema is
 [project_data.schema.json](project_data.schema.json), generated from the server's API
 contract.
 
@@ -84,10 +87,10 @@ the `catalog-search` skill.
    `identifier` column. `validate` reports each such source with a `manual_item` info;
    tell the user that the extract runner does not deliver these columns, so the data
    manager adds them by hand.
-6. Set `extract_format`, the format the extract runner writes each file in: `dta`
-   (Stata, the default when absent), `parquet` or `csv`. Ask the user when the language
-   the analysis runs in on MONA makes it matter (`dta` suits Stata; `parquet` suits R,
-   Python or DuckDB); otherwise leave it out.
+6. Set `extract_format`, the format each delivered file is written in: `parquet`,
+   `dta` (Stata) or `csv`. Always state it. Write `"extract_format": "parquet"` unless
+   the analysis runs in Stata or the user asks for another format; the `project-setup`
+   pipeline reads Parquet.
 7. Call `order` with `operation: "validate"` and the document as `project`. Fix every
    issue whose `level` is `error` and validate again until `ok` is true; report the
    warnings to the user. A `classification_version_ambiguous` warning means the variable
@@ -99,7 +102,7 @@ the `catalog-search` skill.
    from over the period is a `classification_incompatible` error. To cover several
    versions, split the source by period and pin each. Ignore the warning when the column
    is only carried along, not used to join or recode across years.
-8. Save the file as `project_data.json`.
+8. Save the file as `project_data.json` in the project folder.
 9. On a steward's catalog, `order` with `operation: "materialize_order"` returns the MONA
    order file the steward's extract runner reads: one file per table and delivery, its
    columns and row filter. Show it to the user to confirm what the extract will hold. It
@@ -149,6 +152,36 @@ A minimal document on the global catalog (set `schema_version`, `reg_meta_versio
   ]
 }
 ```
+
+## Delivered data
+
+When the files are already on the server, start from a data summary: which files exist,
+their columns, types and row counts. It holds no observed value. Assume file and column
+names are not personal data. Never assume that of a value.
+
+1. Copy [scripts/data_summary.R](scripts/data_summary.R) to the project's
+   `.regmeta/data_summary.R` and set `DATA_DIR` to the delivered files' absolute folder,
+   with forward slashes. The user must not need to edit it.
+2. The user uploads it and submits it as it is (on MONA, to the batch runner). It writes
+   `data_summary.csv` to the folder it runs from. The user reads the file, sends it out through the
+   server's own export and saves it as `.regmeta/data_summary.csv`. It needs no export
+   gate: it has names, types and counts only.
+3. Match it to the catalog. Each file is a table and a year: find the table with
+   `resolve` and `search` on the file and column names, and `schema` or `segments` for
+   its columns. On a steward's catalog `segments` lists the steward's own file names.
+   Ask the user about a file or column the catalog does not explain; never guess.
+4. Write `project_data.json` as in "Drafting a project": one source per table and
+   period, one binding per column the project uses, a manual binding or source for what
+   the catalog lacks (step 5 there). Validate until `ok` is true.
+5. Update the mock data (`mock-data` skill): save the answers again, set the delivered
+   file names (`rename`) and columns in the rules, compile and generate. Then check
+   `SOURCES` in `src/inputs.R` against the summary's file and column names.
+
+Run the same five steps when an ordered delivery arrives: the summary shows where the
+delivery differs from the order. The script reads files only (Parquet, `.dta`,
+`.sas7bdat`, delimited text); data delivered in SQL Server is not covered yet. Never ask
+the user to read or paste values, codes or distributions from the server: a column's
+codes come from the catalog or from documentation.
 
 ## Questions about my project
 

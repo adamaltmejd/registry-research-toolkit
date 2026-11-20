@@ -14,48 +14,54 @@ investigations, aggregate data files and the mandatory final export-gate check
 flexible servers return the checked file set through rsync. No model calls or automatic
 raw-data synchronization. Tables and figures are rendered locally.
 
-Configure real and mock input directories outside the project. Name the mode when
-starting a run (the reference: `Rscript run.R mock|real`); fail when its directory is
-missing, and refuse a mock run where the real directory exists. Before anything that
-can fail, invalidate that mode's previous export. An unreadable directory, invalid input or
-failed assertion in the selected mode halts execution; never retry with another mode.
+The real input folder is outside the project, on the server that holds the data. Mock
+inputs are in the project's Git-ignored `.regmeta/mock-data/`. A run is real unless
+`REGMETA_MOCK` is set (`run.R`); it stops when its input folder is missing, and a mock
+run stops where the real folder exists. Before anything that can fail, invalidate the
+previous run's review copies and manifest; the gate removes the previous export. An
+unreadable directory, invalid input or failed assertion in the selected mode halts execution; never retry with another mode.
 Print the selected mode prominently. Verify that mock inputs belong to an approved
 invented input set before reading them; a mode flag or filename is not sufficient:
 `reg-mock` lists its files in `mock_manifest.json` and labels each with `reg_mock`
-metadata, and a real input must not carry the label (the reference's `R/inputs.R`).
+metadata, and a real input must not carry the label (`check_inputs()` in
+`src/inputs.R`).
 No separate hash manifest: the committed spec and seed fix the bytes. Derive separate
 cache, result and local-render paths from the selected mode. Ignore caches, mock
 outputs, private intermediates, logs, environments and machine-specific configuration.
 Disclosure-checked, human-approved real aggregate results and local renders may be
 tracked in Git. Mock runs must never overwrite real outputs; missing real results must
 never make a paper or slide build use mock results. Refuse input/output overlap. Source
-readers must not alter reference-project inputs or stores.
+readers must not alter their inputs.
 
 ## MONA
 
-The order flow (catalog, `project_data.json`, mock inputs, the steward's extract, the
-gate, MONA's export) and who does each step is in [mona.md](mona.md). On MONA the real
-input directory is the folder the steward's extract lands in.
+The order of work (catalog, `project_data.json`, mock inputs, the delivery, the gate,
+MONA's export) and who does each step is in [mona.md](mona.md). On MONA the real input
+folder is the delivered files' folder, in the project's read-only `PXXXX_Data`.
 
-Upload the committed project folder (the reference project's layout: `run.R`, `R/`,
-`config.R`, `export_gate/`) and return one result ZIP per batch. The run's last step
-calls the pinned `export_gate.R`, uploaded unchanged in `export_gate/` with the chosen
-schema and policy, never folded into the project's own code: the receipt's gate version
-must name those exact bytes. A Python pipeline runs the gate as a separate `Rscript`
-step after it ([export-gate.md](export-gate.md)). The result ZIP is the gate's output
-folder (the schema's Parquet files and `receipt.json`), never `.diagnostics/` or
+A batch is every file in `src/`, uploaded through MONA's web form, and `run.R`
+submitted to the batch runner with no arguments. The form takes text files only and
+keeps no folders, so `src/` is flat and holds only what runs on MONA; `run.R` is
+uploaded once and does not change between batches. The run's last step calls the pinned
+`export_gate.R`, uploaded unchanged in `src/` with the chosen schema and policy, never
+folded into the project's own code: the receipt's gate version must name those exact
+bytes. A Python pipeline runs the gate as a separate `Rscript` step after it
+([export-gate.md](export-gate.md)). What leaves is the zip of `output/export/` (the
+schema's Parquet files and `receipt.json`), never `.diagnostics/`, the review copies or
 staging. Verify accepted formats and runtime before claiming compatibility; do not
-concatenate modules into one file. Include small required nonpersonal
-lookup/configuration assets.
+concatenate modules into one file. Small nonpersonal lookup files the pipeline needs
+go in `src/` as text.
 
-Build from an explicit commit and source allowlist. Exclude .git, datasets, caches,
-logs, secrets and unrelated investigations. Record commit and file hashes. Dependencies
-belong in a prepared environment; never download during research execution. Zipapps
-cannot load native extension binaries directly from inside the archive.
+There is no Git on MONA. The run writes the hash of `run.R` and of every file in `src/`
+to `output/run_manifest.json` and prints a short source id. A mock run from a clean
+local checkout prints the same id for the same files, which names the commit that ran.
+Missing packages install from MONA's own mirror in the run's preparation step; nothing
+else is downloaded during a run.
 
-Preflight runtime, dependencies, inputs and writable locations before expensive work.
-Diagnostics are not exported: the gate's report stays in `.diagnostics/` on MONA.
-Console output must not print rows, arbitrary values or raw tracebacks.
+`run.R` checks the mode, the input folder, the packages and the pinned files before any
+expensive work. Diagnostics are not exported: the gate's report stays in
+`output/.diagnostics/` on MONA. The batch log (`run.Rout`) also stays on MONA; it may be
+verbose, and it is never exported or pasted to the agent.
 
 Use manual MONA upload/export. A simulated local run establishes packaging only. Do not
 open the restricted desktop or use a remote model to inspect its data.
@@ -100,9 +106,10 @@ check alone never grants that approval.
 
 ## Incremental builds
 
-Not in the first scaffold: add one when a run's time matters. Use an established
-dependency-aware tool (for example targets in R or pytask for a Python/file-based
-pipeline) rather than writing a cache manager. A Makefile may expose
+The R template uses `targets`: `src/pipeline.R` declares the steps and the cache is in
+`.regmeta/targets/`, so a refused gate costs only the steps that changed. For another
+stack use an established dependency-aware tool (for example pytask for a
+Python/file-based pipeline) rather than writing a cache manager. A Makefile may expose
 convenient commands; if Make is the dependency engine, explicitly handle
 code/configuration/environment changes rather than relying on output existence alone.
 This skill does not mandate a particular engine.

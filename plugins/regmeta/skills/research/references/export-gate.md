@@ -11,7 +11,7 @@ pinned copy of its bytes and never a variant.
 `reg_meta` tag the project's `reg_meta_version` names (0.6.0 is in `reg_meta/v0.87.3` and
 later):
 `https://raw.githubusercontent.com/adamaltmejd/registry-research-toolkit/reg_meta/vX.Y.Z/reg_export_gate/export_gate.R`.
-Check the version line in the copy and record its SHA-256. In `reg_meta/v0.87.3` the file
+Check the version line in the copy; its SHA-256 goes in `PINS` in `run.R`. In `reg_meta/v0.87.3` the file
 is `51d6f810ef0c93faccb69f748382b6cdce93243af838788f9165e094a103869a`, the default
 `aggregates` schema `8160f4cb2250b5d22e609bf0a58935a221bd61ec407dd0403e2ccdd0537f1f93`
 and its policy (internal name `aggregates-min5`)
@@ -35,11 +35,10 @@ accepts: 0.6.0 accepts everything the shipped schemas and policies use.
   The toolkit's other pairs (`trial`, `mock-stats`) are for trials and local mock
   statistics, not a project's outputs. If the project needs a different policy, see
   "The disclosure policy" below.
-- In the project instructions: the gate version, the schema and policy names and
-  versions, and the three files' SHA-256, so a changed copy is visible.
+- The pins: `PINS` in `run.R` holds each file's SHA-256, and a run stops on a file that
+  differs. The project instructions name the gate version and the schema and policy.
 
-Commit the three files with the project. Upload them to MONA unchanged (the toolkit
-README's step 1).
+The files live in `src/`, committed, and travel unchanged with every batch.
 
 ## The disclosure policy
 
@@ -68,7 +67,7 @@ the staging writer, in this order:
    `estimate` and `std_error` to `NA` where `n_true` is below 5, or where `k_true` or
    `n_true - k_true` is 1 to 4.
 2. **Perturb.** Every published person count (`n_persons` in all four files) comes from
-   `ck_perturb()` in [cell_key.R](../scripts/cell_key.R), from the persons behind the
+   `ck_perturb()` in [cell_key.R](../../project-setup/scripts/cell_key.R), from the persons behind the
    cell, never from a computed count. It returns `n_true` (true, check-only) and the
    perturbed `n_persons`, already `NA` below the floor. A share is one `counts.parquet`
    row per outcome category, each perturbed, never a ratio.
@@ -90,24 +89,24 @@ Stage exactly the columns the schema declares for each file, nothing more:
   it, the bound is 0 and any perturbed count is refused as
   `count_perturbation_exceeded`.
 
-`cell_key.R` is the toolkit's helper, shipped with this skill. Copy it into the project
-unchanged, as `export_gate/cell_key.R`, and record its `CELL_KEY_VERSION` and SHA-256 in
-the project instructions beside the gate's. Its record keys are a secret key file that
-stays on MONA, outside the project folder that is synced or exported, readable by the
-researcher only. On every platform it lives in a folder only the researcher can read;
-that folder is the guarantee. The helper also writes the file with mode 0600, a second
-layer that a folder's inherited access rights (a default ACL, Windows permissions) can
-override. The keys come from a cryptographic generator, the `openssl` R package, which
+`cell_key.R` is the toolkit's helper, shipped with the `project-setup` skill and copied
+unchanged into the project as `src/cell_key.R`, pinned in `run.R` beside the gate's
+files. Its record keys are a secret key file, `.regmeta/keys/cell_keys.csv` in the
+project folder on the server that holds the data. It is never uploaded, exported or
+committed, and the agent never opens it. On MONA the project folder is in `PXXXX_Gem`,
+which the MONA project's members share: they already read the data. The helper also
+writes the file with mode 0600, which a folder's inherited access rights (a default
+ACL, Windows permissions) can override. The keys come from a cryptographic generator, the `openssl` R package, which
 also checks the p-table's SHA-256: it is the helper's one package requirement on every R
 version (install it on MONA from the configured repository; without it the helper
-refuses as `cell_key_openssl_missing`). The researcher creates the key file once with
-`ck_keys_create(<all person ids in the extract>, <path>)`; this is key epoch 1.
-Persons it lacks are refused (`cell_key_missing_ids`); `ck_keys_extend()` adds keys for
-them in the same epoch. A new epoch (`new_epoch = TRUE`) replaces every key, so a table
-published under two epochs loses its protection. Make one only on the researcher's
-explicit request. Every result carries its `key_epoch` (an attribute). The pipeline
-writes it to the project's run record on MONA, never to staging or the export. Locally,
-on mocks, use a key file made from the mock person ids, outside Git.
+refuses as `cell_key_openssl_missing`). Nobody runs a key script: `perturbed_counts()`
+in `src/disclosure.R` creates the key file on the first run (key epoch 1) and adds keys
+for persons it lacks, in the same epoch; existing keys never change. A new epoch
+(`ck_keys_create(..., new_epoch = TRUE)`) replaces every key, so a table published
+under two epochs loses its protection. Make one only on the researcher's explicit
+request. Deleting the project folder on MONA deletes the keys and has the same effect.
+The run writes the `key_epoch` to `output/run_manifest.json`, never to staging or the
+export. A local mock run makes its own key file from the mock person ids.
 
 **A project sets its own policy** as a `<name>.policy.json` (format
 `reg-export-gate/policy`, fields in `reg_export_gate/DESIGN.md`, "Policy format"),
@@ -124,26 +123,30 @@ release.
 
 The pipeline writes its complete output into a fresh staging folder (delete and recreate
 it at the start of every run), then calls the gate as its final step, with nothing after
-it writing to the output folder:
+it writing to the export folder. The call is in `run.R`, so no batch upload can drop it:
 
 ```r
-source("export_gate/export_gate.R")
+source("src/export_gate.R")
 export_gate(
-  staging = "<run>/staging",
-  output = "<run>/export",
-  schema = "export_gate/<name>.schema.json",
-  policy = "export_gate/<name>.policy.json"
+  staging = ".regmeta/staging",
+  output = "output/export",
+  schema = "src/<name>.schema.json",
+  policy = "src/<name>.policy.json"
 )
 ```
+
+After a pass `run.R` writes each exported table again as CSV in `output/review/`, read
+back from `output/export/`, for the researcher to read on MONA, and the manifest. Only
+`output/export/` leaves.
 
 - The output files are Parquet, one per schema file; column types as the schema says (R
   `integer` for counts); a suppressed cell is `NA` (null), never `0`, `NaN` or `Inf`.
 - On a pass the gate rewrites each checked table (the decoded data only, no metadata)
-  into a temporary `.export-gate-*` folder beside `<run>/export`, adds `receipt.json`
-  and renames that folder to `<run>/export`. Staging is not moved or changed. The export
+  into a temporary `.export-gate-*` folder beside `output/export`, adds `receipt.json`
+  and renames that folder to `output/export`. Staging is not moved or changed. The export
   holds exactly the schema's files and the receipt; the receipt's hashes are of the
   files the gate wrote, not of the staged bytes.
-- `<run>/export` must be absent, empty or a prior gate export (a receipt and the files
+- `output/export` must be absent, empty or a prior gate export (a receipt and the files
   it lists). The gate deletes a prior export before checking, so a refused run never
   leaves an old export looking current; any other content, even a file Windows Explorer
   adds (`desktop.ini`, `Thumbs.db`), is refused as `setup` (`output_not_gate_export`).
@@ -151,7 +154,7 @@ export_gate(
   `export_gate_refusal` and a category code: `setup`, `inventory`, `structure`,
   `disclosure` or `backstop`. The pipeline fails with it.
 - The report (rule, plus file and column where the schema declares them; never a value)
-  is `<run>/.diagnostics/export_gate_report.json`. A file or column the schema does not
+  is `output/.diagnostics/export_gate_report.json`. A file or column the schema does not
   declare is located by its `position` in the sorted listing or column order, never by
   name. It stays on the data side: never exported, synced or shown to the agent. The
   agent learns a refusal's category code from the user, nothing more.
@@ -163,14 +166,14 @@ The gate is R even when the pipeline is not. With a Python/DuckDB stack,
 step:
 
 ```sh
-uv run run.py                     # writes <run>/staging; non-zero exit on any failure
-Rscript export_gate/run_gate.R    # the gate, only if run.py succeeded
+uv run run.py          # writes .regmeta/staging; non-zero exit on any failure
+Rscript run_gate.R     # the gate, only if run.py succeeded
 ```
 
 `run_gate.R` is a few lines of project code: it `source()`s the pinned `export_gate.R`
 and makes the `export_gate()` call above with the paths `run.py` used. It adds no checks
 and never edits the gate. Here "the execution file's last step" means the gate is the
-last command of the run: `run.py` never writes to `<run>/export`, and nothing runs after
+last command of the run: `run.py` never writes to `output/export`, and nothing runs after
 `Rscript`. A refusal makes `Rscript` exit non-zero; the category code is in its console
 line and in the report.
 
