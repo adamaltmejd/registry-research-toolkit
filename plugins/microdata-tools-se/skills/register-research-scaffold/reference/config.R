@@ -7,7 +7,7 @@ PROJECT <- basename(getwd())
 REAL_DIR <- "<the folder the delivered files are in; on MONA the project's PXXXX_Data>"
 MOCK_DIR <- file.path("..", paste0(PROJECT, "-mock")) # reg-mock generate --out
 KEY_FILE <- c(
-  real = "<a folder on MONA only the researcher can read>/cell_keys.csv",
+  real = "<on MONA the project's PXXXX_Gem>/.regmeta/cell_keys.csv",
   mock = file.path("..", paste0(PROJECT, "-mock-keys"), "cell_keys.csv")
 )
 SCHEMA <- "export_gate/aggregates.schema.json"

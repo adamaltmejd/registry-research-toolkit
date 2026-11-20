@@ -1,12 +1,11 @@
 ---
 name: register-research-scaffold
-description: Set up a small batch-based Swedish register-data research project from the
-  skill's lean R reference project, copied unchanged and run on mock data until the
-  export gate passes. The project has separate local and restricted execution, `reg-mock`
-  inputs, a disclosure stage and the export gate. Adds a research question to the
-  project only when the user asks for one. Supports MONA (delivered data in, the
-  toolkit export gate out) and other processing servers; does not authorize microdata
-  access, transfer, or server execution.
+description: Organize a Swedish register-data research project, new or existing, to work
+  with the microdata tools. The scaffold is a batch pipeline that runs locally on mock
+  data and unchanged on the real data on MONA or another restricted server, with
+  disclosure control and the export gate as its last step. Sets up the scaffold only; a
+  research question is added when the user asks. Does not authorize microdata access,
+  transfer or server execution.
 ---
 
 # Register research scaffold
@@ -210,7 +209,8 @@ Keep the parts that carry a rule, whatever the question:
 - The staging writer (`R/staging.R`) writes every file the schema declares, exactly its
   columns and types, into a fresh staging folder; the gate call is the run's last step.
 - The key file and the run record (with its `key_epoch`) stay outside the export; the
-  key file outside the project.
+  key file outside the project. On MONA it is in `PXXXX_Gem\.regmeta`, the folder for
+  the tools' files that are not the user's own.
 
 Build later, when the need arrives:
 

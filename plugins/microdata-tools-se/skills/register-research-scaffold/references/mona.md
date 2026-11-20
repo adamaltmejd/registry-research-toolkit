@@ -12,6 +12,9 @@ all project members share:
 
 - `PXXXX_Data`, read-only: delivered data files land here.
 - `PXXXX_Gem`: the project's own files. The committed project folder is uploaded here.
+- `PXXXX_Gem\.regmeta`: the tools' files that are not the user's own. The cell-key file
+  is here, outside the project folder, so replacing the project folder keeps it. Never
+  export or upload anything from this folder.
 
 Data reaches the project in one of two ways. SCB delivers files into `PXXXX_Data`, which
 is also how a data steward's extract arrives. Or, for an order placed directly with SCB,
@@ -83,7 +86,7 @@ counts against the order.
 
 The researcher uploads the project's committed analysis code, the pinned
 `export_gate.R` and `cell_key.R` and the chosen schema and policy to the MONA project's
-`PXXXX_Gem` folder, creates the cell-key file once in a folder only they can read
+`PXXXX_Gem` folder, creates the cell-key file once in `PXXXX_Gem\.regmeta`
 (`make_keys.R` in the reference project), then runs the pipeline by hand. The pipeline
 reads the delivered files' folder as its real input directory, writes its aggregates to a fresh staging folder and ends with the export gate
 ([export-gate.md](export-gate.md)). The same code ran locally on the mock inputs first,
