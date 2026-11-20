@@ -12,7 +12,11 @@ perturbed_counts <- function(persons, by, id = "person_id") {
     added <- ck_keys_extend(ids, keys)
     if (added > 0) message("cell keys: added ", added, " persons")
   } else {
-    message("==== CELL KEYS: creating a new key file, epoch 1 (", keys, ") ====")
+    message(
+      "==== CELL KEYS: creating a new key file, epoch 1 (",
+      keys,
+      ") ===="
+    )
     ck_keys_create(ids, keys)
   }
   ck_perturb(persons, by, id, keys, MIN_CELL)
@@ -23,7 +27,10 @@ perturbed_counts <- function(persons, by, id = "person_id") {
 release_tables <- function(...) {
   results <- list(...)
   files <- unique(unlist(lapply(results, names)))
-  setNames(lapply(files, function(file) {
-    do.call(rbind, lapply(results, function(r) r[[file]]))
-  }), files)
+  setNames(
+    lapply(files, function(file) {
+      do.call(rbind, lapply(results, function(r) r[[file]]))
+    }),
+    files
+  )
 }

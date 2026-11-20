@@ -1,7 +1,10 @@
 # The pipeline's steps, as targets (run.R builds them; unchanged steps are skipped).
 # One target per input, one per analysis, one per disclosed result, and `release`
 # last: every disclosed result, bound into the schema's files.
-for (f in setdiff(list.files("src", pattern = "\\.R$"), c("pipeline.R", "export_gate.R"))) {
+for (f in setdiff(
+  list.files("src", pattern = "\\.R$"),
+  c("pipeline.R", "export_gate.R")
+)) {
   source(file.path("src", f))
 }
 

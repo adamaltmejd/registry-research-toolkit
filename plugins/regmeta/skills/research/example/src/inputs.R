@@ -3,8 +3,10 @@
 # project's names. Mock data mirrors them.
 SOURCES <- list(
   lisa = list(
-    files = c("2021" = "scb_lisa_individer_2021.parquet",
-              "2022" = "scb_lisa_individer_2022.parquet"),
+    files = c(
+      "2021" = "scb_lisa_individer_2021.parquet",
+      "2022" = "scb_lisa_individer_2022.parquet"
+    ),
     columns = c(person_id = "PersonNr", sex = "Kon", income = "DispInk04")
   )
 )
@@ -13,7 +15,9 @@ SOURCES <- list(
 source_files <- function(name) {
   check_inputs()
   source <- SOURCES[[name]]
-  if (is.null(source)) stop("no source named ", name, " in SOURCES")
+  if (is.null(source)) {
+    stop("no source named ", name, " in SOURCES")
+  }
   file.path(Sys.getenv("REGMETA_DATA"), unname(source$files))
 }
 
@@ -23,8 +27,10 @@ read_source <- function(name, files = source_files(name)) {
   source <- SOURCES[[name]]
   frames <- lapply(seq_along(files), function(i) {
     year <- names(source$files)[[i]]
-    d <- as.data.frame(arrow::read_parquet(files[[i]],
-                                           col_select = unname(source$columns)))
+    d <- as.data.frame(arrow::read_parquet(
+      files[[i]],
+      col_select = unname(source$columns)
+    ))
     d <- setNames(d[source$columns], names(source$columns))
     d$year <- as.integer(year)
     d
@@ -39,18 +45,30 @@ check_inputs <- function() {
   dir <- Sys.getenv("REGMETA_DATA")
   mock <- Sys.getenv("REGMETA_MODE") == "mock"
   files <- unlist(lapply(SOURCES, function(s) unname(s$files)))
-  if (anyDuplicated(files)) stop("SOURCES names a file twice")
+  if (anyDuplicated(files)) {
+    stop("SOURCES names a file twice")
+  }
   absent <- files[!file.exists(file.path(dir, files))]
-  if (length(absent)) stop("not in the input folder: ", paste(absent, collapse = ", "))
+  if (length(absent)) {
+    stop("not in the input folder: ", paste(absent, collapse = ", "))
+  }
   if (mock) {
-    listed <- vapply(jsonlite::read_json(file.path(dir, "mock_manifest.json"))$files,
-                     function(f) f$file, "")
-    if (!all(files %in% listed)) stop("a mock input file is not in mock_manifest.json")
+    listed <- vapply(
+      jsonlite::read_json(file.path(dir, "mock_manifest.json"))$files,
+      function(f) f$file,
+      ""
+    )
+    if (!all(files %in% listed)) {
+      stop("a mock input file is not in mock_manifest.json")
+    }
   }
   for (file in files) {
     # No columns are read: only the file's metadata.
-    meta <- arrow::read_parquet(file.path(dir, file), col_select = character(),
-                                as_data_frame = FALSE)$metadata
+    meta <- arrow::read_parquet(
+      file.path(dir, file),
+      col_select = character(),
+      as_data_frame = FALSE
+    )$metadata
     labelled <- "reg_mock" %in% names(meta)
     if (labelled != mock) stop(file, ": the mock label does not match the mode")
   }

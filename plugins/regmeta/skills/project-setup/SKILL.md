@@ -47,6 +47,7 @@ Add no remote and push nothing unless the user asks.
 
 ```text
 AGENTS.md  RESEARCH.md  project_data.json  run.R
+rproject.toml  rv/  .Rprofile  air.toml  jarl.toml    local R tooling
 src/       flat, text only: what runs on the server
 tests/     local tests on small fixtures
 output/    a run's export, review copies, manifest and diagnostics (ignored)
@@ -68,9 +69,25 @@ results/   approved real exports, by date
    `reg_meta` tag of the catalog release in use (the `research` skill's
    `references/export-gate.md` has the address). Check each file's SHA-256 against
    `PINS` in `run.R`. If one differs, stop and report it: never edit a pin to match.
-5. **`.gitignore`**, from [template/gitignore](template/gitignore), and the empty
+5. **Local R tooling.** None of it goes to the server.
+   - Packages with [rv](https://github.com/A2-ai/rv): in the project folder,
+     `rv init --add targets --add arrow --add jsonlite --add openssl`, then `rv sync`.
+     The names are `PACKAGES` in `run.R`; a mock run stops if the two lists differ.
+     Commit `rproject.toml`, the lock file, `rv/scripts/` and the `.Rprofile` rv writes.
+   - Add the line `Sys.setenv(REGMETA_MOCK = "1")` to that `.Rprofile`. A local run is
+     then always a mock run: `Rscript run.R`.
+   - Formatting with [air](https://posit-dev.github.io/air/) and linting with
+     [jarl](https://jarl.etiennebacher.com/): copy [template/air.toml](template/air.toml)
+     and [template/jarl.toml](template/jarl.toml). Both leave the pinned files alone.
+
+   If `rv`, `air` or `jarl` is not installed, say which and give the user the install
+   command to run; do not install tools yourself. Without rv, skip `.Rprofile`: a mock
+   run is then `REGMETA_MOCK=1 Rscript run.R`. A project that already has a package
+   manager (renv, its own `.Rprofile`) keeps it; add the mock line only with the user's
+   agreement.
+6. **`.gitignore`**, from [template/gitignore](template/gitignore), and the empty
    `tests/` and `.regmeta/` folders. Add to an existing `.gitignore`; do not replace it.
-6. **`AGENTS.md`**, from [template/AGENTS.md](template/AGENTS.md), with the project's
+7. **`AGENTS.md`**, from [template/AGENTS.md](template/AGENTS.md), with the project's
    values filled in. It holds pointers, not explanations: keep it that short. If the
    project already has an instructions file (`AGENTS.md` or `CLAUDE.md`), add to it; do
    not replace it or write a second one. For a server other than MONA, rewrite the batch

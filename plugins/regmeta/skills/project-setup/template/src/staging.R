@@ -1,8 +1,13 @@
 # The staging writer: every file the schema declares, exactly its columns, each cast
 # to its declared type. A file with no table is written with zero rows; a declared
 # column the table lacks is null; a column the schema does not declare is dropped.
-CASTS <- list(integer = as.integer, double = as.double, string = as.character,
-              boolean = as.logical, date = as.Date)
+CASTS <- list(
+  integer = as.integer,
+  double = as.double,
+  string = as.character,
+  boolean = as.logical,
+  date = as.Date
+)
 
 write_staging <- function(tables, schema, dir) {
   unlink(dir, recursive = TRUE)

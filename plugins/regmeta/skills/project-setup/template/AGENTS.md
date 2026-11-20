@@ -18,6 +18,7 @@ A register research project. `RESEARCH.md` says what it studies.
 RESEARCH.md        what the project studies
 project_data.json  the data: the order, and what is delivered
 run.R              the runner; uploaded once, not edited
+rproject.toml, rv/, .Rprofile, air.toml, jarl.toml   local R tooling; never uploaded
 src/               everything that runs on the server: flat, text only
 tests/             local tests on small fixtures
 questions/         one ticket per research question
@@ -28,8 +29,11 @@ results/           approved real exports, by date
 
 ## Commands
 
-- A mock run: `REGMETA_MOCK=1 Rscript run.R`. It ends with the export gate and prints
-  a source id.
+- A mock run: `Rscript run.R` (the `.Rprofile` sets `REGMETA_MOCK`). It ends with the
+  export gate and prints a source id.
+- Before a commit: `air format .` and `jarl check .`.
+- Packages: `rv sync`. A new package goes in `rproject.toml` and in `PACKAGES` in
+  `run.R`; say so to the researcher, because `run.R` is then uploaded again.
 - A real run happens only on the server: `run.R` as it is, with no arguments.
 
 ## A batch

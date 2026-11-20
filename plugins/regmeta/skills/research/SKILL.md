@@ -57,11 +57,27 @@ tests, no notes. `run.R`, `src/staging.R` and the four pinned files (`export_gat
 `cell_key.R`, the schema and the policy) are not edited. The export is the schema's
 Parquet files and `receipt.json`; tables and figures are made locally from them.
 
+## Packages and data.table
+
+A new package goes in `rproject.toml` (`rv add <package>`) and in `PACKAGES` in `run.R`;
+a mock run stops if the lists differ. The server installs it from its own mirror, in
+whatever version that holds; the run manifest records the versions that ran.
+
+With data.table:
+
+- Write `dt[flag == TRUE]`, never `dt[flag]`: a single name there is looked up outside
+  the table, not as a column. `jarl.toml` turns off the rule that would "fix" it.
+- `:=` and `set*()` change a table in place. A step that modifies its input starts with
+  `copy()`, or it alters the cached result of the step before it.
+
 ## A mock run
 
 ```bash
-REGMETA_MOCK=1 Rscript run.R
+Rscript run.R
 ```
+
+The project's `.Rprofile` sets `REGMETA_MOCK`, so a local run is a mock run. Without
+that file: `REGMETA_MOCK=1 Rscript run.R`.
 
 The run checks the mode, the input folder, the packages and the pinned files, builds the
 pipeline (unchanged steps are skipped), writes staging and ends with the export gate. A
@@ -81,7 +97,8 @@ the gate refuses a bad file: the gate's own cases cover it.
 
 A batch is the committed `src/` at one commit.
 
-1. Commit. From the clean checkout, run the tests and a mock run that ends in a pass.
+1. `air format .` and `jarl check .`, then commit. From the clean checkout, run the
+   tests and a mock run that ends in a pass.
 2. Write the commit and the printed source id in the ticket. The id is a hash of
    `run.R` and every file in `src/`, so the real run prints the same id when the
    uploaded files are the committed ones.

@@ -12,7 +12,7 @@ description: Generate local mock register data from a project_data.json with
 column names, the runner's types and format (`.dta`, Parquet or CSV), drawn from a
 simulated population built from SCB's public demography. It reads catalog metadata only,
 never a data row; every key is synthetic. A project's pipeline reads them in a mock run
-(`REGMETA_MOCK=1 Rscript run.R`), in place of the delivered files.
+(`run.R` with `REGMETA_MOCK` set), in place of the delivered files.
 
 The paths below are a project's as `project-setup` lays it out: answers, rules and spec
 in `.regmeta/mock/`, committed; the generated files in `.regmeta/mock-data/`, ignored.

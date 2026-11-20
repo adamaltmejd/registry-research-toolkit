@@ -4,7 +4,10 @@
 # statistics need), never counts or statistics.
 income_by_sex <- function(lisa) {
   # Assertions run on mock and real data alike.
-  stopifnot(!anyNA(lisa$person_id), !anyDuplicated(lisa[c("person_id", "year")]))
+  stopifnot(
+    !anyNA(lisa$person_id),
+    !anyDuplicated(lisa[c("person_id", "year")])
+  )
   sex <- unname(c("1" = "man", "2" = "woman")[as.character(lisa$sex)])
   data.frame(
     person_id = lisa$person_id,
@@ -25,7 +28,11 @@ disclose_income_by_sex <- function(persons) {
   stats <- perturbed_counts(valued, by)
   means <- aggregate(income ~ year + group_1, valued, mean)
   stats <- merge(stats, means, by = by, all.x = TRUE, sort = TRUE)
-  stats$value <- ifelse(stats$n_true < MIN_CELL, NA_real_, signif(stats$income, 4))
+  stats$value <- ifelse(
+    stats$n_true < MIN_CELL,
+    NA_real_,
+    signif(stats$income, 4)
+  )
   stats$table <- "income_by_sex"
   stats$statistic <- "mean_disposable_income"
 
