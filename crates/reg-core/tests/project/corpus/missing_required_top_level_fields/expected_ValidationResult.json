@@ -27,6 +27,12 @@
     {
       "level": "error",
       "code": "missing_required_field",
+      "path": "/extract_format",
+      "message": "required top-level field 'extract_format' is missing"
+    },
+    {
+      "level": "error",
+      "code": "missing_required_field",
       "path": "/sources",
       "message": "required top-level field 'sources' is missing"
     }

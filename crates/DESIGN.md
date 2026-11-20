@@ -1330,7 +1330,7 @@ with `--catalog <steward>` ("Holdings").
 
 ## The logical order
 
-`order` runs the order check of design v4 §9 on a 7.0.0 project and returns the logical
+`order` runs the order check of design v4 §9 on an 8.0.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
 implementation in `reg-catalog`, which is what makes their results identical, except
@@ -1462,7 +1462,7 @@ and `sun2000niva`.
 {
   "data": {
     "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
-    "project": {"name": "income-panel", "schema_version": "7.0.0",
+    "project": {"name": "income-panel", "schema_version": "8.0.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
@@ -1515,7 +1515,7 @@ and `sun2000niva`.
        "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
     ]
   },
-  "meta": {"api_version": "7.1.0", "project_schema_version": "7.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"api_version": "7.1.0", "project_schema_version": "8.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1545,7 +1545,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
       ]
     }
   },
-  "meta": {"api_version": "7.1.0", "project_schema_version": "7.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"api_version": "7.1.0", "project_schema_version": "8.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -2497,10 +2497,11 @@ promised (the runner deliberately has no `ORDER BY`).
 
 `materialize_order` is `POST /api/project/materialize`, exposed on the existing coarse
 `order` MCP tool. The hosted request is only `project`; the serving steward and pinned
-holdings pair come from startup configuration, with no request owner override. Add
-optional `extract_format = dta|parquet|csv` to project schema 5.2.0 ("Project document
-5.2.0"), defaulting to `parquet` in order authoring. `project.rs::SCHEMA_VERSION` admits
-7.0.0 exactly; every other version is `unsupported_schema_version`. Older projects are
+holdings pair come from startup configuration, with no request owner override. The
+order file is written in the project's `extract_format` (`dta`, `parquet` or `csv`),
+required from project schema 8.0.0 ("Project document 8.0.0"), so materialization
+resolves no default. `project.rs::SCHEMA_VERSION` admits
+8.0.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
 compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
 absent, use the authoring default without inserting it before project hashing. The
@@ -2689,8 +2690,8 @@ open-ended ranges (`row-filter-disjoint`, `row-filter-open-ended` runner cases).
 NULL/unparseable period values do not pass a filter. Unfilterable pooled holdings report
 that all rows are included; they do not pretend that selecting columns restricts rows.
 
-The default is Parquet; the manifest always specifies its format and the
-runner supplies no default. Preserve Stata aliases, exact large-number handling,
+The manifest always specifies its format, the project's; neither the server nor the
+runner supplies a default. Preserve Stata aliases, exact large-number handling,
 precision/range refusals and preflight checks. A logical inference cannot override the
 actual SQL storage/writer contract. Expected schema metadata makes storage drift a
 located refusal before extraction, not permission to coerce. The R script validates the
@@ -2707,8 +2708,8 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 `reg_core::issue` so the manifest owns its findings type. The cases are
 `conformance/cases/materialize/`.
 
-- `version` is the integer `4`; the runner refuses v3. Absent `extract_format` resolves
-  to `parquet` in the manifest only; the project and its hash are untouched. `stata_name` is
+- `version` is the integer `4`; the runner refuses v3. `extract_format` is the
+  project's. `stata_name` is
   the v3 rule byte for byte, emitted only on a `dta` order.
 - Provenance: `catalog.generation` is the served pair (`meta.generation`),
   `base_generation` the reference catalog's `generation_id`, `holdings.generation` the
@@ -2872,6 +2873,17 @@ check of its own: it asks the server, which refuses. The SPA leaves a project dr
 on another catalog as it is (no study-window clamp at open) and checks it even when it
 has no tables, so the mismatch is shown.
 
+### Project document 8.0.0
+
+`schema_version` `8.0.0` makes the top-level `extract_format` required (maintainer
+ruling 2026-11-20). An absent field meant `dta`, then `parquet`; a required field has
+no default to disagree about, and the extract runner already requires it in the order
+file. Absent is `missing_required_field` at `/extract_format`; the other rules are
+5.2.0's. No reader supplies a format: `materialize_order` and `reg-mock compile` take
+the project's. Every `project_hash` changes. A 7.0.0
+document is re-authored by setting `schema_version` and stating `extract_format`; 7.0.0
+below holds otherwise.
+
 ### Project document 7.0.0
 
 `schema_version` `7.0.0` adds the required top-level `catalog`: `global` or a steward
@@ -2969,10 +2981,9 @@ Nothing else changes: 5.2.0 below holds otherwise.
 `schema_version` `5.2.0` adds the optional top-level `extract_format`, one of `dta`,
 `parquet` or `csv`: the file format of the order's extract files, one per project. It is
 a string; an explicit `null` is `invalid_field_type`, any other string is
-`invalid_enum_value`, both at `/extract_format`. Absent means the authoring default
-`parquet`. The order file resolves that default ("From a logical order to physical files");
-it is never written into the project, so the project hash covers only what the
-researcher wrote (an absent field hashes as `null`, like every absent optional).
+`invalid_enum_value`, both at `/extract_format`. Through 7.0.0 the field was optional
+and the order file resolved an absent one to a default; 8.0.0 requires it ("Project
+document 8.0.0").
 
 Nothing else changes. The field tables and rules below hold for 5.2.0, except that
 `extract_format` is a known top-level key.

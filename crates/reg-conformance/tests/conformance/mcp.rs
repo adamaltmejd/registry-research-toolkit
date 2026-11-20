@@ -454,6 +454,7 @@ fn materialize_tool_matches_http() {
         "reg_meta_version": project["reg_meta_version"],
         "catalog": project["catalog"],
         "name": "Manual only",
+        "extract_format": "parquet",
         "sources": [{
             "name": "nya",
             "manual": {"provider": "UHR", "register": "NyA antagning"},

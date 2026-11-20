@@ -52,6 +52,8 @@ export function newProjectData(seed: ProjectSeed): ProjectData {
     reg_meta_version: seed.reg_meta_version,
     catalog: seed.catalog,
     name: seed.name ?? "new_project",
+    // simplify: the SPA has no format choice; add one if researchers draft dta or csv orders here.
+    extract_format: "parquet",
     sources: [],
     ...(seed.window ? { window: { ...seed.window } } : {}),
   };

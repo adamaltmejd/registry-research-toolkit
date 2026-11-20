@@ -621,6 +621,7 @@ fn project(
         "reg_meta_version": "0.64.0",
         "catalog": catalog,
         "name": "Release order",
+        "extract_format": "parquet",
         "sources": [{
             "name": "s",
             "table": pid,

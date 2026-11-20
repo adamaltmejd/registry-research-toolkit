@@ -4,7 +4,7 @@
     "keys": {"/meta": ["api_version", "catalog_version", "generation", "project_schema_version"]},
     "json": {
       "/meta/api_version": "7.1.0",
-      "/meta/project_schema_version": "7.0.0",
+      "/meta/project_schema_version": "8.0.0",
       "/meta/catalog_version": "dev"
     }
   },
@@ -15,7 +15,7 @@
       "/error/code": "invalid_parameter",
       "/error/fields/parameter": "nonsense",
       "/meta/api_version": "7.1.0",
-      "/meta/project_schema_version": "7.0.0",
+      "/meta/project_schema_version": "8.0.0",
       "/meta/catalog_version": "dev"
     }
   }

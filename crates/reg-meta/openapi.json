@@ -2290,7 +2290,7 @@
           },
           "extract_format": {
             "$ref": "#/components/schemas/ProjectExtractFormat",
-            "description": "The project's format, resolved to `parquet` when it states none."
+            "description": "The project's `extract_format`."
           },
           "files": {
             "type": "array",
@@ -3207,7 +3207,8 @@
           "reg_meta_version",
           "catalog",
           "name",
-          "sources"
+          "sources",
+          "extract_format"
         ],
         "properties": {
           "catalog": {
@@ -3216,7 +3217,7 @@
           },
           "extract_format": {
             "$ref": "#/components/schemas/ProjectExtractFormat",
-            "description": "The extract file format. Absent means the order authoring default, `parquet`, which\nthe order file resolves; it is never inserted here. An explicit `null` is\n`invalid_field_type`."
+            "description": "The format each delivered file is written in. Required: no reader supplies one."
           },
           "linkage": {
             "$ref": "#/components/schemas/ProjectLinkage",

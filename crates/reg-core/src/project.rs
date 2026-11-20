@@ -23,7 +23,7 @@ use crate::{
 };
 
 /// The `project_data.json` contract this runtime reads, exactly.
-pub const SCHEMA_VERSION: &str = "7.0.0";
+pub const SCHEMA_VERSION: &str = "8.0.0";
 
 /// The project in `raw`, or the issues that reject it without a catalog: the single
 /// entry point the server's validate and order operations share.
@@ -180,12 +180,8 @@ pub struct ProjectData {
     #[serde(default)]
     #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub window: Option<StudyWindow>,
-    /// The extract file format. Absent means the order authoring default, `parquet`, which
-    /// the order file resolves; it is never inserted here. An explicit `null` is
-    /// `invalid_field_type`.
-    #[serde(default)]
-    #[cfg_attr(feature = "openapi", schema(nullable = false))]
-    pub extract_format: Option<ExtractFormat>,
+    /// The format each delivered file is written in. Required: no reader supplies one.
+    pub extract_format: ExtractFormat,
     /// The steward database the order draws from. Required by a steward with more
     /// than one database; a steward with one needs none. An explicit `null` is
     /// `invalid_field_type`.
@@ -218,8 +214,7 @@ struct Fields {
     panels: Vec<Panel>,
     #[serde(default)]
     window: Option<StudyWindow>,
-    #[serde(default)]
-    extract_format: Option<ExtractFormat>,
+    extract_format: ExtractFormat,
     #[serde(default)]
     linkage: Option<Linkage>,
 }

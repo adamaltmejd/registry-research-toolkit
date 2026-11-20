@@ -87,8 +87,8 @@ the `catalog-search` skill.
    `identifier` column. `validate` reports each such source with a `manual_item` info;
    tell the user that the extract runner does not deliver these columns, so the data
    manager adds them by hand.
-6. Set `extract_format`, the format each delivered file is written in: `parquet`,
-   `dta` (Stata) or `csv`. Always state it. Write `"extract_format": "parquet"` unless
+6. Set `extract_format` (required), the format each delivered file is written in:
+   `parquet`, `dta` (Stata) or `csv`. Write `"extract_format": "parquet"` unless
    the analysis runs in Stata or the user asks for another format; the `project-setup`
    pipeline reads Parquet.
 7. Call `order` with `operation: "validate"` and the document as `project`. Fix every
@@ -126,7 +126,7 @@ A minimal document on the global catalog (set `schema_version`, `reg_meta_versio
 
 ```json
 {
-  "schema_version": "7.0.0",
+  "schema_version": "8.0.0",
   "reg_meta_version": "reg_meta/vX.Y.Z",
   "catalog": "global",
   "name": "example",

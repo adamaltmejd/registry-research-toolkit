@@ -187,6 +187,7 @@ fn an_order_draws_from_one_database() {
         "reg_meta_version": "0.79.0",
         "catalog": "fixture",
         "name": "Two databases",
+        "extract_format": "parquet",
         "sources": [source("late", 2021)],
     });
     let codes = |findings: &Value| -> Vec<(String, String)> {
