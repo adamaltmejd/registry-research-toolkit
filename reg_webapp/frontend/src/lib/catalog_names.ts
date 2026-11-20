@@ -302,7 +302,7 @@ const sharedDaysKey = (ref: string) => `shared-days:${ref}`;
  * table's shared days.
  * simplify: an implicit table reads as sharing no days, true of every one in the
  * 0.90.0 catalog; if one gets concurrent releases the order still refuses with
- * `release_ambiguous`, and the server must then serve its shared days (#2584). */
+ * `release_ambiguous`, and the server must then serve its shared days (#2592). */
 function sharedDaysRead(ref: string): Read<SharedDays> {
   return read(sharedDaysKey(ref), async () => {
     const node = await getShow(ref);
