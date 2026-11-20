@@ -199,8 +199,9 @@ export function issueRefs(
   ];
 }
 
+// The period tells apart findings that differ only in their years (one per year).
 export function issueId(issue: ValidationIssue): string {
-  return `issue-${encodeURIComponent(JSON.stringify([issue.code, issue.path, issue.message]))}`;
+  return `issue-${encodeURIComponent(JSON.stringify([issue.code, issue.path, issue.message, issue.period ?? null]))}`;
 }
 
 export function plainIssueText(

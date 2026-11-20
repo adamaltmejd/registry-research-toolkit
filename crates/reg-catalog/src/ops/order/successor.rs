@@ -153,8 +153,9 @@ fn materialize(
                 .map_or(scope.table, |s| s.table.pid.as_str()),
             ..*scope
         };
-        let checked = window::binding(&part, b, current)?;
+        let checked = window::check(&part, b, current)?;
         out.findings.extend(checked.findings);
+        out.missing.extend(checked.missing);
         out.entries.extend(checked.entries);
     }
     if !first {
@@ -191,6 +192,7 @@ fn finish(scope: &Scope, b: usize, binding: &CatalogBinding, out: &mut Outcome) 
     // own request can cut a year the whole binding's request holds.
     out.findings.retain(|f| f.code != "period_clipped");
     out.clip = None;
+    out.removed.clone_from(&removed);
     if !removed.is_empty() {
         out.clip = Some(OrderClip {
             source: scope.source.name.clone(),

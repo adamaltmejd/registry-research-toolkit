@@ -18,6 +18,7 @@
 //! binding for a window finding (`/sources/0/bindings/1`), the source for an undated
 //! succession.
 
+mod absent;
 mod breaks;
 mod eras;
 mod materialize;
