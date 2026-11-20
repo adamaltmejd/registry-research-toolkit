@@ -4,7 +4,7 @@ description: Set up a small batch-based Swedish register-data research project f
   skill's lean R reference project, copied unchanged and run on mock data until the
   export gate passes. The project has separate local and restricted execution, `reg-mock`
   inputs, a disclosure stage and the export gate. Adds a research question to the
-  project only when the user asks for one. Supports MONA (a steward's extract in, the
+  project only when the user asks for one. Supports MONA (delivered data in, the
   toolkit export gate out) and other processing servers; does not authorize microdata
   access, transfer, or server execution.
 ---
@@ -50,22 +50,23 @@ how a MONA project calls it. Read [mona.md](references/mona.md) for a project on
 
 No agent runs on MONA, and row-level data never leaves it: only aggregates the export
 gate passed and a human reviewed. The agent works locally on code, catalog metadata and
-mock data. A project whose data a data steward delivers runs in this order
-([mona.md](references/mona.md) has who does what):
+mock data. A MONA project runs in this order ([mona.md](references/mona.md) has who
+does what, and the MONA project's folders):
 
-1. Add the steward's catalog to the project as its `steward-catalog` server, in
-   `.mcp.json` (Claude Code) or `.codex/config.toml` (Codex), and record in the project
-   instructions that it is the catalog to use (`register-metadata-search` skill,
-   `references/data-stewards.md`).
+1. Choose the catalog. The plugin's global `catalog` is the default and needs no setup.
+   Where a data steward delivers the data, add its catalog to the project as the
+   `steward-catalog` server, in `.mcp.json` (Claude Code) or `.codex/config.toml`
+   (Codex), and record in the project instructions that it is the catalog to use
+   (`register-metadata-search` skill, `references/data-stewards.md`).
 2. Draft and validate `project_data.json` with the `register-project` skill.
 3. Generate mock inputs from it with the `register-mock-data` skill (`reg-mock`).
 4. Build and run the pipeline locally on the mocks, ending with `export_gate.R`.
-5. The steward materializes the order and runs `extract.R` on MONA; the researcher runs
-   the same pipeline on the extract, reviews the gate's export and sends it out.
+5. The data is delivered into the MONA project; the researcher runs the same pipeline
+   on it, reviews the gate's export and sends it out.
 
 Stage 1 does step 1, and steps 3 and 4 on the reference's own order. Stage 2 does steps
 2 to 4 for the user's question. Steps 2 to 4 need no MONA access, so a project can be
-complete and tested before its extract exists.
+complete and tested before its data is delivered.
 
 ## The execution boundary
 
@@ -85,9 +86,9 @@ when requested.
 
 ## Stage 1: the scaffold
 
-Ask the user only what setup needs: where the project lives, and whether its data comes
-from a data steward (and that steward's host) or from the global catalog. Ask nothing
-about research questions, populations or outputs.
+Ask the user only what setup needs: where the project lives, and which catalog it uses,
+the global catalog (the default) or a data steward's (and its host). Ask nothing about
+research questions, populations or outputs.
 
 1. Copy [reference/](reference/) unchanged into the project folder, with `PROJECT.md`
    as the project's `CLAUDE.md` or `AGENTS.md`. Change no code, order, mock file or
@@ -95,11 +96,11 @@ about research questions, populations or outputs.
    2021–2022 from the global catalog, and the ticket `q001`, persons and mean disposable
    income by sex and year. In a folder that already holds files, overwrite none; ask
    where a name collides.
-2. Set up the catalog. For a steward's project, add the steward's catalog as the
+2. Set up the catalog. A project on the global catalog needs no setup: the plugin's
+   `catalog` is already there. For a data steward's catalog, add it as the
    `steward-catalog` server in the project's `.mcp.json` (Claude Code) or
    `.codex/config.toml` (Codex), and record it in the project instructions, following
-   the `register-metadata-search` skill's `references/data-stewards.md`. A project on
-   the global catalog needs no server: the plugin's `catalog` is already there.
+   the `register-metadata-search` skill's `references/data-stewards.md`.
 3. Set the pins. Fill `export_gate/`: `export_gate.R` and the default schema and policy
    from the `reg_meta` tag the project's `reg_meta_version` names
    ([export-gate.md](references/export-gate.md)), and `cell_key.R` copied unchanged from
@@ -123,10 +124,10 @@ about research questions, populations or outputs.
 7. Stop and report: the project path, the files that exist, the pins, the commit and the
    mock run's result. Name the two folders created beside the project folder,
    `../<project>-mock` and `../<project>-mock-keys`. Say that the
-   project holds the reference's example order and question, not the user's. With a
-   steward's catalog, tell the user to restart the session in the project and approve
-   the `steward-catalog` server before any catalog work; the tools are not loaded until
-   then. Say that a research question is added when the user asks for one. Do not
+   project holds the reference's example order and question, not the user's. If
+   step 2 added a `steward-catalog` server, tell the user to restart the session in the
+   project and approve the server before any catalog work; its tools are not loaded
+   until then. Say that a research question is added when the user asks for one. Do not
    propose one, and do not continue to stage 2.
 
 ## Stage 2: a research question, on request
@@ -136,8 +137,8 @@ the question. The agent does not start it on its own and does not propose questi
 handles one question per request, with one Markdown ticket per question in `questions/`,
 and stops when that question runs on mock data.
 
-In a steward's project, check first that the `steward-catalog` tools are loaded. If they
-are not, ask the user to restart the session in the project and stop.
+If the project has a `steward-catalog` server, check first that its tools are loaded. If
+they are not, ask the user to restart the session in the project and stop.
 
 1. Establish what the question needs, from the user and from the sources the user
    names: entity and grain, keys, source definitions, measurement timing, population,
@@ -153,15 +154,15 @@ are not, ask the user to restart the session in the project and stop.
    later question adds to the project and leaves earlier questions in place.
 3. Put the question's data in the order: `project_data.json` with the
    `register-project` skill, on the project's catalog, then `mock/` with its saved
-   answers, rules and compiled spec (`register-mock-data` skill). In a steward's project
-   the steward's release sets `reg_meta_version`; when it differs from the pinned one,
-   replace the release-supplied files one by one: `export_gate.R` and the default schema
-   and policy from that release's tag, `cell_key.R` from this skill's
+   answers, rules and compiled spec (`register-mock-data` skill). The catalog's
+   release sets `reg_meta_version`; when it differs from the pinned one, replace the
+   release-supplied files one by one: `export_gate.R` and the default schema and policy
+   from that release's tag, `cell_key.R` from this skill's
    [scripts/](scripts/cell_key.R), and the `reg-mock` binary. Keep any schema or policy
    file the researcher chose and stored in `export_gate/`. Update the pin table in the
    same commit.
 4. Adapt the code to the question: the delivered files and column names in `config.R`
-   (from the order answer; a steward's extract keys persons by `LopNr`), the source
+   (from the order answer, whose `row_keys` name the person key), the source
    adapter (`R/inputs.R`), the analysis (`R/analysis.R`), the cells and statistics in
    `R/disclosure.R` (its suppress, perturb, round order stays) and the calls in `run.R`.
 5. Update the project instructions (`CLAUDE.md` or `AGENTS.md`) to match: the title,

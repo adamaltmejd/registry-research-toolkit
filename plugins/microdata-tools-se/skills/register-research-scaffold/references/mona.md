@@ -5,12 +5,30 @@ on MONA, and row-level data never leaves it: only aggregates checked by the expo
 do, after a human has reviewed them. The agent works on the researcher's machine, from
 code, catalog metadata and mock data.
 
-This is the order of work for a project whose data a data steward
-delivers into MONA from its holdings. Each step names who does it.
+## The MONA project
+
+A MONA project has a code, `PXXXX` (`P` and four digits), and two network folders that
+all project members share:
+
+- `PXXXX_Data`, read-only: delivered data files land here.
+- `PXXXX_Gem`: the project's own files. The committed project folder is uploaded here.
+
+Data reaches the project in one of two ways. SCB delivers files into `PXXXX_Data`, which
+is also how a data steward's extract arrives. Or, for an order placed directly with SCB,
+the data may be delivered as SQL tables, read through the ODBC data source named
+`PXXXX`. The reference pipeline reads files: `REAL_DIR` in `config.R` is the folder in
+`PXXXX_Data`. For a SQL delivery the source adapter (`R/inputs.R`) reads from the data
+source instead; it is written when a research question is added, and mock runs still
+read `reg-mock` files.
+
+The steps below are the order of work. Each names who does it. Steps 1 and 4 depend on
+who delivers the data.
 
 ## 1. The catalog (researcher, once)
 
-Add the steward's catalog to the project as its `steward-catalog` MCP server, in the
+A project that orders directly from SCB uses the plugin's global `catalog` and needs no
+setup. Where a data steward delivers the data, add the steward's catalog to the project
+as its `steward-catalog` MCP server, in the
 project's `.mcp.json` (or `.codex/config.toml`), and record in the project instructions
 that the agent uses it for the project's data and the plugin's global `catalog` only for
 questions about data outside the steward's holdings: the
@@ -22,7 +40,7 @@ which can lag the global catalog. Use that release for everything below: the pro
 
 ## 2. The order (agent drafts, researcher approves)
 
-Draft `project_data.json` with the `register-project` skill, against the steward's
+Draft `project_data.json` with the `register-project` skill, against the project's
 catalog. Validate until `ok` is true, and settle every warning with the researcher. A
 steward with several databases needs `linkage`: one project per database. Choose
 `extract_format` (`dta`, the default, `parquet` or `csv`) for the language the analysis
@@ -39,7 +57,10 @@ the same file and column names and types as the extract, in the order's format. 
 outside the project in the configured mock input directory. The pipeline switches between
 mock and real data by its input directory alone.
 
-## 4. The extract (steward, on MONA)
+## 4. The delivery
+
+For an order placed directly with SCB, the researcher places the order and SCB delivers
+into `PXXXX_Data` or as SQL. The rest of this step is the data steward's case.
 
 The researcher sends the reviewed `project_data.json` to the steward following the
 steward's `order_instructions` (in `data.steward_config.presentation` of
@@ -61,14 +82,14 @@ counts against the order.
 ## 5. Analysis (researcher, on MONA)
 
 The researcher uploads the project's committed analysis code, the pinned
-`export_gate.R` and `cell_key.R` and the chosen schema and policy to the MONA project
-folder, creates the cell-key file once in a folder only they can read (`make_keys.R` in
-the reference project), then runs the pipeline by hand. The pipeline reads the extract folder as its real input
-directory, writes its aggregates to a fresh staging folder and ends with the export gate
+`export_gate.R` and `cell_key.R` and the chosen schema and policy to the MONA project's
+`PXXXX_Gem` folder, creates the cell-key file once in a folder only they can read
+(`make_keys.R` in the reference project), then runs the pipeline by hand. The pipeline
+reads the delivered files' folder as its real input directory, writes its aggregates to a fresh staging folder and ends with the export gate
 ([export-gate.md](export-gate.md)). The same code ran locally on the mock inputs first,
 ending with the same gate call.
 
-A project folder on MONA:
+A project folder on MONA, in `PXXXX_Gem`:
 
 ```text
 <project>\

@@ -4,7 +4,7 @@
 # physical name, as `pwd -P` gives it), so two projects under one parent folder
 # never share them.
 PROJECT <- basename(getwd())
-REAL_DIR <- "<the folder the steward's extract lands in>"
+REAL_DIR <- "<the folder the delivered files are in; on MONA the project's PXXXX_Data>"
 MOCK_DIR <- file.path("..", paste0(PROJECT, "-mock")) # reg-mock generate --out
 KEY_FILE <- c(
   real = "<a folder on MONA only the researcher can read>/cell_keys.csv",
@@ -13,7 +13,7 @@ KEY_FILE <- c(
 SCHEMA <- "export_gate/aggregates.schema.json"
 POLICY <- "export_gate/aggregates.policy.json"
 
-# The delivery, from the order answer (a steward's: materialize_order): every file
+# The delivery, from the order answer (order, or materialize_order): every file
 # it delivers, named by the delivery year the answer gives it (never parsed from
 # the file name), and the stored column names. reg-mock mirrors them.
 LISA_FILES <- c("2021" = "scb_lisa_individer_2021.parquet",

@@ -33,9 +33,10 @@ readers must not alter their inputs.
 
 ## MONA
 
-The order flow (catalog, `project_data.json`, mock inputs, the steward's extract, the
-gate, MONA's export) and who does each step is in [mona.md](mona.md). On MONA the real
-input directory is the folder the steward's extract lands in.
+The order flow (catalog, `project_data.json`, mock inputs, the delivery, the gate,
+MONA's export) and who does each step is in [mona.md](mona.md). On MONA the real input
+directory is the folder the delivered files are in, the project's read-only
+`PXXXX_Data`.
 
 Upload the committed project folder (the reference project's layout: `run.R`, `R/`,
 `config.R`, `export_gate/`) and return one result ZIP per batch. The run's last step
