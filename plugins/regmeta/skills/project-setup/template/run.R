@@ -130,10 +130,10 @@ dir.create(
   showWarnings = FALSE
 )
 dir.create("output", showWarnings = FALSE)
-# Nothing from an earlier run may look current.
-unlink(c(review, manifest), recursive = TRUE)
-if (any(file.exists(c(review, manifest)))) {
-  stop("could not remove the previous review copies")
+# Nothing from an earlier run may look current, whatever fails below.
+unlink(c(export, review, manifest), recursive = TRUE)
+if (any(file.exists(c(export, review, manifest)))) {
+  stop("could not remove the previous run's output")
 }
 
 # ---- Pipeline ----
@@ -145,7 +145,8 @@ Sys.setenv(
   REGMETA_DATA = normalizePath(data_dir),
   REGMETA_KEYS = file.path(getwd(), ".regmeta", "keys", "cell_keys.csv")
 )
-store <- file.path(".regmeta", "targets")
+# One store per mode: a real run never reuses a mock run's results.
+store <- file.path(".regmeta", "targets", mode)
 say("pipeline: start")
 targets::tar_make(script = file.path("src", "pipeline.R"), store = store)
 release <- targets::tar_read_raw("release", store = store)

@@ -2,7 +2,7 @@
 
 The export gate is the toolkit's disclosure checker and transfer. It is the only path by
 which results computed on microdata reach an agent. It fills the checker slot of the
-register-research scaffold, which treats the disclosure checker as an external
+plugin's project template, which treats the disclosure checker as an external
 executable it consumes. The domain invariant holds throughout: PII never leaves the data
 side, only aggregate statistics do, and disclosure control is a load-bearing guard.
 
@@ -78,7 +78,7 @@ The choice of schema is configuration, kept in two places by mode:
   `~/.config/reg-export-gate/`.
 
 Wherever the choice lives, the schema and policy files are toolkit files: on MONA the
-scaffold copies them in with the R file, and on the server they live in the app's config
+project setup copies them in with the R file, and on the server they live in the app's config
 directory, outside any repo the agent can write. A policy change loosens or tightens
 disclosure, so it is a human, reviewed step.
 
@@ -520,7 +520,7 @@ is a rewrite"). A suppressed cell is null, never zero or NaN.
 
 No standalone MONA system and no web UI. No agent runs on MONA and the Rust binary is
 not run there; the R file is the only toolkit code on MONA. The toolkit ships one fixed,
-version-pinned R file of check functions; the scaffold copies it into the project, and
+version-pinned R file of check functions; project setup copies it into the project, and
 the pipeline's last step calls it with the chosen schema and its policy. The
 output-folder model is the same: the folder holds exactly the schema's files and
 `receipt.json`, which appear only if the whole check passes. Logs, error messages and

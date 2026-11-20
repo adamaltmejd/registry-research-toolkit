@@ -56,9 +56,10 @@ Everything the project writes on MONA stays inside it.
    first matters: every R file in `src\` is loaded, a removed one included.
 4. **The run** reads `PXXXX_Data`, creates or extends the cell keys, builds the
    pipeline and ends with the export gate ([export-gate.md](export-gate.md)).
-   A refused gate leaves no `export\`. The researcher tells the agent only the refusal's
-   category code (`setup`, `inventory`, `structure`, `disclosure`, `backstop`), never
-   the log.
+   Any failure, a refused gate included, leaves no `export\`. The researcher tells the
+   agent only the refusal's category code (`setup`, `inventory`, `structure`,
+   `disclosure`, `backstop`), or the step a run stopped in before the gate, never the
+   log.
 5. **Review and export.** On a pass the researcher compares the source id at the end of
    `run.Rout` with the one the local mock run printed: equal ids mean the uploaded files
    are the committed ones. They read the tables in `output\review\`, zip `output\export\`

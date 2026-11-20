@@ -21,7 +21,9 @@ with `mock-data` before writing the analysis.
   approved for model access. Never a batch log, a diagnostics file or an unapproved
   export. A gate pass is not that approval.
 - A refused real run is reported to the agent by its category code only (`setup`,
-  `inventory`, `structure`, `disclosure`, `backstop`). Reproduce it on mock data.
+  `inventory`, `structure`, `disclosure`, `backstop`). A real run that fails before the
+  gate is reported by the step it stopped in (packages, pins, pipeline and which
+  target), never by the log's text. Reproduce either on mock data.
 - A mock run shows that the code runs. It is never a result.
 
 ## A question
@@ -115,7 +117,9 @@ data folder, package list, schema, policy or pin).
 The researcher reviews the export where it was made, sends it out, and approves it for
 model access. Then:
 
-1. Check every file against `receipt.json`, and the receipt against the pins in `run.R`
+1. Import only what the researcher sent out from the server, never a local mock run's
+   `output/export/`: a receipt does not say which mode ran. Check every file against
+   `receipt.json`, and the receipt against the pins in `run.R`
    ([export-gate.md](references/export-gate.md), "Importing an export"). A mismatch is
    a rejected import.
 2. Keep the export unchanged in `results/<date>/` and commit it.

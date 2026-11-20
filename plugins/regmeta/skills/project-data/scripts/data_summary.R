@@ -100,17 +100,18 @@ summary <- do.call(
   })
 )
 # A file of another type is listed by name only.
+blank <- function(value) rep(value, sum(!known))
 other <- data.frame(
   table_schema = dirname(files[!known]),
   table_name = basename(files[!known]),
   table_type = types[!known],
-  column_name = rep(NA_character_, sum(!known)),
-  data_type = NA_character_,
-  character_maximum_length = NA,
-  numeric_precision = NA,
-  numeric_scale = NA,
-  ordinal_position = NA_integer_,
-  row_count = NA_real_
+  column_name = blank(NA_character_),
+  data_type = blank(NA_character_),
+  character_maximum_length = blank(NA),
+  numeric_precision = blank(NA),
+  numeric_scale = blank(NA),
+  ordinal_position = blank(NA_integer_),
+  row_count = blank(NA_real_)
 )
 out <- file.path(getwd(), "data_summary.csv")
 utils::write.csv(rbind(summary, other), out, row.names = FALSE, na = "")
