@@ -1,0 +1,19 @@
+{
+  "note": "`fil` delivers 2019 in one file and 2020 in four quarterly files; `Kod` is in the 2019 file and the first and third 2020 files only. Ordering 2019..2020 orders it whole (2020 is a requested year with some delivery, #2389) and gives one `variable_absent_from_files` info for 2020 naming the second and fourth quarters' files (#2603). Fails if the finding goes, names the files it is in, is split per file, or if a `period_clipped` or a clip appears. Oracle: the fixture's JSONL and crates/DESIGN.md (order findings, #2603).",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "8.0.0",
+    "reg_meta_version": "0.92.0",
+    "catalog": "global",
+    "name": "Order case",
+    "extract_format": "parquet",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/fil",
+        "period": {"from": 2019, "to": 2020},
+        "bindings": [{"variable": "demo/fil/kod"}]
+      }
+    ]
+  }
+}

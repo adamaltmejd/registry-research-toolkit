@@ -2,6 +2,8 @@
 //! segments in the serving tables. The request minus the segments is the clip; the rest, split by merged form, is the binding's entries; the
 //! window findings come from the segments the entries cover.
 
+use std::fmt::Write as _;
+
 use reg_core::project::{CatalogBinding, CatalogSource};
 use reg_core::{Interval, IssueLevel, gaps, intersect, merge, next_iso_day, overlap};
 use rusqlite::{Connection, OptionalExtension, Row};
@@ -75,7 +77,8 @@ struct Piece {
 }
 
 /// The segments a binding reads, keyed by the connection's own table and variable ids,
-/// with value sets and class versions by public identity so rows never cross origins.
+/// with the variable's public id, the folded column name, and value sets and class
+/// versions by public identity so rows never cross origins.
 /// In the composed view a base table's held segments join through public ids: a base
 /// variable's (a reference occurrence, never overlapping the base ones) by its base id,
 /// a variable only the holdings database defines by its negated held id (`held_id`).
@@ -85,8 +88,10 @@ pub(super) fn segments(scope: &Scope) -> String {
             "SELECT {ids}, x.start AS start, x.end AS end, sp.exact AS exact, \
              x.dtype AS dtype, x.length AS length, vs.hash AS vs_hash, vs.n_items AS vs_n, \
              cv.pid AS cv_pid, COALESCE(x.sensitive, 0) AS sensitive, x.state AS state, \
-             rn.body AS release
+             rn.body AS release, vv.pid AS pid, nf.folded AS fold
              FROM {db}.segment x {joins} JOIN {db}.spelling sp ON sp.id = x.spelling_id
+             JOIN {db}.name_fold nf ON nf.id = sp.fold_id
+             JOIN {db}.variable vv ON vv.id = x.variable_id
              LEFT JOIN {db}.release rl ON rl.id = x.release_id
              LEFT JOIN {db}.text rn ON rn.id = rl.name_text
              LEFT JOIN {db}.valueset vs ON vs.id = x.valueset_id
@@ -368,20 +373,28 @@ fn materialize(
             ordered: clip_ordered(scope.server, &days(scope.requested), &days(&ordered)),
         });
         for days in &removed {
+            let mut message = format!(
+                "There is no data on {} in {} for {}. That part of the period will not be delivered.",
+                variable.pid,
+                scope.table,
+                span(scope.server, days)
+            );
+            for (other, table, has) in covering(&at, days)? {
+                let has = words::plain(&periods(scope.server, &has));
+                write!(message, " {other} has data in {table} for {has}.").expect("a String write");
+            }
             outcome.findings.push(at.issue(
                 IssueLevel::Info,
                 "period_clipped",
                 scope.table,
                 Some(days),
-                format!(
-                    "There is no data on {} in {} for {}. That part of the period will not be delivered.",
-                    variable.pid,
-                    scope.table,
-                    span(scope.server, days)
-                ),
+                message,
             ));
         }
     }
+    outcome
+        .findings
+        .extend(absent_from_files(&at, &wanted, &ordered, &removed, &lanes)?);
     // Coverage per named release: a shared day another release serves would hide this
     // one's gap in the union above (days none serves are clipped there already).
     for (name, days) in &lanes {
@@ -860,7 +873,7 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
         .map(|(successor, at_start, caveat)| {
             let days = at_start.map(|a| (iso_day(a).max(requested.0.clone()), requested.1.clone()));
             let from = at_start.map_or_else(
-                || "; the date is not stated".to_owned(),
+                || " without a stated date".to_owned(),
                 |a| format!(" from {}", words::plain_start(&iso_day(a))),
             );
             let caveat = caveat.map_or_else(String::new, |c| format!(": {c}"));
@@ -875,6 +888,160 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
                 ),
             );
             issue.successor_fqid = Some(successor);
+            issue
+        })
+        .collect())
+}
+
+/// The variables that have data in a serving table on clipped `days` and that the catalog
+/// links to this one: a `continues` edge either way, or the same delivered column (by
+/// folded name) in that table. Each with the table and the days it has there, so a
+/// `period_clipped` can name it (#2603). Nothing is guessed from similar names.
+fn covering(at: &Located, days: &Interval) -> Result<Vec<(String, String, Vec<Interval>)>, Error> {
+    let scope = at.scope;
+    let pid = &at.variable.pid;
+    let edge = |origin: &str| {
+        format!(
+            "SELECT CASE WHEN s.pid = ?1 THEN o.pid ELSE s.pid END
+             FROM {origin}relation r JOIN {origin}variable s ON s.id = r.subject_id
+               JOIN {origin}variable o ON o.id = r.object_id
+             WHERE r.kind = 'continues' AND r.subject_kind = 'variable'
+               AND r.object_kind = 'variable' AND (s.pid = ?1 OR o.pid = ?1)"
+        )
+    };
+    let mut linked: Vec<String> = rows(scope.conn, &edge(""), [pid], |row| row.get(0))?;
+    if scope.composed {
+        linked.extend(rows(scope.conn, &edge("held."), [pid], |row| row.get(0))?);
+    }
+    let sql = format!(
+        "WITH s AS ({}) SELECT o.pid, o.start, o.end,
+           EXISTS (SELECT 1 FROM s m WHERE m.variable_id = ?1 AND m.table_id = o.table_id
+                   AND m.fold = o.fold)
+         FROM s o WHERE o.table_id = ?2 AND o.variable_id <> ?1 AND o.state <> 'ambiguous'
+         ORDER BY o.pid, o.start",
+        segments(scope)
+    );
+    let mut found = Vec::new();
+    for s in scope.serving {
+        let here = overlap(&s.requested, std::slice::from_ref(days));
+        if here.is_empty() {
+            continue;
+        }
+        let candidates: Vec<(String, i64, i64, bool)> = rows(
+            scope.conn,
+            &sql,
+            rusqlite::params![at.variable.id, s.table.id],
+            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
+        )?;
+        let mut by: Vec<(String, Vec<Interval>)> = Vec::new();
+        for (other, start, end, same_column) in candidates {
+            if !same_column && !linked.contains(&other) {
+                continue;
+            }
+            let has = overlap(&here, &[interval(start, end)]);
+            if has.is_empty() {
+                continue;
+            }
+            match by.last_mut().filter(|(p, _)| *p == other) {
+                Some((_, all)) => all.extend(has),
+                None => by.push((other, has)),
+            }
+        }
+        for (other, has) in by {
+            found.push((other, s.table.pid.clone(), merge(has)));
+        }
+    }
+    Ok(found)
+}
+
+/// `variable_absent_from_files`: the primary releases (the delivered files) of a serving
+/// table that the variable has no data in at all, on requested days no `period_clipped`
+/// reports: a gap inside a requested year the binding delivers on some day (#2389) that
+/// whole files make. One info per table and year, naming the files' periods (#2603). A gap
+/// inside a file, or with no file, still gives nothing.
+fn absent_from_files(
+    at: &Located,
+    wanted: &[Interval],
+    ordered: &[Interval],
+    removed: &[Interval],
+    lanes: &[(String, Interval)],
+) -> Result<Vec<Issue>, Error> {
+    let scope = at.scope;
+    if ordered.is_empty() {
+        return Ok(Vec::new());
+    }
+    let base = "SELECT start, end FROM main.release
+                WHERE table_id = ?1 AND is_primary = 1 AND start IS NOT NULL";
+    let sql = if scope.composed {
+        format!(
+            "SELECT DISTINCT start, end FROM ({base} UNION ALL
+               SELECT r.start, r.end FROM held.release r JOIN held.tbl ht ON ht.id = r.table_id
+                 JOIN main.tbl bt ON bt.pid = ht.pid
+               WHERE bt.id = ?1 AND r.is_primary = 1 AND r.start IS NOT NULL)
+             ORDER BY start, end"
+        )
+    } else {
+        format!("SELECT DISTINCT start, end FROM ({base}) ORDER BY start, end")
+    };
+    let holds = format!(
+        "SELECT EXISTS (SELECT 1 FROM ({}) WHERE variable_id = ?1 AND table_id = ?2
+           AND start < ?4 AND end > ?3)",
+        segments(scope)
+    );
+    // Days ordered (from any serving table) or already reported, and a named release's
+    // own (its `period_clipped` above).
+    let mut quiet: Vec<Interval> = removed.to_vec();
+    quiet.extend(ordered.iter().cloned());
+    quiet.extend(lanes.iter().map(|(_, d)| d.clone()));
+    let quiet = merge(quiet);
+    let unit = super::Unit::of(&days(scope.requested));
+    let mut by: std::collections::BTreeMap<(i32, usize), Vec<Interval>> =
+        std::collections::BTreeMap::new();
+    for (k, s) in scope.serving.iter().enumerate() {
+        let releases: Vec<(i64, i64)> = rows(scope.conn, &sql, [s.table.id], |row| {
+            Ok((row.get(0)?, row.get(1)?))
+        })?;
+        let open = overlap(&s.requested, wanted);
+        for (start, end) in releases {
+            let file = interval(start, end);
+            let hit = gaps(&overlap(&open, std::slice::from_ref(&file)), quiet.clone());
+            let Some(first) = hit.first() else {
+                continue;
+            };
+            let held: bool = scope.conn.query_row(
+                &holds,
+                rusqlite::params![at.variable.id, s.table.id, start, end],
+                |row| row.get(0),
+            )?;
+            if !held {
+                by.entry((unit.year(super::day(&first.0)), k))
+                    .or_default()
+                    .push(file);
+            }
+        }
+    }
+    Ok(by
+        .into_iter()
+        .map(|((year, k), files)| {
+            let table = at.table_of(k);
+            let unit_days = unit.days(year).map(|(lo, hi)| interval(lo, hi));
+            let days = unit_days.map_or_else(
+                || hull(&files),
+                |u| hull(&overlap(scope.requested, std::slice::from_ref(&u))),
+            );
+            let mut issue = at.issue(
+                IssueLevel::Info,
+                "variable_absent_from_files",
+                table,
+                Some(&days),
+                format!(
+                    "{} is not in the files of {table} for {}, so those files deliver no data \
+                     on it.",
+                    at.variable.pid,
+                    words::plain(&periods(scope.server, &files))
+                ),
+            );
+            issue.period = Some(period(scope.server, &days));
             issue
         })
         .collect())
@@ -947,10 +1114,11 @@ fn entries(
     // By boundary day, each once: two releases' time lines share their unshared days.
     let mut changes: Vec<(&String, String)> = Vec::new();
     for line in &timelines {
-        for pair in line.windows(2) {
-            if let Some(what) = changed(pair[0].last, pair[1].last) {
-                let from = &pair[1].days.0;
-                changes.push((from, format!("From {}, {what}.", words::plain_start(from))));
+        for (i, pair) in line.windows(2).enumerate() {
+            let typed_before = line[..=i].iter().any(|m| m.last.dtype.is_some());
+            let from = &pair[1].days.0;
+            if let Some(text) = changed(pair[0].last, pair[1].last, from, typed_before) {
+                changes.push((from, text));
             }
         }
     }
@@ -1003,28 +1171,44 @@ fn entries(
     (entries, change)
 }
 
-/// What changes between two adjacent forms, in plain words (column name, type, codes),
-/// or `None` when spelling, type and value set agree.
-fn changed(before: &Piece, after: &Piece) -> Option<String> {
+/// What changes between two adjacent forms from day `from`, in plain sentences (column
+/// name, type, codes), or `None` when spelling, type and value set agree. A type stated
+/// on one side only reads as stated or no longer stated (#2603); `typed_before` says
+/// whether an earlier form of the time line stated one.
+fn changed(before: &Piece, after: &Piece, from: &str, typed_before: bool) -> Option<String> {
+    let when = words::plain_start(from);
     let mut what = Vec::new();
+    let mut stated = None;
     if before.spelling != after.spelling {
         what.push(format!(
             "the column name changes from {} to {}",
             before.spelling, after.spelling
         ));
     }
-    if before.dtype != after.dtype {
-        let stated = |t: &Option<String>| t.clone().unwrap_or_else(|| "not stated".to_owned());
-        what.push(format!(
-            "the type changes from {} to {}",
-            stated(&before.dtype),
-            stated(&after.dtype)
-        ));
+    match (&before.dtype, &after.dtype) {
+        (Some(a), Some(b)) if a != b => what.push(format!("the type changes from {a} to {b}")),
+        (Some(_), None) => what.push("the type is no longer stated".to_owned()),
+        (None, Some(b)) => {
+            // `when` is a year or month unless the form starts mid-month.
+            let at = if from.ends_with("-01") { "in" } else { "on" };
+            let first = if typed_before {
+                "stated again"
+            } else {
+                "first stated"
+            };
+            stated = Some(format!("The type is {first} {at} {when} ({b})."));
+        }
+        _ => {}
     }
     if before.valueset != after.valueset {
         what.push("the codes change".to_owned());
     }
-    (!what.is_empty()).then(|| what.join(", "))
+    let mut sentences: Vec<String> = Vec::new();
+    if !what.is_empty() {
+        sentences.push(format!("From {when}, {}.", what.join(", ")));
+    }
+    sentences.extend(stated);
+    (!sentences.is_empty()).then(|| sentences.join(" "))
 }
 
 /// The result periods of inclusive ISO intervals.

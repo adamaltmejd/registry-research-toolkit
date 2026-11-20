@@ -1379,10 +1379,11 @@ the study window). Warnings and infos do not: `classification_version_ambiguous`
 `preliminary_data` (a window only a preliminary release covers; final wins where both
 exist), `edition_disagreement`, `variable_replaced`, `period_clipped`, `form_change`,
 `table_succession_undated`, `coverage_end_unstated`, `binding_type_differs`,
-`series_break`, `row_key_undeclared` and `sensitive_variables`. The last two describe the file rather
-than a fault in the project, so only a successful `order` gives them, after the check's
-findings: `row_key_undeclared` is an info per source and table that the order draws
-entries from but carries no row key for (maintainer ruling 2026-11-14), and
+`series_break`, `variable_absent_from_files`, `row_key_undeclared` and
+`sensitive_variables`. The last two describe the file rather than a fault in the
+project, so only a successful `order` gives them, after the check's findings:
+`row_key_undeclared` is an info per source and table that the order draws entries from
+but carries no row key for (maintainer ruling 2026-11-14), and
 `sensitive_variables` one info on the whole order. Each is an `Issue` whose `path`
 points at the source, binding or panel and whose `source`, `variable`, `table` and
 `period` say what it is about (`null` for a whole-project finding). The conditions are
@@ -1418,7 +1419,10 @@ the order check's to state in its own tests; the rules that shape them:
   a source cannot choose an edition. A year only a preliminary release covers is
   `preliminary_data`, a warning.
 - `form_change` names what changes at each boundary in plain words: the column name, the
-  type, or the codes (a different value set).
+  type, or the codes (a different value set). A type stated on one side only reads
+  as stated, not as a change from "not stated": "The type is first stated in 2016 (text).", or
+  "stated again" after an earlier stated form, and "From 2019, the type is no longer
+  stated." (#2603).
 - Variables are register-scoped, so members of different registers never share a row-key
   variable. Which keys join is the researcher's call; the catalog stores no identifier
   kind, so the order check does not compare panel members' keys.
@@ -1434,7 +1438,17 @@ the order check's to state in its own tests; the rules that shape them:
   missing 31 December snapshot names its year, not its day. A clip's `ordered` is its
   `requested` less the reported gaps, so `requested` less `ordered` names exactly the
   units the findings report (#2392; maintainer, PR #2389, 2026-11-10: the server fixes
-  the gaps).
+  the gaps). One such gap is named, without changing the clip or the entries: where it
+  is whole delivered files (primary releases of a serving table the variable has no
+  segment in, such as three of four quarterly files), `variable_absent_from_files` is
+  one info per table and year naming those files' periods (COS ruling 2026-11-20,
+  #2603). A gap inside a file, or where no file is delivered, still gives nothing.
+- A `period_clipped` names another variable that has data in a serving table on the
+  clipped days when the catalog links the two: a `continues` edge either way, or the
+  same delivered column (the folded column name) in that table. Each is named with the
+  days it has there, which may be only part of the clip. Nothing is guessed from similar
+  names (COS ruling 2026-11-20, #2603). A followed binding (`follow_successor`) rebuilds
+  its clips over the whole chain and names none.
 - Finding messages write their days in plain words at their grain: `2019`, `2018 to
   2019`, school years as `2004/2005`, months for a part year (`July to December 2018`),
   else days; an open end as `2019 onwards` or `every year through 2019`, and "any
@@ -3455,7 +3469,9 @@ relation and not as a document.
   starts at the break is not reported; an undated release break when they overlap the
   release; any other undated break whenever the entity is ordered. A variable break is
   at its binding, a table, release or register break at its source with `table` set. It
-  is a warning when the provider says what changed, else an info. It never blocks.
+  is a warning when the provider says what changed, else an info. It never blocks. An
+  undated break reads "without a date"; one with neither day nor text "The provider marks
+  a series break in X without a date or explanation." (#2603).
 - **The SPA** shows a register's and its tables' breaks on the register page (the
   selected tables' with a table filter on) and a variable's on its page, without release
   names or provenance (frontend DESIGN.md → Words).

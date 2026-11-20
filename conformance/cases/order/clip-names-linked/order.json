@@ -1,0 +1,103 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "18"
+  },
+  "clips": [
+    {
+      "ordered": [
+        {
+          "end": "2020-01-01",
+          "start": "2018-01-01"
+        }
+      ],
+      "requested": [
+        {
+          "end": "2021-01-01",
+          "start": "2018-01-01"
+        }
+      ],
+      "source": "s",
+      "variable": "demo/byt/ers",
+      "variable_name": "Ersättning aktiv"
+    }
+  ],
+  "entries": [
+    {
+      "binding": 0,
+      "classification": null,
+      "delivered_table": "Bytesregistret",
+      "display_name": null,
+      "length": null,
+      "period": {
+        "end": "2020-01-01",
+        "start": "2018-01-01"
+      },
+      "provider": "demo",
+      "register": "demo/byt",
+      "release": null,
+      "source": "s",
+      "spelling": "Ers",
+      "table": "demo/byt",
+      "table_name": "Bytesregistret",
+      "type": "integer",
+      "value_set": null,
+      "variable": "demo/byt/ers",
+      "variable_name": "Ersättning aktiv"
+    }
+  ],
+  "findings": [
+    {
+      "code": "period_clipped",
+      "level": "info",
+      "message": "There is no data on demo/byt/ers in demo/byt for 2020. That part of the period will not be delivered. demo/byt/ers-2 has data in demo/byt for 2020. demo/byt/status has data in demo/byt for 2020.",
+      "path": "/sources/0/bindings/0",
+      "period": {
+        "end": "2021-01-01",
+        "start": "2020-01-01"
+      },
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/byt",
+      "table_name": "Bytesregistret",
+      "variable": "demo/byt/ers",
+      "variable_name": "Ersättning aktiv"
+    },
+    {
+      "code": "variable_replaced",
+      "level": "warning",
+      "message": "demo/byt/ers is continued by demo/byt/status without a stated date",
+      "path": "/sources/0/bindings/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": "demo/byt/status",
+      "successor_name": "Status ny",
+      "table": "demo/byt",
+      "table_name": "Bytesregistret",
+      "variable": "demo/byt/ers",
+      "variable_name": "Ersättning aktiv"
+    },
+    {
+      "code": "row_key_undeclared",
+      "level": "info",
+      "message": "demo/byt has no stated row identifier, so its file carries only the columns you choose",
+      "path": "/sources/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/byt",
+      "table_name": "Bytesregistret",
+      "variable": null,
+      "variable_name": null
+    }
+  ],
+  "manual": [],
+  "project": {
+    "name": "Order case",
+    "reg_meta_version": "0.92.0",
+    "schema_version": "8.0.0"
+  },
+  "row_keys": []
+}

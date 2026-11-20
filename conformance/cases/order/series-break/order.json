@@ -54,7 +54,7 @@
     {
       "code": "series_break",
       "level": "warning",
-      "message": "The provider notes a series break in demo/brott on no stated day: Registret bytte källa.",
+      "message": "The provider notes a series break in demo/brott without a date: Registret bytte källa.",
       "path": "/sources/0",
       "period": null,
       "source": "s",
@@ -102,7 +102,7 @@
     {
       "code": "series_break",
       "level": "info",
-      "message": "The provider marks a series break in demo/brott/civ on no stated day but says nothing more about it.",
+      "message": "The provider marks a series break in demo/brott/civ without a date or explanation.",
       "path": "/sources/0/bindings/1",
       "period": null,
       "source": "s",

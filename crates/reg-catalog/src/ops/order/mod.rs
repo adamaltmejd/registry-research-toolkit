@@ -1081,7 +1081,7 @@ fn check_source(
             "table_succession_undated",
             format!("/sources/{index}"),
             format!(
-                "{continued} is continued by {successor} on no stated day, so its data for {} is not \
+                "{continued} is continued by {successor} without a stated date, so its data for {} is not \
                  followed into {successor}",
                 span(server, &past)
             ),
@@ -1351,9 +1351,40 @@ fn serving(
     Ok((serving, gone, ids))
 }
 
+/// The request's year unit: school years when every requested span (half-open day
+/// numbers) starts and ends on 1 July, else calendar years.
+pub(super) struct Unit {
+    school: bool,
+}
+
+impl Unit {
+    pub(super) fn of(requested: &[(i64, i64)]) -> Self {
+        Unit {
+            school: !requested.is_empty()
+                && requested.iter().all(|&(lo, hi)| {
+                    iso_day(lo).ends_with("-07-01") && iso_day(hi).ends_with("-07-01")
+                }),
+        }
+    }
+
+    /// The unit holding a day, as the year it starts in.
+    pub(super) fn year(&self, d: i64) -> i32 {
+        let iso = iso_day(d);
+        let y: i32 = iso[..4].parse().expect("an ISO year");
+        let before = if self.school { "07" } else { "01" };
+        if iso[5..7] < *before { y - 1 } else { y }
+    }
+
+    /// The days of the unit starting in year `y`, half-open.
+    pub(super) fn days(&self, y: i32) -> Option<(i64, i64)> {
+        let month_day = if self.school { "07-01" } else { "01-01" };
+        let start = |y: i32| reg_core::iso_day_number(&format!("{y:04}-{month_day}"));
+        start(y).zip(start(y + 1))
+    }
+}
+
 /// The parts of `gaps` (half-open day numbers, ascending) an order reports, in the
-/// request's unit: school years when every requested span starts and ends on 1 July,
-/// else calendar years. A unit the request covers whole and `delivered` reaches on some
+/// request's [`Unit`]. A unit the request covers whole and `delivered` reaches on some
 /// day reads as delivered, and no whole unit fills its gap, so a finding or clip would
 /// name a year that comes (`reg_webapp/frontend/DESIGN.md` → Time, #2389; #2409). A unit
 /// the request covers whole and nothing delivers is reported whole, so a gap of data
@@ -1365,28 +1396,13 @@ pub(super) fn reported_gaps(
 ) -> Vec<(i64, i64)> {
     use reg_core::days::{covered, merge, minus, overlap};
     let delivered = merge(delivered.to_vec());
-    let school = !requested.is_empty()
-        && requested
-            .iter()
-            .all(|&(lo, hi)| iso_day(lo).ends_with("-07-01") && iso_day(hi).ends_with("-07-01"));
-    let (month_day, before) = if school {
-        ("07-01", "07")
-    } else {
-        ("01-01", "01")
-    };
-    // The unit holding a day, as the year it starts in.
-    let unit = |d: i64| -> i32 {
-        let iso = iso_day(d);
-        let y: i32 = iso[..4].parse().expect("an ISO year");
-        if iso[5..7] < *before { y - 1 } else { y }
-    };
-    let start = |y: i32| reg_core::iso_day_number(&format!("{y:04}-{month_day}"));
+    let unit = Unit::of(requested);
     // Only a unit at a gap's edge can be partly a gap; one inside is a gap whole.
     let mut quiet = Vec::new();
     let mut empty = Vec::new();
     for &(lo, hi) in gaps {
-        for y in [unit(lo), unit(hi - 1)] {
-            let Some(span) = start(y).zip(start(y + 1)) else {
+        for y in [unit.year(lo), unit.year(hi - 1)] {
+            let Some(span) = unit.days(y) else {
                 continue;
             };
             if !covered(&[span], requested) {

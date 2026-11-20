@@ -1,0 +1,93 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "18"
+  },
+  "clips": [],
+  "entries": [
+    {
+      "binding": 0,
+      "classification": null,
+      "delivered_table": "Kvartalsregistret",
+      "display_name": null,
+      "length": null,
+      "period": {
+        "end": "2020-04-01",
+        "start": "2019-01-01"
+      },
+      "provider": "demo",
+      "register": "demo/fil",
+      "release": null,
+      "source": "s",
+      "spelling": "Kod",
+      "table": "demo/fil",
+      "table_name": "Kvartalsregistret",
+      "type": "integer",
+      "value_set": null,
+      "variable": "demo/fil/kod",
+      "variable_name": "Kod"
+    },
+    {
+      "binding": 0,
+      "classification": null,
+      "delivered_table": "Kvartalsregistret",
+      "display_name": null,
+      "length": null,
+      "period": {
+        "end": "2020-10-01",
+        "start": "2020-07-01"
+      },
+      "provider": "demo",
+      "register": "demo/fil",
+      "release": null,
+      "source": "s",
+      "spelling": "Kod",
+      "table": "demo/fil",
+      "table_name": "Kvartalsregistret",
+      "type": "integer",
+      "value_set": null,
+      "variable": "demo/fil/kod",
+      "variable_name": "Kod"
+    }
+  ],
+  "findings": [
+    {
+      "code": "variable_absent_from_files",
+      "level": "info",
+      "message": "demo/fil/kod is not in the files of demo/fil for April to June 2020 and October to December 2020, so those files deliver no data on it.",
+      "path": "/sources/0/bindings/0",
+      "period": {
+        "end": "2021-01-01",
+        "start": "2020-01-01"
+      },
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/fil",
+      "table_name": "Kvartalsregistret",
+      "variable": "demo/fil/kod",
+      "variable_name": "Kod"
+    },
+    {
+      "code": "row_key_undeclared",
+      "level": "info",
+      "message": "demo/fil has no stated row identifier, so its file carries only the columns you choose",
+      "path": "/sources/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/fil",
+      "table_name": "Kvartalsregistret",
+      "variable": null,
+      "variable_name": null
+    }
+  ],
+  "manual": [],
+  "project": {
+    "name": "Order case",
+    "reg_meta_version": "0.92.0",
+    "schema_version": "8.0.0"
+  },
+  "row_keys": []
+}
