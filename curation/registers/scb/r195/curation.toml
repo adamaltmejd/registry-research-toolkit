@@ -1001,13 +1001,13 @@ evidence = "Reviewed memberships; legacy groups default dissolve.\n"
 kind = "set"
 subject = "sjukfranvaro-sjukloneperioden: FALLID where release = 'r12641'"
 fields = { "period" = "2015-01-01..2015-09-30" }
-evidence = "#2605. SCB Registerinformation, release r12641 (2015) documents both FALLID and Id for VarId v36024 with the same label and definition. The delivered 2015 quarterly files (SWECOV storage export) carry FALLID in Q1–Q3 and Id from Q4; delivered data wins (maintainer ruling 2026-11-14), so FALLID covers 2015 Q1–Q3."
+evidence = "#2605. SCB Registerinformation, release r12641 (2015) documents both FALLID and Id for VarId v36024 with the same label and definition. The delivered 2015 quarterly files carry FALLID in Q1–Q3 and Id from Q4; delivered data wins (maintainer ruling 2026-11-14), so FALLID covers 2015 Q1–Q3."
 
 [[statement]]
 kind = "set"
 subject = "sjukfranvaro-sjukloneperioden: Id where release = 'r12641'"
 fields = { "period" = "2015-10-01..2015-12-31" }
-evidence = "#2605. SCB Registerinformation, release r12641 (2015) documents both FALLID and Id for VarId v36024 with the same label and definition. The delivered 2015 quarterly files (SWECOV storage export) carry FALLID in Q1–Q3 and Id from Q4; delivered data wins (maintainer ruling 2026-11-14), so Id covers 2015 Q4."
+evidence = "#2605. SCB Registerinformation, release r12641 (2015) documents both FALLID and Id for VarId v36024 with the same label and definition. The delivered 2015 quarterly files carry FALLID in Q1–Q3 and Id from Q4; delivered data wins (maintainer ruling 2026-11-14), so Id covers 2015 Q4."
 
 [[statement]]
 kind = "set"
