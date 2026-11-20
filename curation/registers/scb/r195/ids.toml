@@ -90,7 +90,6 @@ public = "ksju"
 "cfar-nummer-idnr" = ["Sjukfrånvaro under sjuklöneperioden: idnr"]
 "inehaller-varde-0-eller-1" = ["Sjukfrånvaro under sjuklöneperioden: pnra"]
 "lan-ksjulan" = ["Sjukfrånvaro under sjuklöneperioden: Ksjulan"]
-"lopnummer-sjukfall-id" = ["Sjukfrånvaro under sjuklöneperioden: Id"]
 "markering-for-sjukfall-kvinna-oviktade" = ["Sjukfrånvaro under sjuklöneperioden: fallk1"]
 "markering-for-sjukfall-man-oviktade" = ["Sjukfrånvaro under sjuklöneperioden: fallm1"]
 "naringsgren-ng1" = ["Sjukfrånvaro under sjuklöneperioden: NG1"]

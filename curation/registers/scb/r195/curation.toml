@@ -992,17 +992,28 @@ subject = "var:lopnummer-sjukfall"
 fields = { "tags" = [] }
 evidence = "Reviewed memberships; legacy groups default dissolve.\n"
 
-[[statement]]
-kind = "set"
-subject = "var:lopnummer-sjukfall-id"
-fields = { "sets" = [] }
-evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+# #2605: FALLID and Id are one SCB variable (VarId v36024, same label and definition)
+# under a column renamed in 2015. SCB's 2015 release documents both names; the delivered
+# quarterly files carry FALLID in 2015 Q1–Q3 and Id from 2015 Q4. Delivered data wins:
+# each 2015 occurrence is cut to its quarters, then Id joins lopnummer-sjukfall.
 
 [[statement]]
 kind = "set"
-subject = "var:lopnummer-sjukfall-id"
-fields = { "tags" = [] }
-evidence = "Reviewed memberships; legacy groups default dissolve.\n"
+subject = "sjukfranvaro-sjukloneperioden: FALLID where release = 'r12641'"
+fields = { "period" = "2015-01-01..2015-09-30" }
+evidence = "#2605. SCB Registerinformation, release r12641 (2015) documents both FALLID and Id for VarId v36024 with the same label and definition. The delivered 2015 quarterly files (SWECOV storage export) carry FALLID in Q1–Q3 and Id from Q4; delivered data wins (maintainer ruling 2026-11-14), so FALLID covers 2015 Q1–Q3."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: Id where release = 'r12641'"
+fields = { "period" = "2015-10-01..2015-12-31" }
+evidence = "#2605. SCB Registerinformation, release r12641 (2015) documents both FALLID and Id for VarId v36024 with the same label and definition. The delivered 2015 quarterly files (SWECOV storage export) carry FALLID in Q1–Q3 and Id from Q4; delivered data wins (maintainer ruling 2026-11-14), so Id covers 2015 Q4."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: Id"
+fields = { "variable" = "lopnummer-sjukfall" }
+evidence = "#2605. FALLID (2011–2015 Q3) and Id (2015 Q4–) are one SCB variable, VarId v36024, with the same label ('Löpnumrering för samtliga sjukfall') and definition ('Variabeln tilldelar varje observerat sjukfall ett unikt löpnummer') in every release: the column was renamed in 2015. One variable with a spelling change, so an order of the sick-spell id gets every quarter."
 
 [[statement]]
 kind = "set"
