@@ -106,7 +106,8 @@ A bound is the ISO day truncated to the encoding's digits, which is the contract
 widening: a finer bound covers its whole year or month. `date` compares days, so a
 datetime keeps every time of a bound day. Blank text reads as NULL (SQL Server would cast
 it to 1900-01-01 or 0), and so does a `yyyymm` that is no calendar month (`10000001`)
-or a `yyyymmdd` that is no calendar day (`20170230`); the filter and the
+or a `yyyymmdd` that is no calendar day (`20170230`), and a fractional number
+(`20180101.5`) under any integer encoding; the filter and the
 `rows_without_period` count read the same value. A NULL or unparseable period value
 matches no range and is left out of a filtered file, and a second query counts those
 rows for `run_log.csv` (`rows_without_period`, empty for an unfiltered file, which keeps every

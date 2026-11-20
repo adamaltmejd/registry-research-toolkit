@@ -856,21 +856,29 @@ period_key <- function(encoding, data_type, table, column) {
   }
   if (encoding != "date" && data_type %in% c(NUMBER_TYPES, TEXT_TYPES)) {
     n <- paste0("TRY_CAST(", value, " AS bigint)")
-    valid <- switch(
-      encoding,
-      year = NULL,
-      yyyymm = paste0(
-        "TRY_CONVERT(date, CAST(",
-        n,
-        " AS varchar(20)) + ''01'', 112) IS NOT NULL"
-      ),
-      yyyymmdd = paste0(
-        "TRY_CONVERT(date, CAST(",
-        n,
-        " AS varchar(20)), 112) IS NOT NULL"
+    valid <- c(
+      # A fractional number (20180101.5) is no period: bigint would truncate it.
+      if (!data_type %in% TEXT_TYPES) paste0("TRY_CAST(@col AS float) = ", n),
+      switch(
+        encoding,
+        year = NULL,
+        yyyymm = paste0(
+          "TRY_CONVERT(date, CAST(",
+          n,
+          " AS varchar(20)) + ''01'', 112) IS NOT NULL"
+        ),
+        yyyymmdd = paste0(
+          "TRY_CONVERT(date, CAST(",
+          n,
+          " AS varchar(20)), 112) IS NOT NULL"
+        )
       )
     )
-    expr <- if (is.null(valid)) n else paste0("CASE WHEN ", valid, " THEN ", n, " END")
+    expr <- if (is.null(valid)) {
+      n
+    } else {
+      paste0("CASE WHEN ", paste(valid, collapse = " AND "), " THEN ", n, " END")
+    }
     return(list(expr = expr, type = "bigint"))
   }
   refuse(

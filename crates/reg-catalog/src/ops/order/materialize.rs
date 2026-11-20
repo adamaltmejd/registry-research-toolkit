@@ -1091,20 +1091,7 @@ fn keys(
     });
     let per_source: Vec<usize> = draft.days.keys().copied().collect();
     for (r, requirement) in requirements.iter().enumerate() {
-        let scope: Vec<Days> = match requirement["period"].as_str() {
-            None => vec![(i64::MIN, i64::MAX)],
-            Some(period) => period
-                .split(',')
-                .map(|token| {
-                    let (lo, hi) = token
-                        .trim()
-                        .parse::<reg_core::Period>()
-                        .map_err(|_| Error::internal("The row identifier data is invalid."))?
-                        .iso_bounds();
-                    Ok((super::day(&lo), super::day(&hi) + 1))
-                })
-                .collect::<Result<_, Error>>()?,
-        };
+        let scope = key_scope(requirement)?;
         let variables = reg_core::placement::key_variables(requirement);
         for s in &per_source {
             let days = overlap(&extracted, &scope);
@@ -1165,28 +1152,6 @@ fn keys(
                              Leave out those years.",
                             holding.label,
                             distinct.len()
-                        ),
-                    );
-                    issue.variable = Some((*variable).to_owned());
-                    findings.push(issue);
-                    continue;
-                }
-                // simplify: refused rather than joining each earlier key column; join
-                // them once a steward's spell table moves its key between columns.
-                if let Some(spells_from) = &spells_from
-                    && found.iter().any(|(column, _, d, ..)| {
-                        !overlap(&overlap(spells_from, &scope), &[*d]).is_empty()
-                            && !over.iter().any(|o| o.0 == *column)
-                    })
-                {
-                    let mut issue = block(
-                        "held_key_spell_varies",
-                        format!(
-                            "Table {:?} has its row identifier {variable} in another column \
-                             for spells that began before the years requested, so it cannot \
-                             be ordered for them. Order it from the start of its delivery, \
-                             or leave it out.",
-                            holding.label
                         ),
                     );
                     issue.variable = Some((*variable).to_owned());
@@ -1275,7 +1240,69 @@ fn keys(
             }
         }
     }
+    // Every declaration over a possible spell start, the request's own and earlier
+    // ones, must find its key columns in the file, or those spells arrive unkeyed.
+    // simplify: refused rather than joining each earlier key column; join them once a
+    // steward's spell table moves its key between columns.
+    if let Some(spells_from) = &spells_from {
+        for requirement in &requirements {
+            let earlier = overlap(spells_from, &key_scope(requirement)?);
+            if earlier.is_empty() {
+                continue;
+            }
+            for variable in reg_core::placement::key_variables(requirement) {
+                let found: Vec<(i64, Days)> = columns
+                    .query_map(rusqlite::params![holding_id, variable], |row| {
+                        Ok((row.get(0)?, (row.get(2)?, row.get(3)?)))
+                    })?
+                    .collect::<rusqlite::Result<_>>()?;
+                let moved = !requirement["hold"].is_null()
+                    || found.iter().any(|(column, d)| {
+                        !overlap(&earlier, &[*d]).is_empty() && !draft.columns.contains_key(column)
+                    });
+                for s in per_source.iter().filter(|_| moved) {
+                    let issue = Issue {
+                        source: Some(sources[*s].name().to_owned()),
+                        variable: Some(variable.to_owned()),
+                        ..Issue::new(
+                            IssueLevel::Error,
+                            "held_key_spell_varies",
+                            format!("/sources/{s}"),
+                            format!(
+                                "Table {:?} has its row identifier {variable} in another \
+                                 column for spells that began before the years requested, so \
+                                 it cannot be ordered for them. Order it from the start of \
+                                 its delivery, or leave it out.",
+                                holding.label
+                            ),
+                        )
+                    };
+                    if !findings.contains(&issue) {
+                        findings.push(issue);
+                    }
+                }
+            }
+        }
+    }
     Ok(())
+}
+
+/// The days a key declaration covers: its `period`, else every day.
+fn key_scope(requirement: &Value) -> Result<Vec<Days>, Error> {
+    let Some(period) = requirement["period"].as_str() else {
+        return Ok(vec![(i64::MIN, i64::MAX)]);
+    };
+    period
+        .split(',')
+        .map(|token| {
+            let (lo, hi) = token
+                .trim()
+                .parse::<reg_core::Period>()
+                .map_err(|_| Error::internal("The row identifier data is invalid."))?
+                .iso_bounds();
+            Ok((super::day(&lo), super::day(&hi) + 1))
+        })
+        .collect()
 }
 
 /// A key's mapping: (column id, table, days, carried, column name, caveat).
