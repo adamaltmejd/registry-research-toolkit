@@ -55,7 +55,7 @@ const TITLES: Readonly<Record<string, string>> = {
   edition_disagreement: "Editions disagree about this variable",
   classification_incompatible: "Classification does not match the study years",
   classification_version_ambiguous:
-    "Two classification versions at the same time",
+    "More than one classification version at the same time",
   ambiguous_window: "Another variable shares this column in these years",
   coverage_end_unstated: "The end of coverage has not been confirmed",
   form_change: "The delivered column changes during the study years",

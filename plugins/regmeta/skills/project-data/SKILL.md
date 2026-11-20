@@ -96,9 +96,10 @@ the `catalog-search` skill.
    warnings to the user. A variable whose code list (municipality codes, say) changes
    version over the years gives no warning: each order entry names the version of its
    years in `classification`, and a `form_change` info says when the codes change. A
-   `classification_version_ambiguous` warning means the variable carries two versions
-   on the same days, in the period the warning names (two releases of one table ordered
-   for a year they share); each entry still names its own version. The binding's
+   `classification_version_ambiguous` warning means the variable carries more than one
+   version on the same days, in the period the warning names (several releases of one
+   table ordered for a year they share); each entry still names its own version. The
+   binding's
    `classification`, a version id `class/<family>/<version>` (`show class` lists the
    families and versions), keeps one version only: it delivers the years where the
    variable carries that version and clips the rest (`period_clipped`), so do not pin to

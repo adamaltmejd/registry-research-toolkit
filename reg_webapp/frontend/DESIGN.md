@@ -869,8 +869,8 @@ Time is the axis every relation is drawn on.
   Each lane's below slot holds an optional classification pin and its findings. There is
   no type control: an added column states no type, so the order reads the catalog's
   (#2071, G13). The pin appears for a binding with a classification or a finding that
-  two versions apply on the same days (successive versions give none, #2602). That
-  finding's title and the add confirmation state the fact and do not advise a pin, which
+  more than one version applies on the same days (successive versions give none,
+  #2602). That finding's title and the add confirmation state the fact and do not advise a pin, which
   delivers one version only. The pin uses named versions from segments on this table overlapping the
   source period, plus "Not pinned" to clear it. A stored pin outside those candidates
   remains named and marked "not delivered in this period". Versions use a scrolling

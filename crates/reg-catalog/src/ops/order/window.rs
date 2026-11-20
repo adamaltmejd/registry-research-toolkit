@@ -3,7 +3,7 @@
 //! window findings come from the segments the entries cover.
 
 use reg_core::project::{CatalogBinding, CatalogSource};
-use reg_core::{Interval, IssueLevel, gaps, merge, next_iso_day, overlap};
+use reg_core::{Interval, IssueLevel, gaps, intersect, merge, next_iso_day, overlap};
 use rusqlite::{Connection, OptionalExtension, Row};
 
 use super::{
@@ -430,16 +430,18 @@ fn materialize(
     // a pin would drop the other years (#2602).
     let mut twice = Vec::new();
     if variable.classification.is_none() {
+        // `pieces` is sorted by start (above), so a later piece that starts past `a`'s
+        // end ends the scan for `a`.
         for (i, a) in pieces.iter().enumerate() {
             for b in &pieces[i + 1..] {
+                if b.days.0 > a.days.1 {
+                    break;
+                }
                 if a.class_version.is_some()
                     && b.class_version.is_some()
                     && a.class_version != b.class_version
                 {
-                    twice.extend(overlap(
-                        std::slice::from_ref(&a.days),
-                        std::slice::from_ref(&b.days),
-                    ));
+                    twice.extend(intersect(&a.days, &b.days));
                 }
             }
         }
