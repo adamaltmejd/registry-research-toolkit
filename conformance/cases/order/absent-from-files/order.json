@@ -54,7 +54,7 @@
     {
       "code": "variable_absent_from_files",
       "level": "info",
-      "message": "demo/fil/kod is not in the files of demo/fil for April to June 2020 and October to December 2020, so those files deliver no data on it.",
+      "message": "There is no data on demo/fil/kod in the files of demo/fil for April to June 2020 and October to December 2020.",
       "path": "/sources/0/bindings/0",
       "period": {
         "end": "2021-01-01",

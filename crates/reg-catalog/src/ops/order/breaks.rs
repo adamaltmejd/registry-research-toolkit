@@ -160,8 +160,8 @@ pub(super) fn met(anchor: &Anchor, breaks: &[Stored], days: &[Interval]) -> Vec<
             None => (
                 IssueLevel::Info,
                 format!(
-                    "The provider marks a series break in {pid} {}, without an explanation.",
-                    when.join("; ")
+                    "The provider marks a series break in {pid} {} but gives no explanation.",
+                    when.join(" and ")
                 ),
             ),
         };

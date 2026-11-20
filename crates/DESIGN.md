@@ -3470,8 +3470,9 @@ relation and not as a document.
   release; any other undated break whenever the entity is ordered. A variable break is
   at its binding, a table, release or register break at its source with `table` set. It
   is a warning when the provider says what changed, else an info. It never blocks. An
-  undated break reads "without a date"; one with neither day nor text "The provider marks
-  a series break in X without a date or explanation." (#2603).
+  undated break reads "without a date"; one with no text "The provider marks a series
+  break in X from 2019 but gives no explanation.", or "… in X without a date or
+  explanation." when no day is stated either (#2603).
 - **The SPA** shows a register's and its tables' breaks on the register page (the
   selected tables' with a table filter on) and a variable's on its page, without release
   names or provenance (frontend DESIGN.md → Words).

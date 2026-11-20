@@ -913,29 +913,43 @@ fn covering(at: &Located, days: &Interval) -> Result<Vec<(String, String, Vec<In
     if scope.composed {
         linked.extend(rows(scope.conn, &edge("held."), [pid], |row| row.get(0))?);
     }
+    // Inline (not a CTE used twice), so each read reaches the segment indexes.
+    let folds_sql = format!(
+        "SELECT DISTINCT fold FROM ({}) WHERE variable_id = ?1 AND table_id = ?2",
+        segments(scope)
+    );
     let sql = format!(
-        "WITH s AS ({}) SELECT o.pid, o.start, o.end,
-           EXISTS (SELECT 1 FROM s m WHERE m.variable_id = ?1 AND m.table_id = o.table_id
-                   AND m.fold = o.fold)
-         FROM s o WHERE o.table_id = ?2 AND o.variable_id <> ?1 AND o.state <> 'ambiguous'
-         ORDER BY o.pid, o.start",
+        "SELECT pid, start, end, fold FROM ({}) WHERE table_id = ?2 AND variable_id <> ?1
+           AND state <> 'ambiguous' AND start < ?4 AND end > ?3
+         ORDER BY pid, start",
         segments(scope)
     );
     let mut found = Vec::new();
     for s in scope.serving {
         let here = overlap(&s.requested, std::slice::from_ref(days));
-        if here.is_empty() {
+        let Some(hull) = reg_core::hull(&here) else {
             continue;
-        }
-        let candidates: Vec<(String, i64, i64, bool)> = rows(
+        };
+        let folds: Vec<String> = rows(
+            scope.conn,
+            &folds_sql,
+            rusqlite::params![at.variable.id, s.table.id],
+            |row| row.get(0),
+        )?;
+        let candidates: Vec<(String, i64, i64, String)> = rows(
             scope.conn,
             &sql,
-            rusqlite::params![at.variable.id, s.table.id],
+            rusqlite::params![
+                at.variable.id,
+                s.table.id,
+                super::day(&hull.0),
+                super::day(&hull.1) + 1
+            ],
             |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
         )?;
         let mut by: Vec<(String, Vec<Interval>)> = Vec::new();
-        for (other, start, end, same_column) in candidates {
-            if !same_column && !linked.contains(&other) {
+        for (other, start, end, fold) in candidates {
+            if !folds.contains(&fold) && !linked.contains(&other) {
                 continue;
             }
             let has = overlap(&here, &[interval(start, end)]);
@@ -1035,8 +1049,7 @@ fn absent_from_files(
                 table,
                 Some(&days),
                 format!(
-                    "{} is not in the files of {table} for {}, so those files deliver no data \
-                     on it.",
+                    "There is no data on {} in the files of {table} for {}.",
                     at.variable.pid,
                     words::plain(&periods(scope.server, &files))
                 ),
