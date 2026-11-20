@@ -1,6 +1,6 @@
 # Terms of Service
 
-`microdata-tools-se` is early-stage research tooling. It is provided for testing and
+`regmeta` is early-stage research tooling. It is provided for testing and
 development workflows around Swedish administrative register data.
 
 ## Acceptable use

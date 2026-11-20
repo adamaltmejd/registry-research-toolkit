@@ -9,7 +9,7 @@ MONA](https://www.scb.se/mona).
   | [`reg_webapp`](reg_webapp/)           | Rust server container and hosted MCP edge deployment                                |
   | [`reg_mona_runner`](reg_mona_runner/) | `extract.R`, the extract runner a steward's data manager runs inside MONA           |
   | [`reg_export_gate`](reg_export_gate/) | `export_gate.R`, the check a MONA pipeline runs before anything is exported         |
-  | [`plugins/`](plugins/)                | The `microdata-tools-se` agent plugin                                               |
+  | [`plugins/`](plugins/)                | The `regmeta` agent plugin                                               |
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
 
@@ -17,11 +17,11 @@ See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
 
 ### Agent plugin (recommended)
 
-The toolkit ships as the `microdata-tools-se` plugin. In Claude Code:
+The toolkit ships as the `regmeta` plugin. In Claude Code:
 
 ```text
 /plugin marketplace add adamaltmejd/registry-research-toolkit
-/plugin install microdata-tools-se@microdata-tools-se
+/plugin install regmeta@regmeta
 ```
 
 In Codex:
@@ -30,13 +30,13 @@ In Codex:
 codex plugin marketplace add adamaltmejd/registry-research-toolkit
 ```
 
-then install `microdata-tools-se` from the plugin marketplace UI.
+then install `regmeta` from the plugin marketplace UI.
 
 The plugin connects to the hosted catalog MCP server at `https://reg-meta.vqv.uk/mcp`
 (or a data steward's catalog, as a setting) and bundles four skills:
-`register-metadata-search`, which documents its tools, `register-project`, for drafting
-a `project_data.json`, `register-mock-data`, for local mock data, and
-`register-research-scaffold`, for a research project that runs on MONA. The plugin
+`catalog-search`, which documents its tools, `project-data`, for drafting
+a `project_data.json`, `mock-data`, for local mock data, and
+`project-setup`, for a research project that runs on MONA. The plugin
 README's "Data stewards" section says when and how to use a steward's catalog.
 
 ## Quick start
@@ -55,7 +55,7 @@ is a setting). SWECOV's catalog is also browsable at <https://data.swecov.se>.
 
 ### Mock data
 
-The `register-mock-data` skill generates local mock data shaped like a project's
+The `mock-data` skill generates local mock data shaped like a project's
 delivery with `reg-mock`. Each `reg_meta/v*` release carries it for macOS arm64
 (`aarch64-apple-darwin`), Linux x86_64 (`x86_64-unknown-linux-gnu`) and Windows x86_64
 (`x86_64-pc-windows-msvc`, asset `reg-mock-<target>.exe`). Download the binary for your

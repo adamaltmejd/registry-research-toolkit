@@ -30,7 +30,7 @@ Access), a remote-desktop environment. Three consequences shape the whole toolki
   pre-installed (WinPython, incl. duckdb/pyodbc/numpy) or uploaded with the code.
 - **LLM agents are not allowed inside MONA.** Researchers develop analysis code with
   coding agents *outside* MONA. Local mock data generated from a `project_data.json` is
-  written by `reg-mock`, driven by the plugin's `register-mock-data` skill.
+  written by `reg-mock`, driven by the plugin's `mock-data` skill.
 
 ### Data stewards
 
@@ -85,7 +85,7 @@ registry-research-toolkit/
   reg_mona_runner/  # MONA extract runner: order file -> extracts inside MONA (R)
   reg_export_gate/  # export gate: MONA check of outputs before export (R), schemas
   conformance/      # contract corpus, run against the Rust server
-  plugins/          # the microdata-tools-se agent plugin (hosted MCP, skills incl. the scaffold)
+  plugins/          # the regmeta agent plugin (hosted MCP, skills incl. the scaffold)
   reg_webapp/
     edge/           # global hosted MCP edge worker
 ```

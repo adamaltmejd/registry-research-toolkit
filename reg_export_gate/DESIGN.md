@@ -260,7 +260,7 @@ The shipped files:
     an unrelated cell key, so differencing two tables does not recover a person. That is
     why there is no secondary-suppression rule and no count rounding. The gate cannot
     verify noise, so it keeps the floor of 5 on the published counts. The toolkit ships
-    the method as `cell_key.R` in the plugin's `register-research-scaffold` skill
+    the method as `cell_key.R` in the plugin's `project-setup` skill
     (`scripts/`); the mock-stats plan's `mock_stats.R` scaffold is unbuilt.
   - **Every statistic rests on a check-only true count** (`n_true`), never only on the
     published, perturbed `n_persons`: a published 5 can rest on one true person, and a

@@ -1,5 +1,5 @@
 ---
-name: register-metadata-search
+name: catalog-search
 description: Query Swedish register metadata (SCB, Socialstyrelsen and other holders)
   through the catalog MCP tools. Use when answering questions about Swedish register
   data — variable definitions, value codes, register schemas, column names, or how data
@@ -16,7 +16,7 @@ whose data comes from a data steward adds the steward's catalog as its own
 classifications, value sets, codes and documents): in such a project use
 `steward-catalog` for the steward's holdings and the plugin's `catalog` for data outside
 them, saying which catalog each fact came from; a `project_data.json` names its own in
-`catalog` (`register-project` skill). A `not_found` there
+`catalog` (`project-data` skill). A `not_found` there
 means nothing orderable is held under that reference, not that the steward lacks it (ask
 the steward), and a held table marked `not_orderable` is
 not to be entered as a manual source (data-stewards.md). To add one, read [data-stewards.md](references/data-stewards.md).
@@ -38,7 +38,7 @@ Each tool's parameters are in its MCP schema; this is what each one is for.
   | `resolve`  | Delivered column names (data-file headers) to the variables that deliver them. Always pass `register`, found by `search` with `type: register`: without it `kon` or `FodAr` matches 20-100 variables.  |
   | `graph`    | A ref's relations, narrowed by `kind`: `continues`, `derived_from`, `equivalent` or `label_of`. Lineage is `kind=derived_from`.                                                                        |
   | `docs`     | `operation`: `docs_search`, `docs_get` (one documentation entry) or `docs_related` (the documents of a register, table or variable).                                                                   |
-  | `order`    | `operation`: `validate`, `order` or (steward catalogs only) `materialize_order` a `project_data.json` (`project` argument); see `register-project`.                                                    |
+  | `order`    | `operation`: `validate`, `order` or (steward catalogs only) `materialize_order` a `project_data.json` (`project` argument); see `project-data`.                                                    |
 
 ## Conventions
 

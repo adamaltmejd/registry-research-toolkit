@@ -74,7 +74,7 @@ fn project_schema_is_current() {
         + "\n";
 
     let path =
-        root.join("plugins/microdata-tools-se/skills/register-project/project_data.schema.json");
+        root.join("plugins/regmeta/skills/project-data/project_data.schema.json");
     if std::env::var_os("REG_META_BLESS").is_some() {
         std::fs::write(&path, &rendered).unwrap();
     }

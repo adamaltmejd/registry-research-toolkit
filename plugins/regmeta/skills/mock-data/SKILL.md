@@ -1,5 +1,5 @@
 ---
-name: register-mock-data
+name: mock-data
 description: Generate local mock register data from a project_data.json with
   `reg-mock`, so analysis code runs on the researcher's machine before the real
   extract exists. Use when the user asks for mock, synthetic or fake data for a register
@@ -34,11 +34,11 @@ catalog's answers, write the rules and compile them into `mock_spec.json`, gener
 - `reg-mock fetch` calls the catalog itself; it does not use the agent's MCP servers.
   For a steward behind Cloudflare Access it reads `CF_ACCESS_HOST` (the steward's host
   name), `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET` from the environment, the
-  project's Git-ignored `.envrc` (`register-metadata-search` skill,
+  project's Git-ignored `.envrc` (`catalog-search` skill,
   `references/data-stewards.md`), and sends the pair only to that host, only over https.
   Without them such a steward is refused as `access_required`; a half-set or unsendable
   pair as `access_credentials`.
-- The project must validate first (`register-project` skill).
+- The project must validate first (`project-data` skill).
 
 ## 1. Save the answers
 
@@ -55,7 +55,7 @@ is JSON on stderr, exit 2, as for compile; `catalog_refused` items carry the cat
 own findings. One at `/catalog`, whose message names two catalogs, means `--catalog`
 is the wrong server: fetch again from the URL of the catalog the project's `catalog`
 names, without editing the project (for the global catalog, with `--mode order`). Fix
-any other finding in the project (`register-project` skill) and fetch again.
+any other finding in the project (`project-data` skill) and fetch again.
 
 Commit `mock/answers/`: compile reads only these files, so the mock never depends on
 the network again. Save again whenever the project changes; compile refuses answers saved

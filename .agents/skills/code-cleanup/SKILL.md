@@ -66,7 +66,7 @@ data) belongs to exactly one module; a file the split below misses joins its nea
 module. Today's split: `reg_webapp/edge` with the Dockerfile and deploy scripts;
 `reg_webapp/frontend` (the SPA) with `reg_webapp/dev`; `scripts/`; the `conformance/`
 case data (its runner, `crates/reg-conformance`, is in the `crates/` module);
-`plugins/microdata-tools-se/`; the R packages `reg_mona_runner` and `reg_export_gate`;
+`plugins/regmeta/`; the R packages `reg_mona_runner` and `reg_export_gate`;
 `curation/` (TOML, read for stale keys and entries); and `crates/` (Rust). The test
 trees are the `test-audit` skill's: run its sweep in the same waves and merge its list
 into step 3.

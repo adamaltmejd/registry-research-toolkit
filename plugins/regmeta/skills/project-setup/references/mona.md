@@ -14,7 +14,7 @@ Add the steward's catalog to the project as its `steward-catalog` MCP server, in
 project's `.mcp.json` (or `.codex/config.toml`), and record in the project instructions
 that the agent uses it for the project's data and the plugin's global `catalog` only for
 questions about data outside the steward's holdings: the
-`register-metadata-search` skill's `references/data-stewards.md`. Only a steward's
+`catalog-search` skill's `references/data-stewards.md`. Only a steward's
 catalog knows its holdings, delivers its own file and column names, and writes MONA
 order files. Every `meta.catalog_version` the tools return is that steward's release,
 which can lag the global catalog. Use that release for everything below: the project's
@@ -22,7 +22,7 @@ which can lag the global catalog. Use that release for everything below: the pro
 
 ## 2. The order (agent drafts, researcher approves)
 
-Draft `project_data.json` with the `register-project` skill, against the steward's
+Draft `project_data.json` with the `project-data` skill, against the steward's
 catalog. Validate until `ok` is true, and settle every warning with the researcher. A
 steward with several databases needs `linkage`: one project per database. Choose
 `extract_format` (`dta`, the default, `parquet` or `csv`) for the language the analysis
@@ -34,7 +34,7 @@ will hold, but it submits nothing.
 
 ## 3. Mock inputs (agent)
 
-Generate mock files shaped like the delivery with the `register-mock-data` skill (`reg-mock`):
+Generate mock files shaped like the delivery with the `mock-data` skill (`reg-mock`):
 the same file and column names and types as the extract, in the order's format. Keep them
 outside the project in the configured mock input directory. The pipeline switches between
 mock and real data by its input directory alone.

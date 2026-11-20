@@ -1,7 +1,7 @@
 # Reference: disposable income by sex
 
 The project's instructions (copy as `CLAUDE.md` or `AGENTS.md`). A worked example of
-the `register-research-scaffold` skill: LISA Individer 2021 to 2022 from the global
+the `project-setup` skill: LISA Individer 2021 to 2022 from the global
 catalog, one question, run on MONA, results through the export gate.
 
 ## Boundaries
@@ -22,7 +22,7 @@ catalog, one question, run on MONA, results through the export gate.
 From the project folder:
 
 ```sh
-# Mock inputs (register-mock-data skill); a changed project_data.json needs
+# Mock inputs (mock-data skill); a changed project_data.json needs
 # reg-mock fetch into mock/answers first
 reg-mock compile --project project_data.json --rules mock/mock_rules.json \
   --answers mock/answers --out mock/mock_spec.json

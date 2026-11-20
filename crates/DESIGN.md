@@ -147,7 +147,7 @@ added when a consumer needs it. Linux builds link the runner's glibc, so they ne
 Ubuntu 24.04-era distribution or newer. A steward's holdings
 (`reg_meta_<steward>.db.zst`, pinning the base's `catalog_sha256`) are released by its
 own repository against the `reg_meta` release it pins. There is no PyPI package, no
-`fetch` run mode and no local stdio MCP: agents use hosted MCP. The `microdata-tools-se`
+`fetch` run mode and no local stdio MCP: agents use hosted MCP. The `regmeta`
 plugin declares one hosted MCP server whose URL is a user setting: the global catalog by
 default, a hosted steward catalog (`https://data.swecov.se/mcp`) instead.
 

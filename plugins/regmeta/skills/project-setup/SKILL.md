@@ -1,5 +1,5 @@
 ---
-name: register-research-scaffold
+name: project-setup
 description: Scaffold a small batch-based Swedish register-data research project from a
   research brief and documented source contracts, starting from the skill's lean R
   reference project: question tickets, separate local and restricted execution,
@@ -35,10 +35,10 @@ mock data. A project whose data a data steward delivers runs in this order
 
 1. Add the steward's catalog to the project as its `steward-catalog` server, in
    `.mcp.json` (Claude Code) or `.codex/config.toml` (Codex), and record in the project
-   instructions that it is the catalog to use (`register-metadata-search` skill,
+   instructions that it is the catalog to use (`catalog-search` skill,
    `references/data-stewards.md`).
-2. Draft and validate `project_data.json` with the `register-project` skill.
-3. Generate mock inputs from it with the `register-mock-data` skill (`reg-mock`).
+2. Draft and validate `project_data.json` with the `project-data` skill.
+3. Generate mock inputs from it with the `mock-data` skill (`reg-mock`).
 4. Build and run the pipeline locally on the mocks, ending with `export_gate.R`.
 5. The steward materializes the order and runs `extract.R` on MONA; the researcher runs
    the same pipeline on the extract, reviews the gate's export and sends it out.
@@ -80,8 +80,8 @@ about 150 lines of the project's own code. The reference orders LISA Individer
 sex and year. Copy it to the project folder, `PROJECT.md` as the project's `CLAUDE.md`
 or `AGENTS.md`, then:
 
-1. Replace `project_data.json` with the user's order (`register-project` skill), and
-   `mock/` with its saved answers, rules and compiled spec (`register-mock-data` skill).
+1. Replace `project_data.json` with the user's order (`project-data` skill), and
+   `mock/` with its saved answers, rules and compiled spec (`mock-data` skill).
    Set the paths in `config.R`; the mock and key folders stay outside the project.
 2. Fill `export_gate/`: `export_gate.R` and the chosen schema and policy from the
    `reg_meta` tag [export-gate.md](references/export-gate.md) names, checked against its
@@ -137,7 +137,7 @@ Routine execution includes only active analyses. A closed ticket stays in Git an
 code at its execution revision; promote what current research still needs into
 maintained code rather than archiving live dependencies.
 
-The mock generator is `reg-mock` (the `register-mock-data` skill), not part of this
+The mock generator is `reg-mock` (the `mock-data` skill), not part of this
 skill or a new subsystem to build. For a trial without it, the brief may provide an
 independent wholly invented mock sample; keep it separate from unit fixtures and
 identify its limitations. Never derive unit fixtures from mock data or restricted

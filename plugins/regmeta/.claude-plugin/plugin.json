@@ -1,12 +1,12 @@
 {
-  "name": "microdata-tools-se",
+  "name": "regmeta",
   "description": "Tooling for working with Swedish administrative register microdata — register metadata search through the hosted catalog MCP server, project_data.json order drafting, local mock data, and a research-project scaffold whose outputs leave MONA through the toolkit export gate.",
   "version": "0.11.0",
   "author": {
     "name": "Adam Altmejd",
     "email": "adam@altmejd.se"
   },
-  "homepage": "https://github.com/adamaltmejd/registry-research-toolkit/tree/main/plugins/microdata-tools-se",
+  "homepage": "https://github.com/adamaltmejd/registry-research-toolkit/tree/main/plugins/regmeta",
   "repository": "https://github.com/adamaltmejd/registry-research-toolkit",
   "license": "MIT",
   "keywords": ["sweden", "microdata", "registry", "scb", "mona", "mcp", "statistics", "research"],

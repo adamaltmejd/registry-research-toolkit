@@ -18,7 +18,7 @@ what the steward holds (below), and adds:
   order file the steward's extract runner reads. The global catalog answers it with
   `holdings_unavailable`.
 - **Databases**: a steward may keep its data in several databases, each with its own
-  person key; a project then names one in `linkage` (`register-project` skill).
+  person key; a project then names one in `linkage` (`project-data` skill).
 
 Use the steward's catalog when the project's data comes from that steward's holdings.
 The steward runs the toolkit release it pins, which can be older than the global
@@ -126,7 +126,7 @@ tools for questions about the steward's holdings; for anything outside them, use
 plugin's `catalog` (the global catalog) and say which catalog each fact came from."
 Both servers are loaded in such a project. In a project without a `steward-catalog`
 server, use the plugin's `catalog`. The project's `project_data.json` records the same
-choice in `catalog`: the steward's id here, `global` otherwise (`register-project`
+choice in `catalog`: the steward's id here, `global` otherwise (`project-data`
 skill).
 
 ## Confirming it worked
@@ -164,7 +164,7 @@ and loads it only for the agent it starts in the project: `direnv` does that on 
 the folder and unloads it on leaving; by hand, start the agent in a subshell so the
 token ends with it, `(set -a; . ./.envrc; exec claude)` (or `exec codex`). The
 project's server reads the pair from that environment; `reg-mock fetch` reads all
-three (`register-mock-data` skill). In `.mcp.json`:
+three (`mock-data` skill). In `.mcp.json`:
 
 ```json
 {

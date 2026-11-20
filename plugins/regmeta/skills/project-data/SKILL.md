@@ -1,5 +1,5 @@
 ---
-name: register-project
+name: project-data
 description: Draft a project_data.json register data order with the catalog MCP tools,
   or answer questions about an existing project file.
 ---
@@ -13,14 +13,14 @@ drafts and checks the file. The document's schema is
 contract.
 
 The catalog server's `search`, `show`, `segments` and `coverage` tools are described in
-the `register-metadata-search` skill.
+the `catalog-search` skill.
 
 ## Drafting a project
 
 1. Set the document's `schema_version` to `meta.project_schema_version` from a response
    of the catalog you order from. Order from the catalog the data comes from: in a steward's
    project, the project's `steward-catalog` server, for the steward's holdings
-   (`register-metadata-search` skill, `references/data-stewards.md`); otherwise the
+   (`catalog-search` skill, `references/data-stewards.md`); otherwise the
    plugin's `catalog`. Data found only in the global catalog cannot go in a steward's
    order. Set `catalog` (required) to that catalog's id: `meta.steward.owner` from one of
    its responses, or `global` when `meta` has no `steward`. `validate`, `order` and

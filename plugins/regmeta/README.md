@@ -1,4 +1,4 @@
-# microdata-tools-se
+# regmeta
 
 Agent plugin for working with Swedish administrative register microdata (SCB,
 Socialstyrelsen, and other holders). It declares the hosted catalog MCP server and
@@ -7,10 +7,10 @@ bundles four skills:
   | Component                    | Purpose                                                                                                                                             |
   | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `catalog` MCP server         | The hosted global register metadata catalog, `https://reg-meta.vqv.uk/mcp`. A data steward's catalog is added per project (below).                 |
-  | `register-metadata-search`   | Skill: how to query variables, value codes and schemas with the catalog tools.                                                                      |
-  | `register-project`           | Skill: drafting and validating a `project_data.json` data order, and answering questions about a project.                                           |
-  | `register-mock-data`         | Skill: local mock data shaped like the project's delivery, with `reg-mock`.                                                                         |
-  | `register-research-scaffold` | Skill: scaffolding a batch-based register research project with mock validation, restricted execution (MONA or another server) and the export gate. |
+  | `catalog-search`   | Skill: how to query variables, value codes and schemas with the catalog tools.                                                                      |
+  | `project-data`           | Skill: drafting and validating a `project_data.json` data order, and answering questions about a project.                                           |
+  | `mock-data`         | Skill: local mock data shaped like the project's delivery, with `reg-mock`.                                                                         |
+  | `project-setup` | Skill: scaffolding a batch-based register research project with mock validation, restricted execution (MONA or another server) and the export gate. |
 
 The catalog tools need nothing beyond the plugin. Mock data needs the `reg-mock` binary
 (the [repository README's Mock data
@@ -23,11 +23,11 @@ project's export gate needs R where the pipeline runs.
 
 ```text
 /plugin marketplace add adamaltmejd/registry-research-toolkit
-/plugin install microdata-tools-se@microdata-tools-se
+/plugin install regmeta@regmeta
 ```
 
-The tools appear as `mcp__plugin_microdata-tools-se_catalog__<tool>`, and the skills as
-`/microdata-tools-se:<skill>`.
+The tools appear as `mcp__plugin_regmeta_catalog__<tool>`, and the skills as
+`/regmeta:<skill>`.
 
 ### Codex
 
@@ -37,7 +37,7 @@ Add the marketplace from the public GitHub repo:
 codex plugin marketplace add adamaltmejd/registry-research-toolkit
 ```
 
-Then open the Codex plugin marketplace, find `microdata-tools-se` under
+Then open the Codex plugin marketplace, find `regmeta` under
 `registry-research-toolkit`, and install it.
 
 ## Data stewards
@@ -50,8 +50,8 @@ and writes the MONA order file for a project (`materialize_order`). Use a stewar
 catalog when your project's data comes from that steward.
 
 The simplest way is to tell the agent, for example "use the plugin with the
-`<steward-host>` steward". The `register-metadata-search` skill's
-[data-stewards reference](skills/register-metadata-search/references/data-stewards.md)
+`<steward-host>` steward". The `catalog-search` skill's
+[data-stewards reference](skills/catalog-search/references/data-stewards.md)
 has the steps it follows:
 
 1. Check that `https://<steward-host>/api/context` answers JSON naming the steward

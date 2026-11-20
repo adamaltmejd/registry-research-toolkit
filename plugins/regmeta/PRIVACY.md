@@ -1,6 +1,6 @@
 # Privacy Policy
 
-`microdata-tools-se` is a plugin bundle for Codex and Claude Code. It ships skills and
+`regmeta` is a plugin bundle for Codex and Claude Code. It ships skills and
 connects to a hosted register metadata catalog operated by the plugin author: the global
 catalog at `https://reg-meta.vqv.uk/mcp`.
 

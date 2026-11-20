@@ -418,7 +418,7 @@ Record what the check exercised in the release notes.
 
 Then move the plugin's scaffold reference to the release, in a PR: its pin is set by
 hand, and its saved answers can only be fetched once the release serves the catalog. In
-`plugins/microdata-tools-se/skills/register-research-scaffold/`, set `reg_meta/vX.Y.Z`
+`plugins/regmeta/skills/project-setup/`, set `reg_meta/vX.Y.Z`
 in `SKILL.md` and `reference/PROJECT.md` and `reg_meta_version` in
 `reference/project_data.json`. The version enters the project hash, so don't edit
 `reference/mock/answers/` by hand: from `reference/`, refresh them and confirm the
