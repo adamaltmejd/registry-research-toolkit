@@ -1,0 +1,27 @@
+{
+  "note": "`demo/pins/w` has two releases, \"2021 - 2022\" on class/kind/v1 and \"2022 - 2023\" on class/kind/v2, that share 2022. An order over 2021-2023 naming both gets 2022 twice, one entry per release with its own version, so that year carries two versions: one `classification_version_ambiguous` warning whose period is 2022 alone (crates/DESIGN.md, the findings rules; #2602). 2021 and 2023 have one version each and give no finding; the code lists are identical, so there is no `form_change`. The silent twin is `classification-versions`. Fails if the same-day check is deleted, if the warning's period is the hull 2021-2023, or if successive versions outside the shared year warn. Oracle: the fixture's JSONL releases and the two `set classification` statements.",
+  "fixture": "classification-pins",
+  "project": {
+    "schema_version": "8.0.0",
+    "reg_meta_version": "0.64.0",
+    "catalog": "global",
+    "name": "Order case",
+    "extract_format": "parquet",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/pins/w",
+        "period": {
+          "from": 2021,
+          "to": 2023
+        },
+        "releases": ["2021 - 2022", "2022 - 2023"],
+        "bindings": [
+          {
+            "variable": "demo/pins/kod"
+          }
+        ]
+      }
+    ]
+  }
+}

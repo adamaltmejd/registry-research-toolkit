@@ -12,3 +12,8 @@
 {"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2015pre","column":"Lopnr","source_key":"id","label":"Löpnummer","dtype":"int","identifier":true}
 {"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2015","column":"Kod","source_key":"code","label":"Code","dtype":"int","valueset":"kind"}
 {"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2015pre","column":"Kod","source_key":"code","label":"Code","dtype":"int","valueset":"kind"}
+{"kind":"table","provider":"demo","register":"pins","table":"w","name":"Waves"}
+{"kind":"release","provider":"demo","register":"pins","table":"w","release":"w1","name":"2021 - 2022","from":"2021-01-01","to":"2022-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"pins","table":"w","release":"w2","name":"2022 - 2023","from":"2022-01-01","to":"2023-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"pins","table":"w","release":"w1","column":"Kod","source_key":"code","label":"Code","dtype":"int","valueset":"kind"}
+{"kind":"occurrence","provider":"demo","register":"pins","table":"w","release":"w2","column":"Kod","source_key":"code","label":"Code","dtype":"int","valueset":"kind"}

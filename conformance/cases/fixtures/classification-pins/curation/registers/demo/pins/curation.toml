@@ -21,3 +21,16 @@ kind = "set"
 subject = "pins: var:lopnr"
 fields.row_key = true
 evidence = "Synthetic fixture: the column identifies the table's row."
+
+# The table `w` has two releases that share 2022, each on its own version.
+[[statement]]
+kind = "set"
+subject = "w: Kod where release = 'w1'"
+fields.classification = "class/kind/v1"
+evidence = "The 2021 - 2022 release uses v1."
+
+[[statement]]
+kind = "set"
+subject = "w: Kod where release = 'w2'"
+fields.classification = "class/kind/v2"
+evidence = "The 2022 - 2023 release uses v2."
