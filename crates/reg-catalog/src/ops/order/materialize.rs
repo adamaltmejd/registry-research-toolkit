@@ -990,7 +990,7 @@ fn clip(
                 .then(|| f.period.as_ref().map(|p| p.days(open)))
                 .flatten()
             else {
-                kept.push(f);
+                kept.extend((!absent_unheld(&f, &path, &held, open)).then_some(f));
                 continue;
             };
             let release = lane_gaps.iter().find(|(g, _)| *g == f).map(|(_, r)| r);
@@ -1047,6 +1047,17 @@ fn clip(
         }
     }
     clips
+}
+
+/// A `variable_absent_from_files` of the binding at `path` in a year the steward holds
+/// none of: the logical check names files missing inside a year it delivers in part, and
+/// that year is this stage's clip (#2603).
+fn absent_unheld(f: &Issue, path: &str, held: &[Days], open: Days) -> bool {
+    f.path == path
+        && f.code == "variable_absent_from_files"
+        && f.period
+            .as_ref()
+            .is_some_and(|p| overlap(&[p.days(open)], held).is_empty())
 }
 
 /// Add each declared key of the holding over the days the file extracts: the key column joins

@@ -958,13 +958,17 @@ fn linked(scope: &Scope, pid: &str) -> Result<Vec<(i64, String)>, Error> {
 /// folded name) in that table. Each with the table and the days it has there as the
 /// order reads them (`served`: release selection and shadowing), so a `period_clipped`
 /// can name it (#2603); with `lane`, only in that named release. Nothing is guessed from
-/// similar names. On a steward's server, only days the steward holds it are named.
+/// similar names. A steward's server names none: what it holds is decided per database
+/// and release by materialization, which this check does not repeat.
 fn covering(
     at: &Located,
     days: &Interval,
     lane: Option<&str>,
 ) -> Result<Vec<(String, String, Vec<Interval>)>, Error> {
     let scope = at.scope;
+    if scope.server.catalog.steward().is_some() {
+        return Ok(Vec::new());
+    }
     let linked_ids = linked(scope, &at.variable.pid)?;
     let own_sql = format!(
         "SELECT DISTINCT exact FROM ({}) WHERE variable_id = ?1 AND table_id = ?2",
@@ -1018,7 +1022,7 @@ fn covering(
         candidates.dedup();
         for (other_id, other) in candidates {
             let is_linked = linked_ids.iter().any(|(_, p)| *p == other);
-            let mut has: Vec<Interval> = served(scope, k, other_id)?
+            let has: Vec<Interval> = served(scope, k, other_id)?
                 .pieces
                 .iter()
                 .filter(|p| p.state != "ambiguous")
@@ -1026,17 +1030,6 @@ fn covering(
                 .filter(|p| is_linked || folds.contains(&reg_core::fold_identity(&p.spelling)))
                 .flat_map(|p| overlap(&here, std::slice::from_ref(&p.days)))
                 .collect();
-            // On a steward's server, only the days the steward holds it in this table.
-            if scope.composed && !has.is_empty() {
-                let held: Vec<Interval> = rows(
-                    scope.conn,
-                    "SELECT start, end FROM held.holding_mapping
-                     WHERE table_pid = ?1 AND variable_pid = ?2 ORDER BY start",
-                    rusqlite::params![s.table.pid, other],
-                    |row| Ok(interval(row.get(0)?, row.get(1)?)),
-                )?;
-                has = overlap(&merge(has), &merge(held));
-            }
             if !has.is_empty() {
                 found.push((other, s.table.pid.clone(), merge(has)));
             }

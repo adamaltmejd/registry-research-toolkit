@@ -1452,7 +1452,10 @@ the order check's to state in its own tests; the rules that shape them:
   days the order would read it there (`served`: release selection and shadowing), which
   may be only part of the clip; a named release's own clip names those in that release.
   Nothing is guessed from similar names (COS ruling 2026-11-20, #2603). A followed
-  binding (`follow_successor`) rebuilds its clips over the whole chain and names none.
+  binding (`follow_successor`) rebuilds its clips over the whole chain and names none,
+  and a steward's server names none: what a steward holds is decided per database and
+  release by the holdings stage, which this check does not repeat. The holdings stage
+  drops a `variable_absent_from_files` for a year it clips whole.
 - Finding messages write their days in plain words at their grain: `2019`, `2018 to
   2019`, school years as `2004/2005`, months for a part year (`July to December 2018`),
   else days; an open end as `2019 onwards` or `every year through 2019`, and "any
