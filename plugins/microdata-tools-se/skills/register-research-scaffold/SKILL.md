@@ -2,11 +2,11 @@
 name: register-research-scaffold
 description: Set up a small batch-based Swedish register-data research project from the
   skill's lean R reference project, copied unchanged and run on mock data until the
-  export gate passes: separate local and restricted execution, `reg-mock` inputs, a
-  disclosure stage and the export gate. Adds a research question to the project only
-  when the user asks for one. Supports MONA (a steward's extract in, the toolkit export
-  gate out) and other processing servers; does not authorize microdata access, transfer,
-  or server execution.
+  export gate passes. The project has separate local and restricted execution, `reg-mock`
+  inputs, a disclosure stage and the export gate. Adds a research question to the
+  project only when the user asks for one. Supports MONA (a steward's extract in, the
+  toolkit export gate out) and other processing servers; does not authorize microdata
+  access, transfer, or server execution.
 ---
 
 # Register research scaffold
@@ -24,7 +24,7 @@ Rules for both stages:
 
 - Read only the project folder and the sources the user names. Do not open neighbouring
   folders, other repositories or the user's other projects unless the user points to
-  them. This skill's own files and the catalog tools are always available.
+  them. The plugin's own files and the catalog tools are always available.
 - Do not start stage 2 on your own, and do not propose research questions. During
   stage 1, ask nothing about research questions, populations or outputs.
 - Preserve a user's existing project; create a separate project when requested. A
@@ -107,13 +107,16 @@ about research questions, populations or outputs.
    ships its saved answers and compiled spec, so this needs no catalog call. The mock
    and key folders stay outside the project, where `config.R` puts them.
 5. Commit. A new project folder gets `git init` first: a mock run reads its commit. In
-   a folder that is already a Git repository, ask before committing. Commit the copied
-   files and the four files in `export_gate/`.
+   a folder that is already a Git repository, ask before committing. Commit everything
+   stage 1 wrote: the copied files, the catalog configuration and the four files in
+   `export_gate/`.
 6. Run `Rscript make_keys.R mock` once and `Rscript run.R mock` until the gate passes.
    A failure here is a setup fault (a missing R package, the wrong `reg-mock` release, a
    path): fix the setup, not the reference's code, the schema or the policy.
 7. Stop and report: the project path, the files that exist, the pins, the commit and the
-   mock run's result. Say that the project holds the reference's example order and
+   mock run's result. Name the two folders created beside the project folder, the mock
+   inputs and the mock key file (`MOCK_DIR` and `KEY_FILE` in `config.R`). Say that the
+   project holds the reference's example order and
    question, not the user's. With a steward's catalog, tell the user to restart the
    session in the project and approve the `steward-catalog` server before any catalog
    work; the tools are not loaded until then. Say that a research question is added when
@@ -151,9 +154,12 @@ are not, ask the user to restart the session in the project and stop.
    (from the order answer; a steward's extract keys persons by `LopNr`), the source
    adapter (`R/inputs.R`), the analysis (`R/analysis.R`), the cells and statistics in
    `R/disclosure.R` (its suppress, perturb, round order stays) and the calls in `run.R`.
-5. Generate the mock inputs again, commit, and run `Rscript run.R mock` until the gate
+5. Update the project instructions (`CLAUDE.md` or `AGENTS.md`) to match: the title,
+   the paragraph about the example, the commands, the names under "Before MONA" and the
+   pin table.
+6. Generate the mock inputs again, commit, and run `Rscript run.R mock` until the gate
    passes. A prototype can run on mocks while parts of the question remain open.
-6. Stop and report: the ticket, what changed, the commit, the mock run's result and what
+7. Stop and report: the ticket, what changed, the commit, the mock run's result and what
    is still pending. The ticket's answer stays pending: a mock run is not an answer.
 
 ## What every project keeps
@@ -242,7 +248,8 @@ arbitrary test-count quotas.
 
 ## Finish with evidence
 
-Commit executable inputs when the user has authorized a committed-code trial. Keep
+Commit executable inputs: in a new project folder without asking, in an existing
+repository after the user's go-ahead. Keep
 source/configuration/lockfiles free of individual data and stage specific paths. Run
 from the commit, not a dirty working directory. Record answers in later commits
 referencing that execution revision; a mock pass is not an empirical answer.
