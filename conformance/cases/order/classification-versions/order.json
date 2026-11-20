@@ -82,23 +82,5 @@
   ],
   "manual": [],
   "clips": [],
-  "findings": [
-    {
-      "level": "warning",
-      "code": "classification_version_ambiguous",
-      "path": "/sources/0/bindings/0",
-      "message": "demo/pins/kod carries more than one classification version for 2018 to 2019; pin one with \"classification\".",
-      "source": "s",
-      "variable": "demo/pins/kod",
-      "variable_name": "Code",
-      "table": "demo/pins",
-      "table_name": "Classification pins",
-      "period": {
-        "start": "2018-01-01",
-        "end": "2020-01-01"
-      },
-      "successor_fqid": null,
-      "successor_name": null
-    }
-  ]
+  "findings": []
 }

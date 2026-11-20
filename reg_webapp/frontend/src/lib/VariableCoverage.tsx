@@ -680,7 +680,8 @@ export function useVariableCoverage({
                 {classificationWarning && (
                   <>
                     {" "}
-                    Choose the classification on the{" "}
+                    More than one classification version applies at the same
+                    time, shown on the{" "}
                     <a className="link" href="/project">
                       project page
                     </a>

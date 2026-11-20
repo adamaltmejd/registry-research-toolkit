@@ -3,7 +3,7 @@
 //! window findings come from the segments the entries cover.
 
 use reg_core::project::{CatalogBinding, CatalogSource};
-use reg_core::{Interval, IssueLevel, gaps, merge, next_iso_day, overlap};
+use reg_core::{Interval, IssueLevel, gaps, intersect, merge, next_iso_day, overlap};
 use rusqlite::{Connection, OptionalExtension, Row};
 
 use super::{
@@ -425,20 +425,36 @@ fn materialize(
             &ordered,
         ));
     }
-    let versions: std::collections::BTreeSet<&String> = pieces
-        .iter()
-        .filter_map(|p| p.class_version.as_ref())
-        .collect();
-    if versions.len() > 1 && variable.classification.is_none() {
-        let days = hull(&ordered);
+    // Days two pieces of different class versions both cover (two named releases on a
+    // day they share). Versions that follow each other in time give no finding here:
+    // a pin would drop the other years (#2602).
+    let mut twice = Vec::new();
+    if variable.classification.is_none() {
+        // `pieces` is sorted by start (above), so a later piece that starts past `a`'s
+        // end ends the scan for `a`.
+        for (i, a) in pieces.iter().enumerate() {
+            for b in &pieces[i + 1..] {
+                if b.days.0 > a.days.1 {
+                    break;
+                }
+                if a.class_version.is_some()
+                    && b.class_version.is_some()
+                    && a.class_version != b.class_version
+                {
+                    twice.extend(intersect(&a.days, &b.days));
+                }
+            }
+        }
+    }
+    for days in merge(twice) {
         outcome.findings.push(at.issue(
             IssueLevel::Warning,
             "classification_version_ambiguous",
             scope.table,
             Some(&days),
             format!(
-                "{} carries more than one classification version for {}; pin one with \
-                 \"classification\".",
+                "{} carries more than one classification version at the same time for {}. \
+                 Each order entry names the version its codes follow.",
                 variable.pid,
                 span(scope.server, &days)
             ),
