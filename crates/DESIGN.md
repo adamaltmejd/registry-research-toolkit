@@ -2768,11 +2768,12 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   on hold or uncovered is `held_key_missing`, a key two columns place over the same day
   `held_key_ambiguous`; both block the order. A key placed in one column for some years
   and another for the rest joins each over its own years. A spell table's filter also
-  returns spells that started before the requested days, back to the delivery's first held
-  day; when a key declaration over those earlier days, the request's own or an
-  earlier one, keeps its key in a column the file does not carry (or holds it), the order
-  is blocked with `held_key_spell_varies` (simplify: it does not join the earlier key columns). `reg-build holdings` already
-  refuses an uncovered or overlapping key (`holdings_key_missing`,
+  returns spells that started before the requested days, so a spell table's keys and
+  bindings are resolved over its spell window, from the delivery's first held day to the
+  widened request end: every key declaration over it joins its columns, and a key or
+  binding the window places in more than one column blocks the order
+  (`spell_column_varies`; simplify: refused rather than joined per start day). `reg-build
+  holdings` already refuses an uncovered or overlapping key (`holdings_key_missing`,
   `holdings_key_ambiguous`), and a hold holds the whole table, so in an admitted pair
   both guard a foreign artifact only.
 - A stored `file_name` failing `safe_file_name` or colliding with another file's when

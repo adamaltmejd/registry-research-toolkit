@@ -181,6 +181,7 @@ fn build(
     // The holdings gap findings of an entry of one release, with that release: a shared
     // day another release delivers does not hide them ([`clip`]).
     let mut lane_gaps: Vec<(Issue, String)> = Vec::new();
+    let mut spell_tables: BTreeMap<i64, Holding> = BTreeMap::new();
     for (e, entry) in order.entries.iter().enumerate() {
         let s = index[entry.source.as_str()];
         let days = entry.period.days(open);
@@ -206,6 +207,44 @@ fn build(
             )
         });
         binding.1.push(days);
+        // A spell table returns every spell that started in its spell window, so the
+        // binding is resolved over that window and must sit in one column of it.
+        for p in &placements {
+            let table = match spell_tables.entry(p.holding) {
+                std::collections::btree_map::Entry::Occupied(e) => e.into_mut(),
+                std::collections::btree_map::Entry::Vacant(e) => {
+                    e.insert(holding(held, p.holding)?)
+                }
+            };
+            let Some(window) = spell_window(table, days.1) else {
+                continue;
+            };
+            let columns: BTreeSet<i64> = self::placements(
+                held,
+                &entry.table,
+                &entry.variable,
+                window,
+                entry.release.as_deref(),
+                space,
+            )?
+            .iter()
+            .filter(|w| w.holding == p.holding)
+            .map(|w| w.column)
+            .collect();
+            let issue = Issue {
+                source: Some(entry.source.clone()),
+                variable: Some(entry.variable.clone()),
+                ..Issue::new(
+                    IssueLevel::Error,
+                    "spell_column_varies",
+                    format!("/sources/{s}/bindings/{}", entry.binding),
+                    spell_column_varies(&table.label, &entry.variable),
+                )
+            };
+            if columns.len() > 1 && !findings.contains(&issue) {
+                findings.push(issue);
+            }
+        }
         let lane_held = binding.2.entry(entry.release.clone()).or_default();
         for p in &placements {
             let piece = (days.0.max(p.days.0), days.1.min(p.days.1));
@@ -1080,15 +1119,6 @@ fn keys(
     // its whole delivery. Only days its tables deliver hold rows: a calendar-year file
     // of a table delivered each autumn needs no key for the spring.
     let extracted = on_delivered(&extracted(holding, draft), &draft.delivered);
-    // A spell filter also returns spells that started earlier, back to the delivery's
-    // first held day; their rows need the key column of the day they started in.
-    let spells_from = holding.period_end_column.as_ref().map(|_| {
-        let end = extracted.last().map_or(i64::MIN, |d| d.1);
-        on_delivered(
-            &overlap(&holding.held, &[(i64::MIN, end)]),
-            &draft.delivered,
-        )
-    });
     let per_source: Vec<usize> = draft.days.keys().copied().collect();
     for (r, requirement) in requirements.iter().enumerate() {
         let scope = key_scope(requirement)?;
@@ -1130,6 +1160,17 @@ fn keys(
                     .iter()
                     .filter(|(_, _, d, ..)| !overlap(&days, &[*d]).is_empty())
                     .collect();
+                if holding.period_end_column.is_some()
+                    && over.iter().map(|o| o.0).collect::<BTreeSet<_>>().len() > 1
+                {
+                    let mut issue = block(
+                        "spell_column_varies",
+                        spell_column_varies(&holding.label, variable),
+                    );
+                    issue.variable = Some((*variable).to_owned());
+                    findings.push(issue);
+                    continue;
+                }
                 // Two columns are ambiguous only over a day both place the key; a key
                 // in one column for some years and another for the rest is not.
                 let distinct: BTreeSet<i64> = over
@@ -1240,50 +1281,6 @@ fn keys(
             }
         }
     }
-    // Every declaration over a possible spell start, the request's own and earlier
-    // ones, must find its key columns in the file, or those spells arrive unkeyed.
-    // simplify: refused rather than joining each earlier key column; join them once a
-    // steward's spell table moves its key between columns.
-    if let Some(spells_from) = &spells_from {
-        for requirement in &requirements {
-            let earlier = overlap(spells_from, &key_scope(requirement)?);
-            if earlier.is_empty() {
-                continue;
-            }
-            for variable in reg_core::placement::key_variables(requirement) {
-                let found: Vec<(i64, Days)> = columns
-                    .query_map(rusqlite::params![holding_id, variable], |row| {
-                        Ok((row.get(0)?, (row.get(2)?, row.get(3)?)))
-                    })?
-                    .collect::<rusqlite::Result<_>>()?;
-                let moved = !requirement["hold"].is_null()
-                    || found.iter().any(|(column, d)| {
-                        !overlap(&earlier, &[*d]).is_empty() && !draft.columns.contains_key(column)
-                    });
-                for s in per_source.iter().filter(|_| moved) {
-                    let issue = Issue {
-                        source: Some(sources[*s].name().to_owned()),
-                        variable: Some(variable.to_owned()),
-                        ..Issue::new(
-                            IssueLevel::Error,
-                            "held_key_spell_varies",
-                            format!("/sources/{s}"),
-                            format!(
-                                "Table {:?} has its row identifier {variable} in another \
-                                 column for spells that began before the years requested, so \
-                                 it cannot be ordered for them. Order it from the start of \
-                                 its delivery, or leave it out.",
-                                holding.label
-                            ),
-                        )
-                    };
-                    if !findings.contains(&issue) {
-                        findings.push(issue);
-                    }
-                }
-            }
-        }
-    }
     Ok(())
 }
 
@@ -1305,16 +1302,30 @@ fn key_scope(requirement: &Value) -> Result<Vec<Days>, Error> {
         .collect()
 }
 
+/// The `spell_column_varies` message: a spell table places `variable` in more than one
+/// column over its spell window, so some returned spells would lack it.
+fn spell_column_varies(table: &str, variable: &str) -> String {
+    format!(
+        "Table {table:?} has {variable} in more than one column for the spells an order of \
+         it can return (spells that began before the years requested), so it cannot be \
+         ordered. Leave it out."
+    )
+}
+
 /// A key's mapping: (column id, table, days, carried, column name, caveat).
 type KeyMapping = (i64, String, Days, bool, String, Option<String>);
 
 /// The held days a file extracts: its requested days widened to the period column's
 /// grain, or the whole delivery when it has no period column (the row filter's rule).
+/// A spell table extracts every spell that started in its spell window.
 fn extracted(holding: &Holding, draft: &Draft) -> Vec<Days> {
     let union = merge(draft.days.values().flatten().copied().collect());
     match &holding.period_column {
         _ if holding.held.is_empty() => union,
         None => holding.held.clone(),
+        _ if let Some(window) = union.last().and_then(|d| spell_window(holding, d.1)) => {
+            overlap(&holding.held, &[window])
+        }
         Some((_, _, encoding)) => {
             let encoding = Encoding::parse(encoding).expect("an admitted encoding");
             overlap(
@@ -1358,6 +1369,16 @@ fn on_delivered(days: &[Days], delivered: &[Days]) -> Vec<Days> {
     } else {
         overlap(days, delivered)
     }
+}
+
+/// A spell table's spell window for requested days ending before `end`: from its first
+/// held day to `end` widened to the period column's grain. The spell filter returns any
+/// spell that started in it, so its rows are placed over the whole window.
+fn spell_window(holding: &Holding, end: i64) -> Option<Days> {
+    holding.period_end_column.as_ref()?;
+    let (_, _, encoding) = holding.period_column.as_ref()?;
+    let encoding = Encoding::parse(encoding).expect("an admitted encoding");
+    Some((holding.held.first()?.0, widen(encoding, (end - 1, end)).1))
 }
 
 /// The first and last held day numbers rounded to an encoding's grain.

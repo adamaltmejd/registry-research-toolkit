@@ -858,7 +858,8 @@ period_key <- function(encoding, data_type, table, column) {
     n <- paste0("TRY_CAST(", value, " AS bigint)")
     valid <- c(
       # A fractional number (20180101.5) is no period: bigint would truncate it.
-      if (!data_type %in% TEXT_TYPES) paste0("TRY_CAST(@col AS float) = ", n),
+      # Compared in the column's own type, so a decimal is tested exactly.
+      if (!data_type %in% c(TEXT_TYPES, INT_TYPES, "bigint")) "@col = ROUND(@col, 0, 1)",
       switch(
         encoding,
         year = NULL,
