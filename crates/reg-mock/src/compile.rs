@@ -574,6 +574,10 @@ impl Context<'_> {
                 built.file.years.iter().map(|&y| year_period(y)).collect();
             for column in &file.columns {
                 // The row filter's period column, or a spell's start or end.
+                // simplify: a whole-delivery order has no row filter, so its spell columns
+                // are drawn as plain columns (an end may precede its start); carry the
+                // spell columns in the order file once a mock pipeline reads spells over a
+                // whole delivery.
                 let period = file
                     .row_filter
                     .as_ref()

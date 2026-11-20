@@ -224,6 +224,9 @@ fn rows(
     last: i32,
 ) -> Result<Vec<Vec<Cell>>, Refusal> {
     let mut rng = Rng::new(seed, &format!("file/{}", file.name));
+    // Spell dates draw from their own stream, so ordering a spell column moves no
+    // other draw (which units have rows, how many).
+    let mut spell_rng = Rng::new(seed, &format!("spell/{}", file.name));
     let mut columns: Vec<Rng> = file
         .columns
         .iter()
@@ -279,9 +282,9 @@ fn rows(
                 1 + rng.poisson(file.rows_per_unit - 1.0)
             };
             for _ in 0..n {
-                // Drawn only for a spell file, so no other file's stream moves.
+                // One pair per row, shared by its start and end columns.
                 let unit = &Unit_ {
-                    spell: spells.then(|| spell_around(unit.year, &mut rng)),
+                    spell: spells.then(|| spell_around(unit.year, &mut spell_rng)),
                     ..*unit
                 };
                 let mut row = Vec::with_capacity(kinds.len());
