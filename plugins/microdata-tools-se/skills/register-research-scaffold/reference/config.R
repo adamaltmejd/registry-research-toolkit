@@ -1,10 +1,13 @@
 # Machine paths, all outside the project folder. The researcher sets REAL_DIR and
-# the real key file on MONA; locally only the mock paths exist.
+# the real key file on MONA; locally only the mock paths exist. The mock folders
+# carry the project folder's name (run.R and make_keys.R run from that folder), so
+# two projects under one parent folder never share them.
+PROJECT <- basename(getwd())
 REAL_DIR <- "<the folder the steward's extract lands in>"
-MOCK_DIR <- "../reference-mock" # reg-mock generate --out
+MOCK_DIR <- file.path("..", paste0(PROJECT, "-mock")) # reg-mock generate --out
 KEY_FILE <- c(
   real = "<a folder on MONA only the researcher can read>/cell_keys.csv",
-  mock = "../reference-mock-keys/cell_keys.csv"
+  mock = file.path("..", paste0(PROJECT, "-mock-keys"), "cell_keys.csv")
 )
 SCHEMA <- "export_gate/aggregates.schema.json"
 POLICY <- "export_gate/aggregates.policy.json"

@@ -24,7 +24,11 @@ Rules for both stages:
 
 - Read only the project folder and the sources the user names. Do not open neighbouring
   folders, other repositories or the user's other projects unless the user points to
-  them. The plugin's own files and the catalog tools are always available.
+  them. Also in scope, and nothing else: the plugin's own files, the catalog tools, the
+  pinned release files the steps name (`export_gate.R`, its schema and policy, the
+  `reg-mock` binary) and the project's own mock and mock-key folders beside it, which
+  the pipeline's commands write and read. Never open a key file's contents, mock or
+  real.
 - Do not start stage 2 on your own, and do not propose research questions. During
   stage 1, ask nothing about research questions, populations or outputs.
 - Preserve a user's existing project; create a separate project when requested. A
@@ -105,7 +109,10 @@ about research questions, populations or outputs.
 4. Generate the mock inputs from the committed `mock/mock_spec.json` with
    `reg-mock generate` (the command is in the project instructions). The reference
    ships its saved answers and compiled spec, so this needs no catalog call. The mock
-   and key folders stay outside the project, where `config.R` puts them.
+   and key folders stay outside the project, beside it and named after its folder:
+   `../<project>-mock` and `../<project>-mock-keys` (`config.R`). If either exists
+   before this step, it belongs to another project or an earlier one of the same name:
+   stop and tell the user which folder exists. Do not read, overwrite or delete it.
 5. Commit. A new project folder gets `git init` first: a mock run reads its commit. In
    a folder that is already a Git repository, ask before committing. Commit everything
    stage 1 wrote: the copied files, the catalog configuration and the four files in
@@ -114,8 +121,8 @@ about research questions, populations or outputs.
    A failure here is a setup fault (a missing R package, the wrong `reg-mock` release, a
    path): fix the setup, not the reference's code, the schema or the policy.
 7. Stop and report: the project path, the files that exist, the pins, the commit and the
-   mock run's result. Name the two folders created beside the project folder, the mock
-   inputs and the mock key file (`MOCK_DIR` and `KEY_FILE` in `config.R`). Say that the
+   mock run's result. Name the two folders created beside the project folder,
+   `../<project>-mock` and `../<project>-mock-keys`. Say that the
    project holds the reference's example order and question, not the user's. With a
    steward's catalog, tell the user to restart the session in the project and approve
    the `steward-catalog` server before any catalog work; the tools are not loaded until
@@ -157,9 +164,17 @@ are not, ask the user to restart the session in the project and stop.
 5. Update the project instructions (`CLAUDE.md` or `AGENTS.md`) to match: the title,
    the paragraph about the example, the commands, the names under "Before MONA" and the
    pin table.
-6. Generate the mock inputs again, commit, and run `Rscript run.R mock` until the gate
-   passes. A prototype can run on mocks while parts of the question remain open.
-7. Stop and report: the ticket, what changed, the commit, the mock run's result and what
+6. Replace the mock inputs and the mock keys. Delete the project's two mock folders,
+   `../<project>-mock` and `../<project>-mock-keys`, and nothing else: `reg-mock
+   generate` leaves the earlier order's files in place, and a run refuses an input
+   folder with extra files; the earlier mock keys do not cover the new persons, and
+   `make_keys.R` refuses where a key file exists. Then run `reg-mock generate` and
+   `Rscript make_keys.R mock`. This applies to mock data only. Never delete or recreate
+   a real input folder or a real key file: a new real key epoch is the researcher's
+   explicit decision.
+7. Commit, and run `Rscript run.R mock` until the gate passes. A prototype can run on
+   mocks while parts of the question remain open.
+8. Stop and report: the ticket, what changed, the commit, the mock run's result and what
    is still pending. The ticket's answer stays pending: a mock run is not an answer.
 
 ## What every project keeps

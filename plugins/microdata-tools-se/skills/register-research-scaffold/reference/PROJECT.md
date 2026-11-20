@@ -11,7 +11,9 @@ stage 2); the first one replaces it.
 
 - The agent reads only this project folder and the sources the user names. It does not
   open neighbouring folders, other repositories or the user's other projects unless the
-  user points to them.
+  user points to them. The project's own mock folders beside it (`MOCK_DIR` and the mock
+  key folder in `config.R`) are in scope for the commands below; the agent never opens
+  a key file.
 - The agent works locally on code, catalog metadata and `reg-mock` data. It never runs
   on MONA, never reads the extract, the key file or an unreviewed export, and learns a
   gate refusal only by its category code.
@@ -32,7 +34,10 @@ From the project folder:
 # reg-mock fetch into mock/answers first
 reg-mock compile --project project_data.json --rules mock/mock_rules.json \
   --answers mock/answers --out mock/mock_spec.json
-reg-mock generate --spec mock/mock_spec.json --out ../reference-mock --seed 1 --persons 2000
+# The mock folders sit beside the project and carry its folder name (config.R):
+# ../<project>-mock and ../<project>-mock-keys
+reg-mock generate --spec mock/mock_spec.json --out "../$(basename "$PWD")-mock" \
+  --seed 1 --persons 2000
 Rscript make_keys.R mock   # once per mode: the cell-key file, outside the project
 Rscript run.R mock         # a run: inputs, analysis, disclosure, staging, gate
 ```
