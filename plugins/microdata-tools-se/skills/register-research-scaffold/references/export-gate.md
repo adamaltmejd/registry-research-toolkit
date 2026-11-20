@@ -16,7 +16,10 @@ is `51d6f810ef0c93faccb69f748382b6cdce93243af838788f9165e094a103869a`, the defau
 `aggregates` schema `8160f4cb2250b5d22e609bf0a58935a221bd61ec407dd0403e2ccdd0537f1f93`
 and its policy (internal name `aggregates-min5`)
 `e3c0835c7963efa39f035216087c08b7558ab5f3887c3ae7bbae2ed0f0098f5c`. A newer gate
-version is a deliberate update of this pin, not something to pick up silently.
+version is a deliberate update of this pin, not something to pick up silently. An update
+replaces the release-supplied files one by one (`export_gate.R`, the default schema and
+policy, `cell_key.R`) and keeps a schema or policy file the researcher chose for the
+project.
 
 The R file imitates the Rust gate (`crates/reg-export-gate`), which is the reference and
 can be ahead of it. A schema or policy that uses a field a gate predates is refused as

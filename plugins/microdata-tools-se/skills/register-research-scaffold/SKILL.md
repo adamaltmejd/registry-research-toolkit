@@ -155,8 +155,11 @@ are not, ask the user to restart the session in the project and stop.
    `register-project` skill, on the project's catalog, then `mock/` with its saved
    answers, rules and compiled spec (`register-mock-data` skill). In a steward's project
    the steward's release sets `reg_meta_version`; when it differs from the pinned one,
-   replace `export_gate/` and the `reg-mock` binary from that release's tag and update
-   the pin table in the same commit.
+   replace the release-supplied files one by one: `export_gate.R` and the default schema
+   and policy from that release's tag, `cell_key.R` from this skill's
+   [scripts/](scripts/cell_key.R), and the `reg-mock` binary. Keep any schema or policy
+   file the researcher chose and stored in `export_gate/`. Update the pin table in the
+   same commit.
 4. Adapt the code to the question: the delivered files and column names in `config.R`
    (from the order answer; a steward's extract keys persons by `LopNr`), the source
    adapter (`R/inputs.R`), the analysis (`R/analysis.R`), the cells and statistics in
@@ -178,8 +181,10 @@ are not, ask the user to restart the session in the project and stop.
      project folder's physical name (`pwd -P`).
 
    If any check fails, for example after the project folder was renamed, delete
-   nothing: stop and ask the user. Then run `reg-mock generate` and
-   `Rscript make_keys.R mock`. This applies to mock data only. Never delete or recreate
+   nothing: stop and ask the user. The checks cannot tell apart two projects with the
+   same folder name and the same spec, so when they pass, name the two folders by their
+   full paths and ask the user to confirm the deletion. Without that confirmation,
+   delete nothing. Then run `reg-mock generate` and `Rscript make_keys.R mock`. This applies to mock data only. Never delete or recreate
    a real input folder or a real key file: a new real key epoch is the researcher's
    explicit decision.
 7. Commit, and run `Rscript run.R mock` until the gate passes. A prototype can run on
