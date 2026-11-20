@@ -59,34 +59,36 @@ columns <- function(path, type) {
       comment.char = "",
       fill = TRUE
     )
-    rows <- 0
-    con <- file(path, "r")
-    on.exit(close(con))
-    repeat {
-      chunk <- readLines(con, n = 100000, warn = FALSE)
-      if (!length(chunk)) {
-        break
-      }
-      rows <- rows + length(chunk)
-    }
+    # Records, not lines: a quoted field can hold a line break.
+    # simplify: count.fields holds one integer per line; count in chunks if a
+    # delimited file passes a few hundred million lines.
+    fields <- utils::count.fields(
+      path,
+      sep = sep,
+      quote = "\"",
+      comment.char = "",
+      blank.lines.skip = FALSE
+    )
     list(
       names = names(head),
-      rows = rows - 1,
+      rows = sum(!is.na(fields)) - 1,
       types = vapply(head, function(x) class(x)[1], "")
     )
   }
 }
 
+# Paths are written relative to DATA_DIR: the folders above it are not the delivery.
 files <- list.files(DATA_DIR, recursive = TRUE, full.names = TRUE)
+folder <- dirname(list.files(DATA_DIR, recursive = TRUE))
 types <- tolower(tools::file_ext(files))
 known <- types %in% c("parquet", "dta", "sas7bdat", "csv", "txt", "tsv")
 summary <- do.call(
   rbind,
   lapply(which(known), function(i) {
-    cat(format(Sys.time(), "%H:%M:%S"), files[i], "\n")
+    cat(format(Sys.time(), "%H:%M:%S"), basename(files[i]), "\n")
     cols <- columns(files[i], types[i])
     data.frame(
-      table_schema = dirname(files[i]),
+      table_schema = folder[i],
       table_name = basename(files[i]),
       table_type = types[i],
       column_name = cols$names,
@@ -102,7 +104,7 @@ summary <- do.call(
 # A file of another type is listed by name only.
 blank <- function(value) rep(value, sum(!known))
 other <- data.frame(
-  table_schema = dirname(files[!known]),
+  table_schema = folder[!known],
   table_name = basename(files[!known]),
   table_type = types[!known],
   column_name = blank(NA_character_),

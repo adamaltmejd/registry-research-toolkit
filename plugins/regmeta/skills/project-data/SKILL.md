@@ -157,17 +157,20 @@ A minimal document on the global catalog (set `schema_version`, `reg_meta_versio
 ## Delivered data
 
 When the files are already on the server, start from a data summary: which files exist,
-their columns, types and row counts. It holds no observed value. Assume file and column
-names are not personal data. Never assume that of a value.
+their columns, types and row counts. It holds no observed value. File and column names
+are normally not personal data, but the user checks that before the file leaves.
 
 1. Copy [scripts/data_summary.R](scripts/data_summary.R) to the project's
    `.regmeta/data_summary.R` and set `DATA_DIR` to the delivered files' absolute folder,
    with forward slashes. The user must not need to edit it.
 2. The user uploads it and submits it as it is (on MONA, to the batch runner). It writes
-   `data_summary.csv` to the folder it runs from. The user reads the file, checks that
-   no row count is small enough to say something about a person, sends it out through
-   the server's own export and saves it as `.regmeta/data_summary.csv`. It needs no
-   export gate: it has names, types and counts only.
+   `data_summary.csv` to the folder it runs from. Before it leaves, the user
+   reads every row: no folder, file or column name may name or describe a person, and no
+   row count may be small enough to say something about one. The user deletes such rows,
+   sends the file out through the server's own export and saves it as
+   `.regmeta/data_summary.csv`. The agent reads it only then. It needs no export gate:
+   it has names, types and counts only, with folders written relative to the data
+   folder.
 3. Match it to the catalog. Each file is a table and a year: find the table with
    `resolve` and `search` on the file and column names, and `schema` or `segments` for
    its columns. On a steward's catalog `segments` lists the steward's own file names.

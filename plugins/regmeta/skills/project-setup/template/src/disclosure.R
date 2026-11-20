@@ -22,6 +22,14 @@ perturbed_counts <- function(persons, by, id = "person_id") {
   ck_perturb(persons, by, id, keys, MIN_CELL)
 }
 
+# The key file's epoch, as a target that always runs and that every disclosure step
+# takes: after the researcher makes a new epoch, no result from the old keys is reused.
+# A key file not yet made will be epoch 1.
+key_epoch <- function() {
+  keys <- Sys.getenv("REGMETA_KEYS")
+  if (file.exists(keys)) ck_keys_read(keys)$key_epoch[[1]] else 1L
+}
+
 # Every disclosed result, bound into the schema's files. A result is a list of data
 # frames named by schema file ("counts.parquet", "statistics.parquet", ...).
 release_tables <- function(...) {

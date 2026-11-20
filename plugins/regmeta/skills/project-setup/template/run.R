@@ -43,6 +43,23 @@ project_dir <- function() {
 setwd(project_dir())
 say("project folder:", getwd())
 
+staging <- file.path(".regmeta", "staging")
+export <- file.path("output", "export")
+review <- file.path("output", "review")
+manifest <- file.path("output", "run_manifest.json")
+dir.create(
+  file.path(".regmeta", "keys"),
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+dir.create("output", showWarnings = FALSE)
+# Nothing from an earlier run may look current, whatever fails below: this comes
+# before every check, and uses nothing the checks load.
+unlink(c(export, review, manifest), recursive = TRUE)
+if (any(file.exists(c(export, review, manifest)))) {
+  stop("could not remove the previous run's output")
+}
+
 # ---- Prepare ----
 mock <- nzchar(Sys.getenv("REGMETA_MOCK"))
 mode <- if (mock) "mock" else "real"
@@ -120,21 +137,6 @@ for (name in names(PINS)) {
 }
 say("pinned files: ok")
 
-staging <- file.path(".regmeta", "staging")
-export <- file.path("output", "export")
-review <- file.path("output", "review")
-manifest <- file.path("output", "run_manifest.json")
-dir.create(
-  file.path(".regmeta", "keys"),
-  recursive = TRUE,
-  showWarnings = FALSE
-)
-dir.create("output", showWarnings = FALSE)
-# Nothing from an earlier run may look current, whatever fails below.
-unlink(c(export, review, manifest), recursive = TRUE)
-if (any(file.exists(c(export, review, manifest)))) {
-  stop("could not remove the previous run's output")
-}
 
 # ---- Pipeline ----
 # src/pipeline.R declares the steps as targets and ends in the target `release`: the

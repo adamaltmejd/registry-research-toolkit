@@ -1,6 +1,7 @@
 # The delivered files, from the order answer (project-data skill): each source's files
 # by delivery year (never parsed from a file name) and its stored column names by the
-# project's names. Mock data mirrors them.
+# project's names. A file that pools several years is listed without a year name and
+# maps the delivery's year column to `year`. Mock data mirrors them.
 SOURCES <- list(
   # <source> = list(
   #   files = c("<year>" = "<file>.parquet"),
@@ -8,8 +9,9 @@ SOURCES <- list(
   # )
 )
 
-# One source's files, by year. As a `format = "file"` target it makes the steps that
-# read them run again when a file changes (a new delivery, regenerated mock data).
+# One source's files, by year. As a `format = "file"` target that always runs, it makes
+# the steps that read them run again when a file or the data folder changes (a new
+# delivery, regenerated mock data), and checks the inputs in every run.
 source_files <- function(name) {
   check_inputs()
   source <- SOURCES[[name]]
@@ -24,13 +26,22 @@ source_files <- function(name) {
 read_source <- function(name, files = source_files(name)) {
   source <- SOURCES[[name]]
   frames <- lapply(seq_along(files), function(i) {
-    year <- names(source$files)[[i]]
+    years <- names(source$files)
+    year <- if (is.null(years)) "" else years[[i]]
     d <- as.data.frame(arrow::read_parquet(
       files[[i]],
       col_select = unname(source$columns)
     ))
     d <- setNames(d[source$columns], names(source$columns))
-    d$year <- as.integer(year)
+    # A pooled file has no year name: it maps its own `year` column.
+    if (nzchar(year)) {
+      d$year <- as.integer(year)
+    } else if (!"year" %in% names(d)) {
+      stop(
+        basename(files[[i]]),
+        ": no year name in SOURCES and no `year` column"
+      )
+    }
     d
   })
   do.call(rbind, frames)

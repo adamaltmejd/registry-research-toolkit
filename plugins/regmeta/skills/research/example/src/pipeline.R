@@ -8,10 +8,20 @@ for (f in setdiff(
   source(file.path("src", f))
 }
 
+always <- targets::tar_cue(mode = "always")
 list(
-  targets::tar_target(lisa_files, source_files("lisa"), format = "file"),
+  targets::tar_target(cell_key_epoch, key_epoch(), cue = always),
+  targets::tar_target(
+    lisa_files,
+    source_files("lisa"),
+    format = "file",
+    cue = always
+  ),
   targets::tar_target(lisa, read_source("lisa", lisa_files)),
   targets::tar_target(income_rows, income_by_sex(lisa)),
-  targets::tar_target(income_result, disclose_income_by_sex(income_rows)),
+  targets::tar_target(
+    income_result,
+    disclose_income_by_sex(income_rows, cell_key_epoch)
+  ),
   targets::tar_target(release, release_tables(income_result))
 )

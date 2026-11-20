@@ -40,8 +40,9 @@ ticket. The agent proposes methods, not research questions.
 disposable income by sex and year. Read it as a pattern. Never copy it into a project.
 Its `mock/` is a project's `.regmeta/mock/`.
 
-1. **Inputs** (`src/inputs.R`). Add each source to `SOURCES`: its files by year and its
-   stored column names by the project's names, from the order answer or the data
+1. **Inputs** (`src/inputs.R`). Add each source to `SOURCES`: its files by year (a file
+   that pools years has no year name and maps its own `year` column) and its stored
+   column names by the project's names, from the order answer or the data
    summary (`project-data` skill). A file's year is never parsed from its name.
 2. **Analysis** (a new file in `src/`). A function from input rows to person-level
    rows, never counts or statistics. Put the data assertions in it (`stopifnot` on
@@ -51,8 +52,9 @@ Its `mock/` is a project's `.regmeta/mock/`.
    (`perturbed_counts()`), round. Nothing else makes a publishable number
    ([export-gate.md](references/export-gate.md), "The disclosure policy").
 4. **Pipeline** (`src/pipeline.R`). Per input, a `format = "file"` target for its files
-   and one that reads them; then one target per analysis and per disclosed result, and
-   each result named in `release_tables()`.
+   that always runs, and one that reads them; then one target per analysis and per
+   disclosed result, and each result named in `release_tables()`. Every disclosure step
+   takes `cell_key_epoch`, so a new key epoch runs it again.
 
 `src/` is flat and holds only text files that run on the server: no subfolders, no
 tests, no notes. `run.R` (but for `PACKAGES`), `src/staging.R` and the four pinned
