@@ -2712,8 +2712,8 @@ table is resolved as if the order had requested its spell window: from the deliv
 first held day to the request's end. Bindings, keys, slot families, coverage and
 findings come out as for an ordinary order over those years: a binding or key placed
 in one column for some years and another for the rest joins each column over its own
-years, and a year the binding has no column for is a `coverage_gap`. Only the row
-filter keeps the requested days.
+years, and a year the binding has no column for is a `coverage_gap`. The row filter
+and the clips keep the requested days.
 
 
 Unfilterable pooled holdings report that all rows are included; they do not pretend

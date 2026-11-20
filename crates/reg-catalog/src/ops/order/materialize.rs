@@ -181,6 +181,10 @@ fn build(
     // The holdings gap findings of an entry of one release, with that release: a shared
     // day another release delivers does not hide them ([`clip`]).
     let mut lane_gaps: Vec<(Issue, String)> = Vec::new();
+    // Per (source, binding, table, variable, release) that reads a spell table: its
+    // first entry, the spell tables, their first held day, and the requested days.
+    let mut spell_groups: BTreeMap<SpellGroup, (usize, BTreeSet<i64>, i64, Vec<Days>)> =
+        BTreeMap::new();
     // Per holding seen, its first held day when it is a spell table.
     let mut spell_tables: BTreeMap<i64, Option<i64>> = BTreeMap::new();
     for (e, entry) in order.entries.iter().enumerate() {
@@ -208,47 +212,9 @@ fn build(
             )
         });
         binding.1.push(days);
-        // A spell table returns every spell that overlaps the request, so its
-        // placements are resolved as if the entry had requested its spell window: from
-        // the table's first held day to the request's end. Only the row filter keeps
-        // the requested days.
-        let mut spells = BTreeSet::new();
-        let mut resolved = days;
-        for p in &placements {
-            if let btree_map::Entry::Vacant(e) = spell_tables.entry(p.holding) {
-                let table = holding(held, p.holding)?;
-                e.insert(spell_window(&table, days.1).map(|w| w.0));
-            }
-            if let Some(first) = spell_tables[&p.holding] {
-                spells.insert(p.holding);
-                resolved.0 = resolved.0.min(first);
-            }
-        }
-        let placements = if spells.is_empty() {
-            placements
-        } else {
-            let wide = self::placements(
-                held,
-                &entry.table,
-                &entry.variable,
-                resolved,
-                entry.release.as_deref(),
-                space,
-            )?;
-            placements
-                .into_iter()
-                .filter(|p| !spells.contains(&p.holding))
-                .chain(wide.into_iter().filter(|p| spells.contains(&p.holding)))
-                .collect()
-        };
         let lane_held = binding.2.entry(entry.release.clone()).or_default();
         for p in &placements {
-            let over = if spells.contains(&p.holding) {
-                resolved
-            } else {
-                days
-            };
-            let piece = (over.0.max(p.days.0), over.1.min(p.days.1));
+            let piece = (days.0.max(p.days.0), days.1.min(p.days.1));
             lane_held.push(piece);
             let draft = drafts.entry(p.holding).or_insert_with(|| Draft {
                 first: (s, entry.binding, e),
@@ -256,48 +222,36 @@ fn build(
                 source: entry.source.clone(),
                 ..Draft::default()
             });
-            let asked = (days.0.max(p.days.0), days.1.min(p.days.1));
-            if asked.0 < asked.1 {
-                draft.days.entry(s).or_default().push(asked);
-            }
+            draft.days.entry(s).or_default().push(piece);
             draft.tables.insert(entry.table.clone());
-            let stored = stored(held, p.column)?;
-            let slot_index = stored
-                .slot
-                .as_ref()
-                .and_then(|slot| slot.index.parse::<i64>().ok())
-                .unwrap_or(0);
-            let key = (0, s, entry.binding, e, slot_index, stored.ordinal);
-            let column = draft
-                .columns
-                .entry(p.column)
-                .or_insert_with(|| (key, Role::Ordered, vec![]));
-            column.0 = column.0.min(key);
-            let mut reference = reference(server, entry, piece);
-            // A spell piece before the request is not the entry's: it is spelled by its
-            // stored column, as a row key is.
-            if piece.1 <= days.0 {
-                reference.spelling.clone_from(&stored.name);
+            place(
+                server,
+                held,
+                draft,
+                &mut findings,
+                (s, e),
+                entry,
+                p,
+                piece,
+                true,
+            )?;
+            if let btree_map::Entry::Vacant(v) = spell_tables.entry(p.holding) {
+                let table = holding(held, p.holding)?;
+                v.insert(spell_window(&table, days.1).map(|w| w.0));
             }
-            column.2.push(reference);
-            if let Some(caveat) = &p.caveat {
-                findings.push(Issue {
-                    source: Some(entry.source.clone()),
-                    variable: Some(entry.variable.clone()),
-                    table: Some(entry.table.clone()),
-                    period: Some(server.period(piece.0, piece.1)),
-                    ..Issue::new(
-                        IssueLevel::Warning,
-                        "mapping_caveat",
-                        format!("/sources/{s}/bindings/{}", entry.binding),
-                        format!(
-                            "{} in {} for {}: {caveat}",
-                            entry.variable,
-                            entry.table,
-                            span(server, piece)
-                        ),
-                    )
-                });
+            if let Some(first) = spell_tables[&p.holding] {
+                let group = spell_groups
+                    .entry((
+                        s,
+                        entry.binding,
+                        entry.table.clone(),
+                        entry.variable.clone(),
+                        entry.release.clone(),
+                    ))
+                    .or_insert((e, BTreeSet::new(), first, Vec::new()));
+                group.1.insert(p.holding);
+                group.2 = group.2.min(first);
+                group.3.push(days);
             }
         }
         let before = findings.len();
@@ -306,7 +260,7 @@ fn build(
             server,
             s,
             entry,
-            resolved,
+            days,
             space,
             &placements,
             &mut findings,
@@ -317,6 +271,61 @@ fn build(
                     .iter()
                     .map(|f| (f.clone(), release.clone())),
             );
+        }
+    }
+    // A spell table returns every spell that overlaps the request, so a binding that
+    // reads one is resolved as if it had requested the spell window too: from the
+    // table's first held day to the request's end. The days no entry requested add
+    // columns, references and gaps, but no ordered or filtered days.
+    for ((s, _, _, _, _), (e, spells, first, requested)) in spell_groups {
+        let entry = &order.entries[e];
+        let requested = merge(requested);
+        let end = requested.last().map_or(first, |d| d.1);
+        for extra in minus(&[(first, end)], &requested) {
+            let placements: Vec<Placement> = placements(
+                held,
+                &entry.table,
+                &entry.variable,
+                extra,
+                entry.release.as_deref(),
+                space,
+            )?
+            .into_iter()
+            .filter(|p| spells.contains(&p.holding))
+            .collect();
+            for p in &placements {
+                let piece = (extra.0.max(p.days.0), extra.1.min(p.days.1));
+                let draft = drafts.get_mut(&p.holding).expect("a spell table's file");
+                place(
+                    server,
+                    held,
+                    draft,
+                    &mut findings,
+                    (s, e),
+                    entry,
+                    p,
+                    piece,
+                    false,
+                )?;
+            }
+            let before = findings.len();
+            gaps(
+                held,
+                server,
+                s,
+                entry,
+                extra,
+                space,
+                &placements,
+                &mut findings,
+            )?;
+            if let Some(release) = &entry.release {
+                lane_gaps.extend(
+                    findings[before..]
+                        .iter()
+                        .map(|f| (f.clone(), release.clone())),
+                );
+            }
         }
     }
     // Per source, every day it requested of any table: a file's rows outside these are
@@ -467,6 +476,64 @@ fn build(
         clips,
         findings: all,
     }))
+}
+
+/// A spell group: (source, binding, table, variable, release).
+type SpellGroup = (usize, usize, String, String, Option<String>);
+
+/// Add `piece` of a placement to its file: its column, ordered after `entry` (the
+/// order's `e`th, of source `s`), with a reference, and the placement's caveat. A piece
+/// no entry requested (a spell table's earlier spells) is spelled by its stored
+/// column, as a row key is.
+#[allow(clippy::too_many_arguments)]
+fn place(
+    server: &Server,
+    held: &Connection,
+    draft: &mut Draft,
+    findings: &mut Vec<Issue>,
+    (s, e): (usize, usize),
+    entry: &OrderEntry,
+    p: &Placement,
+    piece: Days,
+    requested: bool,
+) -> Result<(), Error> {
+    let stored = stored(held, p.column)?;
+    let slot_index = stored
+        .slot
+        .as_ref()
+        .and_then(|slot| slot.index.parse::<i64>().ok())
+        .unwrap_or(0);
+    let key = (0, s, entry.binding, e, slot_index, stored.ordinal);
+    let column = draft
+        .columns
+        .entry(p.column)
+        .or_insert_with(|| (key, Role::Ordered, vec![]));
+    column.0 = column.0.min(key);
+    let mut reference = reference(server, entry, piece);
+    if !requested {
+        reference.spelling = stored.name;
+    }
+    column.2.push(reference);
+    if let Some(caveat) = &p.caveat {
+        findings.push(Issue {
+            source: Some(entry.source.clone()),
+            variable: Some(entry.variable.clone()),
+            table: Some(entry.table.clone()),
+            period: Some(server.period(piece.0, piece.1)),
+            ..Issue::new(
+                IssueLevel::Warning,
+                "mapping_caveat",
+                format!("/sources/{s}/bindings/{}", entry.binding),
+                format!(
+                    "{} in {} for {}: {caveat}",
+                    entry.variable,
+                    entry.table,
+                    span(server, piece)
+                ),
+            )
+        });
+    }
+    Ok(())
 }
 
 /// Whether `issue` is a `binding_type_differs` whose binding's type override is of the
