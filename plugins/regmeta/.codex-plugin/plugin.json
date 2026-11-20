@@ -1,0 +1,37 @@
+{
+  "name": "regmeta",
+  "description": "Tooling for working with Swedish administrative register microdata: register metadata search through the hosted catalog MCP server, a project's project_data.json (data order and inventory), local mock data, project setup, and research in a project whose results leave the data server only through the toolkit export gate.",
+  "version": "0.12.0",
+  "author": {
+    "name": "Adam Altmejd",
+    "email": "adam@altmejd.se",
+    "url": "https://github.com/adamaltmejd"
+  },
+  "homepage": "https://github.com/adamaltmejd/registry-research-toolkit/tree/main/plugins/regmeta",
+  "repository": "https://github.com/adamaltmejd/registry-research-toolkit",
+  "license": "MIT",
+  "keywords": ["sweden", "microdata", "registry", "scb", "mona", "mcp", "statistics", "research"],
+  "skills": "./skills/",
+  "mcpServers": {
+    "catalog": {
+      "type": "http",
+      "url": "https://reg-meta.vqv.uk/mcp"
+    }
+  },
+  "interface": {
+    "displayName": "regmeta",
+    "shortDescription": "Register metadata, project data, mock data, project setup and research",
+    "longDescription": "Query Swedish register metadata (SCB, Socialstyrelsen and other holders) through the hosted catalog MCP server at reg-meta.vqv.uk, write a project's project_data.json (its data order and inventory), generate local mock data with reg-mock, set up a register research project folder, and work on research questions in it with results that leave the data server only through the toolkit export gate.",
+    "developerName": "Adam Altmejd",
+    "category": "research",
+    "capabilities": ["Interactive"],
+    "websiteURL": "https://github.com/adamaltmejd/registry-research-toolkit/tree/main/plugins/regmeta",
+    "privacyPolicyURL": "https://github.com/adamaltmejd/registry-research-toolkit/blob/main/plugins/regmeta/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/adamaltmejd/registry-research-toolkit/blob/main/plugins/regmeta/TERMS.md",
+    "defaultPrompt": [
+      "Find the definition and value codes for a Swedish register variable."
+    ],
+    "brandColor": "#005AA0",
+    "screenshots": []
+  }
+}

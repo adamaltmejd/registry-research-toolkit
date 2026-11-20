@@ -1,0 +1,4 @@
+interface:
+  display_name: "Register project setup"
+  short_description: "Set up a register research project folder"
+  default_prompt: "Use $project-setup to set up this folder as a register research project: research spec, run script, pinned export gate and agent instructions."

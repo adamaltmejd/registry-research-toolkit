@@ -30,7 +30,7 @@ Access), a remote-desktop environment. Three consequences shape the whole toolki
   pre-installed (WinPython, incl. duckdb/pyodbc/numpy) or uploaded with the code.
 - **LLM agents are not allowed inside MONA.** Researchers develop analysis code with
   coding agents *outside* MONA. Local mock data generated from a `project_data.json` is
-  written by `reg-mock`, driven by the plugin's `register-mock-data` skill.
+  written by `reg-mock`, driven by the plugin's `mock-data` skill.
 
 ### Data stewards
 
@@ -85,7 +85,7 @@ registry-research-toolkit/
   reg_mona_runner/  # MONA extract runner: order file -> extracts inside MONA (R)
   reg_export_gate/  # export gate: MONA check of outputs before export (R), schemas
   conformance/      # contract corpus, run against the Rust server
-  plugins/          # the microdata-tools-se agent plugin (hosted MCP, skills incl. the scaffold)
+  plugins/          # the regmeta agent plugin (hosted MCP, five skills)
   reg_webapp/
     edge/           # global hosted MCP edge worker
 ```
@@ -209,7 +209,7 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   `meta.project_schema_version` names the one the server admits. Schema 5.1.0 added
   optional boolean `follow_successor` on variable bindings; absent or false keeps the bound variable's own history. Schema 5.2.0 adds
   optional top-level `extract_format` (`dta`, `parquet`, `csv`); absent means the order
-  authoring default `dta`, resolved by the order file and never inserted into the
+  authoring default `parquet`, resolved by the order file and never inserted into the
   project. Schema 6.0.0 makes the binding `type` an optional override in catalog type
   names and drops the subtype and format fields. Schema 6.1.0 adds optional top-level
   `linkage.database`, the steward database an order draws from. Schema 6.2.0 adds

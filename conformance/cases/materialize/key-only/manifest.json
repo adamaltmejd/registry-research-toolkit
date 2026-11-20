@@ -1,6 +1,6 @@
 {
   "version": 4,
-  "extract_format": "dta",
+  "extract_format": "parquet",
   "provenance": {
     "mode": "steward_holdings",
     "steward": "fixture",

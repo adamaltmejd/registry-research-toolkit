@@ -1,0 +1,19 @@
+{
+  "name": "regmeta",
+  "description": "Tooling for working with Swedish administrative register microdata: register metadata search through the hosted catalog MCP server, a project's project_data.json (data order and inventory), local mock data, project setup, and research in a project whose results leave the data server only through the toolkit export gate.",
+  "version": "0.12.0",
+  "author": {
+    "name": "Adam Altmejd",
+    "email": "adam@altmejd.se"
+  },
+  "homepage": "https://github.com/adamaltmejd/registry-research-toolkit/tree/main/plugins/regmeta",
+  "repository": "https://github.com/adamaltmejd/registry-research-toolkit",
+  "license": "MIT",
+  "keywords": ["sweden", "microdata", "registry", "scb", "mona", "mcp", "statistics", "research"],
+  "mcpServers": {
+    "catalog": {
+      "type": "http",
+      "url": "https://reg-meta.vqv.uk/mcp"
+    }
+  }
+}

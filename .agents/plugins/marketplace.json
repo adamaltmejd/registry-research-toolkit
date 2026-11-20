@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "microdata-tools-se",
+      "name": "regmeta",
       "source": {
         "source": "local",
-        "path": "./plugins/microdata-tools-se"
+        "path": "./plugins/regmeta"
       },
       "policy": {
         "installation": "AVAILABLE",

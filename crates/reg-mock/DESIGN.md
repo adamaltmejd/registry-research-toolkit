@@ -3,7 +3,7 @@
 Mock data lets a researcher write and run analysis code before the real extract exists,
 on their own machine, against files that look like the delivery. Issue #707; the plan
 and its maintainer rulings (2026-11-04, 2026-11-05) are summarized here. The skill that
-drives it lives in `plugins/microdata-tools-se`.
+drives it lives in `plugins/regmeta`.
 
 ## Boundaries
 

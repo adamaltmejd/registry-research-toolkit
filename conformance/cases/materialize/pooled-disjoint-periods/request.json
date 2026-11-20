@@ -2,6 +2,7 @@
   "note": "Fails if one pooled table's filter covers the hull 2017..2019 instead of the two requested years, copies a half-open end into an inclusive bound, keeps a bound that cuts no held day, or drops one form's column.",
   "project": {
     "schema_version": "7.0.0",
+    "extract_format": "dta",
     "reg_meta_version": "0.71.0",
     "catalog": "fixture",
     "name": "Disjoint periods",

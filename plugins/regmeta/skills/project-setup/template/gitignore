@@ -1,0 +1,8 @@
+output/
+.regmeta/mock-data/
+.regmeta/keys/
+.regmeta/cell_keys.made
+.regmeta/staging/
+.regmeta/targets/
+.envrc
+*.Rout

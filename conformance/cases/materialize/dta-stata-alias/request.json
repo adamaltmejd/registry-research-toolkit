@@ -1,7 +1,8 @@
 {
-  "note": "Fails if an absent extract_format does not resolve to dta, or a header that is no Stata name lacks the v3 alias (first 25 characters made safe, _ and 6 hex digits of its SHA-256), or a valid name gets one.",
+  "note": "Fails if a dta order lacks the v3 alias on a header that is no Stata name (first 25 characters made safe, _ and 6 hex digits of its SHA-256), or gives one to a valid name.",
   "project": {
     "schema_version": "7.0.0",
+    "extract_format": "dta",
     "reg_meta_version": "0.71.0",
     "catalog": "fixture",
     "name": "Stata alias",

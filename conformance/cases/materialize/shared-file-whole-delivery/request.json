@@ -2,6 +2,7 @@
   "note": "Fails if sources that jointly request a shared table's whole delivery get one unfiltered file but lose their union findings, though each column is extracted over all four years.",
   "project": {
     "schema_version": "7.0.0",
+    "extract_format": "dta",
     "reg_meta_version": "0.71.0",
     "catalog": "fixture",
     "name": "Shared whole delivery",

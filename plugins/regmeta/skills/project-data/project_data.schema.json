@@ -1,0 +1,400 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "project_data.json",
+  "type": "object",
+  "description": "The top-level `project_data.json` document.",
+  "required": [
+    "schema_version",
+    "reg_meta_version",
+    "catalog",
+    "name",
+    "sources"
+  ],
+  "properties": {
+    "catalog": {
+      "type": "string",
+      "description": "The catalog the project is drafted on and ordered from: `global`, or a steward\nid. `validate`, `order` and `materialize_order` refuse a document whose catalog\nis not the one serving them (`catalog_mismatch`)."
+    },
+    "extract_format": {
+      "$ref": "#/$defs/ProjectExtractFormat",
+      "description": "The extract file format. Absent means the order authoring default, `parquet`, which\nthe order file resolves; it is never inserted here. An explicit `null` is\n`invalid_field_type`."
+    },
+    "linkage": {
+      "$ref": "#/$defs/ProjectLinkage",
+      "description": "The steward database the order draws from. Required by a steward with more\nthan one database; a steward with one needs none. An explicit `null` is\n`invalid_field_type`."
+    },
+    "name": {
+      "type": "string"
+    },
+    "panels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ProjectPanel"
+      }
+    },
+    "reg_meta_version": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ProjectSource"
+      }
+    },
+    "window": {
+      "$ref": "#/$defs/ProjectStudyWindow"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ProjectBinding": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProjectCatalogBinding"
+        },
+        {
+          "$ref": "#/$defs/ProjectManualBinding"
+        }
+      ],
+      "description": "One column: a catalog variable, or a column entered by hand."
+    },
+    "ProjectCatalogBinding": {
+      "type": "object",
+      "description": "One catalog variable to extract.",
+      "required": [
+        "variable"
+      ],
+      "properties": {
+        "classification": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A classification version's public id `class/<family>/<version>`.",
+          "pattern": "^class/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+$"
+        },
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "follow_successor": {
+          "type": "boolean",
+          "description": "Follow the variable's continues successors after it ends; absent means false.",
+          "default": false
+        },
+        "type": {
+          "$ref": "#/$defs/ProjectColumnType",
+          "description": "Overrides the catalog type for the whole binding; absent means the catalog type.\nAn explicit `null` is `invalid_field_type`."
+        },
+        "variable": {
+          "type": "string",
+          "description": "The binding FQID `<provider>/<register>/<slug>`."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectCatalogSource": {
+      "type": "object",
+      "description": "One catalog table, a requested period and its columns.",
+      "required": [
+        "name",
+        "table",
+        "period",
+        "bindings"
+      ],
+      "properties": {
+        "bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProjectBinding"
+          },
+          "description": "At least one catalog binding; the others may be entered by hand."
+        },
+        "name": {
+          "type": "string"
+        },
+        "period": {
+          "$ref": "#/$defs/ProjectSourcePeriod"
+        },
+        "releases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The releases of the table that serve the days two of its primary releases share,\nby name as `show` lists them, matched under the identity fold. Days one release\ncovers are served whether or not it is named. Absent: a shared day blocks the\norder (`release_ambiguous`). An explicit `null` is `invalid_field_type`."
+        },
+        "table": {
+          "type": "string",
+          "description": "A table's public id: `<provider>/<register>` for a register's implicit table,\nelse `<provider>/<register>/<table>`."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectColumnType": {
+      "type": "string",
+      "enum": [
+        "integer",
+        "decimal",
+        "text",
+        "date",
+        "datetime",
+        "boolean",
+        "geometry",
+        "uuid",
+        "binary",
+        "identifier"
+      ]
+    },
+    "ProjectExtractFormat": {
+      "type": "string",
+      "enum": [
+        "dta",
+        "parquet",
+        "csv"
+      ]
+    },
+    "ProjectLinkage": {
+      "type": "object",
+      "description": "Which of a steward's databases (its linkage spaces) an order draws from: the tables\nof one database share a person key, so one order comes from one.",
+      "required": [
+        "database"
+      ],
+      "properties": {
+        "database": {
+          "type": "string",
+          "description": "A database id from the steward's `steward_config.spaces`."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectManualBinding": {
+      "type": "object",
+      "description": "A column the catalog does not document, entered by hand.",
+      "required": [
+        "manual"
+      ],
+      "properties": {
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "manual": {
+          "$ref": "#/$defs/ProjectManualColumn"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectManualCode": {
+      "type": "object",
+      "description": "One code of a manual column.",
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "label": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sentinel": {
+          "type": "boolean",
+          "description": "A missing-value code (`uppgift saknas`); absent means false.",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectManualColumn": {
+      "type": "object",
+      "description": "What the tools need of a manual column.",
+      "required": [
+        "column",
+        "type"
+      ],
+      "properties": {
+        "codes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProjectManualCode"
+          },
+          "description": "The codes the column holds, from documentation; never on an identifier."
+        },
+        "column": {
+          "type": "string",
+          "description": "The column name as the delivery spells it."
+        },
+        "type": {
+          "$ref": "#/$defs/ProjectColumnType"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectManualOrigin": {
+      "type": "object",
+      "description": "Who delivers a manual source, as free-text names, not catalog ids.",
+      "required": [
+        "provider",
+        "register"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "register": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectManualSource": {
+      "type": "object",
+      "description": "Data the catalog does not document, entered by hand: every column is manual.",
+      "required": [
+        "name",
+        "manual",
+        "period",
+        "bindings"
+      ],
+      "properties": {
+        "bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProjectManualBinding"
+          }
+        },
+        "manual": {
+          "$ref": "#/$defs/ProjectManualOrigin"
+        },
+        "name": {
+          "type": "string"
+        },
+        "period": {
+          "$ref": "#/$defs/ProjectSourcePeriod"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectPanel": {
+      "type": "object",
+      "description": "A panel over sources.",
+      "required": [
+        "panel_id",
+        "members"
+      ],
+      "properties": {
+        "comment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Source names."
+        },
+        "panel_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectPeriodRange": {
+      "type": "object",
+      "description": "The `{\"from\": ..., \"to\": ...}` range.",
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "$ref": "#/$defs/ProjectPeriodValue"
+        },
+        "to": {
+          "$ref": "#/$defs/ProjectPeriodValue"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectPeriodSegment": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProjectPeriodValue"
+        },
+        {
+          "$ref": "#/$defs/ProjectPeriodRange"
+        }
+      ],
+      "description": "One contiguous piece of a source period."
+    },
+    "ProjectPeriodValue": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "format": "int64"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "A period endpoint as written: an int year or a period-token string (`\"_default\"`\nincluded, which only a scalar source period may hold)."
+    },
+    "ProjectSource": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProjectCatalogSource"
+        },
+        {
+          "$ref": "#/$defs/ProjectManualSource"
+        }
+      ],
+      "description": "A source: a catalog table, or data the catalog does not document, entered by hand."
+    },
+    "ProjectSourcePeriod": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProjectPeriodSegment"
+          }
+        },
+        {
+          "$ref": "#/$defs/ProjectPeriodSegment"
+        }
+      ],
+      "description": "One period, or a sorted list of periods for an interrupted series."
+    },
+    "ProjectStudyWindow": {
+      "type": "object",
+      "description": "The optional study window, in plain int years.",
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "to": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
