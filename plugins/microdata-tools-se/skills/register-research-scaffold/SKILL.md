@@ -116,11 +116,11 @@ about research questions, populations or outputs.
 7. Stop and report: the project path, the files that exist, the pins, the commit and the
    mock run's result. Name the two folders created beside the project folder, the mock
    inputs and the mock key file (`MOCK_DIR` and `KEY_FILE` in `config.R`). Say that the
-   project holds the reference's example order and
-   question, not the user's. With a steward's catalog, tell the user to restart the
-   session in the project and approve the `steward-catalog` server before any catalog
-   work; the tools are not loaded until then. Say that a research question is added when
-   the user asks for one. Do not propose one, and do not continue to stage 2.
+   project holds the reference's example order and question, not the user's. With a
+   steward's catalog, tell the user to restart the session in the project and approve
+   the `steward-catalog` server before any catalog work; the tools are not loaded until
+   then. Say that a research question is added when the user asks for one. Do not
+   propose one, and do not continue to stage 2.
 
 ## Stage 2: a research question, on request
 
