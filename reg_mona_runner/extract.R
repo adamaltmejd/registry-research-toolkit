@@ -844,13 +844,16 @@ select_expr <- function(type, max_length) {
 # The period value a filter compares, as T-SQL text around `@col` (the quoted
 # column), and the type its bounds take. year, yyyymm and yyyymmdd read the
 # column as an integer (TRY_CAST, so an unparseable value is NULL and excluded);
-# date reads it as a day, so a datetime keeps every time of its day.
+# date reads it as a day, so a datetime keeps every time of its day. Blank text
+# is NULL first: SQL Server casts '' to 1900-01-01 or 0, which would pass a range
+# or escape the rows_without_period count.
 period_key <- function(encoding, data_type, table, column) {
+  value <- if (data_type %in% TEXT_TYPES) "NULLIF(LTRIM(RTRIM(@col)), '''')" else "@col"
   if (encoding == "date" && data_type %in% c(DATE_TYPES, TEXT_TYPES)) {
-    return(list(expr = "TRY_CAST(@col AS date)", type = "date"))
+    return(list(expr = paste0("TRY_CAST(", value, " AS date)"), type = "date"))
   }
   if (encoding != "date" && data_type %in% c(NUMBER_TYPES, TEXT_TYPES)) {
-    return(list(expr = "TRY_CAST(@col AS bigint)", type = "bigint"))
+    return(list(expr = paste0("TRY_CAST(", value, " AS bigint)"), type = "bigint"))
   }
   refuse(
     "resolve",

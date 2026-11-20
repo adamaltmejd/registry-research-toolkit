@@ -2729,7 +2729,7 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 `reg_core::issue` so the manifest owns its findings type. The cases are
 `conformance/cases/materialize/`.
 
-- `version` is the integer `4`; the runner refuses v3. `extract_format` is the
+- `version` is the integer `5`; the runner refuses any other. `extract_format` is the
   project's. `stata_name` is
   the v3 rule byte for byte, emitted only on a `dta` order.
 - Provenance: `catalog.generation` is the served pair (`meta.generation`),

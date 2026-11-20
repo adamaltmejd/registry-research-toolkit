@@ -250,6 +250,21 @@ pub fn day_in(year: i32, rng: &mut Rng) -> i64 {
     start + i64::try_from(rng.below(u64::try_from(len).expect("positive"))).expect("fits")
 }
 
+/// A spell spanning all of `year`: it starts up to a year before it and ends up to a
+/// year after it, or is open (`None`) one time in ten. It overlaps every range that
+/// meets `year`, so it passes any row filter the year passes.
+///
+/// # Panics
+///
+/// Never: a draw below 365 fits an `i64`.
+pub fn spell_around(year: i32, rng: &mut Rng) -> (i64, Option<i64>) {
+    let first = days_from_civil(year, 1, 1);
+    let last = days_from_civil(year + 1, 1, 1) - 1;
+    let start = first - i64::try_from(rng.below(365)).expect("fits");
+    let end = (!rng.chance(0.1)).then(|| last + i64::try_from(rng.below(365)).expect("fits"));
+    (start, end)
+}
+
 /// Days from 1970-01-01 of a civil date (Howard Hinnant's `days_from_civil`).
 #[must_use]
 fn days_from_civil(year: i32, month: u32, day: u32) -> i64 {

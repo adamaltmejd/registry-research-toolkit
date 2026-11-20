@@ -155,4 +155,8 @@ pub enum Attribute {
     DeathDate,
     /// The row's year, in the column's own encoding.
     Year,
+    /// A spell table's start and end (NULL while open), in the column's own encoding:
+    /// one pair per row that spans the row's year, so it overlaps any range in it.
+    SpellStart,
+    SpellEnd,
 }

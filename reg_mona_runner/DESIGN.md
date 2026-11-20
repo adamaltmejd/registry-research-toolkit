@@ -104,7 +104,8 @@ encoding's grain:
 
 A bound is the ISO day truncated to the encoding's digits, which is the contract's
 widening: a finer bound covers its whole year or month. `date` compares days, so a
-datetime keeps every time of a bound day. A NULL or unparseable period value matches no
+datetime keeps every time of a bound day. Blank text reads as NULL (SQL Server would cast
+it to 1900-01-01 or 0). A NULL or unparseable period value matches no
 range and is left out of a filtered file, and a second query counts those rows for
 `run_log.csv` (`rows_without_period`, empty for an unfiltered file, which keeps every
 row). Another type for an encoding (a date column read as `year`) is refused before any
@@ -112,7 +113,7 @@ query rather than guessed.
 
 A spell filter (`end_column`) keeps a row whose spell overlaps any range: the start
 (`column`) on or before the range's `to`, and the end NULL as stored (an open spell) or
-on or after its `from`, both columns read by the one encoding. An unparseable end is not
+on or after its `from`, both columns read by the one encoding. A blank or unparseable end is not
 open and fails a `from` bound; a NULL or unparseable start matches no range.
 
 ## CSV

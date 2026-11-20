@@ -573,16 +573,16 @@ impl Context<'_> {
             let file_years: Vec<Period> =
                 built.file.years.iter().map(|&y| year_period(y)).collect();
             for column in &file.columns {
-                // A spell's end is written like its start, so each mock row is a spell
-                // inside its year and overlaps the ranges its start falls in.
-                let row_filter = file.row_filter.as_ref().filter(|f| {
-                    f.column == column.name || f.end_column.as_ref() == Some(&column.name)
-                });
+                // The row filter's period column, or a spell's start or end.
+                let period = file
+                    .row_filter
+                    .as_ref()
+                    .and_then(|f| period_attribute(f, &column.name).map(|a| (a, f.encoding)));
                 // The runner's period column: a row key placing no variable. It has no
                 // row filter when the order covers the whole delivery.
                 if column.refs.is_empty() {
                     if column.role == manifest::Role::RowKey {
-                        match year_column(column, row_filter.map(|f| f.encoding)) {
+                        match year_column(column, period) {
                             Ok(year) => built.push_unsourced(year),
                             Err(code) => refusals.push(Refusal::new(
                                 code,
@@ -628,9 +628,9 @@ impl Context<'_> {
                 };
                 spec_column.stata_name.clone_from(&column.stata_name);
                 spec_column.label = column.stata_name.as_ref().map(|_| column.name.clone());
-                if let Some(filter) = row_filter {
-                    spec_column.attribute = Some(Attribute::Year);
-                    spec_column.encoding = Some(filter.encoding);
+                if let Some((attribute, encoding)) = period {
+                    spec_column.attribute = Some(attribute);
+                    spec_column.encoding = Some(encoding);
                 }
                 // Missing only in the file's years its placement holds no segment.
                 let held = self.held_years(&file.table, &column.name);
@@ -1059,12 +1059,27 @@ fn within(period: Period, bounds: &Period) -> Period {
     }
 }
 
+/// The attribute a row-filter column writes: the row's year, or a spell's start or
+/// end, which are drawn together so each mock spell overlaps its row's year.
+fn period_attribute(filter: &manifest::RowFilter, name: &str) -> Option<Attribute> {
+    let end = filter.end_column.as_deref();
+    if end == Some(name) {
+        Some(Attribute::SpellEnd)
+    } else if filter.column != name {
+        None
+    } else if end.is_some() {
+        Some(Attribute::SpellStart)
+    } else {
+        Some(Attribute::Year)
+    }
+}
+
 /// The runner's period column, typed by its storage; without a row filter its
 /// encoding is unknown and the year is written whole. A storage type that is missing or
 /// one mocks do not write is refused, as for any column.
 fn year_column(
     column: &manifest::Column,
-    encoding: Option<manifest::Encoding>,
+    period: Option<(Attribute, manifest::Encoding)>,
 ) -> Result<SpecColumn, &'static str> {
     let (dtype, _) = resolve_type(None, Some(&column.storage), None)?;
     Ok(SpecColumn {
@@ -1075,9 +1090,9 @@ fn year_column(
         storage: Some(column.storage.clone()),
         length: column.storage.length,
         codes: Vec::new(),
-        attribute: Some(Attribute::Year),
+        attribute: Some(period.map_or(Attribute::Year, |p| p.0)),
         map: BTreeMap::new(),
-        encoding,
+        encoding: period.map(|p| p.1),
         years: Vec::new(),
         identifier: false,
         null_rate: Some(0.0),

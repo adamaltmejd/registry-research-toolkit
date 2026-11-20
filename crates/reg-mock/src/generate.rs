@@ -7,7 +7,7 @@ use reg_core::manifest::Encoding;
 use reg_core::project::{ColumnType, ExtractFormat};
 
 use crate::Refusal;
-use crate::population::{Demography, Exit, Population, day_in, year_of};
+use crate::population::{Demography, Exit, Population, day_in, spell_around, year_of};
 use crate::rng::Rng;
 use crate::spec::{Attribute, Spec, SpecColumn, SpecFile, Unit};
 
@@ -203,12 +203,15 @@ pub fn generate(
 }
 
 /// One unit's row in one year.
+#[derive(Clone, Copy)]
 struct Unit_<'a> {
     seed: u64,
     municipalities: &'a [&'a str],
     year: i32,
     person: Option<&'a crate::population::Person>,
     firm: Option<&'a crate::population::Firm>,
+    /// The row's spell (start, end), when the file has spell columns.
+    spell: Option<(i64, Option<i64>)>,
 }
 
 fn rows(
@@ -227,6 +230,12 @@ fn rows(
         .map(|c| Rng::new(seed, &format!("column/{}/{}", file.name, c.name)))
         .collect();
     let pools: Vec<Pool<'_>> = file.columns.iter().map(Pool::of).collect();
+    let spells = file.columns.iter().any(|c| {
+        matches!(
+            c.attribute,
+            Some(Attribute::SpellStart | Attribute::SpellEnd)
+        )
+    });
     let years = if file.years.is_empty() {
         vec![last]
     } else {
@@ -245,6 +254,7 @@ fn rows(
                     year,
                     person: Some(p),
                     firm: Some(&population.firms[firm_of(p.key, population.firms.len())]),
+                    spell: None,
                 })
                 .collect(),
             Unit::Firm => population
@@ -256,6 +266,7 @@ fn rows(
                     year,
                     person: None,
                     firm: Some(f),
+                    spell: None,
                 })
                 .collect(),
         };
@@ -268,6 +279,11 @@ fn rows(
                 1 + rng.poisson(file.rows_per_unit - 1.0)
             };
             for _ in 0..n {
+                // Drawn only for a spell file, so no other file's stream moves.
+                let unit = &Unit_ {
+                    spell: spells.then(|| spell_around(unit.year, &mut rng)),
+                    ..*unit
+                };
                 let mut row = Vec::with_capacity(kinds.len());
                 for (((column, kind), pool), crng) in
                     file.columns.iter().zip(kinds).zip(&pools).zip(&mut columns)
@@ -365,7 +381,13 @@ fn cell(
     let keyed = column.identifier
         || matches!(
             column.attribute,
-            Some(Attribute::PersonKey | Attribute::FirmKey | Attribute::Year)
+            Some(
+                Attribute::PersonKey
+                    | Attribute::FirmKey
+                    | Attribute::Year
+                    | Attribute::SpellStart
+                    | Attribute::SpellEnd
+            )
         );
     if !keyed && rng.chance(null_rate) {
         if pool.sentinels.is_empty() {
@@ -509,19 +531,22 @@ fn attribute_cell(
             Some((day, Exit::Death)) if year_of(day) <= unit.year => date(day)?,
             _ => Cell::Null,
         },
-        Attribute::Year => year_cell(column.encoding, kind, unit.year, &mapped, rng)?,
+        Attribute::Year => day_cell(column.encoding, kind, day_in(unit.year, rng), &mapped)?,
+        Attribute::SpellStart => day_cell(column.encoding, kind, unit.spell?.0, &mapped)?,
+        Attribute::SpellEnd => match unit.spell?.1 {
+            Some(day) => day_cell(column.encoding, kind, day, &mapped)?,
+            None => Cell::Null,
+        },
     })
 }
 
-/// The row's year in the row filter's encoding: a whole year, or a day or month in it.
-fn year_cell(
+/// A day in the row filter's encoding: its whole year, its month, or the day.
+fn day_cell(
     encoding: Option<Encoding>,
     kind: Kind,
-    year: i32,
+    day: i64,
     mapped: &dyn Fn(&str) -> String,
-    rng: &mut Rng,
 ) -> Option<Cell> {
-    let day = day_in(year, rng);
     let iso = reg_core::issue::iso_day(day);
     match (encoding, kind) {
         (_, Kind::Date) => Some(Cell::Date(day)),
@@ -530,7 +555,7 @@ fn year_cell(
         (Some(Encoding::Yyyymmdd | Encoding::Date), _) => {
             from_text(&mapped(&iso.replace('-', "")), kind)
         }
-        _ => from_text(&mapped(&year.to_string()), kind),
+        _ => from_text(&mapped(&year_of(day).to_string()), kind),
     }
 }
 

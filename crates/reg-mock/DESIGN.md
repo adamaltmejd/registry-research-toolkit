@@ -138,6 +138,9 @@ project (its `project_hash`), and a value set whose saved pages do not hold each
 **Layout.** With a manifest, files and columns are the runner's: the order file's names,
 `stata_name` aliases and labels, and the period column, a row key placing no variable,
 as the year (`Attribute::Year`, in the row filter's encoding, a whole year without one).
+A spell table's start and end columns (`SpellStart`, `SpellEnd`) take one pair per row
+(`population::spell_around`): it spans the row's year, so it overlaps every range the
+year meets, starts on or before its end, and is open one time in ten.
 A column is drawn from its held placement's segment row. A file holds its columns'
 requested years; a column is missing in the years its placement does not hold (its
 segment rows), as the runner reads every column over the file's years, and takes the
