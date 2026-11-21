@@ -2,6 +2,8 @@
 //! segments in the serving tables. The request minus the segments is the clip; the rest, split by merged form, is the binding's entries; the
 //! window findings come from the segments the entries cover.
 
+use std::fmt::Write as _;
+
 use reg_core::project::{CatalogBinding, CatalogSource};
 use reg_core::{Interval, IssueLevel, gaps, intersect, merge, next_iso_day, overlap};
 use rusqlite::{Connection, OptionalExtension, Row};
@@ -41,6 +43,10 @@ pub(super) struct Outcome {
     pub entries: Vec<OrderEntry>,
     pub clip: Option<OrderClip>,
     pub serving: Vec<Serving>,
+    /// Files the variable is missing from (`absent::files`), reported against `removed`.
+    pub missing: Vec<super::absent::Missing>,
+    /// The requested days the binding's clip reports.
+    pub removed: Vec<Interval>,
 }
 
 /// A resolved binding variable.
@@ -75,7 +81,8 @@ struct Piece {
 }
 
 /// The segments a binding reads, keyed by the connection's own table and variable ids,
-/// with value sets and class versions by public identity so rows never cross origins.
+/// with the variable's public id, the folded column name, and value sets and class
+/// versions by public identity so rows never cross origins.
 /// In the composed view a base table's held segments join through public ids: a base
 /// variable's (a reference occurrence, never overlapping the base ones) by its base id,
 /// a variable only the holdings database defines by its negated held id (`held_id`).
@@ -227,8 +234,24 @@ fn held_class_version(conn: &Connection, pin: &str) -> Result<Option<String>, Er
         .optional()?)
 }
 
-/// One binding over its source's serving tables.
+/// One binding over its source's serving tables, with its `variable_absent_from_files`
+/// findings against the whole binding's clips.
 pub(super) fn binding(scope: &Scope, b: usize, binding: &CatalogBinding) -> Result<Outcome, Error> {
+    let mut out = check(scope, b, binding, false)?;
+    let missing = std::mem::take(&mut out.missing);
+    out.findings
+        .extend(super::absent::findings(scope, b, &missing, &out.removed));
+    Ok(out)
+}
+
+/// [`binding`] before its file findings: a followed binding's hops run this with `hop`,
+/// whose clips are not final until the whole chain is checked.
+pub(super) fn check(
+    scope: &Scope,
+    b: usize,
+    binding: &CatalogBinding,
+    hop: bool,
+) -> Result<Outcome, Error> {
     let (variable, findings) = refs(
         scope.conn,
         scope.composed,
@@ -277,7 +300,7 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &CatalogBinding) -> Resu
             return Ok(outcome);
         }
     }
-    materialize(scope, b, binding, &variable, outcome)
+    materialize(scope, b, binding, &variable, outcome, hop)
 }
 
 #[allow(clippy::too_many_lines)]
@@ -287,6 +310,7 @@ fn materialize(
     binding: &CatalogBinding,
     variable: &Variable,
     mut outcome: Outcome,
+    hop: bool,
 ) -> Result<Outcome, Error> {
     let at = Located { scope, b, variable };
     let mut pieces = Vec::new();
@@ -368,20 +392,34 @@ fn materialize(
             ordered: clip_ordered(scope.server, &days(scope.requested), &days(&ordered)),
         });
         for days in &removed {
+            let mut message = format!(
+                "There is no data on {} in {} for {}. That part of the period will not be delivered.",
+                variable.pid,
+                scope.table,
+                span(scope.server, days)
+            );
+            for (other, table, has) in covering(&at, days, None, hop)? {
+                let has = words::plain(&periods(scope.server, &has));
+                write!(message, " {other} has data in {table} for {has}.").expect("a String write");
+            }
             outcome.findings.push(at.issue(
                 IssueLevel::Info,
                 "period_clipped",
                 scope.table,
                 Some(days),
-                format!(
-                    "There is no data on {} in {} for {}. That part of the period will not be delivered.",
-                    variable.pid,
-                    scope.table,
-                    span(scope.server, days)
-                ),
+                message,
             ));
         }
     }
+    // An ordinary binding's clips are final here, so their files need no lookup.
+    let settled = if hop {
+        ordered.clone()
+    } else {
+        merge([ordered.as_slice(), removed.as_slice()].concat())
+    };
+    outcome.missing =
+        super::absent::files(scope, variable.id, &variable.pid, &wanted, &settled, &lanes)?;
+    outcome.removed = removed;
     // Coverage per named release: a shared day another release serves would hide this
     // one's gap in the union above (days none serves are clipped there already).
     for (name, days) in &lanes {
@@ -394,18 +432,27 @@ fn materialize(
         );
         let missing = overlap(&gaps(std::slice::from_ref(days), own), &ordered);
         for days in &missing {
+            let mut message = format!(
+                "There is no data on {} in the release \"{name}\" of {} for {}. Only the \
+                 other named releases deliver it there.",
+                variable.pid,
+                scope.table,
+                span(scope.server, days)
+            );
+            for (other, table, has) in covering(&at, days, Some(name), hop)? {
+                let has = words::plain(&periods(scope.server, &has));
+                write!(
+                    message,
+                    " {other} has data in this release of {table} for {has}."
+                )
+                .expect("a String write");
+            }
             outcome.findings.push(at.issue(
                 IssueLevel::Info,
                 "period_clipped",
                 scope.table,
                 Some(days),
-                format!(
-                    "There is no data on {} in the release \"{name}\" of {} for {}. Only the \
-                     other named releases deliver it there.",
-                    variable.pid,
-                    scope.table,
-                    span(scope.server, days)
-                ),
+                message,
             ));
         }
     }
@@ -860,7 +907,7 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
         .map(|(successor, at_start, caveat)| {
             let days = at_start.map(|a| (iso_day(a).max(requested.0.clone()), requested.1.clone()));
             let from = at_start.map_or_else(
-                || "; the date is not stated".to_owned(),
+                || " without a stated date".to_owned(),
                 |a| format!(" from {}", words::plain_start(&iso_day(a))),
             );
             let caveat = caveat.map_or_else(String::new, |c| format!(": {c}"));
@@ -878,6 +925,111 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
             issue
         })
         .collect())
+}
+
+/// The variables a `continues` edge links to variable `id` either way, with their ids
+/// (reference catalog only: [`covering`] names none on a steward's server). Each
+/// direction is its own lookup, so the `relation_subject` and `relation_object` indexes
+/// serve it.
+fn linked(scope: &Scope, id: i64) -> Result<Vec<(i64, String)>, Error> {
+    Ok(rows(
+        scope.conn,
+        "SELECT v.id, v.pid FROM main.relation r JOIN main.variable v ON v.id = r.object_id
+         WHERE r.subject_kind = 'variable' AND r.subject_id = ?1 AND r.kind = 'continues'
+           AND r.object_kind = 'variable'
+         UNION
+         SELECT v.id, v.pid FROM main.relation r JOIN main.variable v ON v.id = r.subject_id
+         WHERE r.object_kind = 'variable' AND r.object_id = ?1 AND r.kind = 'continues'
+           AND r.subject_kind = 'variable'",
+        [id],
+        |row| Ok((row.get(0)?, row.get(1)?)),
+    )?)
+}
+
+/// The variables that have data in a serving table on clipped `days` and that the catalog
+/// links to this one: a `continues` edge either way, or the same delivered column (by
+/// folded name) in that table. Each with the table and the days it has there as the
+/// order reads them (`served`: release selection and shadowing), so a `period_clipped`
+/// can name it (#2603); with `lane`, only in that named release. Nothing is guessed from
+/// similar names. A steward's server names none: what it holds is decided per database
+/// and release by materialization, which this check does not repeat. A successor hop names
+/// none either: `successor::finish` rebuilds its clips without them.
+fn covering(
+    at: &Located,
+    days: &Interval,
+    lane: Option<&str>,
+    hop: bool,
+) -> Result<Vec<(String, String, Vec<Interval>)>, Error> {
+    let scope = at.scope;
+    if scope.server.catalog.steward().is_some() || hop {
+        return Ok(Vec::new());
+    }
+    let linked_ids = linked(scope, at.variable.id)?;
+    let own_sql = format!(
+        "SELECT DISTINCT exact FROM ({}) WHERE variable_id = ?1 AND table_id = ?2",
+        segments(scope)
+    );
+    // Same-column candidates by folded name through `segment_fold`.
+    let same_sql = "SELECT DISTINCT s.variable_id, v.pid FROM main.name_fold f
+           JOIN main.segment s ON s.fold_id = f.id
+           JOIN main.variable v ON v.id = s.variable_id
+         WHERE f.folded IN (SELECT value FROM json_each(?1)) AND s.table_id = ?2";
+    let mut found = Vec::new();
+    for (k, s) in scope.serving.iter().enumerate() {
+        let here = overlap(&s.requested, std::slice::from_ref(days));
+        if here.is_empty() {
+            continue;
+        }
+        let mut folds: Vec<String> = rows(
+            scope.conn,
+            &own_sql,
+            rusqlite::params![at.variable.id, s.table.id],
+            |row| row.get::<_, String>(0),
+        )?
+        .iter()
+        .map(|exact| reg_core::fold_identity(exact))
+        .collect();
+        folds.sort();
+        folds.dedup();
+        let mut candidates: Vec<(i64, String)> = rows(
+            scope.conn,
+            same_sql,
+            rusqlite::params![
+                serde_json::to_string(&folds).expect("strings serialize"),
+                s.table.id
+            ],
+            |row| Ok((row.get(0)?, row.get(1)?)),
+        )?;
+        candidates.extend(linked_ids.iter().cloned());
+        candidates.retain(|(id, _)| *id != at.variable.id);
+        candidates.sort_by(|a, b| a.1.cmp(&b.1));
+        candidates.dedup();
+        for (other_id, other) in candidates {
+            let is_linked = linked_ids.iter().any(|(_, p)| *p == other);
+            let has: Vec<Interval> = served(scope, k, other_id)?
+                .pieces
+                .iter()
+                .filter(|p| p.state != "ambiguous")
+                .filter(|p| lane.is_none_or(|l| p.lane.as_deref().is_none_or(|x| x == l)))
+                .filter(|p| is_linked || folds.contains(&reg_core::fold_identity(&p.spelling)))
+                .flat_map(|p| overlap(&here, std::slice::from_ref(&p.days)))
+                .collect();
+            if !has.is_empty() {
+                found.push((other, s.table.pid.clone(), merge(has)));
+            }
+        }
+    }
+    Ok(found)
+}
+
+/// The shared days the source selects other releases on and not `release` (half-open
+/// gaps of [`served`]'s lanes): days where `release`'s own segments are not read.
+pub(super) fn not_selected(lanes: &[(String, Interval)], release: &str) -> Vec<Interval> {
+    let (own, other): (Vec<_>, Vec<_>) = lanes.iter().partition(|(name, _)| name == release);
+    gaps(
+        &merge(other.into_iter().map(|(_, d)| d.clone()).collect()),
+        own.into_iter().map(|(_, d)| d.clone()).collect(),
+    )
 }
 
 /// One entry being built: its latest piece, its days and whether any piece is sensitive.
@@ -948,9 +1100,9 @@ fn entries(
     let mut changes: Vec<(&String, String)> = Vec::new();
     for line in &timelines {
         for pair in line.windows(2) {
-            if let Some(what) = changed(pair[0].last, pair[1].last) {
-                let from = &pair[1].days.0;
-                changes.push((from, format!("From {}, {what}.", words::plain_start(from))));
+            let from = &pair[1].days.0;
+            if let Some(text) = changed(pair[0].last, pair[1].last, from) {
+                changes.push((from, text));
             }
         }
     }
@@ -1003,9 +1155,12 @@ fn entries(
     (entries, change)
 }
 
-/// What changes between two adjacent forms, in plain words (column name, type, codes),
-/// or `None` when spelling, type and value set agree.
-fn changed(before: &Piece, after: &Piece) -> Option<String> {
+/// What changes between two adjacent forms from day `from`, as a plain sentence (column
+/// name, type, codes), or `None` when spelling, type and value set agree. A type stated
+/// on one side only reads as stated or not stated from that day, which needs no
+/// knowledge of years outside the request (#2603).
+fn changed(before: &Piece, after: &Piece, from: &str) -> Option<String> {
+    let when = words::plain_start(from);
     let mut what = Vec::new();
     if before.spelling != after.spelling {
         what.push(format!(
@@ -1013,18 +1168,16 @@ fn changed(before: &Piece, after: &Piece) -> Option<String> {
             before.spelling, after.spelling
         ));
     }
-    if before.dtype != after.dtype {
-        let stated = |t: &Option<String>| t.clone().unwrap_or_else(|| "not stated".to_owned());
-        what.push(format!(
-            "the type changes from {} to {}",
-            stated(&before.dtype),
-            stated(&after.dtype)
-        ));
+    match (&before.dtype, &after.dtype) {
+        (Some(a), Some(b)) if a != b => what.push(format!("the type changes from {a} to {b}")),
+        (Some(_), None) => what.push("the type is not stated".to_owned()),
+        (None, Some(b)) => what.push(format!("the type is stated ({b})")),
+        _ => {}
     }
     if before.valueset != after.valueset {
         what.push("the codes change".to_owned());
     }
-    (!what.is_empty()).then(|| what.join(", "))
+    (!what.is_empty()).then(|| format!("From {when}, {}.", what.join(", ")))
 }
 
 /// The result periods of inclusive ISO intervals.

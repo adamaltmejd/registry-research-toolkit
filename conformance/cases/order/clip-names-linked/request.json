@@ -1,0 +1,19 @@
+{
+  "note": "In `byt`, column `Ers` is `ers` for 2018-2019 and `ers-2` in 2020 (the same delivered column); `status` continues `ers` by an undated `continues` edge; `annan` is delivered in 2020 too but is not linked. Ordering `ers` over 2018..2020 clips 2020, and the `period_clipped` names the two linked variables with the days they have there, not `Annan` (#2603). Fails if a linked variable goes unnamed or the unlinked one is named. Oracle: the fixture's JSONL and crates/DESIGN.md (order findings, #2603).",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "8.0.0",
+    "reg_meta_version": "0.92.0",
+    "catalog": "global",
+    "name": "Order case",
+    "extract_format": "parquet",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/byt",
+        "period": {"from": 2018, "to": 2020},
+        "bindings": [{"variable": "demo/byt/ers"}]
+      }
+    ]
+  }
+}

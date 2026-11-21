@@ -200,3 +200,22 @@
 {"kind":"occurrence","provider":"demo","register":"conc","table":"u","release":"r4","column":"T","source_key":"k6","label":"Avgift","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r2","column":"Z","source_key":"k7","label":"Ålder","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r3","column":"Z","source_key":"k8","label":"Yrke","dtype":"char"}
+{"kind":"register","provider":"demo","register":"fil","name":"Kvartalsregistret"}
+{"kind":"release","provider":"demo","register":"fil","table":"","release":"f2019","name":"Fil 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"fil","table":"","release":"f2020q1","name":"Fil 2020 kv1","from":"2020-01-01","to":"2020-03-31","grain":"quarter","edition":"final"}
+{"kind":"release","provider":"demo","register":"fil","table":"","release":"f2020q2","name":"Fil 2020 kv2","from":"2020-04-01","to":"2020-06-30","grain":"quarter","edition":"final"}
+{"kind":"release","provider":"demo","register":"fil","table":"","release":"f2020q3","name":"Fil 2020 kv3","from":"2020-07-01","to":"2020-09-30","grain":"quarter","edition":"final"}
+{"kind":"release","provider":"demo","register":"fil","table":"","release":"f2020q4","name":"Fil 2020 kv4","from":"2020-10-01","to":"2020-12-31","grain":"quarter","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"fil","table":"","release":"f2019","column":"Kod","source_key":"k1","label":"Kod","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"fil","table":"","release":"f2020q1","column":"Kod","source_key":"k1","label":"Kod","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"fil","table":"","release":"f2020q3","column":"Kod","source_key":"k1","label":"Kod","dtype":"int"}
+{"kind":"register","provider":"demo","register":"byt","name":"Bytesregistret"}
+{"kind":"release","provider":"demo","register":"byt","table":"","release":"b2018","name":"Byt 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"byt","table":"","release":"b2019","name":"Byt 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"byt","table":"","release":"b2020","name":"Byt 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"byt","table":"","release":"b2018","column":"Ers","source_key":"k1","label":"Ersättning aktiv","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"byt","table":"","release":"b2019","column":"Ers","source_key":"k1","label":"Ersättning aktiv","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"byt","table":"","release":"b2020","column":"Ers","source_key":"k2","label":"Ersättning","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"byt","table":"","release":"b2020","column":"Status","source_key":"k3","label":"Status ny","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"byt","table":"","release":"b2020","column":"Annan","source_key":"k4","label":"Annan","dtype":"int"}
+{"kind":"link","relation":"continues","subject":{"kind":"variable","provider":"demo","register":"byt","key":"k3"},"object":{"kind":"variable","provider":"demo","register":"byt","key":"k1"}}

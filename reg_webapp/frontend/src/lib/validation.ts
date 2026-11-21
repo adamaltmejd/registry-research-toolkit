@@ -62,6 +62,7 @@ const TITLES: Readonly<Record<string, string>> = {
   series_break: "Series break during the study years",
   binding_type_differs: "The type in the project differs from the catalog",
   period_clipped: "Years not available",
+  variable_absent_from_files: "Variable unavailable in some files",
   preliminary_data: "The requested data are preliminary",
   variable_replaced: "Variable has a successor",
   sensitive_variables: "Some variables may contain sensitive personal data",
@@ -198,8 +199,9 @@ export function issueRefs(
   ];
 }
 
+// The period tells apart findings that differ only in their years (one per year).
 export function issueId(issue: ValidationIssue): string {
-  return `issue-${encodeURIComponent(JSON.stringify([issue.code, issue.path, issue.message]))}`;
+  return `issue-${encodeURIComponent(JSON.stringify([issue.code, issue.path, issue.message, issue.period ?? null]))}`;
 }
 
 export function plainIssueText(
@@ -226,17 +228,15 @@ export function plainIssueText(
   }
   // A register-level refusal can list its tables in the message without naming
   // them in Issue.table. Resolve those names from the already-read register too.
-  const message = [
-    ...new Set(
-      [...refs, ...names.keys()].filter((ref): ref is string => Boolean(ref)),
-    ),
-  ]
-    .sort((a, b) => b.length - a.length)
-    .reduce(
-      (message, ref) =>
-        message.replaceAll(ref, names.get(ref) ?? "this catalog item"),
-      text,
-    );
+  // Only a complete id is replaced: each maximal run of id characters is looked up
+  // whole, so a known id inside a longer one (a replacement the server names in
+  // prose, say) keeps its catalog id until its own name loads.
+  const known = new Set(refs.filter((ref): ref is string => Boolean(ref)));
+  const message = text.replace(/[\p{L}\p{N}_/-]+/gu, (token) =>
+    known.has(token) || names.has(token)
+      ? (names.get(token) ?? "this catalog item")
+      : token,
+  );
   // The server writes a period as `[start, end)` with `open` for a missing bound
   // (`span` in reg-catalog's order ops) and a study window as `2019..2020`.
   // Adapt only those exact forms, in prose with an en dash; malformed intervals

@@ -733,8 +733,9 @@ Time is the axis every relation is drawn on.
   that meet at that grain read as one range (yearly snapshots `2010–2020`); stretches of
   different grains stay apart (`2018, 2019/2020`). A gap the
   server reports inside a year reads as that year too; a gap no whole year fills is the
-  server's to stop reporting (maintainer, PR #2389, 2026-11-10). Text that states
-  delivered years (a list row's, a lane's, a fact's) is read from the catalog periods,
+  server's to stop reporting (maintainer, PR #2389, 2026-11-10), except whole delivered
+  files a variable is missing from, which an info names by their periods (#2603). Text
+  that states delivered years (a list row's, a lane's, a fact's) is read from the catalog periods,
   not from the drawing's year cells, so a school-year register reads `1972/1973–2023/2024`
   beside its bar (maintainer, PR #2389, 2026-11-10: fold). On `/project`, the years a
   table delivers (the delivery summary, a source card's lanes) read in the table's grain,

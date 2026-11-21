@@ -58,7 +58,7 @@
       "level": "info",
       "code": "table_succession_undated",
       "path": "/sources/0",
-      "message": "demo/und/ett is continued by demo/und/tva on no stated day, so its data for 2018 to 2019 is not followed into demo/und/tva",
+      "message": "demo/und/ett is continued by demo/und/tva without a stated date, so its data for 2018 to 2019 is not followed into demo/und/tva",
       "source": "s",
       "variable": null,
       "variable_name": null,

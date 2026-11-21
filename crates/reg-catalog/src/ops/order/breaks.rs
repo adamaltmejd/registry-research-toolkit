@@ -139,7 +139,7 @@ pub(super) fn met(anchor: &Anchor, breaks: &[Stored], days: &[Interval]) -> Vec<
             ));
         }
         if undated {
-            when.push("on no stated day".to_owned());
+            when.push("without a date".to_owned());
         }
         let pid = anchor.pid;
         let (level, message) = match text {
@@ -150,11 +150,18 @@ pub(super) fn met(anchor: &Anchor, breaks: &[Stored], days: &[Interval]) -> Vec<
                     when.join("; ")
                 ),
             ),
+            // "without a date or explanation" when no day is stated at all.
+            None if dated.is_empty() && releases.is_empty() => (
+                IssueLevel::Info,
+                format!(
+                    "The provider marks a series break in {pid} without a date or explanation."
+                ),
+            ),
             None => (
                 IssueLevel::Info,
                 format!(
-                    "The provider marks a series break in {pid} {} but says nothing more about it.",
-                    when.join("; ")
+                    "The provider marks a series break in {pid} {} but gives no explanation.",
+                    when.join(" and ")
                 ),
             ),
         };
