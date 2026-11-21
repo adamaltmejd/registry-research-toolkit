@@ -398,7 +398,7 @@ fn materialize(
                 scope.table,
                 span(scope.server, days)
             );
-            for (other, table, has) in covering(&at, days, None)? {
+            for (other, table, has) in covering(&at, days, None, hop)? {
                 let has = words::plain(&periods(scope.server, &has));
                 write!(message, " {other} has data in {table} for {has}.").expect("a String write");
             }
@@ -439,7 +439,7 @@ fn materialize(
                 scope.table,
                 span(scope.server, days)
             );
-            for (other, table, has) in covering(&at, days, Some(name))? {
+            for (other, table, has) in covering(&at, days, Some(name), hop)? {
                 let has = words::plain(&periods(scope.server, &has));
                 write!(
                     message,
@@ -927,18 +927,21 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
         .collect())
 }
 
-/// The variables a `continues` edge links to `pid` either way, with their ids (reference
-/// catalog only: [`covering`] names none on a steward's server).
-fn linked(scope: &Scope, pid: &str) -> Result<Vec<(i64, String)>, Error> {
+/// The variables a `continues` edge links to variable `id` either way, with their ids
+/// (reference catalog only: [`covering`] names none on a steward's server). Each
+/// direction is its own lookup, so the `relation_subject` and `relation_object` indexes
+/// serve it.
+fn linked(scope: &Scope, id: i64) -> Result<Vec<(i64, String)>, Error> {
     Ok(rows(
         scope.conn,
-        "SELECT CASE WHEN s.pid = ?1 THEN o.id ELSE s.id END,
-                CASE WHEN s.pid = ?1 THEN o.pid ELSE s.pid END
-         FROM main.relation r JOIN main.variable s ON s.id = r.subject_id
-           JOIN main.variable o ON o.id = r.object_id
-         WHERE r.kind = 'continues' AND r.subject_kind = 'variable'
-           AND r.object_kind = 'variable' AND (s.pid = ?1 OR o.pid = ?1)",
-        [pid],
+        "SELECT v.id, v.pid FROM main.relation r JOIN main.variable v ON v.id = r.object_id
+         WHERE r.subject_kind = 'variable' AND r.subject_id = ?1 AND r.kind = 'continues'
+           AND r.object_kind = 'variable'
+         UNION
+         SELECT v.id, v.pid FROM main.relation r JOIN main.variable v ON v.id = r.subject_id
+         WHERE r.object_kind = 'variable' AND r.object_id = ?1 AND r.kind = 'continues'
+           AND r.subject_kind = 'variable'",
+        [id],
         |row| Ok((row.get(0)?, row.get(1)?)),
     )?)
 }
@@ -949,17 +952,19 @@ fn linked(scope: &Scope, pid: &str) -> Result<Vec<(i64, String)>, Error> {
 /// order reads them (`served`: release selection and shadowing), so a `period_clipped`
 /// can name it (#2603); with `lane`, only in that named release. Nothing is guessed from
 /// similar names. A steward's server names none: what it holds is decided per database
-/// and release by materialization, which this check does not repeat.
+/// and release by materialization, which this check does not repeat. A successor hop names
+/// none either: `successor::finish` rebuilds its clips without them.
 fn covering(
     at: &Located,
     days: &Interval,
     lane: Option<&str>,
+    hop: bool,
 ) -> Result<Vec<(String, String, Vec<Interval>)>, Error> {
     let scope = at.scope;
-    if scope.server.catalog.steward().is_some() {
+    if scope.server.catalog.steward().is_some() || hop {
         return Ok(Vec::new());
     }
-    let linked_ids = linked(scope, &at.variable.pid)?;
+    let linked_ids = linked(scope, at.variable.id)?;
     let own_sql = format!(
         "SELECT DISTINCT exact FROM ({}) WHERE variable_id = ?1 AND table_id = ?2",
         segments(scope)
