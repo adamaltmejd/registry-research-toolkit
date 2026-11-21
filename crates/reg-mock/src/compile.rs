@@ -218,12 +218,18 @@ fn json_files(dir: &Path) -> Result<Vec<std::path::PathBuf>, Refusal> {
 
 /// The materialize answer, its version checked before its shape.
 fn read_manifest(path: &Path, generations: &mut BTreeSet<String>) -> Result<Manifest, Refusal> {
+    /// Only the version; other fields are left to the full decode.
+    #[derive(serde::Deserialize)]
+    struct Versioned {
+        version: Value,
+    }
     let at = path.display().to_string();
-    let data: Value = read_answer(path, generations)?;
+    let bytes = read_bytes(path)?;
     // The version before the shape: another version's fields would fail the
     // decode as answer_invalid. The runner refuses any other version, so a
-    // mock of it would not match.
-    let version = data.get("version").unwrap_or(&Value::Null);
+    // mock of it would not match. Both decodes read the file's bytes, so a
+    // duplicate key stays answer_invalid.
+    let Versioned { version } = decode_answer(&at, &bytes, generations)?;
     if version.as_u64() != Some(u64::from(manifest::MANIFEST_VERSION)) {
         return Err(Refusal::new(
             "manifest_version",
@@ -235,26 +241,27 @@ fn read_manifest(path: &Path, generations: &mut BTreeSet<String>) -> Result<Mani
             ),
         ));
     }
-    let manifest: Manifest = serde_json::from_value(data).map_err(|e| {
-        Refusal::new(
-            "answer_invalid",
-            at,
-            format!(
-                "not a saved catalog answer of this kind ({e}); save the response \
-                 document unchanged"
-            ),
-        )
-    })?;
-    Ok(manifest)
+    decode_answer(&at, &bytes, generations)
 }
 
 fn read_answer<T: DeserializeOwned>(
     path: &Path,
     generations: &mut BTreeSet<String>,
 ) -> Result<T, Refusal> {
-    let at = path.display().to_string();
-    let bytes = std::fs::read(path).map_err(|e| Refusal::new("io", at.clone(), e.to_string()))?;
-    let envelope: Envelope<T> = serde_json::from_slice(&bytes).map_err(|e| {
+    let bytes = read_bytes(path)?;
+    decode_answer(&path.display().to_string(), &bytes, generations)
+}
+
+fn read_bytes(path: &Path) -> Result<Vec<u8>, Refusal> {
+    std::fs::read(path).map_err(|e| Refusal::new("io", path.display().to_string(), e.to_string()))
+}
+
+fn decode_answer<T: DeserializeOwned>(
+    at: &str,
+    bytes: &[u8],
+    generations: &mut BTreeSet<String>,
+) -> Result<T, Refusal> {
+    let envelope: Envelope<T> = serde_json::from_slice(bytes).map_err(|e| {
         Refusal::new(
             "answer_invalid",
             at,
