@@ -6,13 +6,13 @@
 //! The base is the branch's own fork point, so a main that moved on does not charge the
 //! branch with plugin changes it never made:
 //! - with history, `git merge-base HEAD origin/main`;
-//! - in a shallow clone (CI checks out the PR merge commit at depth 1) the first parent
-//!   of HEAD, read from the commit object, which lists it even when the parent is
-//!   absent, and fetched by SHA at depth 1. On a PR that parent is the pinned base; on a
-//!   push to main it is the previous main commit.
+//! - in a shallow clone whose HEAD is a merge commit (CI checks out the PR's synthetic
+//!   merge commit at depth 1) the first parent, read from the commit object, which lists
+//!   it even when the parent is absent, and fetched by SHA at depth 1. That parent is the
+//!   pinned base. Any other shallow HEAD has no known fork point.
 //!
 //! Where no base can be found, CI fails the test and a local run skips with the reason
-//! printed.
+//! printed. A base manifest that exists but cannot be read fails the test.
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -74,11 +74,15 @@ fn base_commit(root: &Path) -> Option<String> {
         return git_stdout(root, &["merge-base", "HEAD", "origin/main"]);
     }
     let head = git_stdout(root, &["cat-file", "-p", "HEAD"])?;
-    let parent = head
+    let parents: Vec<&str> = head
         .lines()
         .take_while(|l| !l.is_empty())
-        .find_map(|l| l.strip_prefix("parent "))?
-        .to_owned();
+        .filter_map(|l| l.strip_prefix("parent "))
+        .collect();
+    let [parent, _] = parents[..] else {
+        return None;
+    };
+    let parent = parent.to_owned();
     git(
         root,
         &["fetch", "--no-tags", "--depth=1", "origin", &parent],
@@ -108,6 +112,7 @@ fn plugin_change_raises_the_version() {
             "{name}: missing .claude-plugin/plugin.json"
         );
         let version = version_of(&fs::read(&claude).unwrap(), &name);
+        triple(&version, &name);
         for file in manifests(plugin) {
             let other = version_of(&fs::read(&file).unwrap(), &name);
             if other != version {
@@ -129,14 +134,21 @@ fn plugin_change_raises_the_version() {
             {
                 continue;
             }
-            let old = git(
-                &root,
-                &["show", &format!("{base}:{dir}/.claude-plugin/plugin.json")],
+            let path = format!("{dir}/.claude-plugin/plugin.json");
+            let listed = git(&root, &["ls-tree", &base, "--", &path]);
+            assert!(
+                listed.status.success(),
+                "{name}: cannot list {path} in base {base}"
             );
             // A plugin absent from the base is new and starts at any version.
-            if !old.status.success() {
+            if listed.stdout.is_empty() {
                 continue;
             }
+            let old = git(&root, &["show", &format!("{base}:{path}")]);
+            assert!(
+                old.status.success(),
+                "{name}: {path} exists in base {base} but cannot be read"
+            );
             let old = version_of(&old.stdout, name);
             if triple(version, name) <= triple(&old, name) {
                 errors.push(format!(
