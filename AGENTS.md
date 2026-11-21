@@ -196,7 +196,7 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
   `frontend`). The R packages are not gated: their testthat suites run only by hand
   (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
 - `bash scripts/gate.sh lint` — shellcheck. The repo-policy lints (provider
-  vocabulary, skill reads and aliases, test size, no Python) and the plugin schema drift
+  vocabulary, skill reads and aliases, test size, no Python, plugin version bump) and the plugin schema drift
   check are `crates/xtask` tests, run by `crates`.
 - `bash scripts/gate.sh g0 rust` — lint and crates, plus the conformance run against the
   Rust server.
