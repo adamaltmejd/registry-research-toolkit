@@ -1,6 +1,6 @@
 {
   "schema_version": "8.0.0",
-  "reg_meta_version": "reg_meta/v0.92.0",
+  "reg_meta_version": "reg_meta/v0.92.1",
   "catalog": "global",
   "name": "reference-income-by-sex",
   "extract_format": "parquet",
