@@ -49,23 +49,7 @@ pub fn load_answers(dir: &Path) -> Result<Answers, Refusal> {
     let (logical, delivery) = (dir.join("order.json"), dir.join("manifest.json"));
     let order = match (logical.exists(), delivery.exists()) {
         (true, false) => Order::Logical(read_answer(&logical, &mut generations)?),
-        (false, true) => {
-            let manifest: Manifest = read_answer(&delivery, &mut generations)?;
-            // The runner refuses any other version, so a mock of it would not match.
-            if manifest.version != manifest::MANIFEST_VERSION {
-                return Err(Refusal::new(
-                    "manifest_version",
-                    delivery.display().to_string(),
-                    format!(
-                        "the saved order file is version {}, the runner reads version {}: \
-                         save the materialize answer again",
-                        manifest.version,
-                        manifest::MANIFEST_VERSION
-                    ),
-                ));
-            }
-            Order::Delivery(Box::new(manifest))
-        }
+        (false, true) => Order::Delivery(Box::new(read_manifest(&delivery, &mut generations)?)),
         _ => {
             return Err(Refusal::new(
                 "order_answer_missing",
@@ -230,6 +214,38 @@ fn json_files(dir: &Path) -> Result<Vec<std::path::PathBuf>, Refusal> {
     }
     files.sort();
     Ok(files)
+}
+
+/// The materialize answer, its version checked before its shape.
+fn read_manifest(path: &Path, generations: &mut BTreeSet<String>) -> Result<Manifest, Refusal> {
+    let at = path.display().to_string();
+    let data: Value = read_answer(path, generations)?;
+    // The version before the shape: another version's fields would fail the
+    // decode as answer_invalid. The runner refuses any other version, so a
+    // mock of it would not match.
+    let version = data.get("version").unwrap_or(&Value::Null);
+    if version.as_u64() != Some(u64::from(manifest::MANIFEST_VERSION)) {
+        return Err(Refusal::new(
+            "manifest_version",
+            at,
+            format!(
+                "the saved order file is version {version}, the runner reads version \
+                 {}: save the materialize answer again",
+                manifest::MANIFEST_VERSION
+            ),
+        ));
+    }
+    let manifest: Manifest = serde_json::from_value(data).map_err(|e| {
+        Refusal::new(
+            "answer_invalid",
+            at,
+            format!(
+                "not a saved catalog answer of this kind ({e}); save the response \
+                 document unchanged"
+            ),
+        )
+    })?;
+    Ok(manifest)
 }
 
 fn read_answer<T: DeserializeOwned>(

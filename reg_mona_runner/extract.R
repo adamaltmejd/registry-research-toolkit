@@ -839,12 +839,30 @@ select_expr <- function(type, max_length) {
 # or escape the rows_without_period count. The filter and that count read this
 # one value.
 period_key <- function(encoding, data_type, table, column) {
-  value <- if (data_type %in% TEXT_TYPES) "NULLIF(LTRIM(RTRIM(@col)), '''')" else "@col"
+  text <- data_type %in% TEXT_TYPES
+  value <- if (text) "NULLIF(LTRIM(RTRIM(@col)), '''')" else "@col"
   if (encoding == "date" && data_type %in% c(DATE_TYPES, TEXT_TYPES)) {
     return(list(expr = paste0("TRY_CAST(", value, " AS date)"), type = "date"))
   }
   if (encoding != "date" && data_type %in% c(NUMBER_TYPES, TEXT_TYPES)) {
     n <- paste0("TRY_CAST(", value, " AS bigint)")
+    # A yyyymm or yyyymmdd checked as its digits: text as written (exactly six
+    # or eight digits, so '0201801' is no month and '099912' is one), a number
+    # by its range. Style 112 also reads 4 digits as a year and 6 as yymmdd, so
+    # the digit count comes before the calendar check.
+    digits <- function(width, low, high, day) {
+      if (text) {
+        paste0(
+          "LEN(", value, ") = ", width, " AND ", value,
+          " NOT LIKE ''%[^0-9]%'' AND TRY_CONVERT(date, ", value, day, ", 112) IS NOT NULL"
+        )
+      } else {
+        paste0(
+          n, " BETWEEN ", low, " AND ", high, " AND TRY_CONVERT(date, CAST(", n,
+          " AS varchar(20))", day, ", 112) IS NOT NULL"
+        )
+      }
+    }
     valid <- c(
       # A fractional number (20180101.5) is no period: bigint would truncate it.
       # Compared in the column's own type, so a decimal is tested exactly.
@@ -852,20 +870,8 @@ period_key <- function(encoding, data_type, table, column) {
       switch(
         encoding,
         year = NULL,
-        # The digit range first: style 112 also reads 4 digits as a year and 6
-        # as yymmdd, which would pass a short value as a calendar day.
-        yyyymm = paste0(
-          n,
-          " BETWEEN 100001 AND 999912 AND TRY_CONVERT(date, CAST(",
-          n,
-          " AS varchar(20)) + ''01'', 112) IS NOT NULL"
-        ),
-        yyyymmdd = paste0(
-          n,
-          " BETWEEN 10000101 AND 99991231 AND TRY_CONVERT(date, CAST(",
-          n,
-          " AS varchar(20)), 112) IS NOT NULL"
-        )
+        yyyymm = digits(6L, 100001L, 999912L, " + ''01''"),
+        yyyymmdd = digits(8L, 10000101L, 99991231L, "")
       )
     )
     expr <- if (is.null(valid)) {
