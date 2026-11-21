@@ -75,7 +75,9 @@ A successful order writes `export_data\<nr>_<date>\`:
   (a Stata-safe form of its first 25 characters, `_` and 6 hex digits), with the full
   name as the variable label. [DESIGN.md](DESIGN.md), "Types per format", lists what
   each column type becomes;
-- `run_log.csv`: each file's row count, column count and the period filter applied.
+- `run_log.csv`: each file's row count, column count, the period filter applied and, for
+  a filtered file, how many rows it left out because their period value is missing or
+  unreadable (`rows_without_period`).
 
 The order then moves to `orders\archive\`.
 

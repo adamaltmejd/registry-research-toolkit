@@ -832,14 +832,48 @@ select_expr <- function(type, max_length) {
 
 # The period value a filter compares, as T-SQL text around `@col` (the quoted
 # column), and the type its bounds take. year, yyyymm and yyyymmdd read the
-# column as an integer (TRY_CAST, so an unparseable value is NULL and excluded);
-# date reads it as a day, so a datetime keeps every time of its day.
+# column as an integer (TRY_CAST, so an unparseable value is NULL and excluded),
+# and a yyyymmdd that is no calendar day or a yyyymm that is no month is NULL too;
+# date reads it as a day, so a datetime keeps every time of its day. Blank text
+# is NULL first: SQL Server casts '' to 1900-01-01 or 0, which would pass a range
+# or escape the rows_without_period count. The filter and that count read this
+# one value.
 period_key <- function(encoding, data_type, table, column) {
+  value <- if (data_type %in% TEXT_TYPES) "NULLIF(LTRIM(RTRIM(@col)), '''')" else "@col"
   if (encoding == "date" && data_type %in% c(DATE_TYPES, TEXT_TYPES)) {
-    return(list(expr = "TRY_CAST(@col AS date)", type = "date"))
+    return(list(expr = paste0("TRY_CAST(", value, " AS date)"), type = "date"))
   }
   if (encoding != "date" && data_type %in% c(NUMBER_TYPES, TEXT_TYPES)) {
-    return(list(expr = "TRY_CAST(@col AS bigint)", type = "bigint"))
+    n <- paste0("TRY_CAST(", value, " AS bigint)")
+    valid <- c(
+      # A fractional number (20180101.5) is no period: bigint would truncate it.
+      # Compared in the column's own type, so a decimal is tested exactly.
+      if (!data_type %in% c(TEXT_TYPES, INT_TYPES, "bigint")) "@col = ROUND(@col, 0, 1)",
+      switch(
+        encoding,
+        year = NULL,
+        # The digit range first: style 112 also reads 4 digits as a year and 6
+        # as yymmdd, which would pass a short value as a calendar day.
+        yyyymm = paste0(
+          n,
+          " BETWEEN 100001 AND 999912 AND TRY_CONVERT(date, CAST(",
+          n,
+          " AS varchar(20)) + ''01'', 112) IS NOT NULL"
+        ),
+        yyyymmdd = paste0(
+          n,
+          " BETWEEN 10000101 AND 99991231 AND TRY_CONVERT(date, CAST(",
+          n,
+          " AS varchar(20)), 112) IS NOT NULL"
+        )
+      )
+    )
+    expr <- if (is.null(valid)) {
+      n
+    } else {
+      paste0("CASE WHEN ", paste(valid, collapse = " AND "), " THEN ", n, " END")
+    }
+    return(list(expr = expr, type = "bigint"))
   }
   refuse(
     "resolve",
@@ -867,79 +901,42 @@ bound <- function(day, encoding) {
   as.integer(substr(digits, 1L, width))
 }
 
-# One batch per file: the SELECT is assembled server-side from QUOTENAME()d
-# identifiers and run by sp_executesql with the filter bounds as parameters,
-# bound from R.
-select_batch <- function(file, types) {
-  quoted <- function(name) paste0("QUOTENAME(", sql_text(name), ")")
-  # A template's fixed text as N'...' literals around the quoted column at each
-  # @col; the templates are this script's constants, never manifest text.
-  splice <- function(template, col) {
-    parts <- strsplit(paste0(template, " "), "@col", fixed = TRUE)[[1]]
-    parts[length(parts)] <- sub(" $", "", parts[length(parts)])
-    paste(paste0("N'", parts, "'"), collapse = paste0(" + ", col, " + "))
-  }
-  selected <- vapply(
-    seq_along(file$columns),
-    function(j) {
-      splice(
-        select_expr(types$type[j], types$max_length[j]),
-        quoted(file$columns[j])
-      )
-    },
-    ""
-  )
-  filter_type <- types$type[length(types$type)]
-  select <- paste0(
-    "N'SELECT ' + ",
-    paste(selected, collapse = " + N', ' + "),
-    " + N' FROM ' + ",
-    quoted(file$schema),
-    " + N'.' + ",
-    quoted(file$table)
-  )
-  declared <- character()
-  params <- list()
+# A name as a T-SQL expression quoting it as an identifier.
+sql_quoted <- function(name) paste0("QUOTENAME(", sql_text(name), ")")
+
+# A template's fixed text as N'...' literals around the quoted column at each
+# @col; the templates are this script's constants, never manifest text.
+sql_splice <- function(template, col) {
+  parts <- strsplit(paste0(template, " "), "@col", fixed = TRUE)[[1]]
+  parts[length(parts)] <- sub(" $", "", parts[length(parts)])
+  paste(paste0("N'", parts, "'"), collapse = paste0(" + ", col, " + "))
+}
+
+# The filter's period value as T-SQL text and the type its bounds take. The
+# filter column follows the file's columns in `types` (extract_order resolves it
+# there).
+filter_key <- function(file, types) {
   f <- file$filter
-  if (!is.null(f)) {
-    key <- period_key(f$encoding, filter_type, file$table, f$column)
-    key_sql <- splice(key$expr, quoted(f$column))
-    terms <- character()
-    for (r in f$ranges) {
-      parts <- character()
-      for (side in c("from", "to")) {
-        if (is.null(r[[side]])) {
-          next
-        }
-        name <- sprintf("@p%d", length(params) + 1L)
-        params[[length(params) + 1L]] <- bound(r[[side]], f$encoding)
-        declared <- c(declared, paste(name, key$type))
-        parts <- c(
-          parts,
-          paste0(
-            key_sql,
-            " + N' ",
-            if (side == "from") ">=" else "<=",
-            " ",
-            name,
-            "'"
-          )
-        )
-      }
-      if (!length(parts)) {
-        parts <- paste0(key_sql, " + N' IS NOT NULL'")
-      }
-      terms <- c(
-        terms,
-        paste0("N'(' + ", paste(parts, collapse = " + N' AND ' + "), " + N')'")
-      )
-    }
-    select <- paste0(
-      select,
-      " + N' WHERE ' + ",
-      paste(terms, collapse = " + N' OR ' + ")
-    )
-  }
+  key <- period_key(
+    f$encoding,
+    types$type[length(file$columns) + 1L],
+    file$table,
+    f$column
+  )
+  list(sql = sql_splice(key$expr, sql_quoted(f$column)), type = key$type)
+}
+
+sql_from <- function(file) {
+  paste0(
+    " + N' FROM ' + ",
+    sql_quoted(file$schema),
+    " + N'.' + ",
+    sql_quoted(file$table)
+  )
+}
+
+# `select` run by sp_executesql with `declared` parameters bound from R.
+sql_batch <- function(select, declared, params) {
   exec <- if (length(params)) {
     paste0(
       "EXEC sp_executesql @sql, N'",
@@ -959,6 +956,85 @@ select_batch <- function(file, types) {
       exec
     ),
     params = params
+  )
+}
+
+# One batch per file: the SELECT is assembled server-side from QUOTENAME()d
+# identifiers and run by sp_executesql with the filter bounds as parameters,
+# bound from R.
+select_batch <- function(file, types) {
+  selected <- vapply(
+    seq_along(file$columns),
+    function(j) {
+      sql_splice(
+        select_expr(types$type[j], types$max_length[j]),
+        sql_quoted(file$columns[j])
+      )
+    },
+    ""
+  )
+  select <- paste0(
+    "N'SELECT ' + ",
+    paste(selected, collapse = " + N', ' + "),
+    sql_from(file)
+  )
+  declared <- character()
+  params <- list()
+  f <- file$filter
+  if (!is.null(f)) {
+    key <- filter_key(file, types)
+    terms <- character()
+    for (r in f$ranges) {
+      parts <- character()
+      for (side in c("from", "to")) {
+        if (is.null(r[[side]])) {
+          next
+        }
+        name <- sprintf("@p%d", length(params) + 1L)
+        params[[length(params) + 1L]] <- bound(r[[side]], f$encoding)
+        declared <- c(declared, paste(name, key$type))
+        parts <- c(
+          parts,
+          paste0(
+            key$sql,
+            " + N' ",
+            if (side == "from") ">=" else "<=",
+            " ",
+            name,
+            "'"
+          )
+        )
+      }
+      if (!length(parts)) {
+        parts <- paste0(key$sql, " + N' IS NOT NULL'")
+      }
+      terms <- c(
+        terms,
+        paste0("N'(' + ", paste(parts, collapse = " + N' AND ' + "), " + N')'")
+      )
+    }
+    select <- paste0(
+      select,
+      " + N' WHERE ' + ",
+      paste(terms, collapse = " + N' OR ' + ")
+    )
+  }
+  sql_batch(select, declared, params)
+}
+
+# The count of a filtered file's rows that pass no range for a NULL or
+# unreadable period value: an aggregate the run log reports.
+null_period_batch <- function(file, types) {
+  sql_batch(
+    paste0(
+      "N'SELECT CAST(COUNT_BIG(*) AS float) AS n'",
+      sql_from(file),
+      " + N' WHERE ' + ",
+      filter_key(file, types)$sql,
+      " + N' IS NULL'"
+    ),
+    character(),
+    list()
   )
 }
 
@@ -1322,7 +1398,7 @@ extract_order <- function(path, out, db) {
   # column fails fast.
   resolved <- lapply(files, function(f) {
     resolve_table(con, f$schema, f$table)
-    # The filter column last, so select_batch finds its type there.
+    # The filter column after the file's, where filter_key finds its type.
     types <- resolve_columns(
       con,
       f$schema,
@@ -1331,12 +1407,7 @@ extract_order <- function(path, out, db) {
     )
     check_storage(f, types)
     if (!is.null(f$filter)) {
-      period_key(
-        f$filter$encoding,
-        types$type[length(types$type)],
-        f$table,
-        f$filter$column
-      )
+      filter_key(f, types)
     }
     check_format(f, types, format)
     types
@@ -1345,17 +1416,40 @@ extract_order <- function(path, out, db) {
     file = character(),
     rows = numeric(),
     columns = integer(),
-    filter = character()
+    filter = character(),
+    rows_without_period = numeric()
   )
   for (i in order(vapply(files, `[[`, "", "name"), method = "radix")) {
     f <- files[[i]]
     rows <- extract_file(con, f, resolved[[i]], format, out)
     say("  ", f$name, ": ", format(rows, scientific = FALSE), " rows")
+    # Rows the filter leaves out for a NULL or unreadable period value, counted
+    # so the order's requester learns of them (an aggregate; NA, an empty field,
+    # for an unfiltered file).
+    dropped <- if (is.null(f$filter)) {
+      NA_real_
+    } else {
+      as.numeric(query(
+        con,
+        null_period_batch(f, resolved[[i]])$sql,
+        paste0("counting ", f$name, "'s rows without a period value")
+      )$n)
+    }
+    if (!is.na(dropped) && dropped > 0) {
+      say(
+        "  ",
+        f$name,
+        ": ",
+        format(dropped, scientific = FALSE),
+        " rows left out for a missing period value"
+      )
+    }
     log[nrow(log) + 1L, ] <- list(
       f$name,
       rows,
       length(f$columns),
-      describe_filter(f$filter)
+      describe_filter(f$filter),
+      dropped
     )
   }
   write_csv(log, file.path(out, "run_log.csv"))

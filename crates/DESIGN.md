@@ -2711,8 +2711,9 @@ widen to the encoded grain and are reported. `row_filter = {column, encoding, ra
 keeps sorted disjoint ranges joined with OR; each range has optional inclusive
 `from`/`to` bounds. Omit a bound when it cuts no held day. Preserve interrupted and
 open-ended ranges (`row-filter-disjoint`, `row-filter-open-ended` runner cases).
-NULL/unparseable period values do not pass a filter. Unfilterable pooled holdings report
-that all rows are included; they do not pretend that selecting columns restricts rows.
+NULL/unparseable period values do not pass a filter; `run_log.csv` counts the rows a
+filtered file leaves out for one (`rows_without_period`). Unfilterable pooled holdings
+report that all rows are included; they do not pretend that selecting columns restricts rows.
 
 The manifest always specifies its format, the project's; neither the server nor the
 runner supplies a default. Preserve Stata aliases, exact large-number handling,

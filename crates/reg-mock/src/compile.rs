@@ -42,13 +42,30 @@ pub struct Answers {
 /// # Errors
 ///
 /// A located refusal for an unreadable file, a document that is not the answer it
-/// should be, both or neither order file, or answers from different generations.
+/// should be, both or neither order file, an order file of another manifest version,
+/// or answers from different generations.
 pub fn load_answers(dir: &Path) -> Result<Answers, Refusal> {
     let mut generations = BTreeSet::new();
     let (logical, delivery) = (dir.join("order.json"), dir.join("manifest.json"));
     let order = match (logical.exists(), delivery.exists()) {
         (true, false) => Order::Logical(read_answer(&logical, &mut generations)?),
-        (false, true) => Order::Delivery(Box::new(read_answer(&delivery, &mut generations)?)),
+        (false, true) => {
+            let manifest: Manifest = read_answer(&delivery, &mut generations)?;
+            // The runner refuses any other version, so a mock of it would not match.
+            if manifest.version != manifest::MANIFEST_VERSION {
+                return Err(Refusal::new(
+                    "manifest_version",
+                    delivery.display().to_string(),
+                    format!(
+                        "the saved order file is version {}, the runner reads version {}: \
+                         save the materialize answer again",
+                        manifest.version,
+                        manifest::MANIFEST_VERSION
+                    ),
+                ));
+            }
+            Order::Delivery(Box::new(manifest))
+        }
         _ => {
             return Err(Refusal::new(
                 "order_answer_missing",

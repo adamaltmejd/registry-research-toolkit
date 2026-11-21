@@ -77,8 +77,8 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
    order gives every such column a `stata_name`, so this is a backstop) or a full name
    longer than a variable label holds (80 characters).
 4. Extract each file with one `SELECT`, fetched in chunks of 100,000 rows into the
-   order's one format (below), then write `run_log.csv` (file, rows, columns, filter;
-   the file name's extension is the format).
+   order's one format (below), then write `run_log.csv` (file, rows, columns, filter,
+   rows_without_period; the file name's extension is the format).
 
 On success the order moves to `orders/archive/<nr>_<YYYY-MM-DD>.json`. On failure the
 order stays in `orders/` and its export folder holds only `error_log.csv` (code,
@@ -95,19 +95,26 @@ bound from R.
 A filter keeps a row whose period value lies in any range (OR), comparing at the
 encoding's grain:
 
-  | Encoding   | Column types                  | Compared value            | Bound       |
-  | ---------- | ----------------------------- | ------------------------- | ----------- |
-  | `year`     | int, float, decimal, varchar  | `TRY_CAST(col AS bigint)` | `YYYY`      |
-  | `yyyymm`   | int, float, decimal, varchar  | `TRY_CAST(col AS bigint)` | `YYYYMM`    |
-  | `yyyymmdd` | int, float, decimal, varchar  | `TRY_CAST(col AS bigint)` | `YYYYMMDD`  |
-  | `date`     | date, datetime2, varchar, ... | `TRY_CAST(col AS date)`   | the ISO day |
+  | Encoding   | Column types                  | Compared value                              | Bound       |
+  | ---------- | ----------------------------- | ------------------------------------------- | ----------- |
+  | `year`     | int, float, decimal, varchar  | `TRY_CAST(col AS bigint)`                   | `YYYY`      |
+  | `yyyymm`   | int, float, decimal, varchar  | `TRY_CAST(col AS bigint)`, a calendar month | `YYYYMM`    |
+  | `yyyymmdd` | int, float, decimal, varchar  | `TRY_CAST(col AS bigint)`, a calendar day   | `YYYYMMDD`  |
+  | `date`     | date, datetime2, varchar, ... | `TRY_CAST(col AS date)`                     | the ISO day |
 
 A bound is the ISO day truncated to the encoding's digits, which is the contract's
 widening: a finer bound covers its whole year or month. `date` compares days, so a
-datetime keeps every time of a bound day. A NULL or unparseable period value matches no
-range and is left out of a filtered file; an unfiltered file keeps every row. Another
-type for an encoding (a date column read as `year`) is refused before any query rather
-than guessed.
+datetime keeps every time of a bound day. Blank text reads as NULL (SQL Server would cast
+it to 1900-01-01 or 0), and so does a `yyyymm` that is not six digits naming a calendar
+month (`201813`), a `yyyymmdd` that is not eight digits naming a calendar day
+(`20170230`; the digit count is checked first, as style 112 would read `180101` as a
+day) and a fractional number (`20180101.5`, tested exactly in the column's own type with
+`col = ROUND(col, 0, 1)`) under any integer encoding. A NULL or unparseable period value
+matches no range and is left out of a filtered file; a second query counts those rows
+for `run_log.csv` (`rows_without_period`, an aggregate, empty for an unfiltered file,
+which keeps every row). The filter and the count read the same value. Another type for
+an encoding (a date column read as `year`) is refused before any query rather than
+guessed.
 
 ## CSV
 

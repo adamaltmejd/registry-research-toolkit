@@ -62,7 +62,8 @@ any other finding in the project (`project-data` skill) and fetch again.
 
 Commit `.regmeta/mock/answers/`: compile reads only these files, so the mock never depends on
 the network again. Save again whenever the project changes; compile refuses answers saved
-for another version of it (`answers_stale`).
+for another version of it (`answers_stale`), and an order file of another version than the
+runner reads (`manifest_version`).
 
 ## 2. Write the rules and compile
 
