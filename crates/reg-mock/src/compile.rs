@@ -42,13 +42,14 @@ pub struct Answers {
 /// # Errors
 ///
 /// A located refusal for an unreadable file, a document that is not the answer it
-/// should be, both or neither order file, or answers from different generations.
+/// should be, both or neither order file, an order file of another manifest version,
+/// or answers from different generations.
 pub fn load_answers(dir: &Path) -> Result<Answers, Refusal> {
     let mut generations = BTreeSet::new();
     let (logical, delivery) = (dir.join("order.json"), dir.join("manifest.json"));
     let order = match (logical.exists(), delivery.exists()) {
         (true, false) => Order::Logical(read_answer(&logical, &mut generations)?),
-        (false, true) => Order::Delivery(Box::new(read_answer(&delivery, &mut generations)?)),
+        (false, true) => Order::Delivery(Box::new(read_manifest(&delivery, &mut generations)?)),
         _ => {
             return Err(Refusal::new(
                 "order_answer_missing",
@@ -215,13 +216,52 @@ fn json_files(dir: &Path) -> Result<Vec<std::path::PathBuf>, Refusal> {
     Ok(files)
 }
 
+/// The materialize answer, its version checked before its shape.
+fn read_manifest(path: &Path, generations: &mut BTreeSet<String>) -> Result<Manifest, Refusal> {
+    /// Only the version; other fields are left to the full decode.
+    #[derive(serde::Deserialize)]
+    struct Versioned {
+        version: Value,
+    }
+    let at = path.display().to_string();
+    let bytes = read_bytes(path)?;
+    // The version before the shape: another version's fields would fail the
+    // decode as answer_invalid. The runner refuses any other version, so a
+    // mock of it would not match. Both decodes read the file's bytes, so a
+    // duplicate key stays answer_invalid.
+    let Versioned { version } = decode_answer(&at, &bytes, generations)?;
+    if version.as_u64() != Some(u64::from(manifest::MANIFEST_VERSION)) {
+        return Err(Refusal::new(
+            "manifest_version",
+            at,
+            format!(
+                "the saved order file is version {version}, the runner reads version \
+                 {}: save the materialize answer again",
+                manifest::MANIFEST_VERSION
+            ),
+        ));
+    }
+    decode_answer(&at, &bytes, generations)
+}
+
 fn read_answer<T: DeserializeOwned>(
     path: &Path,
     generations: &mut BTreeSet<String>,
 ) -> Result<T, Refusal> {
-    let at = path.display().to_string();
-    let bytes = std::fs::read(path).map_err(|e| Refusal::new("io", at.clone(), e.to_string()))?;
-    let envelope: Envelope<T> = serde_json::from_slice(&bytes).map_err(|e| {
+    let bytes = read_bytes(path)?;
+    decode_answer(&path.display().to_string(), &bytes, generations)
+}
+
+fn read_bytes(path: &Path) -> Result<Vec<u8>, Refusal> {
+    std::fs::read(path).map_err(|e| Refusal::new("io", path.display().to_string(), e.to_string()))
+}
+
+fn decode_answer<T: DeserializeOwned>(
+    at: &str,
+    bytes: &[u8],
+    generations: &mut BTreeSet<String>,
+) -> Result<T, Refusal> {
+    let envelope: Envelope<T> = serde_json::from_slice(bytes).map_err(|e| {
         Refusal::new(
             "answer_invalid",
             at,
