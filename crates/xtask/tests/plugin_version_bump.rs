@@ -4,15 +4,14 @@
 //! `plugin.json` files is not above the base's, as happened to 0.12.0 after #2601 to #2622.
 //!
 //! The base is the branch's own fork point, so a main that moved on does not charge the
-//! branch with plugin changes it never made:
-//! - with history, `git merge-base HEAD origin/main`;
-//! - in a shallow clone whose HEAD is a merge commit (CI checks out the PR's synthetic
-//!   merge commit at depth 1) the first parent, read from the commit object, which lists
-//!   it even when the parent is absent, and fetched by SHA at depth 1. That parent is the
-//!   pinned base. Any other shallow HEAD has no known fork point.
+//! branch with plugin changes it never made. One explicit source per environment:
+//! - in CI (`GITHUB_EVENT_PATH` set; the checkout is shallow) the event's own base:
+//!   `pull_request.base.sha`, or `before` for a push, fetched by SHA at depth 1. Other
+//!   events and a push that creates a branch (`before` all zeros) skip;
+//! - locally, `git merge-base HEAD origin/main`; without `origin/main` the test skips.
 //!
-//! Where no base can be found, CI fails the test and a local run skips with the reason
-//! printed. A base manifest that exists but cannot be read fails the test.
+//! A skip prints its reason. A base SHA that cannot be fetched fails the test, as does a
+//! base manifest that exists but cannot be read.
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -68,28 +67,36 @@ fn manifests(plugin: &Path) -> Vec<PathBuf> {
     found
 }
 
-/// The commit the branch forked from, as a SHA whose objects are present.
-fn base_commit(root: &Path) -> Option<String> {
-    if git_stdout(root, &["rev-parse", "--is-shallow-repository"]).as_deref() != Some("true") {
-        return git_stdout(root, &["merge-base", "HEAD", "origin/main"]);
-    }
-    let head = git_stdout(root, &["cat-file", "-p", "HEAD"])?;
-    let parents: Vec<&str> = head
-        .lines()
-        .take_while(|l| !l.is_empty())
-        .filter_map(|l| l.strip_prefix("parent "))
-        .collect();
-    let [parent, _] = parents[..] else {
-        return None;
+/// The commit the branch forked from, as a SHA whose objects are present, or the reason
+/// no base applies.
+fn base_commit(root: &Path) -> Result<String, String> {
+    let Some(event) = std::env::var_os("GITHUB_EVENT_PATH") else {
+        return git_stdout(root, &["merge-base", "HEAD", "origin/main"])
+            .ok_or_else(|| "no origin/main to take a merge base with".to_owned());
     };
-    let parent = parent.to_owned();
-    git(
-        root,
-        &["fetch", "--no-tags", "--depth=1", "origin", &parent],
-    )
-    .status
-    .success()
-    .then_some(parent)
+    let event: serde_json::Value = serde_json::from_slice(&fs::read(&event).unwrap()).unwrap();
+    let sha = event["pull_request"]["base"]["sha"]
+        .as_str()
+        .or_else(|| event["before"].as_str())
+        .ok_or("the CI event is neither a pull request nor a push")?;
+    if sha.bytes().all(|b| b == b'0') {
+        return Err("the push creates a branch, so it has no previous commit".to_owned());
+    }
+    let present = || {
+        git(root, &["cat-file", "-e", &format!("{sha}^{{commit}}")])
+            .status
+            .success()
+    };
+    let fetch = || {
+        git(root, &["fetch", "--no-tags", "--depth=1", "origin", sha])
+            .status
+            .success()
+    };
+    assert!(
+        present() || (fetch() && present()),
+        "cannot fetch base {sha}"
+    );
+    Ok(sha.to_owned())
 }
 
 #[test]
@@ -125,44 +132,41 @@ fn plugin_change_raises_the_version() {
         versions.push((name, version));
     }
 
-    if let Some(base) = base_commit(&root) {
-        for (name, version) in &versions {
-            let dir = format!("plugins/{name}");
-            if git(&root, &["diff", "--quiet", &base, "--", &dir])
-                .status
-                .success()
-            {
-                continue;
-            }
-            let path = format!("{dir}/.claude-plugin/plugin.json");
-            let listed = git(&root, &["ls-tree", &base, "--", &path]);
-            assert!(
-                listed.status.success(),
-                "{name}: cannot list {path} in base {base}"
-            );
-            // A plugin absent from the base is new and starts at any version.
-            if listed.stdout.is_empty() {
-                continue;
-            }
-            let old = git(&root, &["show", &format!("{base}:{path}")]);
-            assert!(
-                old.status.success(),
-                "{name}: {path} exists in base {base} but cannot be read"
-            );
-            let old = version_of(&old.stdout, name);
-            if triple(version, name) <= triple(&old, name) {
-                errors.push(format!(
-                    "{name}: files under {dir}/ differ from the base but version {version} \
+    match base_commit(&root) {
+        Err(reason) => eprintln!("skipping the bump check: {reason}"),
+        Ok(base) => {
+            for (name, version) in &versions {
+                let dir = format!("plugins/{name}");
+                if git(&root, &["diff", "--quiet", &base, "--", &dir])
+                    .status
+                    .success()
+                {
+                    continue;
+                }
+                let path = format!("{dir}/.claude-plugin/plugin.json");
+                let listed = git(&root, &["ls-tree", &base, "--", &path]);
+                assert!(
+                    listed.status.success(),
+                    "{name}: cannot list {path} in base {base}"
+                );
+                // A plugin absent from the base is new and starts at any version.
+                if listed.stdout.is_empty() {
+                    continue;
+                }
+                let old = git(&root, &["show", &format!("{base}:{path}")]);
+                assert!(
+                    old.status.success(),
+                    "{name}: {path} exists in base {base} but cannot be read"
+                );
+                let old = version_of(&old.stdout, name);
+                if triple(version, name) <= triple(&old, name) {
+                    errors.push(format!(
+                        "{name}: files under {dir}/ differ from the base but version {version} \
                          is not above {old}; raise `version` in every plugin.json"
-                ));
+                    ));
+                }
             }
         }
-    } else {
-        assert!(
-            std::env::var_os("CI").is_none(),
-            "no base commit: need origin/main in a full clone, or a fetchable first parent"
-        );
-        eprintln!("skipping the bump check: no base commit (no origin/main, not shallow)");
     }
     assert!(errors.is_empty(), "{}", errors.join("\n"));
 }
