@@ -120,40 +120,37 @@ fn plugin_change_raises_the_version() {
         versions.push((name, version));
     }
 
-    match base_commit(&root) {
-        Some(base) => {
-            for (name, version) in &versions {
-                let dir = format!("plugins/{name}");
-                if git(&root, &["diff", "--quiet", &base, "--", &dir])
-                    .status
-                    .success()
-                {
-                    continue;
-                }
-                let old = git(
-                    &root,
-                    &["show", &format!("{base}:{dir}/.claude-plugin/plugin.json")],
-                );
-                // A plugin absent from the base is new and starts at any version.
-                if !old.status.success() {
-                    continue;
-                }
-                let old = version_of(&old.stdout, name);
-                if triple(version, name) <= triple(&old, name) {
-                    errors.push(format!(
-                        "{name}: files under {dir}/ differ from the base but version {version} \
+    if let Some(base) = base_commit(&root) {
+        for (name, version) in &versions {
+            let dir = format!("plugins/{name}");
+            if git(&root, &["diff", "--quiet", &base, "--", &dir])
+                .status
+                .success()
+            {
+                continue;
+            }
+            let old = git(
+                &root,
+                &["show", &format!("{base}:{dir}/.claude-plugin/plugin.json")],
+            );
+            // A plugin absent from the base is new and starts at any version.
+            if !old.status.success() {
+                continue;
+            }
+            let old = version_of(&old.stdout, name);
+            if triple(version, name) <= triple(&old, name) {
+                errors.push(format!(
+                    "{name}: files under {dir}/ differ from the base but version {version} \
                          is not above {old}; raise `version` in every plugin.json"
-                    ));
-                }
+                ));
             }
         }
-        None => {
-            assert!(
-                std::env::var_os("CI").is_none(),
-                "no base commit: need origin/main in a full clone, or a fetchable first parent"
-            );
-            eprintln!("skipping the bump check: no base commit (no origin/main, not shallow)");
-        }
+    } else {
+        assert!(
+            std::env::var_os("CI").is_none(),
+            "no base commit: need origin/main in a full clone, or a fetchable first parent"
+        );
+        eprintln!("skipping the bump check: no base commit (no origin/main, not shallow)");
     }
     assert!(errors.is_empty(), "{}", errors.join("\n"));
 }
