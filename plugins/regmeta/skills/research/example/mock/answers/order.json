@@ -1,8 +1,8 @@
 {
   "data": {
     "catalog": {
-      "catalog_version": "0.91.0",
-      "generation_id": "b626a5d55b0d7ee0a21673e36083ac3496d3821bf0e373ca6503faf7b9ac3100",
+      "catalog_version": "0.92.0",
+      "generation_id": "ccee3b447f0b7d3d2ffad09ef64e8e29aa9cf2b75dfdd54d1d187a6270e976af",
       "schema_version": "18"
     },
     "clips": [],
@@ -59,8 +59,8 @@
     "manual": [],
     "project": {
       "name": "reference-income-by-sex",
-      "project_hash": "665e6f3d57c8dd0185b8606a883d2f78606b843e5eadfb6db8846c97c87645f1",
-      "reg_meta_version": "reg_meta/v0.91.0",
+      "project_hash": "add5e9c6c7fc950dbaf367ba4d7b809685c617bfac73c2d79376c0c6c0071d3d",
+      "reg_meta_version": "reg_meta/v0.92.0",
       "schema_version": "8.0.0"
     },
     "row_keys": [
@@ -86,8 +86,8 @@
   },
   "meta": {
     "api_version": "7.1.0",
-    "catalog_version": "0.91.0",
-    "generation": "b626a5d55b0d7ee0a21673e36083ac3496d3821bf0e373ca6503faf7b9ac3100",
+    "catalog_version": "0.92.0",
+    "generation": "ccee3b447f0b7d3d2ffad09ef64e8e29aa9cf2b75dfdd54d1d187a6270e976af",
     "project_schema_version": "8.0.0"
   }
 }
