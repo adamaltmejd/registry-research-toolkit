@@ -1,14 +1,18 @@
 //! A plugin is installed from its version string, so a change under `plugins/<name>/`
-//! that keeps the version never reaches installed copies. Regression caught: a plugin
-//! file edited (a skill, the schema, a manifest) while `version` in its `plugin.json`
-//! files stays the one on `origin/main`, as happened to 0.12.0 after #2601 to #2622.
+//! that keeps or lowers the version never reaches installed copies. Regression caught: a
+//! plugin file edited (a skill, the schema, a manifest) while `version` in its
+//! `plugin.json` files is not above the base's, as happened to 0.12.0 after #2601 to #2622.
 //!
-//! The base is the tip of `origin/main`, not the merge base: CI checks out the
-//! pull-request merge commit at depth 1, which holds no history, and that commit differs
-//! from the main tip by exactly the PR's changes. A local branch behind main fails only
-//! when it changes the plugin without bumping. If `origin/main` is absent the test
-//! fetches it at depth 1; where that fails, CI fails the test and a local run skips with
-//! the reason printed. On a push to main the diff is empty and the check passes.
+//! The base is the branch's own fork point, so a main that moved on does not charge the
+//! branch with plugin changes it never made:
+//! - with history, `git merge-base HEAD origin/main`;
+//! - in a shallow clone (CI checks out the PR merge commit at depth 1) the first parent
+//!   of HEAD, read from the commit object, which lists it even when the parent is
+//!   absent, and fetched by SHA at depth 1. On a PR that parent is the pinned base; on a
+//!   push to main it is the previous main commit.
+//!
+//! Where no base can be found, CI fails the test and a local run skips with the reason
+//! printed.
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -21,6 +25,28 @@ fn git(root: &Path, args: &[&str]) -> Output {
         .args(args)
         .output()
         .expect("git runs")
+}
+
+fn git_stdout(root: &Path, args: &[&str]) -> Option<String> {
+    let out = git(root, args);
+    out.status
+        .success()
+        .then(|| String::from_utf8_lossy(&out.stdout).trim().to_owned())
+}
+
+/// `X.Y.Z` as numbers, so versions order by value (0.9.0 < 0.13.0).
+fn triple(version: &str, what: &str) -> (u64, u64, u64) {
+    let parts: Vec<u64> = version
+        .split('.')
+        .map(|p| {
+            p.parse()
+                .unwrap_or_else(|_| panic!("{what}: version {version} is not X.Y.Z"))
+        })
+        .collect();
+    match parts[..] {
+        [a, b, c] => (a, b, c),
+        _ => panic!("{what}: version {version} is not X.Y.Z"),
+    }
 }
 
 fn version_of(json: &[u8], what: &str) -> String {
@@ -42,34 +68,28 @@ fn manifests(plugin: &Path) -> Vec<PathBuf> {
     found
 }
 
-/// True when `origin/main` is available, fetching it at depth 1 if needed.
-fn have_base(root: &Path) -> bool {
-    let present = || {
-        git(
-            root,
-            &["rev-parse", "--verify", "-q", "refs/remotes/origin/main"],
-        )
-        .status
-        .success()
-    };
-    if present() {
-        return true;
+/// The commit the branch forked from, as a SHA whose objects are present.
+fn base_commit(root: &Path) -> Option<String> {
+    if git_stdout(root, &["rev-parse", "--is-shallow-repository"]).as_deref() != Some("true") {
+        return git_stdout(root, &["merge-base", "HEAD", "origin/main"]);
     }
-    let fetch = git(
+    let head = git_stdout(root, &["cat-file", "-p", "HEAD"])?;
+    let parent = head
+        .lines()
+        .take_while(|l| !l.is_empty())
+        .find_map(|l| l.strip_prefix("parent "))?
+        .to_owned();
+    git(
         root,
-        &[
-            "fetch",
-            "--no-tags",
-            "--depth=1",
-            "origin",
-            "+refs/heads/main:refs/remotes/origin/main",
-        ],
-    );
-    fetch.status.success() && present()
+        &["fetch", "--no-tags", "--depth=1", "origin", &parent],
+    )
+    .status
+    .success()
+    .then_some(parent)
 }
 
 #[test]
-fn plugin_change_carries_a_version_bump() {
+fn plugin_change_raises_the_version() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
     let plugins: Vec<PathBuf> = fs::read_dir(root.join("plugins"))
         .unwrap()
@@ -100,36 +120,40 @@ fn plugin_change_carries_a_version_bump() {
         versions.push((name, version));
     }
 
-    if have_base(&root) {
-        for (name, version) in &versions {
-            let dir = format!("plugins/{name}");
-            if git(&root, &["diff", "--quiet", "origin/main", "--", &dir])
-                .status
-                .success()
-            {
-                continue;
-            }
-            let base = git(
-                &root,
-                &[
-                    "show",
-                    &format!("origin/main:{dir}/.claude-plugin/plugin.json"),
-                ],
-            );
-            // A plugin absent from origin/main is new and starts at any version.
-            if base.status.success() && version_of(&base.stdout, name) == *version {
-                errors.push(format!(
-                    "{name}: files under {dir}/ differ from origin/main but version stays \
-                     {version}; bump `version` in every plugin.json"
-                ));
+    match base_commit(&root) {
+        Some(base) => {
+            for (name, version) in &versions {
+                let dir = format!("plugins/{name}");
+                if git(&root, &["diff", "--quiet", &base, "--", &dir])
+                    .status
+                    .success()
+                {
+                    continue;
+                }
+                let old = git(
+                    &root,
+                    &["show", &format!("{base}:{dir}/.claude-plugin/plugin.json")],
+                );
+                // A plugin absent from the base is new and starts at any version.
+                if !old.status.success() {
+                    continue;
+                }
+                let old = version_of(&old.stdout, name);
+                if triple(version, name) <= triple(&old, name) {
+                    errors.push(format!(
+                        "{name}: files under {dir}/ differ from the base but version {version} \
+                         is not above {old}; raise `version` in every plugin.json"
+                    ));
+                }
             }
         }
-    } else {
-        assert!(
-            std::env::var_os("CI").is_none(),
-            "origin/main is not available and could not be fetched"
-        );
-        eprintln!("skipping the bump check: origin/main is not available");
+        None => {
+            assert!(
+                std::env::var_os("CI").is_none(),
+                "no base commit: need origin/main in a full clone, or a fetchable first parent"
+            );
+            eprintln!("skipping the bump check: no base commit (no origin/main, not shallow)");
+        }
     }
     assert!(errors.is_empty(), "{}", errors.join("\n"));
 }
