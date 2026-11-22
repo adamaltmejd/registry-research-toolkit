@@ -111,11 +111,14 @@ information only and never gates, prompts or refuses.
   It is rough: a declared string length is a maximum, Parquet compresses and a CSV
   number's text varies. A string with no declared length (`max`, `text`, `ntext`), and
   a CSV column of a type the table does not list, has no width: the console names
-  those columns as not in the size.
+  those columns as not in the size. A file with no column of known width has an
+  unknown size, not zero, and a total that leaves one out says it is partial.
 - **Time left.** No throughput is known before the first rows arrive, so there is no
   time before the extract starts. During it, the rate is the cells (rows times
-  columns) written per second so far in the order, and the time left is the counted
-  cells still to write at that rate. A line is printed at most every 30 seconds, and
+  columns) actually fetched per second so far in the order. The work left is each
+  unfinished file's counted cells, less what the current file has fetched; a
+  finished file drops out whatever its actual rows were, so a count that was off
+  does not carry into later estimates. A line is printed at most every 30 seconds, and
   one when each file ends. A file whose count failed is left out of the time left, and
   the line says so, and with only such files left no time is given. The rate ignores
   that text columns cost more than numbers, so the estimate settles as the run goes on.

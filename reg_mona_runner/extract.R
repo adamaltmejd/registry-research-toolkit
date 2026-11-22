@@ -1553,7 +1553,12 @@ precount <- function(con, files, resolved, format) {
       0
     )
     unsized <- c(unsized, f$columns[is.na(widths)])
-    bytes[i] <- counts[i] * sum(widths, na.rm = TRUE)
+    # No column of known width: the size is unknown, not zero.
+    bytes[i] <- if (all(is.na(widths))) {
+      NA_real_
+    } else {
+      counts[i] * sum(widths, na.rm = TRUE)
+    }
     say(
       "    ",
       f$name,
@@ -1561,11 +1566,21 @@ precount <- function(con, files, resolved, format) {
       if (is.na(counts[i])) {
         "not counted"
       } else {
-        paste0(with_commas(counts[i]), " rows, roughly ", bytes_text(bytes[i]))
+        paste0(
+          with_commas(counts[i]),
+          " rows, ",
+          if (is.na(bytes[i])) {
+            "size unknown"
+          } else {
+            paste("roughly", bytes_text(bytes[i]))
+          }
+        )
       }
     )
   }
   missing <- sum(is.na(counts))
+  # Counted files whose size is unknown: the total size leaves them out.
+  unsized_files <- sum(!is.na(counts) & is.na(bytes))
   say(
     "  total: ",
     with_commas(sum(counts, na.rm = TRUE)),
@@ -1576,7 +1591,14 @@ precount <- function(con, files, resolved, format) {
     " as .",
     format,
     if (format == "parquet") " before compression",
-    if (missing) paste0("; ", missing, " file(s) not counted and not included")
+    if (missing) paste0("; ", missing, " file(s) not counted and not included"),
+    if (unsized_files) {
+      paste0(
+        "; the size is partial: ",
+        unsized_files,
+        " file(s) of unknown size not included"
+      )
+    }
   )
   if (length(unsized)) {
     say(
@@ -1595,23 +1617,32 @@ precount <- function(con, files, resolved, format) {
 }
 
 # Progress over an order's files: rows written against the counted rows, and the
-# time left at the rate seen so far. The rate is cells (rows x columns) per second
-# over everything this order has written, so a wide file counts as more work than
-# a narrow one. Files not counted are left out of the time left.
+# time left at the rate seen so far. The rate is the cells (rows x columns)
+# actually fetched per second in this order, so a wide file counts as more work
+# than a narrow one. The work left is each unfinished counted file's counted
+# cells, less what the current file has fetched; a finished file drops out
+# whatever its actual rows were. Files not counted are left out of the time left.
 progress_tracker <- function(counts, columns) {
   state <- new.env()
   state$started <- Sys.time()
   state$shown <- state$started
-  state$cells <- 0 # written, every file
-  state$counted <- 0 # written, counted files only
-  total <- sum(counts * columns, na.rm = TRUE)
-  left <- function(cells, counted) {
+  state$fetched <- 0 # cells fetched by finished files
+  state$finished <- rep(FALSE, length(counts))
+  # Text for the time left while file i has fetched `rows`.
+  left <- function(i, rows) {
+    fetched <- state$fetched + rows * columns[i]
     elapsed <- as.numeric(difftime(Sys.time(), state$started, units = "secs"))
+    open <- !state$finished & !is.na(counts)
+    open[i] <- FALSE
+    work <- sum(counts[open] * columns[open])
+    if (!state$finished[i] && !is.na(counts[i])) {
+      work <- work + max(counts[i] - rows, 0) * columns[i]
+    }
     # No rate yet, or only uncounted files left: no estimate to give.
-    if (cells <= 0 || elapsed <= 0 || (anyNA(counts) && counted >= total)) {
+    if (fetched <= 0 || elapsed <= 0 || (anyNA(counts) && work <= 0)) {
       return("")
     }
-    seconds <- max(total - counted, 0) / (cells / elapsed)
+    seconds <- work / (fetched / elapsed)
     paste0(
       "; ",
       if (seconds >= 30) "about ",
@@ -1620,10 +1651,6 @@ progress_tracker <- function(counts, columns) {
       if (anyNA(counts)) " for the counted files"
     )
   }
-  now <- function(i, rows) {
-    cells <- rows * columns[i]
-    c(state$cells + cells, state$counted + if (is.na(counts[i])) 0 else cells)
-  }
   list(
     update = function(i, rows) {
       since <- as.numeric(difftime(Sys.time(), state$shown, units = "secs"))
@@ -1631,7 +1658,6 @@ progress_tracker <- function(counts, columns) {
         return(invisible())
       }
       state$shown <- Sys.time()
-      done <- now(i, rows)
       say(
         "    ",
         with_commas(rows),
@@ -1640,15 +1666,15 @@ progress_tracker <- function(counts, columns) {
         } else {
           paste0(" of ", with_commas(counts[i]), " rows")
         },
-        left(done[1], done[2])
+        left(i, rows)
       )
     },
-    # The time left after file i, as text for its closing line.
+    # Marks file i done and returns the time left, as text for its closing line.
     finish = function(i, rows) {
-      done <- now(i, rows)
-      state$cells <- done[1]
-      state$counted <- done[2]
-      left(done[1], done[2])
+      state$finished[i] <- TRUE
+      text <- left(i, rows)
+      state$fetched <- state$fetched + rows * columns[i]
+      text
     }
   )
 }
