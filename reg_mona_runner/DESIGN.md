@@ -120,7 +120,9 @@ information only and never gates, prompts or refuses.
   finished file drops out whatever its actual rows were, so a count that was off
   does not carry into later estimates. A line is printed at most every 30 seconds, and
   one when each file ends. A file whose count failed is left out of the time left, and
-  the line says so, and with only such files left no time is given. The rate ignores
+  the line says so. With no counted work left (the last file done, or only uncounted
+  files left) no time is given, and a file's closing line comes after its
+  `rows_without_period` count. A total over no estimate reads unknown, not 0. The rate ignores
   that text columns cost more than numbers, so the estimate settles as the run goes on.
   Rows count as written when fetched: a `.dta` file is written whole at its end (see
   "Memory"), and that write is not in the estimate.

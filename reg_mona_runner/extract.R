@@ -1583,16 +1583,28 @@ precount <- function(con, files, resolved, format) {
   unsized_files <- sum(!is.na(counts) & is.na(bytes))
   say(
     "  total: ",
-    with_commas(sum(counts, na.rm = TRUE)),
-    " rows in ",
+    # A sum over no estimate is unknown, not 0.
+    if (all(is.na(counts))) {
+      "rows unknown"
+    } else {
+      paste0(with_commas(sum(counts, na.rm = TRUE)), " rows")
+    },
+    " in ",
     length(files),
-    " file(s), roughly ",
-    bytes_text(sum(bytes, na.rm = TRUE)),
-    " as .",
-    format,
-    if (format == "parquet") " before compression",
+    " file(s), ",
+    if (all(is.na(bytes))) {
+      "size unknown"
+    } else {
+      paste0(
+        "roughly ",
+        bytes_text(sum(bytes, na.rm = TRUE)),
+        " as .",
+        format,
+        if (format == "parquet") " before compression"
+      )
+    },
     if (missing) paste0("; ", missing, " file(s) not counted and not included"),
-    if (unsized_files) {
+    if (unsized_files && !all(is.na(bytes))) {
       paste0(
         "; the size is partial: ",
         unsized_files,
@@ -1638,8 +1650,9 @@ progress_tracker <- function(counts, columns) {
     if (!state$finished[i] && !is.na(counts[i])) {
       work <- work + max(counts[i] - rows, 0) * columns[i]
     }
-    # No rate yet, or only uncounted files left: no estimate to give.
-    if (fetched <= 0 || elapsed <= 0 || (anyNA(counts) && work <= 0)) {
+    # No rate yet, or no counted work left (the last file done, or only
+    # uncounted files left): no estimate to give.
+    if (fetched <= 0 || elapsed <= 0 || work <= 0) {
       return("")
     }
     seconds <- work / (fetched / elapsed)
@@ -1766,7 +1779,6 @@ extract_order <- function(path, out, db) {
       out,
       function(rows) tracker$update(i, rows)
     )
-    say("  ", f$name, ": ", with_commas(rows), " rows", tracker$finish(i, rows))
     # Rows the filter leaves out for a NULL or unreadable period value, counted
     # so the order's requester learns of them (an aggregate; NA, an empty field,
     # for an unfiltered file).
@@ -1781,6 +1793,8 @@ extract_order <- function(path, out, db) {
         )$n
       )
     }
+    # After the count above, so its time is behind the time left shown here.
+    say("  ", f$name, ": ", with_commas(rows), " rows", tracker$finish(i, rows))
     if (!is.na(dropped) && dropped > 0) {
       say(
         "  ",
