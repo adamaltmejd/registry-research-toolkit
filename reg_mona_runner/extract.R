@@ -1466,8 +1466,38 @@ written_width <- function(type, max_length, precision, format) {
   as.numeric(width)
 }
 
+# decimal.mark is explicit: under options(OutDec = ","), a Swedish setup's
+# choice, format() warns that the marks clash, and a warning fails an order.
 with_commas <- function(n) {
-  format(n, big.mark = ",", scientific = FALSE, trim = TRUE)
+  format(
+    n,
+    big.mark = ",",
+    decimal.mark = ".",
+    scientific = FALSE,
+    trim = TRUE
+  )
+}
+
+# The pre-count's and progress's console lines. A warning or error while one is
+# formatted (an unexpected locale, say) drops the line, or returns `fallback`,
+# instead of reaching the order's handlers: the report never fails an order.
+report <- function(expr, fallback = NULL) {
+  tryCatch(
+    expr,
+    error = function(e) fallback,
+    warning = function(w) fallback
+  )
+}
+
+# say(), its arguments formatted inside report(): TRUE when the line printed.
+note <- function(...) {
+  report(
+    {
+      say(...)
+      TRUE
+    },
+    FALSE
+  )
 }
 
 # Bytes at two significant figures, in SI units (1 GB = 10^9 bytes).
@@ -1476,7 +1506,10 @@ bytes_text <- function(n) {
   # Rounded first, so 999,600 bytes is 1 MB, not 1000 KB.
   n <- signif(n, 2)
   k <- min(max(floor(log10(max(n, 1)) / 3), 0), length(units) - 1)
-  paste(format(n / 1000^k, scientific = FALSE, trim = TRUE), units[k + 1])
+  paste(
+    format(n / 1000^k, decimal.mark = ".", scientific = FALSE, trim = TRUE),
+    units[k + 1]
+  )
 }
 
 minutes_text <- function(seconds) {
@@ -1497,7 +1530,7 @@ minutes_text <- function(seconds) {
 # when not counted).
 precount <- function(con, files, resolved, format) {
   started <- Sys.time()
-  say("  counting rows before extracting (one count query per file):")
+  note("  counting rows before extracting (one count query per file):")
   counts <- rep(NA_real_, length(files))
   bytes <- rep(NA_real_, length(files))
   unsized <- character()
@@ -1520,11 +1553,11 @@ precount <- function(con, files, resolved, format) {
         if (length(n) == 1L) n else NA_real_
       },
       runner_refusal = function(e) {
-        say("    ", conditionMessage(e), "; extracting it anyway")
+        note("    ", conditionMessage(e), "; extracting it anyway")
         NA_real_
       },
       error = function(e) {
-        say(
+        note(
           "    counting ",
           f$name,
           " failed (R message withheld); extracting it anyway"
@@ -1532,7 +1565,7 @@ precount <- function(con, files, resolved, format) {
         NA_real_
       },
       warning = function(w) {
-        say(
+        note(
           "    counting ",
           f$name,
           " raised an R warning (withheld); extracting it anyway"
@@ -1559,7 +1592,7 @@ precount <- function(con, files, resolved, format) {
     } else {
       counts[i] * sum(widths, na.rm = TRUE)
     }
-    say(
+    note(
       "    ",
       f$name,
       ": ",
@@ -1581,7 +1614,7 @@ precount <- function(con, files, resolved, format) {
   missing <- sum(is.na(counts))
   # Counted files whose size is unknown: the total size leaves them out.
   unsized_files <- sum(!is.na(counts) & is.na(bytes))
-  say(
+  note(
     "  total: ",
     # A sum over no estimate is unknown, not 0.
     if (all(is.na(counts))) {
@@ -1613,14 +1646,14 @@ precount <- function(con, files, resolved, format) {
     }
   )
   if (length(unsized)) {
-    say(
+    note(
       "  not in the size: ",
       length(unique(unsized)),
       " column(s) with no known width (long text, or a type a CSV writes as other text): ",
       paste(unique(unsized), collapse = ", ")
     )
   }
-  say(
+  note(
     "  counting took ",
     minutes_text(as.numeric(difftime(Sys.time(), started, units = "secs"))),
     "; the time left is estimated once the first rows are written"
@@ -1671,7 +1704,7 @@ progress_tracker <- function(counts, columns) {
         return(invisible())
       }
       state$shown <- Sys.time()
-      say(
+      note(
         "    ",
         with_commas(rows),
         if (is.na(counts[i])) {
@@ -1685,7 +1718,7 @@ progress_tracker <- function(counts, columns) {
     # Marks file i done and returns the time left, as text for its closing line.
     finish = function(i, rows) {
       state$finished[i] <- TRUE
-      text <- left(i, rows)
+      text <- report(left(i, rows), "")
       state$fetched <- state$fetched + rows * columns[i]
       text
     }
@@ -1753,7 +1786,10 @@ extract_order <- function(path, out, db) {
     check_format(f, types, format)
     types
   })
-  counts <- precount(con, files, resolved, format)
+  counts <- report(
+    precount(con, files, resolved, format),
+    rep(NA_real_, length(files))
+  )
   tracker <- progress_tracker(
     counts,
     vapply(files, function(f) length(f$columns), 0L)
@@ -1770,14 +1806,14 @@ extract_order <- function(path, out, db) {
   for (k in seq_along(sequence)) {
     i <- sequence[k]
     f <- files[[i]]
-    say("  file ", k, " of ", length(files), ": ", f$name)
+    note("  file ", k, " of ", length(files), ": ", f$name)
     rows <- extract_file(
       con,
       f,
       resolved[[i]],
       format,
       out,
-      function(rows) tracker$update(i, rows)
+      function(rows) report(tracker$update(i, rows))
     )
     # Rows the filter leaves out for a NULL or unreadable period value, counted
     # so the order's requester learns of them (an aggregate; NA, an empty field,
@@ -1794,7 +1830,11 @@ extract_order <- function(path, out, db) {
       )
     }
     # After the count above, so its time is behind the time left shown here.
-    say("  ", f$name, ": ", with_commas(rows), " rows", tracker$finish(i, rows))
+    # The rows written, without the separators, if the report's line fails.
+    closing <- tracker$finish(i, rows)
+    if (!note("  ", f$name, ": ", with_commas(rows), " rows", closing)) {
+      say("  ", f$name, ": ", format(rows, scientific = FALSE), " rows")
+    }
     if (!is.na(dropped) && dropped > 0) {
       say(
         "  ",

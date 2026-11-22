@@ -128,7 +128,10 @@ information only and never gates, prompts or refuses.
   "Memory"), and that write is not in the estimate.
 - **Failure.** A count that fails (a driver error, by SQLSTATE; an R error or warning,
   withheld) is printed, `rows_counted` is empty for that file, and the extract runs as
-  it would have without it. A run that passed before the pre-count still passes.
+  it would have without it. The console lines of the pre-count and progress are
+  formatted inside a guard too: a warning or error there (such as R's `OutDec` locale
+  option clashing with a separator) drops the line, never the order. A run that passed
+  before the pre-count still passes.
 
 ## SQL
 
