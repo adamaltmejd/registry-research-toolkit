@@ -50,7 +50,18 @@ All under the export root:
    `source("extract.R")`, or run `Rscript extract.R`. Every order in `orders\` runs, one
    after the other.
 
-4. Read the console: each order ends with `done` or `FAILED (exit code N)`.
+4. Read the console. Each order first counts the rows each file will hold and prints
+   them, the order's total, its rough size in the order's format and how long counting
+   took. Then it extracts file by file, printing `file k of n`, rows written against the
+   counted rows and the time left, about every 30 seconds. Each order ends with `done`
+   or `FAILED (exit code N)`.
+
+   The count runs one count query per file, which reads the whole table (or view) under
+   the order's filter: it is faster than the extract but adds to the run on a large
+   view. It is information only: a count that fails is printed and the file is
+   extracted anyway. The size is rough: it takes text columns at their declared maximum
+   length, ignores Parquet's compression, and leaves out long text columns, which it
+   names.
 
 The script first installs any of its R packages (DBI, odbc, jsonlite) that is missing,
 and haven (for `.dta`) or arrow (for `.parquet`) when an order needs it, into R's
@@ -75,7 +86,9 @@ A successful order writes `export_data\<nr>_<date>\`:
   (a Stata-safe form of its first 25 characters, `_` and 6 hex digits), with the full
   name as the variable label. [DESIGN.md](DESIGN.md), "Types per format", lists what
   each column type becomes;
-- `run_log.csv`: each file's row count, column count, the period filter applied and, for
+- `run_log.csv`: each file's row count, the count made before extracting
+  (`rows_counted`, empty if that count failed), column count, the period filter applied
+  and, for
   a filtered file, how many rows it left out because their period value is missing or
   unreadable (`rows_without_period`).
 

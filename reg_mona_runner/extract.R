@@ -566,9 +566,13 @@ sql_text <- function(s) {
 
 # Run a query; a driver error is reported by SQLSTATE only, because its message
 # can quote a row value (a conversion error names the value it failed on).
-query <- function(con, sql, what) {
+query <- function(con, sql, what, params = list()) {
   tryCatch(
-    DBI::dbGetQuery(con, sql),
+    if (length(params)) {
+      DBI::dbGetQuery(con, sql, params = params)
+    } else {
+      DBI::dbGetQuery(con, sql)
+    },
     error = function(e) refuse("extract", what, " failed", sqlstate(e))
   )
 }
@@ -965,25 +969,11 @@ sql_batch <- function(select, declared, params) {
   )
 }
 
-# One batch per file: the SELECT is assembled server-side from QUOTENAME()d
-# identifiers and run by sp_executesql with the filter bounds as parameters,
-# bound from R.
-select_batch <- function(file, types) {
-  selected <- vapply(
-    seq_along(file$columns),
-    function(j) {
-      sql_splice(
-        select_expr(types$type[j], types$max_length[j]),
-        sql_quoted(file$columns[j])
-      )
-    },
-    ""
-  )
-  select <- paste0(
-    "N'SELECT ' + ",
-    paste(selected, collapse = " + N', ' + "),
-    sql_from(file)
-  )
+# The file's row filter as T-SQL text to append to a SELECT (empty for an
+# unfiltered file), with the declared parameters and the bounds bound from R. The
+# extract and its pre-count share it, so both select the same rows.
+filter_where <- function(file, types) {
+  where <- ""
   declared <- character()
   params <- list()
   f <- file$filter
@@ -1019,13 +1009,54 @@ select_batch <- function(file, types) {
         paste0("N'(' + ", paste(parts, collapse = " + N' AND ' + "), " + N')'")
       )
     }
-    select <- paste0(
-      select,
+    where <- paste0(
       " + N' WHERE ' + ",
       paste(terms, collapse = " + N' OR ' + ")
     )
   }
-  sql_batch(select, declared, params)
+  list(sql = where, declared = declared, params = params)
+}
+
+# One batch per file: the SELECT is assembled server-side from QUOTENAME()d
+# identifiers and run by sp_executesql with the filter bounds as parameters,
+# bound from R.
+select_batch <- function(file, types) {
+  selected <- vapply(
+    seq_along(file$columns),
+    function(j) {
+      sql_splice(
+        select_expr(types$type[j], types$max_length[j]),
+        sql_quoted(file$columns[j])
+      )
+    },
+    ""
+  )
+  where <- filter_where(file, types)
+  sql_batch(
+    paste0(
+      "N'SELECT ' + ",
+      paste(selected, collapse = " + N', ' + "),
+      sql_from(file),
+      where$sql
+    ),
+    where$declared,
+    where$params
+  )
+}
+
+# The count of the rows the extract of `file` will write: its own filter, one
+# COUNT_BIG, so one scan of the table (or the view's query).
+count_batch <- function(file, types) {
+  where <- filter_where(file, types)
+  sql_batch(
+    paste0(
+      "N'SELECT CAST(COUNT_BIG(*) AS float) AS n'",
+      sql_from(file),
+      where$sql
+    ),
+    where$declared,
+    where$params
+  )
 }
 
 # The count of a filtered file's rows that pass no range for a NULL or
@@ -1311,7 +1342,8 @@ dta_writer <- function(path, columns, types, names) {
 
 WRITERS <- list(dta = dta_writer, parquet = parquet_writer, csv = csv_writer)
 
-extract_file <- function(con, file, types, format, out) {
+# `progress(rows)` is called after each fetched chunk with the file's rows so far.
+extract_file <- function(con, file, types, format, out, progress) {
   batch <- select_batch(file, types)
   n <- length(file$columns)
   path <- file.path(out, file$name)
@@ -1351,10 +1383,274 @@ extract_file <- function(con, file, types, format, out) {
     }
     writer$write(chunk)
     rows <- rows + nrow(chunk)
+    progress(rows)
     if (DBI::dbHasCompleted(res)) break
   }
   writer$finish()
   rows
+}
+
+# ---- Pre-count, size and progress ---------------------------------------------------
+
+# Seconds between progress lines while a file is extracted.
+PROGRESS_SECONDS <- 30
+
+# Roughly how many bytes one value of a column takes in the written file: the
+# written type's width ("Types per format"; .csv: its usual text plus a comma),
+# a string at its declared length. NA where no width is known: a string with no
+# declared length (max, text, ntext) and, in a CSV, a type the table does not list.
+written_width <- function(type, max_length, precision, format) {
+  if (type %in% STRING_TYPES) {
+    if (type %in% c("text", "ntext") || is.na(max_length) || max_length < 0L) {
+      return(NA_real_)
+    }
+    return(max_length + (format == "csv"))
+  }
+  wide_decimal <- type %in%
+    c("decimal", "numeric") &&
+    precision > DTA_DOUBLE_DIGITS
+  width <- switch(
+    format,
+    dta = switch(
+      type,
+      tinyint = ,
+      smallint = ,
+      int = ,
+      bit = 4,
+      decimal = ,
+      numeric = if (wide_decimal) precision + 2 else 8,
+      bigint = ,
+      float = ,
+      real = ,
+      date = ,
+      datetime = ,
+      datetime2 = ,
+      smalldatetime = 8,
+      NA
+    ),
+    parquet = switch(
+      type,
+      tinyint = ,
+      smallint = ,
+      int = ,
+      real = ,
+      date = 4,
+      bigint = ,
+      float = ,
+      datetime = ,
+      datetime2 = ,
+      smalldatetime = 8,
+      decimal = ,
+      numeric = 16,
+      bit = 1,
+      NA
+    ),
+    csv = switch(
+      type,
+      tinyint = 4,
+      smallint = 7,
+      int = 12,
+      bigint = 21,
+      decimal = ,
+      numeric = precision + 3,
+      float = ,
+      real = 18,
+      bit = 2,
+      date = 11,
+      datetime = ,
+      datetime2 = ,
+      smalldatetime = 20,
+      NA
+    )
+  )
+  as.numeric(width)
+}
+
+with_commas <- function(n) {
+  format(n, big.mark = ",", scientific = FALSE, trim = TRUE)
+}
+
+# Bytes at two significant figures, in SI units (1 GB = 10^9 bytes).
+bytes_text <- function(n) {
+  units <- c("bytes", "KB", "MB", "GB", "TB")
+  # Rounded first, so 999,600 bytes is 1 MB, not 1000 KB.
+  n <- signif(n, 2)
+  k <- min(max(floor(log10(max(n, 1)) / 3), 0), length(units) - 1)
+  paste(format(n / 1000^k, scientific = FALSE, trim = TRUE), units[k + 1])
+}
+
+minutes_text <- function(seconds) {
+  m <- round(seconds / 60)
+  if (m < 1) {
+    return("under a minute")
+  }
+  if (m < 60) {
+    return(paste0(m, " min"))
+  }
+  paste0(m %/% 60, " h ", m %% 60, " min")
+}
+
+# Counts the rows each file's extract will write, one COUNT_BIG per file with the
+# file's own filter, before any file is written, and prints them with the order's
+# rough size. Information only: a count that fails is logged as not counted and
+# the extract runs as it would have without it. Returns each file's count (NA
+# when not counted).
+precount <- function(con, files, resolved, format) {
+  started <- Sys.time()
+  say("  counting rows before extracting (one count query per file):")
+  counts <- rep(NA_real_, length(files))
+  bytes <- rep(NA_real_, length(files))
+  unsized <- character()
+  for (i in seq_along(files)) {
+    f <- files[[i]]
+    types <- resolved[[i]]
+    # The count's own failure, R warnings included, is caught here, so it never
+    # reaches the order's handlers and never fails an order.
+    counts[i] <- tryCatch(
+      {
+        batch <- count_batch(f, types)
+        n <- as.numeric(
+          query(
+            con,
+            batch$sql,
+            paste0("counting ", f$name),
+            batch$params
+          )$n
+        )
+        if (length(n) == 1L) n else NA_real_
+      },
+      runner_refusal = function(e) {
+        say("    ", conditionMessage(e), "; extracting it anyway")
+        NA_real_
+      },
+      error = function(e) {
+        say(
+          "    counting ",
+          f$name,
+          " failed (R message withheld); extracting it anyway"
+        )
+        NA_real_
+      },
+      warning = function(w) {
+        say(
+          "    counting ",
+          f$name,
+          " raised an R warning (withheld); extracting it anyway"
+        )
+        NA_real_
+      }
+    )
+    widths <- vapply(
+      seq_along(f$columns),
+      function(j) {
+        written_width(
+          types$type[j],
+          types$max_length[j],
+          types$precision[j],
+          format
+        )
+      },
+      0
+    )
+    unsized <- c(unsized, f$columns[is.na(widths)])
+    bytes[i] <- counts[i] * sum(widths, na.rm = TRUE)
+    say(
+      "    ",
+      f$name,
+      ": ",
+      if (is.na(counts[i])) {
+        "not counted"
+      } else {
+        paste0(with_commas(counts[i]), " rows, roughly ", bytes_text(bytes[i]))
+      }
+    )
+  }
+  missing <- sum(is.na(counts))
+  say(
+    "  total: ",
+    with_commas(sum(counts, na.rm = TRUE)),
+    " rows in ",
+    length(files),
+    " file(s), roughly ",
+    bytes_text(sum(bytes, na.rm = TRUE)),
+    " as .",
+    format,
+    if (format == "parquet") " before compression",
+    if (missing) paste0("; ", missing, " file(s) not counted and not included")
+  )
+  if (length(unsized)) {
+    say(
+      "  not in the size: ",
+      length(unique(unsized)),
+      " column(s) with no known width (long text, or a type a CSV writes as other text): ",
+      paste(unique(unsized), collapse = ", ")
+    )
+  }
+  say(
+    "  counting took ",
+    minutes_text(as.numeric(difftime(Sys.time(), started, units = "secs"))),
+    "; the time left is estimated once the first rows are written"
+  )
+  counts
+}
+
+# Progress over an order's files: rows written against the counted rows, and the
+# time left at the rate seen so far. The rate is cells (rows x columns) per second
+# over everything this order has written, so a wide file counts as more work than
+# a narrow one. Files not counted are left out of the time left.
+progress_tracker <- function(counts, columns) {
+  state <- new.env()
+  state$started <- Sys.time()
+  state$shown <- state$started
+  state$cells <- 0 # written, every file
+  state$counted <- 0 # written, counted files only
+  total <- sum(counts * columns, na.rm = TRUE)
+  left <- function(cells, counted) {
+    elapsed <- as.numeric(difftime(Sys.time(), state$started, units = "secs"))
+    # No rate yet, or only uncounted files left: no estimate to give.
+    if (cells <= 0 || elapsed <= 0 || (anyNA(counts) && counted >= total)) {
+      return("")
+    }
+    seconds <- max(total - counted, 0) / (cells / elapsed)
+    paste0(
+      "; ",
+      if (seconds >= 30) "about ",
+      minutes_text(seconds),
+      " left",
+      if (anyNA(counts)) " for the counted files"
+    )
+  }
+  now <- function(i, rows) {
+    cells <- rows * columns[i]
+    c(state$cells + cells, state$counted + if (is.na(counts[i])) 0 else cells)
+  }
+  list(
+    update = function(i, rows) {
+      since <- as.numeric(difftime(Sys.time(), state$shown, units = "secs"))
+      if (since < PROGRESS_SECONDS) {
+        return(invisible())
+      }
+      state$shown <- Sys.time()
+      done <- now(i, rows)
+      say(
+        "    ",
+        with_commas(rows),
+        if (is.na(counts[i])) {
+          " rows"
+        } else {
+          paste0(" of ", with_commas(counts[i]), " rows")
+        },
+        left(done[1], done[2])
+      )
+    },
+    # The time left after file i, as text for its closing line.
+    finish = function(i, rows) {
+      done <- now(i, rows)
+      state$cells <- done[1]
+      state$counted <- done[2]
+      left(done[1], done[2])
+    }
+  )
 }
 
 # ---- One order ----------------------------------------------------------------------
@@ -1418,28 +1714,46 @@ extract_order <- function(path, out, db) {
     check_format(f, types, format)
     types
   })
+  counts <- precount(con, files, resolved, format)
+  tracker <- progress_tracker(
+    counts,
+    vapply(files, function(f) length(f$columns), 0L)
+  )
   log <- data.frame(
     file = character(),
     rows = numeric(),
+    rows_counted = numeric(),
     columns = integer(),
     filter = character(),
     rows_without_period = numeric()
   )
-  for (i in order(vapply(files, `[[`, "", "name"), method = "radix")) {
+  sequence <- order(vapply(files, `[[`, "", "name"), method = "radix")
+  for (k in seq_along(sequence)) {
+    i <- sequence[k]
     f <- files[[i]]
-    rows <- extract_file(con, f, resolved[[i]], format, out)
-    say("  ", f$name, ": ", format(rows, scientific = FALSE), " rows")
+    say("  file ", k, " of ", length(files), ": ", f$name)
+    rows <- extract_file(
+      con,
+      f,
+      resolved[[i]],
+      format,
+      out,
+      function(rows) tracker$update(i, rows)
+    )
+    say("  ", f$name, ": ", with_commas(rows), " rows", tracker$finish(i, rows))
     # Rows the filter leaves out for a NULL or unreadable period value, counted
     # so the order's requester learns of them (an aggregate; NA, an empty field,
     # for an unfiltered file).
     dropped <- if (is.null(f$filter)) {
       NA_real_
     } else {
-      as.numeric(query(
-        con,
-        null_period_batch(f, resolved[[i]])$sql,
-        paste0("counting ", f$name, "'s rows without a period value")
-      )$n)
+      as.numeric(
+        query(
+          con,
+          null_period_batch(f, resolved[[i]])$sql,
+          paste0("counting ", f$name, "'s rows without a period value")
+        )$n
+      )
     }
     if (!is.na(dropped) && dropped > 0) {
       say(
@@ -1453,6 +1767,7 @@ extract_order <- function(path, out, db) {
     log[nrow(log) + 1L, ] <- list(
       f$name,
       rows,
+      counts[i],
       length(f$columns),
       describe_filter(f$filter),
       dropped

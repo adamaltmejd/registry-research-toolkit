@@ -76,13 +76,54 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
    below, for `.dta` a name it is written under that is not a Stata variable name (the
    order gives every such column a `stata_name`, so this is a backstop) or a full name
    longer than a variable label holds (80 characters).
-4. Extract each file with one `SELECT`, fetched in chunks of 100,000 rows into the
-   order's one format (below), then write `run_log.csv` (file, rows, columns, filter,
-   rows_without_period; the file name's extension is the format).
+4. Count, before writing any file, the rows each file's extract will write: one
+   `COUNT_BIG(*)` per file with the file's own filter, through the same `sp_executesql`
+   path as the extract ("Pre-count" below). Print each file's rows and rough size, the
+   order's totals and how long the count took.
+5. Extract each file with one `SELECT`, fetched in chunks of 100,000 rows into the
+   order's one format (below), printing file k of n and progress, then write
+   `run_log.csv` (file, rows, rows_counted, columns, filter, rows_without_period; the
+   file name's extension is the format).
 
 On success the order moves to `orders/archive/<nr>_<YYYY-MM-DD>.json`. On failure the
 order stays in `orders/` and its export folder holds only `error_log.csv` (code,
 message): partial files are removed so they cannot pass as an extract.
+
+## Pre-count
+
+The person running an order on MONA should know its size and likely run time before
+the expensive part starts (#2624). The count runs in every order, after the manifest checks and table resolution and
+before the first file is written, with no flag and no extra step, since a batch run takes no arguments; it is
+information only and never gates, prompts or refuses.
+
+- **What it counts.** For each manifest file, the rows its extract selects: the
+  extract's own `WHERE` (one shared builder), so the count and the extract agree.
+  `run_log.csv` keeps it as `rows_counted` beside the rows written (`rows`); the two
+  differ only if the table changed during the run.
+- **What it costs.** One `COUNT_BIG(*)` per file, which is a scan of the table, or of
+  the view's query, under the filter. It reads no columns and writes nothing, so it is
+  cheaper than the extract, but on a large view it is not free: it can add a
+  noticeable share of the extract's time. No figure is measured: agents are never on
+  MONA. The console reports how long counting took.
+- **Size.** Rows times the column widths written in the order's format ("Types per
+  format"): a `.dta` long 4 bytes, a double 8; Parquet's own widths before
+  compression; a CSV field's usual text plus its comma; a string at its declared length.
+  It is rough: a declared string length is a maximum, Parquet compresses and a CSV
+  number's text varies. A string with no declared length (`max`, `text`, `ntext`), and
+  a CSV column of a type the table does not list, has no width: the console names
+  those columns as not in the size.
+- **Time left.** No throughput is known before the first rows arrive, so there is no
+  time before the extract starts. During it, the rate is the cells (rows times
+  columns) written per second so far in the order, and the time left is the counted
+  cells still to write at that rate. A line is printed at most every 30 seconds, and
+  one when each file ends. A file whose count failed is left out of the time left, and
+  the line says so, and with only such files left no time is given. The rate ignores
+  that text columns cost more than numbers, so the estimate settles as the run goes on.
+  Rows count as written when fetched: a `.dta` file is written whole at its end (see
+  "Memory"), and that write is not in the estimate.
+- **Failure.** A count that fails (a driver error, by SQLSTATE; an R error or warning,
+  withheld) is printed, `rows_counted` is empty for that file, and the extract runs as
+  it would have without it. A run that passed before the pre-count still passes.
 
 ## SQL
 

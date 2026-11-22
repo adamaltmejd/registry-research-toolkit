@@ -80,7 +80,8 @@ steward's `order_instructions` (in `data.steward_config.presentation` of
 `https://<steward-host>/api/context`). The steward writes the MONA order file and runs
 the extract; the files land in the project's `PXXXX_Data`, one per delivered table (a
 register delivered per year gives one file per year), with a `run_log.csv` whose row
-and column counts can be checked against the order, and which counts the rows a period
+and column counts can be checked against the order (`rows_counted` is the count the
+extract made before writing), and which counts the rows a period
 filter left out for a missing or unreadable period value (`rows_without_period`). Manual bindings and sources are not
 extracted; they are added by hand. The project holds none of the steward's tools.
 
