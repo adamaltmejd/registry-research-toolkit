@@ -17,12 +17,17 @@ working directory or from the path in `REG_EXTRACT_CONFIG`:
 {
   "steward": "<the steward id, as in the order's provenance.steward>",
   "base": "<the export root>",
-  "odbc": { "dsn": "<DSN>", "Driver": "ODBC Driver 17 for SQL Server", "Server": "<server>", "Database": "<database>" }
+  "odbc": { "dsn": "<DSN>" }
 }
 ```
 
 `odbc` holds the `DBI::dbConnect(odbc::odbc(), ...)` arguments, all strings; the script
-adds `encoding = "UTF-8"` and `bigint = "character"`. A missing or malformed file stops
+adds `encoding = "UTF-8"` and `bigint = "character"`. Name either a DSN, as above, or a
+driver and server, as in `{ "Driver": "<driver>", "Server": "<server>", "Database":
+"<database>", "Trusted_Connection": "Yes" }`, never both: a DSN takes precedence, and a
+`Driver` beside it is ignored. The driver must be installed where the runner runs, which
+on MONA can be another machine than the interactive session (`odbc::odbcListDrivers()`
+under the same `Rscript` or `R CMD BATCH` shows which). A missing or malformed file stops
 the run with exit code 2 before any order.
 
 ## Folders
