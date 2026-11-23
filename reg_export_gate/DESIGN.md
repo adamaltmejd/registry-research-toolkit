@@ -377,8 +377,7 @@ stable codes by category: setup, inventory, structure, disclosure, backstop, and
 delivery integrity (a hash mismatch; binary only). Reports, logs and diagnostics stay on
 the data side and never enter the output folder.
 
-A finding names the rule and locates it, never by a value, as in the MONA extract runner
-([../reg_mona_runner/DESIGN.md](../reg_mona_runner/DESIGN.md), "No row values in logs").
+A finding names the rule and locates it, never by a value.
 A file or column the schema declares is named, since the name comes from the fixed
 schema. A file or column it does not declare (an extra or hidden file, a folder, an
 extra column) is located by its 1-based `position` instead: its name is the author's and

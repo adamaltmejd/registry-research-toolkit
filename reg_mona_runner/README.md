@@ -33,7 +33,8 @@ All under the export root:
 <base>\
   orders\                  orders waiting to run, named <project number>.json
   orders\archive\          orders that ran, as <project number>_<date>.json
-  export_data\             one folder per run, <project number>_<date>\
+  export_data\             one folder per finished order, <project number>_<date>\, and
+                           <project number>.partial\ for one that has not finished
 ```
 
 ## Run an order
@@ -54,7 +55,9 @@ All under the export root:
    them, the order's total, its rough size in the order's format and how long counting
    took. Then it extracts file by file, printing `file k of n`, rows written against the
    counted rows and the time left, about every 30 seconds. Each order ends with `done`
-   or `FAILED (exit code N)`.
+   or `FAILED (exit code N)`. A failure is followed by an error block with the full R
+   or database message, which can quote row values: keep it, and screenshots of it,
+   on MONA.
 
    The count runs one count query per file, which reads the whole table (or view) under
    the order's filter: it is faster than the extract but adds to the run on a large
@@ -94,9 +97,13 @@ A successful order writes `export_data\<nr>_<date>\`:
 
 The order then moves to `orders\archive\`.
 
-A failed order stays in `orders\`, and its export folder holds only `error_log.csv` with
-the exit code and the reason. Fix the cause and run the script again: a rerun overwrites
-that day's export folder.
+An order is written into `export_data\<nr>.partial\`, each file under a `.partial` name
+until it is complete, and the folder takes its dated name only when the order succeeds.
+A failed order stays in `orders\`; the console shows the exit code and the reason, and
+`<nr>.partial\` keeps the files that finished. A run that was stopped leaves the same
+folder. Fix the cause and run the script again: it resumes, keeping each finished file
+whose order entry is unchanged and whose table still has the same number of rows, and
+extracts the rest. A rerun of a finished order overwrites that day's export folder.
 
   | Code    | What to do                                                                                                                                                                                                                                                                                                                                  |
   | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -108,9 +115,11 @@ that day's export folder.
 
 ## Safety
 
-The script never prints or logs row values: only file names, counts and the order's own
-fields. A database error is reported by its code, not its message. The extract files
-contain microdata: they stay in MONA like any other project data.
+Nothing the script writes under `export_data\` holds row values besides the extract files:
+`run_log.csv` has file names, counts and the order's own fields. The console does: a
+failure prints the full R or database message, which can quote a value, between marker
+lines that say so. The console, the `.Rout` file and the extract files contain
+microdata or may: they stay in MONA like any other project data.
 
 ## Tests
 

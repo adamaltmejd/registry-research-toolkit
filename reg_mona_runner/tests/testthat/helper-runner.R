@@ -62,21 +62,18 @@ run_runner <- function(base) {
   list(status = status, output = readLines(output, warn = FALSE))
 }
 
-export_dir <- function(base, name) {
-  file.path(
-    base,
-    "export_data",
-    paste0(name, "_", format(Sys.Date(), "%Y-%m-%d"))
+# A failed order: its code on the console, the order still in orders/, an empty
+# unfinished export folder (no file was written) and no finished one.
+expect_refused <- function(base, name, code, output) {
+  expect_match(
+    output,
+    paste0("FAILED (exit code ", code, ")"),
+    fixed = TRUE,
+    all = FALSE
   )
-}
-
-# A failed order: the code in its error log, the order still in orders/ and no
-# CSV but the log in its export folder.
-expect_refused <- function(base, name, code) {
-  out <- export_dir(base, name)
-  expect_identical(list.files(out), "error_log.csv")
-  log <- utils::read.csv(file.path(out, "error_log.csv"))
-  expect_identical(log$code, code)
+  exports <- file.path(base, "export_data")
+  expect_identical(list.files(exports), paste0(name, ".partial"))
+  expect_length(list.files(file.path(exports, paste0(name, ".partial"))), 0L)
   expect_true(file.exists(file.path(base, "orders", paste0(name, ".json"))))
 }
 

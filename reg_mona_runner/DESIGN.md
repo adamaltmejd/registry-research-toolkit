@@ -21,7 +21,7 @@ with the orders. Run steps are in [README.md](README.md).
   when that library is writable and a CRAN mirror is set (otherwise `install.packages`
   would prompt for a personal library or a mirror). One still missing after that ends
   the run with exit code 2 and a console line naming the package, before any order is
-  read; there is no per-order `error_log.csv` for it, since no order ran. The install
+  read, since no order ran. The install
   runs when the script runs, which for this script is when it is sourced: sourcing it is
   running it. haven and arrow are installed the same way, but per order and only for the
   format that order needs, so a MONA without arrow still runs `.dta` and `.csv` orders;
@@ -33,8 +33,9 @@ with the orders. Run steps are in [README.md](README.md).
   install, so every steward runs the released `extract.R` unchanged (SWECOV move, R11).
   A missing or malformed file is exit code 2 before any order. The tests write their own
   file; there is no other override.
-- **No dry run** (maintainer, 2026-10-21). A rerun overwrites the order's export folder
-  and archive copy, so a run is cheap to repeat.
+- **No dry run** (maintainer, 2026-10-21). A rerun of a finished order overwrites that
+  day's export folder and archive copy, and a rerun of an unfinished one resumes it
+  ("Resuming"), so a run is cheap to repeat.
 - **Source or Rscript.** Under `source()` in an interactive session the script reports
   its exit code instead of quitting, since quitting would end the data manager's
   session. Under `Rscript` it exits with the code.
@@ -42,7 +43,8 @@ with the orders. Run steps are in [README.md](README.md).
 ## The run
 
 Every `<base>/orders/*.json` runs independently, in name order; the file stem is the
-project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared first:
+project number. An order writes into `<base>/export_data/<nr>.partial/` and, once
+complete, renames it to `<nr>_<YYYY-MM-DD>/` (replacing an earlier export of that day):
 
 1. Parse and check the whole manifest before touching the database: version, then mode
    and steward, then shape. The manifest, its provenance and every object the runner
@@ -81,13 +83,18 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
    path as the extract ("Pre-count" below). Print each file's rows and rough size, the
    order's totals and how long the count took.
 5. Extract each file with one `SELECT`, fetched in chunks of 100,000 rows into the
-   order's one format (below), printing file k of n and progress, then write
-   `run_log.csv` (file, rows, rows_counted, columns, filter, rows_without_period; the
-   file name's extension is the format).
+   order's one format (below) under `<name>.partial`, renamed to its own name once
+   complete, printing file k of n and progress. `run_log.csv` (file, rows,
+   rows_counted, columns, filter, rows_without_period; the file name's extension is the
+   format) gets each file's row as it finishes.
 
-On success the order moves to `orders/archive/<nr>_<YYYY-MM-DD>.json`. On failure the
-order stays in `orders/` and its export folder holds only `error_log.csv` (code,
-message): partial files are removed so they cannot pass as an extract.
+On success the folder is renamed and the order moves to
+`orders/archive/<nr>_<YYYY-MM-DD>.json`. On failure the order stays in `orders/`, the
+console prints the failure (below, "Row values"), and the `.partial` folder keeps its
+finished files: only the file that was being written is removed. A run that is stopped
+(Esc, Ctrl-C, a killed batch job) leaves the same folder plus that file's `.partial`
+copy. Either way the folder name says the order did not finish, and the next run
+resumes from it (#2630).
 
 ## Pre-count
 
@@ -126,8 +133,8 @@ information only and never gates, prompts or refuses.
   that text columns cost more than numbers, so the estimate settles as the run goes on.
   Rows count as written when fetched: a `.dta` file is written whole at its end (see
   "Memory"), and that write is not in the estimate.
-- **Failure.** A count that fails (a driver error, by SQLSTATE; an R error or warning,
-  withheld) is printed, `rows_counted` is empty for that file, and the extract runs as
+- **Failure.** A count that fails (a driver error, an R error or warning) is printed,
+  with its message in an error block ("Row values"), `rows_counted` is empty for that file, and the extract runs as
   it would have without it. The console lines of the pre-count and progress are
   formatted inside a guard too: a warning or error there (such as R's `OutDec` locale
   option clashing with a separator) drops the line, never the order. A run that passed
@@ -234,14 +241,41 @@ Choices behind the table:
 The type table is verified by the manual run on MONA (see Tests); a long (`%12.0g`) and
 a double (`%20.0g`) differ in the `.dta` display format.
 
-## No row values in logs
+## Resuming
 
-Console output, `run_log.csv` and `error_log.csv` hold file names, counts and manifest
-fields only. A driver error is reported by the SQLSTATE in its message prefix: the rest
-is withheld, since SQL Server's conversion errors quote the offending value. For the
-same reason an unexpected R error is reported by its class alone, and an R warning
-during an order (R quotes a string it cannot translate) fails the order instead of
-printing.
+An unfinished order's folder, `<nr>.partial/`, holds its finished files, `run_log.csv`
+with a row for each, and `order.json`, a copy of the order that ran. The next run of
+the same order number reads both after the pre-count and keeps a finished file only if
+its whole manifest entry is identical to the new order's (the format too, through the
+file name), it is listed in the log, and its source now counts the rows it was written
+with. Everything else in the folder is removed before extracting, a `.partial` file
+included, and the kept files are not extracted again. The pre-count is the only check
+on the source: a resume assumes the source tables did not change between the runs in a
+way that keeps their row counts. A count that fails keeps nothing for that file. A
+missing or unreadable `order.json` or log keeps nothing. `order.json` is removed when
+the order completes.
+
+The unit is the file: a file of a billion rows that fails at the end is written again
+whole.
+
+## Row values
+
+Nothing the runner writes under `export_data/` holds a row value beyond the extract
+files themselves: `run_log.csv` holds file names, counts and manifest fields. That
+folder is what leaves MONA.
+
+The console (and a batch run's `.Rout`) does. A failure prints its headline (exit
+code, the file, what failed, a driver error's SQLSTATE) and then, between marker lines
+whose header says the text may contain row values and must not be copied off MONA, the
+underlying message in full: the driver's message (SQL Server's conversion errors quote
+the offending value) or the R error's, with the runner functions it was raised in. A
+failed count prints the same block. Before 2026-11-23 these messages were withheld, and
+a failed order showed only an error class, which left the data manager unable to
+diagnose a failure on MONA (P1105 trial). The console stays on MONA; only
+`export_data/` is exported, and keeping console output, screenshots included, off MONA
+is the data manager's responsibility (coordinator, 2026-11-23). An R warning during an
+order still fails it (R warns when it cannot translate a string, so a value may have
+changed), and prints the warning in the same block.
 
 The manifest decides which tables and columns are read: nothing checks it against an
 allowlist or the project hash. The data manager's review of the order, and the catalog
