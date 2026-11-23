@@ -51,11 +51,13 @@ All under the export root:
    `source("extract.R")`, or run `Rscript extract.R`. Every order in `orders\` runs, one
    after the other.
 
-4. Read the console. Each order first counts the rows each file will hold and prints
-   them, the order's total, its rough size in the order's format and how long counting
-   took. Then it extracts file by file, printing `file k of n`, rows written against the
-   counted rows and the time left, about every 30 seconds. Each order ends with `done`
-   or `FAILED (exit code N)`. A failure is followed by an error block with the full R
+4. Read the console (or the batch run's `.Rout`). Each order prints a header line,
+   then a count block: the rows its files will hold, its rough size in the order's
+   format, its three largest files, the columns not in the size, any count that failed
+   and how long counting took. Then one line per finished file, with rows, size on
+   disk, elapsed time and the time left; a file running longer than five minutes gets
+   a progress line every five minutes. Each order ends with `done` or
+   `FAILED (exit code N)`. A failure is followed by an error block with the full R
    or database message, which can quote row values: keep it, and screenshots of it,
    on MONA. A date-time finer than the format holds (Parquet: a microsecond; `.dta`: a
    millisecond) is cut, never rounded, and the console names each such column with the
@@ -95,7 +97,7 @@ A successful order writes `export_data\<nr>_<date>\`:
   (`rows_counted`, empty if that count failed), column count, the period filter applied
   and, for
   a filtered file, how many rows it left out because their period value is missing or
-  unreadable (`rows_without_period`).
+  unreadable (`rows_without_period`), and the file's size on disk (`bytes_written`).
 
 The order then moves to `orders\archive\`.
 
