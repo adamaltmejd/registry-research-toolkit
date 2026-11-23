@@ -34,8 +34,9 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 # names. Closed keys: `steward` (the manifest's provenance.steward this deployment
 # serves), `base` (the export root holding orders/, orders/archive/ and
 # export_data/) and `odbc` (the DBI::dbConnect arguments for odbc::odbc(), all
-# strings, such as dsn, Driver, Server and Database). Read in main(), once the
-# packages are in place.
+# strings, such as dsn, Driver, Server and Database), and optionally `fetch_rows`
+# (rows per fetch, and so per Parquet row group; FETCH_ROWS when absent). Read in
+# main(), once the packages are in place.
 config <- NULL
 
 read_config <- function() {
@@ -50,10 +51,16 @@ read_config <- function() {
   strings <- function(x) {
     is_object(x) && all(nzchar(names(x))) && all(vapply(x, is_string, TRUE))
   }
+  whole <- function(x) {
+    is.numeric(x) && length(x) == 1L && !is.na(x) && x >= 1 &&
+      x <= .Machine$integer.max && x == round(x)
+  }
   if (
     !is_object(cfg) ||
-      !setequal(names(cfg), c("steward", "base", "odbc")) ||
-      length(cfg) != 3L ||
+      !all(c("steward", "base", "odbc") %in% names(cfg)) ||
+      !all(names(cfg) %in% c("steward", "base", "odbc", "fetch_rows")) ||
+      anyDuplicated(names(cfg)) ||
+      (!is.null(cfg$fetch_rows) && !whole(cfg$fetch_rows)) ||
       !is_string(cfg$steward) ||
       !grepl("^[a-z0-9]+(-[a-z0-9]+)*$", cfg$steward) ||
       !is_string(cfg$base) ||
@@ -63,9 +70,11 @@ read_config <- function() {
     return(paste0(
       "steward configuration ",
       path,
-      " is not {\"steward\": slug, \"base\": path, \"odbc\": {name: string}}"
+      " is not {\"steward\": slug, \"base\": path, \"odbc\": {name: string}},",
+      " with an optional \"fetch_rows\": positive whole number"
     ))
   }
+  cfg$fetch_rows <- as.integer(if (is.null(cfg$fetch_rows)) FETCH_ROWS else cfg$fetch_rows)
   cfg$connect <- function() {
     do.call(
       DBI::dbConnect,
@@ -95,6 +104,7 @@ EXIT <- c(
   extract = 8L # the query or the file write failed, or a value the format cannot hold
 )
 
+# Rows per fetch when the steward configuration names no `fetch_rows`.
 FETCH_ROWS <- 100000L
 # The suffix of a file or order folder that is not finished yet.
 PARTIAL <- ".partial"
@@ -1363,7 +1373,7 @@ parquet_writer <- function(path, columns, types, names) {
           !!!stats::setNames(arrays, columns),
           schema = schema
         ),
-        chunk_size = FETCH_ROWS
+        chunk_size = config$fetch_rows
       )
     },
     finish = close_all,
@@ -1517,7 +1527,7 @@ extract_file <- function(con, file, types, format, out, progress) {
   rows <- 0
   repeat {
     chunk <- tryCatch(
-      DBI::dbFetch(res, n = FETCH_ROWS),
+      DBI::dbFetch(res, n = config$fetch_rows),
       error = function(e) driver_refusal(e, "extract", what, " failed")
     )
     if (ncol(chunk) != n) {

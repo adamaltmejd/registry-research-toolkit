@@ -84,8 +84,9 @@ complete, renames it to `<nr>_<YYYY-MM-DD>/`, which must not exist yet:
    path as the extract ("Pre-count" below). Print the order's totals, its three
    largest files, the columns not in the size, the failed counts and how long the
    count took ("Console" below).
-5. Extract each file with one `SELECT`, fetched in chunks of 100,000 rows into the
-   order's one format (below) under `<name>.partial`, renamed to its own name once
+5. Extract each file with one `SELECT`, fetched in chunks of `fetch_rows` rows (the
+   steward configuration's; 100,000 when it names none) into the order's one format
+   (below) under `<name>.partial`, renamed to its own name once
    complete, printing one line per finished file. `run_log.csv` (file, rows,
    rows_counted, columns, filter, rows_without_period, bytes_written; the file name's
    extension is the format) gets each file's row as it finishes. `bytes_written`, the
@@ -295,7 +296,9 @@ Choices behind the table:
   no two columns of a file are written under one name, or the order is refused (exit 6).
   `%tc` holds milliseconds: a `datetime2`'s finer digits are cut and counted (above).
 - **Memory.** CSV and Parquet stream one chunk at a time (a Parquet row group per
-  chunk). haven cannot append, so a `.dta` file is collected whole and written once: the
+  chunk, split at arrow's cap of 1,048,576 rows), so their ceiling is one chunk of `fetch_rows` rows, about twice over for
+  Parquet while it is converted; the steward sizes it for the machine the runner runs
+  on. haven cannot append, so a `.dta` file is collected whole and written once: the
   ceiling is MONA's RAM for the order's widest file (`simplify:` in the script).
 
 The type table is verified by the manual run on MONA (see Tests); a long (`%12.0g`) and

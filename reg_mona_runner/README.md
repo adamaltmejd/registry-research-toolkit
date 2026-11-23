@@ -17,7 +17,8 @@ working directory or from the path in `REG_EXTRACT_CONFIG`:
 {
   "steward": "<the steward id, as in the order's provenance.steward>",
   "base": "<the export root>",
-  "odbc": { "dsn": "<DSN>" }
+  "odbc": { "dsn": "<DSN>" },
+  "fetch_rows": 1000000
 }
 ```
 
@@ -29,6 +30,13 @@ driver and server, as in `{ "Driver": "<driver>", "Server": "<server>", "Databas
 on MONA can be another machine than the interactive session (`odbc::odbcListDrivers()`
 under the same `Rscript` or `R CMD BATCH` shows which). A missing or malformed file stops
 the run with exit code 2 before any order.
+
+`fetch_rows`, optional, is how many rows the runner fetches at a time (100,000 when
+absent); each fetch is one Parquet row group, up to arrow's cap of 1,048,576 rows (a
+larger fetch is split). Larger row groups compress better and read faster, and larger
+fetches cost memory: a fetch is held in
+R, twice over while it is converted for Parquet. Size it for the machine the runner runs
+on (on MONA, a batch server has far more memory than an interactive session).
 
 ## Folders
 
