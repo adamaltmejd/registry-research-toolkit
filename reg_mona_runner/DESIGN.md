@@ -127,7 +127,8 @@ information only and never gates, prompts or refuses.
   number's text varies. A string with no declared length (`max`, `text`, `ntext`), and
   a CSV column of a type the table does not list, has no width: the console names
   those columns as not in the size. A file with no column of known width has an
-  unknown size, not zero, and a total that leaves one out says it is partial.
+  unknown size, not zero. The console shows the size as an estimate, `~300 GB est.`,
+and marks one that leaves such a column or file out with `+`.
 - **Time left.** No throughput is known before the first rows arrive, so there is no
   time before the extract starts. During it, the rate is the cells (rows times
   columns) actually fetched per second so far in the order. The work left is each
@@ -157,10 +158,10 @@ a file is named without the order's format, which the header gives.
 
 ```text
 order 1234   136 files   parquet   -> export_data/1234_2026-11-23
-count      0:05   2,916,948,188 rows   max 300 GB uncompressed
-  largest    table_c          1,183,402,551 rows   max 140 GB
-             table_a              6,233,616 rows   max 900 MB
-             table_b                912,004 rows   max 88 MB
+count      0:05   2,916,948,188 rows   ~300 GB+ est. uncompressed
+  largest    table_c          1,183,402,551 rows   ~140 GB
+             table_a              6,233,616 rows   ~900 MB
+             table_b                912,004 rows   ~88 MB+
   not sized  table_d          COLUMN_X (varchar(max))
   failed     none
 extract                          rows       size  elapsed     left
@@ -316,6 +317,11 @@ on the source: a resume assumes the source tables did not change between the run
 way that keeps their row counts. A count that fails keeps nothing for that file. A
 missing or unreadable `order.json` or log keeps nothing. `order.json` is removed when
 the order completes.
+
+Resuming works only within one runner version: a log whose columns differ (written by
+another version) is unreadable, and the console says so before its files are cleared,
+`run_log.csv is from another runner version: N finished file(s) will be extracted
+again`. There is no compatibility path before v1 (coordinator review, 2026-11-23).
 
 `run_log.csv` and `order.json` are written to a `.tmp` name and renamed over the old
 copy, so a readable checkpoint is always there (where the share refuses to rename over

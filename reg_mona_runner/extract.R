@@ -1615,8 +1615,10 @@ written_width <- function(type, max_length, precision, format) {
       real = 18,
       bit = 2,
       date = 11,
-      datetime = ,
-      datetime2 = ,
+      # Style 121 text plus the comma: datetime2(7) has seven fractional
+      # digits, datetime three, smalldatetime's are zeros and dropped.
+      datetime2 = 28,
+      datetime = 24,
       smalldatetime = 20,
       NA
     )
@@ -1765,8 +1767,9 @@ precount <- function(con, files, resolved, format) {
 print_count <- function(pre, files, format) {
   names <- short_name(vapply(files, `[[`, "", "name"), format)
   width <- max(nchar(names))
-  max_size <- function(b) {
-    if (is.na(b)) "size unknown" else paste("max", bytes_text(b))
+  # An estimate; `+` when columns of no known width are left out of it.
+  est_size <- function(b, partial) {
+    if (is.na(b)) "size unknown" else paste0("~", bytes_text(b), if (partial) "+")
   }
   counted <- !is.na(pre$counts)
   note(
@@ -1780,9 +1783,12 @@ print_count <- function(pre, files, format) {
       "size unknown"
     } else {
       paste0(
-        max_size(sum(pre$bytes, na.rm = TRUE)),
-        if (format == "parquet") " uncompressed",
-        if (any(counted & is.na(pre$bytes))) " (partial)"
+        est_size(
+          sum(pre$bytes, na.rm = TRUE),
+          any(counted & (is.na(pre$bytes) | nzchar(pre$unsized)))
+        ),
+        " est.",
+        if (format == "parquet") " uncompressed"
       )
     }
   )
@@ -1790,7 +1796,7 @@ print_count <- function(pre, files, format) {
   for (k in seq_along(top)) {
     i <- top[k]
     note(
-      sprintf("  %-9s  %-*s  %15s rows   %s", if (k == 1L) "largest" else "", width, names[i], with_commas(pre$counts[i]), max_size(pre$bytes[i]))
+      sprintf("  %-9s  %-*s  %15s rows   %s", if (k == 1L) "largest" else "", width, names[i], with_commas(pre$counts[i]), est_size(pre$bytes[i], nzchar(pre$unsized[i])))
     )
   }
   for (i in which(nzchar(pre$unsized))) {
@@ -1880,10 +1886,12 @@ progress_tracker <- function(counts, columns) {
       state$finished[i] <- TRUE
     },
     # Marks file i done and returns the seconds left after it.
+    # The estimate comes first: left() adds the current file's rows itself.
     finish = function(i, rows) {
       state$finished[i] <- TRUE
+      seconds <- report(left(i, rows), NA_real_)
       state$fetched <- state$fetched + rows * columns[i]
-      report(left(i, rows), NA_real_)
+      seconds
     }
   )
 }
@@ -2178,6 +2186,18 @@ resume <- function(out, doc, files, counts) {
   log <- empty_log()
   present <- regular_files(out)
   prior <- report(read_prior(out, present))
+  if (is.null(prior) && all(c(ORDER_COPY, RUN_LOG) %in% present)) {
+    lost <- sum(vapply(files, `[[`, "", "name") %in% present)
+    if (lost > 0L) {
+      say(
+        "  ",
+        RUN_LOG,
+        " is from another runner version: ",
+        lost,
+        " finished file(s) will be extracted again"
+      )
+    }
+  }
   if (!is.null(prior)) {
     for (i in seq_along(files)) {
       name <- files[[i]]$name
