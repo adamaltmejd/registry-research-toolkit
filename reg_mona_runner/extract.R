@@ -792,8 +792,24 @@ stata_name_ok <- function(name) {
 # Refuse, before any row is read, a column of `file` the order's format cannot
 # hold: a SQL type outside MAPPED_TYPES (.dta and .parquet), or a name it is
 # written under (its stata_name, else its own) that is not a Stata variable name
-# and a label too long for its full name (.dta). A CSV holds anything as text.
+# and a label too long for its full name (.dta). A CSV holds anything as text,
+# except a time of day or a date-time with an offset: those are refused in every
+# format, since the driver returns them in forms the runner does not read.
 check_format <- function(file, types, format) {
+  odd <- which(types$type[seq_along(file$columns)] %in% c("time", "datetimeoffset"))
+  if (length(odd)) {
+    j <- odd[1]
+    refuse(
+      "resolve",
+      "column ",
+      file$columns[j],
+      " of ",
+      file$table,
+      " is SQL type ",
+      types$type[j],
+      ", which this runner does not map to any format"
+    )
+  }
   if (format == "csv") {
     return(invisible())
   }
