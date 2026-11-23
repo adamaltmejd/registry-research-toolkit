@@ -209,7 +209,7 @@ large id. What each SQL type becomes:
   | `float`, `real`                                            | double          | double; beyond Stata's range refused      | float64, float32       | 15 significant digits |
   | `bit`                                                      | logical         | long 0/1                                  | bool                   | 0/1                   |
   | `date`                                                     | text            | `%td` day                                 | date32                 | `YYYY-MM-DD`          |
-  | `datetime`, `datetime2`, `smalldatetime`                   | text            | `%tc`; finer than 1 ms refused            | timestamp(us, UTC); finer than 1 us refused | `YYYY-MM-DD HH:MM:SS[.f]` |
+  | `datetime`, `datetime2`, `smalldatetime`                   | text            | `%tc`, cut to the millisecond            | timestamp(us, UTC), cut to the microsecond | `YYYY-MM-DD HH:MM:SS[.f]` |
   | `char`, `varchar`, `nchar`, `nvarchar`, `text`, `ntext`    | UTF-8 text      | str or strL; NULL as `""`                 | string                 | text                  |
   | any other (`time`, `datetimeoffset`, `money`, binary, ...) | as odbc returns | refused at resolve (7)                    | refused at resolve (7) | as text               |
 
@@ -234,11 +234,17 @@ Choices behind the table:
   DSN may name, returns `datetime2` and `date` as text of its own, and a `CAST` of
   `datetime` to text is `Jan  1 2026  4:33PM`. The runner then reads the text: a
   date-time is a time of no zone, written as UTC. A `.dta` `%tc` value is whole
-  milliseconds since 1960, computed exactly. A value finer than the format holds (a
-  `datetime2(7)` with a non-zero 100-ns digit in Parquet, sub-millisecond in `.dta`)
-  is refused, naming the column; CSV keeps every digit, trailing zeros dropped
-  (found on MONA, 2026-11-23: the DSN's driver returned `datetime2` as text, which
-  Arrow refused as a UTC timestamp).
+  milliseconds since 1960, computed exactly. CSV keeps every digit, trailing zeros
+  dropped (found on MONA, 2026-11-23: the DSN's driver returned `datetime2` as text,
+  which Arrow refused as a UTC timestamp).
+- **A time finer than the format holds is cut, and the console says so.** `datetime2`
+  holds 100 ns and system timestamps usually fill all seven digits; Parquet's
+  timestamp holds a microsecond and Stata's `%tc` a millisecond. Refusing them would
+  fail nearly every `datetime2` column, so the fraction is truncated (never rounded,
+  so a time never moves into the next second or day), and each column that lost a
+  non-zero digit gets one console line after its file: `<column>: fraction cut to us
+  in N values` (`ms` for `.dta`). It is the format's limit, not the runner's; an order
+  that needs every digit is ordered as CSV (coordinator review, 2026-11-23).
 - **Text NULL is `""` in `.dta`.** Stata has no missing string, and reads an empty
   string as missing. CSV and Parquet keep NULL apart from `""`.
 - **Stata limits.** Format 118 (Stata 14 and later) is UTF-8 with 32-character names and

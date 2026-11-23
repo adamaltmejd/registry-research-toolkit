@@ -57,7 +57,9 @@ All under the export root:
    counted rows and the time left, about every 30 seconds. Each order ends with `done`
    or `FAILED (exit code N)`. A failure is followed by an error block with the full R
    or database message, which can quote row values: keep it, and screenshots of it,
-   on MONA.
+   on MONA. A date-time finer than the format holds (Parquet: a microsecond; `.dta`: a
+   millisecond) is cut, never rounded, and the console names each such column with the
+   number of values cut; CSV keeps every digit.
 
    The count runs one count query per file, which reads the whole table (or view) under
    the order's filter: it is faster than the extract but adds to the run on a large
