@@ -847,8 +847,18 @@ check_format <- function(file, types, format) {
 # A selected column as T-SQL text around `@col`. Text the client would fetch in
 # its code page (char, varchar, text) is fetched as nvarchar, so it arrives as
 # UTF-8 whatever MONA's code page; decimal and numeric are fetched as text, so
-# an 18-digit id never passes through a double.
+# an 18-digit id never passes through a double. Dates and date-times are fetched
+# as ISO text in an explicit style (23: YYYY-MM-DD; 121: YYYY-MM-DD HH:MM:SS and
+# the type's fractional digits, none for datetime2(0)), so every driver returns
+# them alike: the legacy "SQL Server" driver returns datetime2 and date as text
+# of its own, and a plain CAST of datetime gives "Jan  1 2026  4:33PM".
 select_expr <- function(type, max_length) {
+  if (type == "date") {
+    return("CONVERT(nvarchar(10), @col, 23) AS @col")
+  }
+  if (type %in% TIME_TYPES) {
+    return("CONVERT(nvarchar(27), @col, 121) AS @col")
+  }
   if (type %in% c("char", "varchar", "text")) {
     size <- if (is.na(max_length) || max_length < 0L || max_length > 4000L) {
       "max"
@@ -1116,15 +1126,76 @@ csv_text <- function(x) {
   x
 }
 
+# ---- Dates and times ------------------------------------------------------------
+
+# A date-time as select_expr fetches it: whole seconds, then 0 to 7 fractional
+# digits.
+TIME_TEXT <- "^([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})(\\.([0-9]{1,7}))?$"
+
+# A fetched date-time column as its whole seconds and its fraction to `digits`
+# places (NULL stays NA). Digits beyond `digits` must be zero: a value is never
+# rounded or cut, so a finer one is refused, naming the column.
+time_parts <- function(x, digits, unit, column, what) {
+  bad <- !is.na(x) & !grepl(TIME_TEXT, x)
+  if (any(bad)) {
+    refuse("extract", what, ": column ", column, " returned a date-time in an unexpected form")
+  }
+  fraction <- substr(paste0(sub(TIME_TEXT, "\\3", x), "0000000"), 1L, 7L)
+  if (any(!is.na(x) & substr(fraction, digits + 1L, 7L) != strrep("0", 7L - digits))) {
+    refuse(
+      "extract",
+      what,
+      ": column ",
+      column,
+      " holds a time finer than ",
+      unit,
+      ", which this format cannot hold exactly: order it as csv"
+    )
+  }
+  fraction <- substr(fraction, 1L, digits)
+  fraction[is.na(x)] <- NA_character_
+  list(seconds = sub(TIME_TEXT, "\\1", x), fraction = fraction)
+}
+
+# A fetched date column as Date, or a refusal if a value does not read as one.
+parse_date <- function(x, column, what) {
+  day <- as.Date(x, format = "%Y-%m-%d", optional = TRUE)
+  if (any(is.na(day) & !is.na(x))) {
+    refuse("extract", what, ": column ", column, " returned a date in an unexpected form")
+  }
+  day
+}
+
+# Seconds from Stata's epoch (1960-01-01) to R's (1970-01-01).
+STATA_EPOCH_SECONDS <- 315619200
+
+# A fetched date-time column as Stata %tc: milliseconds since 1960-01-01 UTC,
+# computed in whole numbers so every value is exact (a POSIXct's fractional
+# seconds would not be).
+parse_time_ms <- function(x, column, what) {
+  parts <- time_parts(x, 3L, "a millisecond", column, what)
+  at <- as.POSIXct(parts$seconds, tz = "UTC", format = "%Y-%m-%d %H:%M:%S")
+  if (any(is.na(at) & !is.na(x))) {
+    refuse("extract", what, ": column ", column, " returned a date-time in an unexpected form")
+  }
+  ms <- (as.numeric(at) + STATA_EPOCH_SECONDS) * 1000 + as.numeric(parts$fraction)
+  attr(ms, "format.stata") <- "%tc"
+  ms
+}
+
+# A fetched date-time column as CSV text: whole seconds, then the fraction
+# without trailing zeros, if any is left.
+csv_time <- function(x, column, what) {
+  parts <- time_parts(x, 7L, "100 nanoseconds", column, what)
+  fraction <- sub("0+$", "", parts$fraction)
+  ifelse(nzchar(fraction) & !is.na(x), paste0(parts$seconds, ".", fraction), parts$seconds)
+}
+
 # One CSV field per value: numbers in fixed notation to 15 significant digits
-# (no 1e+15 for a numeric id), days as YYYY-MM-DD, times as YYYY-MM-DD HH:MM:SS
-# in UTC, text as UTF-8, NULL as an empty field.
+# (no 1e+15 for a numeric id), text (dates and times as fetched, csv_time) as
+# UTF-8, NULL as an empty field.
 csv_field <- function(x) {
-  out <- if (inherits(x, "POSIXct")) {
-    format(x, "%Y-%m-%d %H:%M:%S", tz = "UTC")
-  } else if (inherits(x, "Date")) {
-    format(x, "%Y-%m-%d")
-  } else if (is.double(x)) {
+  out <- if (is.double(x)) {
     formatC(x, digits = 15L, format = "fg", width = 1L)
   } else if (is.character(x) || is.factor(x)) {
     csv_text(x)
@@ -1167,12 +1238,22 @@ write_csv <- function(df, path) {
 # the file's columns' resolve_columns() facts, in column order; `names` are the
 # names they are written under, which only a .dta order renames (plan_files).
 csv_writer <- function(path, columns, types, names) {
+  what <- paste0("writing ", sub("\\.partial$", "", basename(path)))
+  times <- which(types$type %in% TIME_TYPES)
   sink <- file(path, open = "wb")
   writeBin(csv_header(columns), sink)
   state <- new.env()
   state$open <- TRUE
   list(
-    write = function(chunk) if (nrow(chunk)) writeBin(csv_bytes(chunk), sink),
+    write = function(chunk) {
+      if (!nrow(chunk)) {
+        return(invisible())
+      }
+      for (j in times) {
+        chunk[[j]] <- csv_time(chunk[[j]], columns[j], what)
+      }
+      writeBin(csv_bytes(chunk), sink)
+    },
     finish = function() {
       close(sink)
       state$open <- FALSE
@@ -1205,6 +1286,7 @@ arrow_type <- function(type, precision, scale) {
 
 # Streams one row group per chunk, so a file is never held whole in memory.
 parquet_writer <- function(path, columns, types, names) {
+  what <- paste0("writing ", sub("\\.partial$", "", basename(path)))
   schema <- arrow::schema(stats::setNames(
     lapply(seq_along(columns), function(j) {
       arrow_type(types$type[j], types$precision[j], types$scale[j])
@@ -1240,10 +1322,15 @@ parquet_writer <- function(path, columns, types, names) {
       }
       arrays <- lapply(seq_along(chunk), function(j) {
         x <- chunk[[j]]
-        if (inherits(x, "POSIXct")) {
-          attr(x, "tzone") <- "UTC"
+        if (types$type[j] %in% TIME_TYPES) {
+          # Read as a time of no zone, then marked UTC: arrow refuses to read
+          # text without an offset straight into a UTC timestamp.
+          parts <- time_parts(x, 6L, "a microsecond", columns[j], what)
+          text <- ifelse(is.na(x), NA_character_, paste0(parts$seconds, ".", parts$fraction))
+          return(arrow::Array$create(text)$cast(arrow::timestamp("us"))$cast(schema[[j]]$type))
         }
-        # bigint and decimal arrive as text: arrow parses them exactly, or fails.
+        # bigint, decimal and date arrive as text: arrow parses them exactly, or
+        # fails.
         arrow::Array$create(x)$cast(schema[[j]]$type)
       })
       writer$WriteTable(
@@ -1295,6 +1382,12 @@ dta_column <- function(x, type, precision, column, what) {
   }
   if (type == "bit") {
     return(as.integer(x))
+  }
+  if (type == "date") {
+    return(parse_date(x, column, what))
+  }
+  if (type %in% TIME_TYPES) {
+    return(parse_time_ms(x, column, what))
   }
   if (
     type %in% c("float", "real") && any(abs(x) > STATA_DOUBLE_MAX, na.rm = TRUE)

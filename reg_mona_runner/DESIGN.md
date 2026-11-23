@@ -208,8 +208,8 @@ large id. What each SQL type becomes:
   | `decimal(p, s)`, `numeric(p, s)`, p > 15                   | text            | str (exact digits)                        | decimal128(p, s)       | the decimal as text   |
   | `float`, `real`                                            | double          | double; beyond Stata's range refused      | float64, float32       | 15 significant digits |
   | `bit`                                                      | logical         | long 0/1                                  | bool                   | 0/1                   |
-  | `date`                                                     | Date            | `%td` day                                 | date32                 | `YYYY-MM-DD`          |
-  | `datetime`, `datetime2`, `smalldatetime`                   | POSIXct, UTC    | `%tc` (milliseconds)                      | timestamp(us, UTC)     | `YYYY-MM-DD HH:MM:SS` |
+  | `date`                                                     | text            | `%td` day                                 | date32                 | `YYYY-MM-DD`          |
+  | `datetime`, `datetime2`, `smalldatetime`                   | text            | `%tc`; finer than 1 ms refused            | timestamp(us, UTC); finer than 1 us refused | `YYYY-MM-DD HH:MM:SS[.f]` |
   | `char`, `varchar`, `nchar`, `nvarchar`, `text`, `ntext`    | UTF-8 text      | str or strL; NULL as `""`                 | string                 | text                  |
   | any other (`time`, `datetimeoffset`, `money`, binary, ...) | as odbc returns | refused at resolve (7)                    | refused at resolve (7) | as text               |
 
@@ -229,6 +229,16 @@ Choices behind the table:
 - **A decimal goes by its declared precision**, a schema fact, so a column's Stata type
   never depends on its rows: up to 15 digits fit a double, a wider decimal stays exact
   as text. Parquet keeps decimal128 at the column's own precision and scale.
+- **Dates and date-times are fetched as ISO text** (`CONVERT` styles 23 and 121), so
+  every driver returns them alike. The legacy Windows "SQL Server" driver, which a
+  DSN may name, returns `datetime2` and `date` as text of its own, and a `CAST` of
+  `datetime` to text is `Jan  1 2026  4:33PM`. The runner then reads the text: a
+  date-time is a time of no zone, written as UTC. A `.dta` `%tc` value is whole
+  milliseconds since 1960, computed exactly. A value finer than the format holds (a
+  `datetime2(7)` with a non-zero 100-ns digit in Parquet, sub-millisecond in `.dta`)
+  is refused, naming the column; CSV keeps every digit, trailing zeros dropped
+  (found on MONA, 2026-11-23: the DSN's driver returned `datetime2` as text, which
+  Arrow refused as a UTC timestamp).
 - **Text NULL is `""` in `.dta`.** Stata has no missing string, and reads an empty
   string as missing. CSV and Parquet keep NULL apart from `""`.
 - **Stata limits.** Format 118 (Stata 14 and later) is UTF-8 with 32-character names and
