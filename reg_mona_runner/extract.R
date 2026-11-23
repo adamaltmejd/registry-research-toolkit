@@ -1628,6 +1628,8 @@ written_width <- function(type, max_length, precision, format) {
 
 # decimal.mark is explicit: under options(OutDec = ","), a Swedish setup's
 # choice, format() warns that the marks clash, and a warning fails an order.
+files_text <- function(n) paste(n, if (n == 1) "file" else "files")
+
 with_commas <- function(n) {
   format(
     n,
@@ -1938,7 +1940,7 @@ extract_order <- function(path, out, db, run) {
   format <- doc$extract_format
   files <- plan_files(doc$files, format)
   say(
-    "order ", run$nr, "   ", length(files), " files   ", format,
+    "order ", run$nr, "   ", files_text(length(files)), "   ", format,
     "   -> ", file.path("export_data", basename(run$final))
   )
   run$headed <- TRUE
@@ -2392,13 +2394,13 @@ run_order <- function(path, base, db) {
         log <- run$done
         if (
           !note(
-            "done   ", nrow(log), " files   ",
+            "done   ", files_text(nrow(log)), "   ",
             with_commas(sum(log$rows)), " rows   ",
             bytes_text(sum(log$bytes_written, na.rm = TRUE)), "   ",
             clock_text(seconds_since(started)), "   exit 0"
           )
         ) {
-          say("done: ", nrow(log), " files")
+          say("done: ", files_text(nrow(log)))
         }
         return(EXIT[["ok"]])
       }
