@@ -15,8 +15,9 @@ test_that("an export root without orders/ is a setup failure (2)", {
 test_that("an order that is not JSON is refused (3)", {
   # Regression: a truncated upload reaches the shape checks or the database.
   base <- export_root(text = list(`900` = "{\"version\": 4, \"files\": ["))
-  expect_identical(run_runner(base)$status, 3L)
-  expect_refused(base, "900", 3L)
+  run <- run_runner(base)
+  expect_identical(run$status, 3L)
+  expect_refused(base, "900", 3L, run$output)
 })
 
 test_that("a manifest version other than 4 is refused (4)", {
@@ -31,8 +32,9 @@ test_that("a manifest version other than 4 is refused (4)", {
       })
     )
   )
-  expect_identical(run_runner(base)$status, 4L)
-  expect_refused(base, "900", 4L)
+  run <- run_runner(base)
+  expect_identical(run$status, 4L)
+  expect_refused(base, "900", 4L, run$output)
 })
 
 test_that("another steward's order is refused (5)", {
@@ -42,8 +44,9 @@ test_that("another steward's order is refused (5)", {
   base <- export_root(
     text = list(`900` = order_text("key-only", identity, steward = "fixture"))
   )
-  expect_identical(run_runner(base)$status, 5L)
-  expect_refused(base, "900", 5L)
+  run <- run_runner(base)
+  expect_identical(run$status, 5L)
+  expect_refused(base, "900", 5L, run$output)
 })
 
 test_that("an unknown field anywhere in a compact manifest is refused (6)", {
@@ -57,8 +60,9 @@ test_that("an unknown field anywhere in a compact manifest is refused (6)", {
       })
     )
   )
-  expect_identical(run_runner(base)$status, 6L)
-  expect_refused(base, "900", 6L)
+  run <- run_runner(base)
+  expect_identical(run$status, 6L)
+  expect_refused(base, "900", 6L, run$output)
 })
 
 test_that("an unknown top-level field is refused (6)", {
@@ -73,8 +77,9 @@ test_that("an unknown top-level field is refused (6)", {
       })
     )
   )
-  expect_identical(run_runner(base)$status, 6L)
-  expect_refused(base, "900", 6L)
+  run <- run_runner(base)
+  expect_identical(run$status, 6L)
+  expect_refused(base, "900", 6L, run$output)
 })
 
 test_that("a column with a null storage type is refused (6)", {
@@ -88,8 +93,9 @@ test_that("a column with a null storage type is refused (6)", {
       })
     )
   )
-  expect_identical(run_runner(base)$status, 6L)
-  expect_refused(base, "900", 6L)
+  run <- run_runner(base)
+  expect_identical(run$status, 6L)
+  expect_refused(base, "900", 6L, run$output)
 })
 
 test_that("an output file named like the run log is refused (6)", {
@@ -104,8 +110,9 @@ test_that("an output file named like the run log is refused (6)", {
       })
     )
   )
-  expect_identical(run_runner(base)$status, 6L)
-  expect_refused(base, "900", 6L)
+  run <- run_runner(base)
+  expect_identical(run$status, 6L)
+  expect_refused(base, "900", 6L, run$output)
 })
 
 test_that("two columns written under one Stata name are refused (6)", {
@@ -120,6 +127,7 @@ test_that("two columns written under one Stata name are refused (6)", {
       })
     )
   )
-  expect_identical(run_runner(base)$status, 6L)
-  expect_refused(base, "900", 6L)
+  run <- run_runner(base)
+  expect_identical(run$status, 6L)
+  expect_refused(base, "900", 6L, run$output)
 })

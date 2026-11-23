@@ -4,11 +4,13 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 #
 # For every order manifest in <base>/orders/*.json (the order.json the catalog
 # writes, renamed to the project number), extract the ordered columns from the
-# steward's holdings into <base>/export_data/<nr>_<YYYY-MM-DD>/: one file per
-# manifest file, in the order's extract_format (Stata .dta, Parquet or CSV), plus
-# run_log.csv. A success moves the order to
-# orders/archive/<nr>_<YYYY-MM-DD>.json; a failure leaves it in orders/ with
-# error_log.csv in its export folder. A rerun overwrites.
+# steward's holdings: one file per manifest file, in the order's extract_format
+# (Stata .dta, Parquet or CSV), plus run_log.csv. An order is written into
+# <base>/export_data/<nr>.partial/, each file under a .partial name until it is
+# complete; a success renames the folder to <nr>_<YYYY-MM-DD>/ and moves the order
+# to orders/archive/<nr>_<YYYY-MM-DD>.json. A failure, or a run that is stopped,
+# leaves the order in orders/ and its finished files in <nr>.partial/, and the
+# next run resumes from them.
 #
 # Run: source("extract.R") in R on MONA, `Rscript extract.R`, or
 # `R CMD BATCH extract.R` on the batch server, beside extract-config.json.
@@ -17,9 +19,10 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 #
 # Packages: base R (>= 4.2, UTF-8 native), DBI, odbc and jsonlite, plus haven for
 # a .dta order and arrow for a .parquet one; any missing is installed into R's
-# default library first (haven and arrow when an order needs them). Row values
-# are never printed or logged: only file names, row and column counts and
-# manifest fields are.
+# default library first (haven and arrow when an order needs them). Files under
+# export_data/ hold no row values beyond the extract itself. The console does: a
+# failure prints the full R or driver message in a marked error block, since the
+# console stays on MONA (reg_mona_runner/DESIGN.md, "Row values").
 #
 # This file is ASCII only: a non-ASCII name reaches SQL Server as NCHAR() code
 # points, never as R string bytes (non-ASCII identifiers sent as text fail on MONA).
@@ -93,6 +96,8 @@ EXIT <- c(
 )
 
 FETCH_ROWS <- 100000L
+# The suffix of a file or order folder that is not finished yet.
+PARTIAL <- ".partial"
 ENCODINGS <- c("date", "year", "yyyymm", "yyyymmdd")
 DATE_TYPES <- c(
   "date",
@@ -138,14 +143,38 @@ STATA_DOUBLE_MAX <- 8.98846567431157e307
 # A decimal of at most this many digits is a Stata double; a wider one is text.
 DTA_DOUBLE_DIGITS <- 15L
 
-refuse <- function(code, ...) {
+# `detail` is the underlying R or driver message, which can quote a row value:
+# it is printed only inside the failure's error block (run_order).
+refuse <- function(code, ..., detail = NULL) {
   stop(structure(
     class = c("runner_refusal", "error", "condition"),
-    list(message = paste0(...), call = NULL, code = EXIT[[code]])
+    list(
+      message = paste0(...),
+      call = NULL,
+      code = EXIT[[code]],
+      detail = detail
+    )
   ))
 }
 
 say <- function(...) cat(paste0(...), "\n", sep = "")
+
+# The underlying R or driver message of a failure, between marker lines. It can
+# quote a row value, so it goes to the console only, which stays on MONA, never
+# to a file under export_data/.
+error_block <- function(detail, trace = NULL) {
+  if (!length(detail) && !length(trace)) {
+    return(invisible())
+  }
+  say("  ---- error detail: may contain row values, do not copy off MONA ----")
+  for (line in unlist(strsplit(detail, "\n", fixed = TRUE))) {
+    say("  ", line)
+  }
+  if (length(trace)) {
+    say("  in: ", paste(trace, collapse = " > "))
+  }
+  say("  ---- end of error detail ----")
+}
 
 PACKAGES <- c("DBI", "odbc", "jsonlite")
 FORMATS <- c("dta", "parquet", "csv")
@@ -564,8 +593,9 @@ sql_text <- function(s) {
   paste0("CAST(", paste(parts, collapse = " + "), " AS nvarchar(128))")
 }
 
-# Run a query; a driver error is reported by SQLSTATE only, because its message
-# can quote a row value (a conversion error names the value it failed on).
+# Run a query. A driver error names its SQLSTATE in the headline; the driver's
+# full message, which can quote a row value (a conversion error names the value
+# it failed on), is the refusal's detail.
 query <- function(con, sql, what, params = list()) {
   tryCatch(
     if (length(params)) {
@@ -573,14 +603,17 @@ query <- function(con, sql, what, params = list()) {
     } else {
       DBI::dbGetQuery(con, sql)
     },
-    error = function(e) refuse("extract", what, " failed", sqlstate(e))
+    error = function(e) driver_refusal(e, "extract", what, " failed")
   )
 }
 
+driver_refusal <- function(e, code, ...) {
+  refuse(code, ..., sqlstate(e), detail = conditionMessage(e))
+}
+
 # The SQLSTATE from odbc's own state marker ("nanodbc/nanodbc.cpp:N: XXXXX: " or
-# "ODBC failed with error XXXXX from "), first match only; the rest of the
-# message can quote a row value and is never kept. A value would have to spell
-# that marker to be mistaken for it, and would still yield five characters.
+# "ODBC failed with error XXXXX from "), first match only. A value would have to
+# spell that marker to be mistaken for it, and would still yield five characters.
 sqlstate <- function(e) {
   msg <- conditionMessage(e)
   markers <- regmatches(
@@ -597,11 +630,7 @@ sqlstate <- function(e) {
   )
   # The driver can report a success (00xxx) or warning (01xxx) state before the error.
   state <- states[!startsWith(states, "00") & !startsWith(states, "01")][1]
-  paste0(
-    " (",
-    if (!is.na(state)) paste0("SQLSTATE ", state, "; "),
-    "driver message withheld: it may quote row values)"
-  )
+  if (is.na(state)) "" else paste0(" (SQLSTATE ", state, ")")
 }
 
 # The order's table in its named schema: exactly one, both names matched
@@ -1134,7 +1163,7 @@ write_csv <- function(df, path) {
 
 # A writer for one output file: write(chunk) takes each fetched chunk (the first
 # may have no rows), finish() completes the file, release() frees what an
-# unfinished file holds (the failed order's folder is then cleared). `types` are
+# unfinished file holds (its .partial file is then removed). `types` are
 # the file's columns' resolve_columns() facts, in column order; `names` are the
 # names they are written under, which only a .dta order renames (plan_files).
 csv_writer <- function(path, columns, types, names) {
@@ -1286,7 +1315,7 @@ dta_column <- function(x, type, precision, column, what) {
 # simplify: the whole file is in memory; a LISA year file is about 8M rows x
 # 100 columns, so stream (or split) if a real .dta order exhausts MONA's RAM.
 dta_writer <- function(path, columns, types, names) {
-  what <- paste0("writing ", basename(path))
+  what <- paste0("writing ", sub("\\.partial$", "", basename(path)))
   state <- new.env()
   state$chunks <- list()
   list(
@@ -1343,10 +1372,12 @@ dta_writer <- function(path, columns, types, names) {
 WRITERS <- list(dta = dta_writer, parquet = parquet_writer, csv = csv_writer)
 
 # `progress(rows)` is called after each fetched chunk with the file's rows so far.
+# The file is written as <name>.partial and takes its own name only once complete,
+# so a run that is stopped leaves nothing that passes for a finished file.
 extract_file <- function(con, file, types, format, out, progress) {
   batch <- select_batch(file, types)
   n <- length(file$columns)
-  path <- file.path(out, file$name)
+  path <- file.path(out, paste0(file$name, PARTIAL))
   column_types <- lapply(types, `[`, seq_len(n))
   writer <- WRITERS[[format]](path, file$columns, column_types, file$names)
   on.exit(writer$release(), add = TRUE)
@@ -1357,14 +1388,14 @@ extract_file <- function(con, file, types, format, out, progress) {
     } else {
       DBI::dbSendQuery(con, batch$sql)
     },
-    error = function(e) refuse("extract", what, " failed", sqlstate(e))
+    error = function(e) driver_refusal(e, "extract", what, " failed")
   )
   on.exit(DBI::dbClearResult(res), add = TRUE, after = FALSE)
   rows <- 0
   repeat {
     chunk <- tryCatch(
       DBI::dbFetch(res, n = FETCH_ROWS),
-      error = function(e) refuse("extract", what, " failed", sqlstate(e))
+      error = function(e) driver_refusal(e, "extract", what, " failed")
     )
     if (ncol(chunk) != n) {
       refuse("extract", what, " returned an unexpected column count")
@@ -1387,6 +1418,9 @@ extract_file <- function(con, file, types, format, out, progress) {
     if (DBI::dbHasCompleted(res)) break
   }
   writer$finish()
+  if (!rename(path, file.path(out, file$name))) {
+    refuse("extract", "cannot rename ", basename(path), " to ", file$name)
+  }
   rows
 }
 
@@ -1554,22 +1588,17 @@ precount <- function(con, files, resolved, format) {
       },
       runner_refusal = function(e) {
         note("    ", conditionMessage(e), "; extracting it anyway")
+        report(error_block(e$detail))
         NA_real_
       },
       error = function(e) {
-        note(
-          "    counting ",
-          f$name,
-          " failed (R message withheld); extracting it anyway"
-        )
+        note("    counting ", f$name, " failed; extracting it anyway")
+        report(error_block(conditionMessage(e)))
         NA_real_
       },
       warning = function(w) {
-        note(
-          "    counting ",
-          f$name,
-          " raised an R warning (withheld); extracting it anyway"
-        )
+        note("    counting ", f$name, " raised an R warning; extracting it anyway")
+        report(error_block(conditionMessage(w)))
         NA_real_
       }
     )
@@ -1715,6 +1744,10 @@ progress_tracker <- function(counts, columns) {
         left(i, rows)
       )
     },
+    # A file kept from an earlier run: no work left, and none fetched in this one.
+    skip = function(i) {
+      state$finished[i] <- TRUE
+    },
     # Marks file i done and returns the time left, as text for its closing line.
     finish = function(i, rows) {
       state$finished[i] <- TRUE
@@ -1727,8 +1760,12 @@ progress_tracker <- function(counts, columns) {
 
 # ---- One order ----------------------------------------------------------------------
 
-read_order <- function(path) {
-  text <- rawToChar(readBin(path, "raw", file.size(path)))
+read_bytes <- function(path) readBin(path, "raw", file.size(path))
+
+read_order <- function(path) parse_order(read_bytes(path))
+
+parse_order <- function(bytes) {
+  text <- rawToChar(bytes)
   Encoding(text) <- "UTF-8"
   tryCatch(
     jsonlite::parse_json(text, simplifyVector = FALSE),
@@ -1739,18 +1776,21 @@ read_order <- function(path) {
 connection <- function(db) {
   if (is.null(db$con)) {
     if (!is.null(db$failed)) {
-      refuse("setup", db$failed)
+      refuse("setup", db$failed, detail = db$failed_detail)
     }
     db$con <- tryCatch(config$connect(), error = function(e) {
       db$failed <- paste0("cannot connect to the database", sqlstate(e))
-      refuse("setup", db$failed)
+      db$failed_detail <- conditionMessage(e)
+      refuse("setup", db$failed, detail = db$failed_detail)
     })
   }
   db$con
 }
 
-extract_order <- function(path, out, db) {
-  doc <- check_manifest(read_order(path))
+extract_order <- function(path, out, db, run) {
+  # Read once: the bytes parsed are the bytes saved as the order copy.
+  bytes <- read_bytes(path)
+  doc <- check_manifest(parse_order(bytes))
   format <- doc$extract_format
   files <- plan_files(doc$files, format)
   pkg <- FORMAT_PACKAGES[[format]]
@@ -1790,23 +1830,35 @@ extract_order <- function(path, out, db) {
     precount(con, files, resolved, format),
     rep(NA_real_, length(files))
   )
+  file_names <- vapply(files, `[[`, "", "name")
+  log <- resume(out, doc, files, counts)
+  kept <- file_names %in% log$file
+  if (any(kept)) {
+    say(
+      "  resuming: ",
+      sum(kept),
+      " of ",
+      length(files),
+      " file(s) kept from an earlier run"
+    )
+  }
+  replace_file(file.path(out, ORDER_COPY), function(tmp) writeBin(bytes, tmp))
+  write_log(log, out)
+  run$log <- log
   tracker <- progress_tracker(
     counts,
     vapply(files, function(f) length(f$columns), 0L)
   )
-  log <- data.frame(
-    file = character(),
-    rows = numeric(),
-    rows_counted = numeric(),
-    columns = integer(),
-    filter = character(),
-    rows_without_period = numeric()
-  )
-  sequence <- order(vapply(files, `[[`, "", "name"), method = "radix")
-  for (k in seq_along(sequence)) {
-    i <- sequence[k]
+  for (i in which(kept)) {
+    tracker$skip(i)
+  }
+  sequence <- order(file_names, method = "radix")
+  todo <- sequence[!kept[sequence]]
+  for (k in seq_along(todo)) {
+    i <- todo[k]
     f <- files[[i]]
-    note("  file ", k, " of ", length(files), ": ", f$name)
+    run$file <- f$name
+    note("  file ", k, " of ", length(todo), ": ", f$name)
     rows <- extract_file(
       con,
       f,
@@ -1852,56 +1904,287 @@ extract_order <- function(path, out, db) {
       describe_filter(f$filter),
       dropped
     )
+    # Written after every file: it is the record a resumed run keeps files by.
+    write_log(log, out)
+    run$log <- log
   }
-  write_csv(log, file.path(out, "run_log.csv"))
-  nrow(log)
+  run$file <- NULL
+  log <- log[order(log$file, method = "radix"), , drop = FALSE]
+  rownames(log) <- NULL
+  write_log(log, out)
+  log
+}
+
+# ---- Resuming -------------------------------------------------------------------------
+
+# The copy of the order an unfinished export folder keeps, so that a later run can
+# tell which of its files still stand. Removed when the order completes.
+ORDER_COPY <- "order.json"
+RUN_LOG <- "run_log.csv"
+TMP <- ".tmp"
+
+empty_log <- function() {
+  data.frame(
+    file = character(),
+    rows = numeric(),
+    rows_counted = numeric(),
+    columns = integer(),
+    filter = character(),
+    rows_without_period = numeric()
+  )
+}
+
+# file.rename() that reports failure only by its value: on Windows it warns
+# before returning FALSE, and an order's warning handler would fail the order
+# on the warning instead of letting the caller recover.
+rename <- function(from, to) isTRUE(suppressWarnings(file.rename(from, to)))
+
+# Writes `path` through `write(tmp)` into <path>.tmp, then renames it over `path`,
+# so the folder always holds a whole copy. Where the rename cannot replace an
+# existing file, the old one is removed first: for that moment the folder has no
+# copy, and a run stopped then resumes nothing. If that fails too, the .tmp copy
+# stays and the order is refused.
+replace_file <- function(path, write) {
+  tmp <- paste0(path, TMP)
+  write(tmp)
+  if (!rename(tmp, path)) {
+    unlink(path, expand = FALSE)
+    if (!rename(tmp, path)) {
+      refuse("setup", "cannot rename ", tmp, " to ", path)
+    }
+  }
+}
+
+write_log <- function(log, out) {
+  replace_file(file.path(out, RUN_LOG), function(tmp) write_csv(log, tmp))
+}
+
+# The regular files in `out`, by their exact (case-sensitive) names.
+regular_files <- function(out) {
+  names <- list.files(out, all.files = TRUE, no.. = TRUE)
+  names[!dir.exists(file.path(out, names))]
+}
+
+# The order copy and run log an earlier, unfinished run left in `out`: its
+# manifest entries by output file name, and its log. NULL when either is missing
+# or unreadable, and then nothing is kept.
+read_prior <- function(out, present) {
+  if (!all(c(ORDER_COPY, RUN_LOG) %in% present)) {
+    return(NULL)
+  }
+  prior <- read_order(file.path(out, ORDER_COPY))
+  entries <- stats::setNames(
+    prior$files,
+    vapply(prior$files, function(e) paste0(e$name, ".", prior$extract_format), "")
+  )
+  # As text, so an empty field stays "" in a text column; the numbers then read
+  # an empty field as NA.
+  log <- utils::read.csv(
+    file.path(out, RUN_LOG),
+    colClasses = "character",
+    na.strings = character(),
+    encoding = "UTF-8"
+  )
+  if (!identical(names(log), names(empty_log()))) {
+    return(NULL)
+  }
+  for (column in c("rows", "rows_counted", "rows_without_period")) {
+    log[[column]] <- as.numeric(log[[column]])
+  }
+  log$columns <- as.integer(log$columns)
+  list(entries = entries, log = log)
+}
+
+# Keeps the finished files of an earlier run of this order and clears every other
+# file from `out`, returning the kept files' log rows. A file stands only if it is
+# in the folder under its exact name, its manifest entry is unchanged (the whole
+# entry, format included through its name), it is listed in the earlier log, and
+# its source still counts the rows it was written with. The count is the only
+# check on the source: a table changed without changing its row count is not
+# noticed (DESIGN.md, "Resuming"). The order copy and the log stay until the
+# caller replaces them, so a readable checkpoint is always there.
+resume <- function(out, doc, files, counts) {
+  log <- empty_log()
+  present <- regular_files(out)
+  prior <- report(read_prior(out, present))
+  if (!is.null(prior)) {
+    for (i in seq_along(files)) {
+      name <- files[[i]]$name
+      row <- prior$log[prior$log$file == name, , drop = FALSE]
+      if (
+        name %in% present &&
+          nrow(row) == 1L &&
+          identical(prior$entries[[name]], doc$files[[i]]) &&
+          !is.na(counts[i]) &&
+          !is.na(row$rows) &&
+          row$rows == counts[i]
+      ) {
+        log <- rbind(log, row)
+      }
+    }
+  }
+  listed <- list.files(out, all.files = TRUE, no.. = TRUE)
+  stale <- setdiff(listed, c(log$file, ORDER_COPY, RUN_LOG))
+  unlink(file.path(out, stale), recursive = TRUE, expand = FALSE)
+  left <- intersect(list.files(out, all.files = TRUE, no.. = TRUE), stale)
+  if (length(left)) {
+    refuse(
+      "setup",
+      "cannot clear ",
+      paste(left, collapse = ", "),
+      " from ",
+      out,
+      " (open in another program?)"
+    )
+  }
+  rownames(log) <- NULL
+  log
+}
+
+# The runner's own functions among the calls on the stack when an R error was
+# raised, outermost first, then the call that raised it: where in the runner it
+# failed. Function names only, since a call's arguments can hold row values; the
+# raising call is cut to its function name too.
+call_trace <- function(calls, e) {
+  runner <- environment(call_trace)
+  name <- function(cl) {
+    f <- cl[[1]]
+    if (is.name(f)) as.character(f) else paste(deparse(f), collapse = "")
+  }
+  names <- vapply(calls, name, "")
+  own <- names[vapply(
+    names,
+    function(n) exists(n, envir = runner, inherits = FALSE, mode = "function"),
+    TRUE
+  )]
+  raising <- conditionCall(e)
+  c(own, if (!is.null(raising)) paste0(name(raising), "()"))
+}
+
+# The refusal when an order's dated export folder already exists: it is never
+# replaced, so the .partial folder stays as it is and can be resumed.
+refuse_existing <- function(final) {
+  refuse(
+    "setup",
+    final,
+    " already exists: move or delete it, then run again"
+  )
+}
+
+# Gives the finished order's folder its dated name. The folder must hold exactly
+# the order's files, the run log and the order copy; only then is the order copy
+# removed and the folder renamed. A refusal before the rename leaves the .partial
+# folder resumable; `run$stage` records how far it got, for the failure report.
+publish <- function(out, final, expected, run) {
+  if (file.exists(final)) {
+    refuse_existing(final)
+  }
+  listed <- list.files(out, all.files = TRUE, no.. = TRUE)
+  wanted <- c(expected, RUN_LOG, ORDER_COPY)
+  if (!setequal(listed, wanted) || length(listed) != length(wanted)) {
+    refuse(
+      "setup",
+      out,
+      " does not hold exactly the order's files, ",
+      RUN_LOG,
+      " and ",
+      ORDER_COPY,
+      ": unexpected ",
+      paste(setdiff(listed, wanted), collapse = ", "),
+      "; missing ",
+      paste(setdiff(wanted, listed), collapse = ", ")
+    )
+  }
+  unlink(file.path(out, ORDER_COPY), expand = FALSE)
+  if (file.exists(file.path(out, ORDER_COPY))) {
+    refuse("setup", "cannot remove ", ORDER_COPY, " from ", out)
+  }
+  run$stage <- "complete"
+  if (!rename(out, final)) {
+    refuse(
+      "setup",
+      "cannot rename ",
+      out,
+      " to ",
+      final
+    )
+  }
+}
+
+# After a failure, removes the file that was being written (<name>.partial) and
+# any temporary copy (<name>.tmp) from `out`, so the finished files, the order
+# copy and the run log remain. A temporary copy whose file is missing is the only
+# whole copy left (replace_file removed the old one and could not rename): it is
+# renamed back, never deleted. Returns the names it could not handle.
+clean_partial <- function(out) {
+  names <- list.files(out, pattern = "\\.(partial|tmp)$", all.files = TRUE)
+  left <- character()
+  for (name in names) {
+    path <- file.path(out, name)
+    whole <- sub("\\.tmp$", "", path)
+    if (endsWith(name, TMP) && !file.exists(whole)) {
+      if (!rename(path, whole)) left <- c(left, name)
+    } else {
+      unlink(path, expand = FALSE)
+      if (file.exists(path)) left <- c(left, name)
+    }
+  }
+  left
 }
 
 run_order <- function(path, base, db) {
   nr <- tools::file_path_sans_ext(basename(path))
   stamp <- format(Sys.Date(), "%Y-%m-%d")
-  out <- file.path(base, "export_data", paste0(nr, "_", stamp))
+  out <- file.path(base, "export_data", paste0(nr, PARTIAL))
+  final <- file.path(base, "export_data", paste0(nr, "_", stamp))
   say("order ", nr, ":")
-  # An empty export folder, or FALSE when a file survives (on Windows, one open
-  # in another program).
-  reset <- function() {
-    unlink(out, recursive = TRUE)
-    dir.create(out, recursive = TRUE, showWarnings = FALSE)
-    dir.exists(out) && !length(list.files(out, all.files = TRUE, no.. = TRUE))
-  }
+  # What the failure report names: the file being extracted, and where an
+  # unexpected R error was raised.
+  run <- new.env()
   failure <- tryCatch(
     {
-      if (!reset()) {
-        refuse("setup", "cannot clear the export folder ", out)
+      # Checked first too, so a run does not extract for hours to be refused at
+      # the end.
+      if (file.exists(final)) {
+        refuse_existing(final)
       }
-      # An R warning can quote a value (a string R cannot translate): it fails
-      # the order instead of reaching the console.
-      n <- withCallingHandlers(
-        extract_order(path, out, db),
+      dir.create(out, recursive = TRUE, showWarnings = FALSE)
+      if (!dir.exists(out)) {
+        refuse("setup", "cannot create the export folder ", out)
+      }
+      # From here on the failure report cleans up and describes `out`.
+      run$stage <- "open"
+      # An R warning can mean a value was altered (a string R cannot
+      # translate): it fails the order.
+      log <- withCallingHandlers(
+        extract_order(path, out, db, run),
         warning = function(w) {
           refuse(
             "extract",
-            "an R warning was raised (withheld: it may quote row values)"
+            "an R warning was raised",
+            detail = conditionMessage(w)
           )
+        },
+        error = function(e) {
+          if (!inherits(e, "runner_refusal")) {
+            run$trace <- report(call_trace(sys.calls(), e))
+          }
         }
       )
-      say("  done: ", n, " file(s) in ", out)
+      publish(out, final, log$file, run)
+      run$stage <- "published"
+      say("  done: ", nrow(log), " file(s) in ", final)
       NULL
     },
     runner_refusal = function(e) e,
-    # Withheld like a driver message: an R error, and its call (do.call inlines
-    # its arguments), can quote a value it failed on.
     error = function(e) {
       structure(
         class = c("runner_refusal", "error", "condition"),
         list(
-          message = paste0(
-            "unexpected R error (",
-            class(e)[1],
-            "; message withheld: it may quote row values)"
-          ),
+          message = paste0("unexpected R error (", class(e)[1], ")"),
           call = NULL,
-          code = EXIT[["extract"]]
+          code = EXIT[["extract"]],
+          detail = conditionMessage(e)
         )
       )
     }
@@ -1927,15 +2210,29 @@ run_order <- function(path, base, db) {
       )
     )
   }
-  # A failed order leaves no partial files, only its error log.
-  if (!reset()) {
-    say("  WARNING: files remain in ", out, ": delete them before using it")
-  }
-  write_csv(
-    data.frame(code = failure$code, message = conditionMessage(failure)),
-    file.path(out, "error_log.csv")
+  stage <- if (is.null(run$stage)) "none" else run$stage
+  left <- if (stage %in% c("open", "complete")) clean_partial(out) else character()
+  say(
+    "  FAILED (exit code ",
+    failure$code,
+    ")",
+    if (!is.null(run$file)) paste0(" in ", run$file),
+    ": ",
+    conditionMessage(failure)
   )
-  say("  FAILED (exit code ", failure$code, "): ", conditionMessage(failure))
+  error_block(failure$detail, run$trace)
+  # What is left, and what the coordinator does next.
+  finished <- if (is.null(run$log)) 0L else nrow(run$log)
+  if (stage == "open" && finished > 0L) {
+    say("  the next run resumes ", finished, " finished file(s) kept in ", out)
+  } else if (stage == "complete") {
+    say("  the export is complete in ", out, ": rename it to ", final, " by hand")
+  } else if (stage == "published") {
+    say("  the export is complete in ", final, "; the order could not be archived")
+  }
+  if (length(left)) {
+    say("  WARNING: could not remove or restore ", paste(left, collapse = ", "))
+  }
   failure$code
 }
 
