@@ -296,7 +296,8 @@ Choices behind the table:
   no two columns of a file are written under one name, or the order is refused (exit 6).
   `%tc` holds milliseconds: a `datetime2`'s finer digits are cut and counted (above).
 - **Memory.** CSV and Parquet stream one chunk at a time (a Parquet row group per
-  chunk, split at arrow's cap of 1,048,576 rows), so their ceiling is one chunk of `fetch_rows` rows, about twice over for
+  chunk, split at arrow's own cap, 1,048,576 rows in current versions, and wherever a
+  text column would pass 1 GB, since an arrow string array holds under 2 GB), so their ceiling is one chunk of `fetch_rows` rows, about twice over for
   Parquet while it is converted; the steward sizes it for the machine the runner runs
   on. haven cannot append, so a `.dta` file is collected whole and written once: the
   ceiling is MONA's RAM for the order's widest file (`simplify:` in the script).

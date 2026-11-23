@@ -133,6 +133,7 @@ test_that("two columns written under one Stata name are refused (6)", {
 })
 
 test_that("a fetch_rows that is not a positive whole number is a setup failure (2)", {
+  # A fraction, zero or a string must stop the run, not reach dbFetch.
   base <- export_root()
   path <- file.path(base, "extract-config.json")
   cfg <- jsonlite::read_json(path)

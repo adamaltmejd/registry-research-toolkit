@@ -106,6 +106,9 @@ EXIT <- c(
 
 # Rows per fetch when the steward configuration names no `fetch_rows`.
 FETCH_ROWS <- 100000L
+# Text bytes per column in one Parquet row group, at most: half of what an arrow
+# string array holds.
+GROUP_TEXT_BYTES <- 1e9
 # The suffix of a file or order folder that is not finished yet.
 PARTIAL <- ".partial"
 ENCODINGS <- c("date", "year", "yyyymm", "yyyymmdd")
@@ -1350,31 +1353,44 @@ parquet_writer <- function(path, columns, types, names) {
       tryCatch(writer$Close(), finally = sink$close())
     }
   }
+  write_rows <- function(chunk) {
+    arrays <- lapply(seq_along(chunk), function(j) {
+      x <- chunk[[j]]
+      if (types$type[j] %in% TIME_TYPES) {
+        # Read as a time of no zone, then marked UTC: arrow refuses to read
+        # text without an offset straight into a UTC timestamp.
+        parts <- time_parts(x, 6L, columns[j], what, cuts$add)
+        text <- ifelse(is.na(x), NA_character_, paste0(parts$seconds, ".", parts$fraction))
+        return(arrow::Array$create(text)$cast(arrow::timestamp("us"))$cast(schema[[j]]$type))
+      }
+      # bigint, decimal and date arrive as text: arrow parses them exactly, or
+      # fails.
+      arrow::Array$create(x)$cast(schema[[j]]$type)
+    })
+    writer$WriteTable(
+      arrow::Table$create(
+        !!!stats::setNames(arrays, columns),
+        schema = schema
+      ),
+      chunk_size = config$fetch_rows
+    )
+  }
   list(
     write = function(chunk) {
       if (!nrow(chunk)) {
         return(invisible())
       }
-      arrays <- lapply(seq_along(chunk), function(j) {
-        x <- chunk[[j]]
-        if (types$type[j] %in% TIME_TYPES) {
-          # Read as a time of no zone, then marked UTC: arrow refuses to read
-          # text without an offset straight into a UTC timestamp.
-          parts <- time_parts(x, 6L, columns[j], what, cuts$add)
-          text <- ifelse(is.na(x), NA_character_, paste0(parts$seconds, ".", parts$fraction))
-          return(arrow::Array$create(text)$cast(arrow::timestamp("us"))$cast(schema[[j]]$type))
-        }
-        # bigint, decimal and date arrive as text: arrow parses them exactly, or
-        # fails.
-        arrow::Array$create(x)$cast(schema[[j]]$type)
-      })
-      writer$WriteTable(
-        arrow::Table$create(
-          !!!stats::setNames(arrays, columns),
-          schema = schema
-        ),
-        chunk_size = config$fetch_rows
-      )
+      # An arrow string array holds under 2 GB of text: a chunk whose widest
+      # text column holds more is written in row slices, a row group each.
+      text <- vapply(chunk, function(x) {
+        if (is.character(x)) sum(as.numeric(nchar(x, type = "bytes"))) else 0
+      }, 0)
+      pieces <- max(1, ceiling(max(text, 0) / GROUP_TEXT_BYTES))
+      slice <- ceiling(nrow(chunk) / pieces)
+      for (start in seq(1L, nrow(chunk), by = slice)) {
+        rows <- start:min(nrow(chunk), start + slice - 1L)
+        write_rows(if (pieces == 1) chunk else chunk[rows, , drop = FALSE])
+      }
     },
     finish = close_all,
     cut = cuts$counts,
