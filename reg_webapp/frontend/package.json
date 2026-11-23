@@ -16,7 +16,7 @@
     "gen:types": "openapi-typescript ../../crates/reg-meta/openapi.json -o src/lib/api-types-rust.ts"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.7",
+    "@biomejs/biome": "2.6.8",
     "@google/design.md": "0.4.0",
     "@react-aria/optimize-locales-plugin": "2.1.0",
     "@types/react": "19.3.0",
@@ -26,7 +26,7 @@
     "agent-browser": "0.43.0",
     "jsdom": "31.0.1",
     "openapi-typescript": "7.13.0",
-    "oxlint": "1.93.0",
+    "oxlint": "1.94.0",
     "typescript": "6.0.3",
     "vite": "8.3.8",
     "vitest": "5.1.0"
