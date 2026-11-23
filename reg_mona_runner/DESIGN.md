@@ -81,13 +81,15 @@ complete, renames it to `<nr>_<YYYY-MM-DD>/`, which must not exist yet:
    longer than a variable label holds (80 characters).
 4. Count, before writing any file, the rows each file's extract will write: one
    `COUNT_BIG(*)` per file with the file's own filter, through the same `sp_executesql`
-   path as the extract ("Pre-count" below). Print each file's rows and rough size, the
-   order's totals and how long the count took.
+   path as the extract ("Pre-count" below). Print the order's totals, its three
+   largest files, the columns not in the size, the failed counts and how long the
+   count took ("Console" below).
 5. Extract each file with one `SELECT`, fetched in chunks of 100,000 rows into the
    order's one format (below) under `<name>.partial`, renamed to its own name once
-   complete, printing file k of n and progress. `run_log.csv` (file, rows,
-   rows_counted, columns, filter, rows_without_period; the file name's extension is the
-   format) gets each file's row as it finishes.
+   complete, printing one line per finished file. `run_log.csv` (file, rows,
+   rows_counted, columns, filter, rows_without_period, bytes_written; the file name's
+   extension is the format) gets each file's row as it finishes. `bytes_written`, the
+   file's size on disk, is there to compare with the size estimate.
 
 On success the folder is renamed and the order moves to
 `orders/archive/<nr>_<YYYY-MM-DD>.json`. On failure the order stays in `orders/`, the
@@ -125,26 +127,60 @@ information only and never gates, prompts or refuses.
   number's text varies. A string with no declared length (`max`, `text`, `ntext`), and
   a CSV column of a type the table does not list, has no width: the console names
   those columns as not in the size. A file with no column of known width has an
-  unknown size, not zero, and a total that leaves one out says it is partial.
+  unknown size, not zero. The console shows the size as an estimate, `~300 GB est.`,
+and marks one that leaves such a column or file out with `+`.
 - **Time left.** No throughput is known before the first rows arrive, so there is no
   time before the extract starts. During it, the rate is the cells (rows times
   columns) actually fetched per second so far in the order. The work left is each
   unfinished file's counted cells, less what the current file has fetched; a
   finished file drops out whatever its actual rows were, so a count that was off
-  does not carry into later estimates. A line is printed at most every 30 seconds, and
-  one when each file ends. A file whose count failed is left out of the time left, and
-  the line says so. With no counted work left (the last file done, or only uncounted
+  does not carry into later estimates. The rate is not shown before extracting has run
+  five minutes: the first small files are mostly query overhead. A file whose count
+  failed is left out of the time left. With no counted work left (the last file done, or only uncounted
   files left) no time is given, and a file's closing line comes after its
   `rows_without_period` count. A total over no estimate reads unknown, not 0. The rate ignores
   that text columns cost more than numbers, so the estimate settles as the run goes on.
   Rows count as written when fetched: a `.dta` file is written whole at its end (see
   "Memory"), and that write is not in the estimate.
-- **Failure.** A count that fails (a driver error, an R error or warning) is printed,
-  with its message in an error block ("Row values"), `rows_counted` is empty for that file, and the extract runs as
+- **Failure.** A count that fails (a driver error, an R error or warning) is listed in
+  the count block, with its message in an error block ("Row values"), `rows_counted` is empty for that file, and the extract runs as
   it would have without it. The console lines of the pre-count and progress are
   formatted inside a guard too: a warning or error there (such as R's `OutDec` locale
   option clashing with a separator) drops the line, never the order. A run that passed
   before the pre-count still passes.
+
+## Console
+
+The coordinator follows a batch run by reading its `.Rout` file, where no line can
+be overwritten, so the console prints few lines in fixed-width, ASCII-only columns
+(#2631; trial on MONA, 2026-11-23). Durations are `h:mm`, an estimate has a `~`, and
+a file is named without the order's format, which the header gives.
+
+```text
+order 1234   136 files   parquet   -> export_data/1234_2026-11-23
+count      0:05   2,916,948,188 rows   ~300 GB+ est. uncompressed
+  largest    table_c          1,183,402,551 rows   ~140 GB
+             table_a              6,233,616 rows   ~900 MB
+             table_b                912,004 rows   ~88 MB+
+  not sized  table_d          COLUMN_X (varchar(max))
+  failed     none
+extract                          rows       size  elapsed     left
+    1/136  table_a          6,233,616      80 MB     0:03
+   97/136  table_c     310,000,000 of 1,183,402,551  1:05    ~3:10
+   97/136  table_c      1,183,402,551      81 GB     1:16    ~1:02
+done   136 files   2,916,948,188 rows   171 GB   4:12   exit 0
+```
+
+- **One line per finished file**: its place among the order's files (kept files of
+  a resumed run first), rows written, size on disk, time since extracting began and
+  the time left. No line when a file starts.
+- **A long file** gets a progress line in the same columns once it has run five
+  minutes, then at most every five minutes, so a file of a billion rows does not look
+  hung.
+- **A failure** takes the file's row, `FAILED (exit code N): reason`, followed by the
+  error block and what is left ("Resuming").
+- **The count block** keeps each file's count out of the console: `run_log.csv` has
+  it (`rows_counted`).
 
 ## SQL
 
@@ -281,6 +317,11 @@ on the source: a resume assumes the source tables did not change between the run
 way that keeps their row counts. A count that fails keeps nothing for that file. A
 missing or unreadable `order.json` or log keeps nothing. `order.json` is removed when
 the order completes.
+
+Resuming works only within one runner version: a log whose columns differ (written by
+another version) is unreadable, and the console says so before its files are cleared,
+`run_log.csv is from another runner version: N finished file(s) will be extracted
+again`. There is no compatibility path before v1 (coordinator review, 2026-11-23).
 
 `run_log.csv` and `order.json` are written to a `.tmp` name and renamed over the old
 copy, so a readable checkpoint is always there (where the share refuses to rename over

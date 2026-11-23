@@ -1549,8 +1549,9 @@ extract_file <- function(con, file, types, format, out, progress) {
 
 # ---- Pre-count, size and progress ---------------------------------------------------
 
-# Seconds between progress lines while a file is extracted.
-PROGRESS_SECONDS <- 30
+# Seconds a file runs before its first progress line, and between its progress
+# lines: a long file shows it is moving, a short one prints only its closing line.
+PROGRESS_SECONDS <- 300
 
 # Roughly how many bytes one value of a column takes in the written file: the
 # written type's width ("Types per format"; .csv: its usual text plus a comma),
@@ -1614,8 +1615,10 @@ written_width <- function(type, max_length, precision, format) {
       real = 18,
       bit = 2,
       date = 11,
-      datetime = ,
-      datetime2 = ,
+      # Style 121 text plus the comma: datetime2(7) has seven fractional
+      # digits, datetime three, smalldatetime's are zeros and dropped.
+      datetime2 = 28,
+      datetime = 24,
       smalldatetime = 20,
       NA
     )
@@ -1625,6 +1628,8 @@ written_width <- function(type, max_length, precision, format) {
 
 # decimal.mark is explicit: under options(OutDec = ","), a Swedish setup's
 # choice, format() warns that the marks clash, and a warning fails an order.
+files_text <- function(n) paste(n, if (n == 1) "file" else "files")
+
 with_commas <- function(n) {
   format(
     n,
@@ -1669,28 +1674,38 @@ bytes_text <- function(n) {
   )
 }
 
-minutes_text <- function(seconds) {
+# A duration as h:mm.
+clock_text <- function(seconds) {
   m <- round(seconds / 60)
-  if (m < 1) {
-    return("under a minute")
+  sprintf("%d:%02d", m %/% 60, m %% 60)
+}
+
+seconds_since <- function(t) as.numeric(difftime(Sys.time(), t, units = "secs"))
+
+# A column's SQL type as text, with its declared length where it has one.
+type_text <- function(type, max_length) {
+  if (!type %in% STRING_TYPES || type %in% c("text", "ntext")) {
+    return(type)
   }
-  if (m < 60) {
-    return(paste0(m, " min"))
-  }
-  paste0(m %/% 60, " h ", m %% 60, " min")
+  paste0(type, "(", if (is.na(max_length) || max_length < 0L) "max" else max_length, ")")
 }
 
 # Counts the rows each file's extract will write, one COUNT_BIG per file with the
-# file's own filter, before any file is written, and prints them with the order's
-# rough size. Information only: a count that fails is logged as not counted and
-# the extract runs as it would have without it. Returns each file's count (NA
-# when not counted).
+# file's own filter, before any file is written, and estimates each file's size.
+# Information only: a count that fails leaves the file not counted and the
+# extract runs as it would have without it. Returns each file's count (NA when
+# not counted) and size, its columns of no known width, the failed counts and
+# how long counting took; print_count() prints them.
 precount <- function(con, files, resolved, format) {
   started <- Sys.time()
-  note("  counting rows before extracting (one count query per file):")
   counts <- rep(NA_real_, length(files))
   bytes <- rep(NA_real_, length(files))
-  unsized <- character()
+  unsized <- character(length(files))
+  failed <- list()
+  fail <- function(f, message, detail) {
+    failed[[length(failed) + 1L]] <<- list(name = f$name, message = message, detail = detail)
+    NA_real_
+  }
   for (i in seq_along(files)) {
     f <- files[[i]]
     types <- resolved[[i]]
@@ -1709,24 +1724,13 @@ precount <- function(con, files, resolved, format) {
         )
         if (length(n) == 1L) n else NA_real_
       },
-      runner_refusal = function(e) {
-        note("    ", conditionMessage(e), "; extracting it anyway")
-        report(error_block(e$detail))
-        NA_real_
-      },
-      error = function(e) {
-        note("    counting ", f$name, " failed; extracting it anyway")
-        report(error_block(conditionMessage(e)))
-        NA_real_
-      },
-      warning = function(w) {
-        note("    counting ", f$name, " raised an R warning; extracting it anyway")
-        report(error_block(conditionMessage(w)))
-        NA_real_
-      }
+      runner_refusal = function(e) fail(f, conditionMessage(e), e$detail),
+      error = function(e) fail(f, "the count failed", conditionMessage(e)),
+      warning = function(w) fail(f, "the count raised an R warning", conditionMessage(w))
     )
+    n <- length(f$columns)
     widths <- vapply(
-      seq_along(f$columns),
+      seq_len(n),
       function(j) {
         written_width(
           types$type[j],
@@ -1737,149 +1741,168 @@ precount <- function(con, files, resolved, format) {
       },
       0
     )
-    unsized <- c(unsized, f$columns[is.na(widths)])
-    # No column of known width: the size is unknown, not zero.
-    bytes[i] <- if (all(is.na(widths))) {
-      NA_real_
-    } else {
-      counts[i] * sum(widths, na.rm = TRUE)
+    gaps <- which(is.na(widths))
+    if (length(gaps)) {
+      unsized[i] <- paste0(
+        f$columns[gaps],
+        " (",
+        vapply(gaps, function(j) type_text(types$type[j], types$max_length[j]), ""),
+        ")",
+        collapse = ", "
+      )
     }
-    note(
-      "    ",
-      f$name,
-      ": ",
-      if (is.na(counts[i])) {
-        "not counted"
-      } else {
-        paste0(
-          with_commas(counts[i]),
-          " rows, ",
-          if (is.na(bytes[i])) {
-            "size unknown"
-          } else {
-            paste("roughly", bytes_text(bytes[i]))
-          }
-        )
-      }
-    )
+    # No column of known width: the size is unknown, not zero.
+    bytes[i] <- if (length(gaps) == n) NA_real_ else counts[i] * sum(widths, na.rm = TRUE)
   }
-  missing <- sum(is.na(counts))
-  # Counted files whose size is unknown: the total size leaves them out.
-  unsized_files <- sum(!is.na(counts) & is.na(bytes))
+  list(
+    counts = counts,
+    bytes = bytes,
+    unsized = unsized,
+    failed = failed,
+    seconds = seconds_since(started)
+  )
+}
+
+# The count block: totals, the three largest files, the columns not in the size
+# and the failed counts, each failure's message in an error block. The size is a
+# ceiling: each value at its declared width, before any compression.
+print_count <- function(pre, files, format) {
+  names <- short_name(vapply(files, `[[`, "", "name"), format)
+  width <- max(nchar(names))
+  # An estimate; `+` when columns of no known width are left out of it.
+  est_size <- function(b, partial) {
+    if (is.na(b)) "size unknown" else paste0("~", bytes_text(b), if (partial) "+")
+  }
+  counted <- !is.na(pre$counts)
   note(
-    "  total: ",
-    # A sum over no estimate is unknown, not 0.
-    if (all(is.na(counts))) {
-      "rows unknown"
-    } else {
-      paste0(with_commas(sum(counts, na.rm = TRUE)), " rows")
-    },
-    " in ",
-    length(files),
-    " file(s), ",
-    if (all(is.na(bytes))) {
+    sprintf("%-11s", "count"),
+    clock_text(pre$seconds),
+    "   ",
+    if (any(counted)) paste(with_commas(sum(pre$counts, na.rm = TRUE)), "rows") else "rows unknown",
+    if (!all(counted)) paste0(" (", sum(!counted), " not counted)"),
+    "   ",
+    if (all(is.na(pre$bytes))) {
       "size unknown"
     } else {
       paste0(
-        "roughly ",
-        bytes_text(sum(bytes, na.rm = TRUE)),
-        " as .",
-        format,
-        if (format == "parquet") " before compression"
-      )
-    },
-    if (missing) paste0("; ", missing, " file(s) not counted and not included"),
-    if (unsized_files && !all(is.na(bytes))) {
-      paste0(
-        "; the size is partial: ",
-        unsized_files,
-        " file(s) of unknown size not included"
+        est_size(
+          sum(pre$bytes, na.rm = TRUE),
+          any(counted & (is.na(pre$bytes) | nzchar(pre$unsized)))
+        ),
+        " est.",
+        if (format == "parquet") " uncompressed"
       )
     }
   )
-  if (length(unsized)) {
+  top <- utils::head(order(-pre$counts, names, na.last = NA, method = "radix"), 3L)
+  for (k in seq_along(top)) {
+    i <- top[k]
     note(
-      "  not in the size: ",
-      length(unique(unsized)),
-      " column(s) with no known width (long text, or a type a CSV writes as other text): ",
-      paste(unique(unsized), collapse = ", ")
+      sprintf("  %-9s  %-*s  %15s rows   %s", if (k == 1L) "largest" else "", width, names[i], with_commas(pre$counts[i]), est_size(pre$bytes[i], nzchar(pre$unsized[i])))
     )
   }
-  note(
-    "  counting took ",
-    minutes_text(as.numeric(difftime(Sys.time(), started, units = "secs"))),
-    "; the time left is estimated once the first rows are written"
-  )
-  counts
+  for (i in which(nzchar(pre$unsized))) {
+    note(sprintf("  %-9s  %-*s  %s", "not sized", width, names[i], pre$unsized[i]))
+  }
+  if (!length(pre$failed)) {
+    note(sprintf("  %-9s  none", "failed"))
+  }
+  for (f in pre$failed) {
+    note(sprintf("  %-9s  %-*s  %s; extracting it anyway", "failed", width, short_name(f$name, format), f$message))
+    report(error_block(f$detail))
+  }
 }
 
-# Progress over an order's files: rows written against the counted rows, and the
-# time left at the rate seen so far. The rate is the cells (rows x columns)
-# actually fetched per second in this order, so a wide file counts as more work
-# than a narrow one. The work left is each unfinished counted file's counted
-# cells, less what the current file has fetched; a finished file drops out
-# whatever its actual rows were. Files not counted are left out of the time left.
+# The extract block's fixed-width lines: `k/n`, the file name as wide as the
+# longest, then rows, size, elapsed and time left, right-aligned.
+row_layout <- function(names, format) {
+  names <- short_name(names, format)
+  n <- length(names)
+  kn <- 2L * nchar(n) + 1L
+  name <- max(nchar(names))
+  lead <- function(k, file) {
+    sprintf("  %*s  %-*s", kn, paste0(k, "/", n), name, short_name(file, format))
+  }
+  list(
+    head = function() {
+      sprintf("%-*s  %15s  %9s  %7s  %7s", 2L + kn + 2L + name, "extract", "rows", "size", "elapsed", "left")
+    },
+    row = function(k, file, rows, size, elapsed, left) {
+      sprintf("%s  %15s  %9s  %7s  %7s", lead(k, file), rows, size, elapsed, left)
+    },
+    # A file still running: its rows against its count, across rows and size.
+    progress = function(k, file, rows, elapsed, left) {
+      sprintf("%s  %26s  %7s  %7s", lead(k, file), rows, elapsed, left)
+    },
+    text = function(k, file, text) paste0(lead(k, file), "  ", text),
+    note = function(file, text) sprintf("  %*s  %-*s  %s", kn, "", name, file, text)
+  )
+}
+
+# The time left at the rate seen so far, over an order's files. The rate is the
+# cells (rows x columns) actually fetched per second since extracting began, so a
+# wide file counts as more work than a narrow one. The work left is each
+# unfinished counted file's counted cells, less what the current file has
+# fetched; a finished file drops out whatever its actual rows were. Files not
+# counted are left out.
 progress_tracker <- function(counts, columns) {
   state <- new.env()
   state$started <- Sys.time()
-  state$shown <- state$started
   state$fetched <- 0 # cells fetched by finished files
   state$finished <- rep(FALSE, length(counts))
-  # Text for the time left while file i has fetched `rows`.
+  # Seconds left while file i has fetched `rows`; NA with no rate yet or no
+  # counted work left.
   left <- function(i, rows) {
     fetched <- state$fetched + rows * columns[i]
-    elapsed <- as.numeric(difftime(Sys.time(), state$started, units = "secs"))
+    elapsed <- seconds_since(state$started)
     open <- !state$finished & !is.na(counts)
     open[i] <- FALSE
     work <- sum(counts[open] * columns[open])
     if (!state$finished[i] && !is.na(counts[i])) {
       work <- work + max(counts[i] - rows, 0) * columns[i]
     }
-    # No rate yet, or no counted work left (the last file done, or only
-    # uncounted files left): no estimate to give.
-    if (fetched <= 0 || elapsed <= 0 || work <= 0) {
-      return("")
+    # Before PROGRESS_SECONDS the rate is too noisy to show (the first small
+    # files are mostly query overhead).
+    if (fetched <= 0 || elapsed < max(PROGRESS_SECONDS, 1) || work <= 0) {
+      return(NA_real_)
     }
-    seconds <- work / (fetched / elapsed)
-    paste0(
-      "; ",
-      if (seconds >= 30) "about ",
-      minutes_text(seconds),
-      " left",
-      if (anyNA(counts)) " for the counted files"
-    )
+    work / (fetched / elapsed)
   }
   list(
-    update = function(i, rows) {
-      since <- as.numeric(difftime(Sys.time(), state$shown, units = "secs"))
-      if (since < PROGRESS_SECONDS) {
-        return(invisible())
+    elapsed = function() seconds_since(state$started),
+    left = left,
+    start = function() {
+      state$file_started <- Sys.time()
+      state$shown <- state$file_started
+    },
+    # TRUE when file i's next progress line is due.
+    due = function() {
+      if (seconds_since(state$shown) < PROGRESS_SECONDS) {
+        return(FALSE)
       }
       state$shown <- Sys.time()
-      note(
-        "    ",
-        with_commas(rows),
-        if (is.na(counts[i])) {
-          " rows"
-        } else {
-          paste0(" of ", with_commas(counts[i]), " rows")
-        },
-        left(i, rows)
-      )
+      TRUE
     },
     # A file kept from an earlier run: no work left, and none fetched in this one.
     skip = function(i) {
       state$finished[i] <- TRUE
     },
-    # Marks file i done and returns the time left, as text for its closing line.
+    # Marks file i done and returns the seconds left after it.
+    # The estimate comes first: left() adds the current file's rows itself.
     finish = function(i, rows) {
       state$finished[i] <- TRUE
-      text <- report(left(i, rows), "")
+      seconds <- report(left(i, rows), NA_real_)
       state$fetched <- state$fetched + rows * columns[i]
-      text
+      seconds
     }
   )
 }
+
+# A file's name in the console's columns: without the order's format, which the
+# header names.
+short_name <- function(name, format) sub(paste0("\\.", format, "$"), "", name)
+
+left_text <- function(seconds) if (is.na(seconds)) "" else paste0("~", clock_text(seconds))
 
 # ---- One order ----------------------------------------------------------------------
 
@@ -1916,6 +1939,11 @@ extract_order <- function(path, out, db, run) {
   doc <- check_manifest(parse_order(bytes))
   format <- doc$extract_format
   files <- plan_files(doc$files, format)
+  say(
+    "order ", run$nr, "   ", files_text(length(files)), "   ", format,
+    "   -> ", file.path("export_data", basename(run$final))
+  )
+  run$headed <- TRUE
   pkg <- FORMAT_PACKAGES[[format]]
   if (!is.na(pkg) && !nzchar(system.file(package = pkg))) {
     install_missing(pkg)
@@ -1949,21 +1977,18 @@ extract_order <- function(path, out, db, run) {
     check_format(f, types, format)
     types
   })
-  counts <- report(
-    precount(con, files, resolved, format),
-    rep(NA_real_, length(files))
-  )
   file_names <- vapply(files, `[[`, "", "name")
+  pre <- report(precount(con, files, resolved, format))
+  if (is.null(pre)) {
+    pre <- list(counts = rep(NA_real_, length(files)))
+  } else {
+    report(print_count(pre, files, format))
+  }
+  counts <- pre$counts
   log <- resume(out, doc, files, counts)
   kept <- file_names %in% log$file
   if (any(kept)) {
-    say(
-      "  resuming: ",
-      sum(kept),
-      " of ",
-      length(files),
-      " file(s) kept from an earlier run"
-    )
+    say(sprintf("%-11s", "resume"), sum(kept), " of ", length(files), " files kept from an earlier run")
   }
   replace_file(file.path(out, ORDER_COPY), function(tmp) writeBin(bytes, tmp))
   write_log(log, out)
@@ -1975,22 +2000,39 @@ extract_order <- function(path, out, db, run) {
   for (i in which(kept)) {
     tracker$skip(i)
   }
+  layout <- row_layout(file_names, format)
+  run$layout <- layout
+  note(layout$head())
   sequence <- order(file_names, method = "radix")
   todo <- sequence[!kept[sequence]]
   for (k in seq_along(todo)) {
     i <- todo[k]
     f <- files[[i]]
+    # Its place among all the order's files, kept ones first.
+    place <- sum(kept) + k
     run$file <- f$name
-    note("  file ", k, " of ", length(todo), ": ", f$name)
-    written <- extract_file(
+    run$place <- place
+    tracker$start()
+    extracted <- extract_file(
       con,
       f,
       resolved[[i]],
       format,
       out,
-      function(rows) report(tracker$update(i, rows))
+      function(rows) {
+        if (tracker$due()) {
+          note(layout$progress(
+            place,
+            f$name,
+            if (is.na(counts[i])) with_commas(rows) else paste(with_commas(rows), "of", with_commas(counts[i])),
+            clock_text(tracker$elapsed()),
+            left_text(tracker$left(i, rows))
+          ))
+        }
+      }
     )
-    rows <- written$rows
+    rows <- extracted$rows
+    written <- file.size(file.path(out, f$name))
     # Rows the filter leaves out for a NULL or unreadable period value, counted
     # so the order's requester learns of them (an aggregate; NA, an empty field,
     # for an unfiltered file).
@@ -2007,32 +2049,31 @@ extract_order <- function(path, out, db, run) {
     }
     # After the count above, so its time is behind the time left shown here.
     # The rows written, without the separators, if the report's line fails.
-    closing <- tracker$finish(i, rows)
-    if (!note("  ", f$name, ": ", with_commas(rows), " rows", closing)) {
+    left <- tracker$finish(i, rows)
+    if (
+      !note(layout$row(place, f$name, with_commas(rows), bytes_text(written), clock_text(tracker$elapsed()), left_text(left)))
+    ) {
       say("  ", f$name, ": ", format(rows, scientific = FALSE), " rows")
     }
     if (!is.na(dropped) && dropped > 0) {
-      say(
-        "  ",
-        f$name,
-        ": ",
-        format(dropped, scientific = FALSE),
-        " rows left out for a missing period value"
-      )
+      say(layout$note(
+        "",
+        paste(format(dropped, scientific = FALSE), "rows left out for a missing period value")
+      ))
     }
     unit <- if (format == "dta") "ms" else "us"
-    for (column in names(written$cut)) {
-      say(
-        "  ",
-        f$name,
-        ": ",
-        column,
-        ": fraction cut to ",
-        unit,
-        " in ",
-        format(written$cut[[column]], scientific = FALSE),
-        " values"
-      )
+    for (column in names(extracted$cut)) {
+      say(layout$note(
+        "",
+        paste0(
+          column,
+          ": fraction cut to ",
+          unit,
+          " in ",
+          with_commas(extracted$cut[[column]]),
+          " values"
+        )
+      ))
     }
     log[nrow(log) + 1L, ] <- list(
       f$name,
@@ -2040,7 +2081,8 @@ extract_order <- function(path, out, db, run) {
       counts[i],
       length(f$columns),
       describe_filter(f$filter),
-      dropped
+      dropped,
+      written
     )
     # Written after every file: it is the record a resumed run keeps files by.
     write_log(log, out)
@@ -2068,7 +2110,8 @@ empty_log <- function() {
     rows_counted = numeric(),
     columns = integer(),
     filter = character(),
-    rows_without_period = numeric()
+    rows_without_period = numeric(),
+    bytes_written = numeric()
   )
 }
 
@@ -2126,7 +2169,7 @@ read_prior <- function(out, present) {
   if (!identical(names(log), names(empty_log()))) {
     return(NULL)
   }
-  for (column in c("rows", "rows_counted", "rows_without_period")) {
+  for (column in c("rows", "rows_counted", "rows_without_period", "bytes_written")) {
     log[[column]] <- as.numeric(log[[column]])
   }
   log$columns <- as.integer(log$columns)
@@ -2145,6 +2188,18 @@ resume <- function(out, doc, files, counts) {
   log <- empty_log()
   present <- regular_files(out)
   prior <- report(read_prior(out, present))
+  if (is.null(prior) && all(c(ORDER_COPY, RUN_LOG) %in% present)) {
+    lost <- sum(vapply(files, `[[`, "", "name") %in% present)
+    if (lost > 0L) {
+      say(
+        "  ",
+        RUN_LOG,
+        " is from another runner version: ",
+        lost,
+        " finished file(s) will be extracted again"
+      )
+    }
+  }
   if (!is.null(prior)) {
     for (i in seq_along(files)) {
       name <- files[[i]]$name
@@ -2275,10 +2330,12 @@ run_order <- function(path, base, db) {
   stamp <- format(Sys.Date(), "%Y-%m-%d")
   out <- file.path(base, "export_data", paste0(nr, PARTIAL))
   final <- file.path(base, "export_data", paste0(nr, "_", stamp))
-  say("order ", nr, ":")
-  # What the failure report names: the file being extracted, and where an
-  # unexpected R error was raised.
+  # What the header and the failure report name: the order, its dated folder,
+  # the file being extracted, and where an unexpected R error was raised.
   run <- new.env()
+  run$nr <- nr
+  run$final <- final
+  started <- Sys.time()
   failure <- tryCatch(
     {
       # Checked first too, so a run does not extract for hours to be refused at
@@ -2311,7 +2368,7 @@ run_order <- function(path, base, db) {
       )
       publish(out, final, log$file, run)
       run$stage <- "published"
-      say("  done: ", nrow(log), " file(s) in ", final)
+      run$done <- log
       NULL
     },
     runner_refusal = function(e) e,
@@ -2334,6 +2391,17 @@ run_order <- function(path, base, db) {
     # file.rename refuses an existing target on Windows: copy, then remove.
     if (file.copy(path, target, overwrite = TRUE)) {
       if (file.remove(path)) {
+        log <- run$done
+        if (
+          !note(
+            "done   ", files_text(nrow(log)), "   ",
+            with_commas(sum(log$rows)), " rows   ",
+            bytes_text(sum(log$bytes_written, na.rm = TRUE)), "   ",
+            clock_text(seconds_since(started)), "   exit 0"
+          )
+        ) {
+          say("done: ", files_text(nrow(log)))
+        }
         return(EXIT[["ok"]])
       }
       # The order stays in orders/; no stale copy beside it in archive/.
@@ -2350,14 +2418,17 @@ run_order <- function(path, base, db) {
   }
   stage <- if (is.null(run$stage)) "none" else run$stage
   left <- if (stage %in% c("open", "complete")) clean_partial(out) else character()
-  say(
-    "  FAILED (exit code ",
+  if (!isTRUE(run$headed)) {
+    say("order ", nr)
+  }
+  failed <- paste0(
+    "FAILED (exit code ",
     failure$code,
-    ")",
-    if (!is.null(run$file)) paste0(" in ", run$file),
-    ": ",
+    "): ",
     conditionMessage(failure)
   )
+  # In the file's row when a file was being extracted.
+  say(if (!is.null(run$file) && !is.null(run$layout)) run$layout$text(run$place, run$file, failed) else paste0("  ", failed))
   error_block(failure$detail, run$trace)
   # What is left, and what the coordinator does next.
   finished <- if (is.null(run$log)) 0L else nrow(run$log)
