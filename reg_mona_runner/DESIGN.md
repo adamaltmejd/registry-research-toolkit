@@ -186,7 +186,8 @@ digits (a float id never prints as `1e+15`); `bigint` is read as text and `decim
 `numeric` are fetched as text, so an 18-digit key never passes through a double. `char`,
 `varchar` and `text` are fetched as `nvarchar`, so they arrive as UTF-8 whatever the
 client code page; text that is still not UTF-8 fails the order. `bit` is 0/1, days
-`YYYY-MM-DD`, date-times `YYYY-MM-DD HH:MM:SS` (sub-second precision dropped), NULL an
+`YYYY-MM-DD`, date-times `YYYY-MM-DD HH:MM:SS` and every fractional digit SQL Server
+holds, trailing zeros dropped (legacy `datetime` at its displayed milliseconds), NULL an
 empty field. A text field is quoted only when it must be: when empty (so it differs from
 NULL), or holding a quote, comma, line break or edge whitespace. Lines end in LF. Rows
 come in the server's order: there is no `ORDER BY`, which would sort whole registers for
@@ -208,17 +209,18 @@ large id. What each SQL type becomes:
   | `decimal(p, s)`, `numeric(p, s)`, p > 15                   | text            | str (exact digits)                        | decimal128(p, s)       | the decimal as text   |
   | `float`, `real`                                            | double          | double; beyond Stata's range refused      | float64, float32       | 15 significant digits |
   | `bit`                                                      | logical         | long 0/1                                  | bool                   | 0/1                   |
-  | `date`                                                     | Date            | `%td` day                                 | date32                 | `YYYY-MM-DD`          |
-  | `datetime`, `datetime2`, `smalldatetime`                   | POSIXct, UTC    | `%tc` (milliseconds)                      | timestamp(us, UTC)     | `YYYY-MM-DD HH:MM:SS` |
+  | `date`                                                     | text            | `%td` day                                 | date32                 | `YYYY-MM-DD`          |
+  | `datetime`, `datetime2`, `smalldatetime`                   | text            | `%tc`, cut to the millisecond            | timestamp(us, UTC), cut to the microsecond | `YYYY-MM-DD HH:MM:SS[.f]` |
   | `char`, `varchar`, `nchar`, `nvarchar`, `text`, `ntext`    | UTF-8 text      | str or strL; NULL as `""`                 | string                 | text                  |
-  | any other (`time`, `datetimeoffset`, `money`, binary, ...) | as odbc returns | refused at resolve (7)                    | refused at resolve (7) | as text               |
+  | `time`, `datetimeoffset`                                   | -               | refused at resolve (7)                    | refused at resolve (7) | refused at resolve (7) |
+  | any other (`money`, binary, ...)                           | as odbc returns | refused at resolve (7)                    | refused at resolve (7) | as text               |
 
 Choices behind the table:
 
-- **Never round, never cut.** A value a `.dta` file cannot hold exactly fails the order
-  (exit 8) naming the column, never a value; a column whose type or name it cannot hold
-  fails before any row is read (exit 7). The refusal names `parquet` and `csv`, which
-  hold everything.
+- **Never round, never cut**, with one exception below (a date-time's fraction). A
+  value a `.dta` file cannot hold exactly fails the order (exit 8) naming the column,
+  never a value; a column whose type or name it cannot hold fails before any row is
+  read (exit 7). The refusal names `parquet` and `csv`, which hold everything.
 - **`bigint` is a double in `.dta`.** Stata has no 64-bit integer. A double holds every
   integer below 2^53 (about 9 \* 10^15) exactly, which covers every pseudonymised
   `LopNr` and a 12-digit personal or organisation number, and a numeric id merges like
@@ -229,6 +231,24 @@ Choices behind the table:
 - **A decimal goes by its declared precision**, a schema fact, so a column's Stata type
   never depends on its rows: up to 15 digits fit a double, a wider decimal stays exact
   as text. Parquet keeps decimal128 at the column's own precision and scale.
+- **Dates and date-times are fetched as ISO text** (`CONVERT` styles 23 and 121), so
+  every driver returns them alike. The legacy Windows "SQL Server" driver, which a
+  DSN may name, returns `datetime2` and `date` as text of its own, and a `CAST` of
+  `datetime` to text is `Jan  1 2026  4:33PM`. The runner then reads the text: a
+  date-time is a time of no zone, written as UTC. A `.dta` `%tc` value is whole
+  milliseconds since 1960, computed exactly. CSV keeps every digit, trailing zeros
+  dropped (found on MONA, 2026-11-23: the DSN's driver returned `datetime2` as text,
+  which Arrow refused as a UTC timestamp).
+- **A time finer than the format holds is cut, and the console says so.** `datetime2`
+  holds 100 ns and system timestamps usually fill all seven digits; Parquet's
+  timestamp holds a microsecond and Stata's `%tc` a millisecond. Refusing them would
+  fail nearly every `datetime2` column, so the fraction is truncated (never rounded,
+  so a time never moves into the next second or day), and each column that lost a
+  non-zero digit gets one console line after its file: `<column>: fraction cut to us
+  in N values` (`ms` for `.dta`). It is the format's limit, not the runner's; an order
+  that needs every digit is ordered as CSV (coordinator review, 2026-11-23). Legacy
+  `datetime` counts in 1/300 s ticks; it is written at its displayed millisecond
+  precision (style 121), as SQL Server shows it.
 - **Text NULL is `""` in `.dta`.** Stata has no missing string, and reads an empty
   string as missing. CSV and Parquet keep NULL apart from `""`.
 - **Stata limits.** Format 118 (Stata 14 and later) is UTF-8 with 32-character names and
@@ -237,9 +257,7 @@ Choices behind the table:
   ([../crates/DESIGN.md](../crates/DESIGN.md), "MONA order file"), with its full name as
   the variable label. Only a column that is not a Stata variable name has an alias, and
   no two columns of a file are written under one name, or the order is refused (exit 6).
-  `%tc` holds milliseconds, so a `datetime2`'s finer digits are dropped; Parquet keeps
-  microseconds, dropping `datetime2(7)`'s 100 ns digit; CSV already writes whole
-  seconds.
+  `%tc` holds milliseconds: a `datetime2`'s finer digits are cut and counted (above).
 - **Memory.** CSV and Parquet stream one chunk at a time (a Parquet row group per
   chunk). haven cannot append, so a `.dta` file is collected whole and written once: the
   ceiling is MONA's RAM for the order's widest file (`simplify:` in the script).

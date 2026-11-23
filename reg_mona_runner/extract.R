@@ -792,8 +792,24 @@ stata_name_ok <- function(name) {
 # Refuse, before any row is read, a column of `file` the order's format cannot
 # hold: a SQL type outside MAPPED_TYPES (.dta and .parquet), or a name it is
 # written under (its stata_name, else its own) that is not a Stata variable name
-# and a label too long for its full name (.dta). A CSV holds anything as text.
+# and a label too long for its full name (.dta). A CSV holds anything as text,
+# except a time of day or a date-time with an offset: those are refused in every
+# format, since the driver returns them in forms the runner does not read.
 check_format <- function(file, types, format) {
+  odd <- which(types$type[seq_along(file$columns)] %in% c("time", "datetimeoffset"))
+  if (length(odd)) {
+    j <- odd[1]
+    refuse(
+      "resolve",
+      "column ",
+      file$columns[j],
+      " of ",
+      file$table,
+      " is SQL type ",
+      types$type[j],
+      ", which this runner does not map to any format"
+    )
+  }
   if (format == "csv") {
     return(invisible())
   }
@@ -847,8 +863,18 @@ check_format <- function(file, types, format) {
 # A selected column as T-SQL text around `@col`. Text the client would fetch in
 # its code page (char, varchar, text) is fetched as nvarchar, so it arrives as
 # UTF-8 whatever MONA's code page; decimal and numeric are fetched as text, so
-# an 18-digit id never passes through a double.
+# an 18-digit id never passes through a double. Dates and date-times are fetched
+# as ISO text in an explicit style (23: YYYY-MM-DD; 121: YYYY-MM-DD HH:MM:SS and
+# the type's fractional digits, none for datetime2(0)), so every driver returns
+# them alike: the legacy "SQL Server" driver returns datetime2 and date as text
+# of its own, and a plain CAST of datetime gives "Jan  1 2026  4:33PM".
 select_expr <- function(type, max_length) {
+  if (type == "date") {
+    return("CONVERT(nvarchar(10), @col, 23) AS @col")
+  }
+  if (type %in% TIME_TYPES) {
+    return("CONVERT(nvarchar(27), @col, 121) AS @col")
+  }
   if (type %in% c("char", "varchar", "text")) {
     size <- if (is.na(max_length) || max_length < 0L || max_length > 4000L) {
       "max"
@@ -1116,15 +1142,83 @@ csv_text <- function(x) {
   x
 }
 
+# ---- Dates and times ------------------------------------------------------------
+
+# A date-time as select_expr fetches it: whole seconds, then 0 to 7 fractional
+# digits.
+TIME_TEXT <- "^([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})(\\.([0-9]{1,7}))?$"
+
+# Counts, per column, the values whose fraction a format cut: add(column, n)
+# while writing, counts() for the file's console lines.
+cut_counter <- function() {
+  state <- new.env()
+  state$n <- numeric()
+  list(
+    add = function(column, n) {
+      if (n > 0) {
+        state$n[column] <- n + if (is.na(state$n[column])) 0 else state$n[column]
+      }
+    },
+    counts = function() state$n
+  )
+}
+
+# A fetched date-time column as its whole seconds and its fraction cut to
+# `digits` places (NULL stays NA). The fraction is truncated, never rounded, so
+# a time never moves into the next second or day; `cut(column, n)` is told how
+# many values lost a non-zero digit. That limit is the format's: datetime2 holds
+# 100 ns, Parquet's timestamp a microsecond, Stata's %tc a millisecond.
+time_parts <- function(x, digits, column, what, cut = function(column, n) NULL) {
+  bad <- !is.na(x) & !grepl(TIME_TEXT, x)
+  if (any(bad)) {
+    refuse("extract", what, ": column ", column, " returned a date-time in an unexpected form")
+  }
+  fraction <- substr(paste0(sub(TIME_TEXT, "\\3", x), "0000000"), 1L, 7L)
+  cut(column, sum(!is.na(x) & substr(fraction, digits + 1L, 7L) != strrep("0", 7L - digits)))
+  fraction <- substr(fraction, 1L, digits)
+  fraction[is.na(x)] <- NA_character_
+  list(seconds = sub(TIME_TEXT, "\\1", x), fraction = fraction)
+}
+
+# A fetched date column as Date, or a refusal if a value does not read as one.
+parse_date <- function(x, column, what) {
+  day <- as.Date(x, format = "%Y-%m-%d", optional = TRUE)
+  if (any(is.na(day) & !is.na(x))) {
+    refuse("extract", what, ": column ", column, " returned a date in an unexpected form")
+  }
+  day
+}
+
+# Seconds from Stata's epoch (1960-01-01) to R's (1970-01-01).
+STATA_EPOCH_SECONDS <- 315619200
+
+# A fetched date-time column as Stata %tc: milliseconds since 1960-01-01 UTC,
+# computed in whole numbers so every value is exact (a POSIXct's fractional
+# seconds would not be).
+parse_time_ms <- function(x, column, what, cut) {
+  parts <- time_parts(x, 3L, column, what, cut)
+  at <- as.POSIXct(parts$seconds, tz = "UTC", format = "%Y-%m-%d %H:%M:%S")
+  if (any(is.na(at) & !is.na(x))) {
+    refuse("extract", what, ": column ", column, " returned a date-time in an unexpected form")
+  }
+  ms <- (as.numeric(at) + STATA_EPOCH_SECONDS) * 1000 + as.numeric(parts$fraction)
+  attr(ms, "format.stata") <- "%tc"
+  ms
+}
+
+# A fetched date-time column as CSV text: whole seconds, then the fraction
+# without trailing zeros, if any is left.
+csv_time <- function(x, column, what) {
+  parts <- time_parts(x, 7L, column, what)
+  fraction <- sub("0+$", "", parts$fraction)
+  ifelse(nzchar(fraction) & !is.na(x), paste0(parts$seconds, ".", fraction), parts$seconds)
+}
+
 # One CSV field per value: numbers in fixed notation to 15 significant digits
-# (no 1e+15 for a numeric id), days as YYYY-MM-DD, times as YYYY-MM-DD HH:MM:SS
-# in UTC, text as UTF-8, NULL as an empty field.
+# (no 1e+15 for a numeric id), text (dates and times as fetched, csv_time) as
+# UTF-8, NULL as an empty field.
 csv_field <- function(x) {
-  out <- if (inherits(x, "POSIXct")) {
-    format(x, "%Y-%m-%d %H:%M:%S", tz = "UTC")
-  } else if (inherits(x, "Date")) {
-    format(x, "%Y-%m-%d")
-  } else if (is.double(x)) {
+  out <- if (is.double(x)) {
     formatC(x, digits = 15L, format = "fg", width = 1L)
   } else if (is.character(x) || is.factor(x)) {
     csv_text(x)
@@ -1167,17 +1261,28 @@ write_csv <- function(df, path) {
 # the file's columns' resolve_columns() facts, in column order; `names` are the
 # names they are written under, which only a .dta order renames (plan_files).
 csv_writer <- function(path, columns, types, names) {
+  what <- paste0("writing ", sub("\\.partial$", "", basename(path)))
+  times <- which(types$type %in% TIME_TYPES)
   sink <- file(path, open = "wb")
   writeBin(csv_header(columns), sink)
   state <- new.env()
   state$open <- TRUE
   list(
-    write = function(chunk) if (nrow(chunk)) writeBin(csv_bytes(chunk), sink),
+    write = function(chunk) {
+      if (!nrow(chunk)) {
+        return(invisible())
+      }
+      for (j in times) {
+        chunk[[j]] <- csv_time(chunk[[j]], columns[j], what)
+      }
+      writeBin(csv_bytes(chunk), sink)
+    },
     finish = function() {
       close(sink)
       state$open <- FALSE
     },
-    release = function() if (state$open) close(sink)
+    release = function() if (state$open) close(sink),
+    cut = function() numeric()
   )
 }
 
@@ -1205,6 +1310,8 @@ arrow_type <- function(type, precision, scale) {
 
 # Streams one row group per chunk, so a file is never held whole in memory.
 parquet_writer <- function(path, columns, types, names) {
+  what <- paste0("writing ", sub("\\.partial$", "", basename(path)))
+  cuts <- cut_counter()
   schema <- arrow::schema(stats::setNames(
     lapply(seq_along(columns), function(j) {
       arrow_type(types$type[j], types$precision[j], types$scale[j])
@@ -1240,10 +1347,15 @@ parquet_writer <- function(path, columns, types, names) {
       }
       arrays <- lapply(seq_along(chunk), function(j) {
         x <- chunk[[j]]
-        if (inherits(x, "POSIXct")) {
-          attr(x, "tzone") <- "UTC"
+        if (types$type[j] %in% TIME_TYPES) {
+          # Read as a time of no zone, then marked UTC: arrow refuses to read
+          # text without an offset straight into a UTC timestamp.
+          parts <- time_parts(x, 6L, columns[j], what, cuts$add)
+          text <- ifelse(is.na(x), NA_character_, paste0(parts$seconds, ".", parts$fraction))
+          return(arrow::Array$create(text)$cast(arrow::timestamp("us"))$cast(schema[[j]]$type))
         }
-        # bigint and decimal arrive as text: arrow parses them exactly, or fails.
+        # bigint, decimal and date arrive as text: arrow parses them exactly, or
+        # fails.
         arrow::Array$create(x)$cast(schema[[j]]$type)
       })
       writer$WriteTable(
@@ -1255,13 +1367,14 @@ parquet_writer <- function(path, columns, types, names) {
       )
     },
     finish = close_all,
+    cut = cuts$counts,
     release = close_all
   )
 }
 
 # One column as .dta storage (reg_mona_runner/DESIGN.md, "Types per format").
 # A value Stata cannot hold exactly is refused, never rounded or cut.
-dta_column <- function(x, type, precision, column, what) {
+dta_column <- function(x, type, precision, column, what, cut) {
   beyond <- function(limit) {
     refuse(
       "extract",
@@ -1296,6 +1409,12 @@ dta_column <- function(x, type, precision, column, what) {
   if (type == "bit") {
     return(as.integer(x))
   }
+  if (type == "date") {
+    return(parse_date(x, column, what))
+  }
+  if (type %in% TIME_TYPES) {
+    return(parse_time_ms(x, column, what, cut))
+  }
   if (
     type %in% c("float", "real") && any(abs(x) > STATA_DOUBLE_MAX, na.rm = TRUE)
   ) {
@@ -1316,6 +1435,7 @@ dta_column <- function(x, type, precision, column, what) {
 # 100 columns, so stream (or split) if a real .dta order exhausts MONA's RAM.
 dta_writer <- function(path, columns, types, names) {
   what <- paste0("writing ", sub("\\.partial$", "", basename(path)))
+  cuts <- cut_counter()
   state <- new.env()
   state$chunks <- list()
   list(
@@ -1328,7 +1448,8 @@ dta_writer <- function(path, columns, types, names) {
             types$type[j],
             types$precision[j],
             columns[j],
-            what
+            what,
+            cuts$add
           )
         }
       )
@@ -1365,13 +1486,15 @@ dta_writer <- function(path, columns, types, names) {
     },
     release = function() {
       state$chunks <- list()
-    }
+    },
+    cut = cuts$counts
   )
 }
 
 WRITERS <- list(dta = dta_writer, parquet = parquet_writer, csv = csv_writer)
 
 # `progress(rows)` is called after each fetched chunk with the file's rows so far.
+# Returns the rows written and, per column, how many values the format cut.
 # The file is written as <name>.partial and takes its own name only once complete,
 # so a run that is stopped leaves nothing that passes for a finished file.
 extract_file <- function(con, file, types, format, out, progress) {
@@ -1421,7 +1544,7 @@ extract_file <- function(con, file, types, format, out, progress) {
   if (!rename(path, file.path(out, file$name))) {
     refuse("extract", "cannot rename ", basename(path), " to ", file$name)
   }
-  rows
+  list(rows = rows, cut = writer$cut())
 }
 
 # ---- Pre-count, size and progress ---------------------------------------------------
@@ -1859,7 +1982,7 @@ extract_order <- function(path, out, db, run) {
     f <- files[[i]]
     run$file <- f$name
     note("  file ", k, " of ", length(todo), ": ", f$name)
-    rows <- extract_file(
+    written <- extract_file(
       con,
       f,
       resolved[[i]],
@@ -1867,6 +1990,7 @@ extract_order <- function(path, out, db, run) {
       out,
       function(rows) report(tracker$update(i, rows))
     )
+    rows <- written$rows
     # Rows the filter leaves out for a NULL or unreadable period value, counted
     # so the order's requester learns of them (an aggregate; NA, an empty field,
     # for an unfiltered file).
@@ -1894,6 +2018,20 @@ extract_order <- function(path, out, db, run) {
         ": ",
         format(dropped, scientific = FALSE),
         " rows left out for a missing period value"
+      )
+    }
+    unit <- if (format == "dta") "ms" else "us"
+    for (column in names(written$cut)) {
+      say(
+        "  ",
+        f$name,
+        ": ",
+        column,
+        ": fraction cut to ",
+        unit,
+        " in ",
+        format(written$cut[[column]], scientific = FALSE),
+        " values"
       )
     }
     log[nrow(log) + 1L, ] <- list(
