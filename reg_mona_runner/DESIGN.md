@@ -243,6 +243,9 @@ a double (`%20.0g`) differ in the `.dta` display format.
 
 ## Resuming
 
+Run one `extract.R` at a time per order: two runs of the same order share its
+`.partial` folder, and nothing locks it (a coordinator rule, not code).
+
 An unfinished order's folder, `<nr>.partial/`, holds its finished files, `run_log.csv`
 with a row for each, and `order.json`, a copy of the order that ran. The next run of
 the same order number reads both after the pre-count and keeps a finished file only if
@@ -255,25 +258,34 @@ way that keeps their row counts. A count that fails keeps nothing for that file.
 missing or unreadable `order.json` or log keeps nothing. `order.json` is removed when
 the order completes.
 
+`run_log.csv` and `order.json` are written to a `.tmp` name and renamed over the old
+copy, so a readable checkpoint is always there (where the share refuses to rename over
+a file, the old one is removed first, and a run stopped in that moment resumes nothing).
+Keep-or-delete is decided from one listing of the folder's regular files by exact
+name. When the order completes, `order.json` is removed, the folder must hold exactly
+the order's files and the log, and it is renamed to its dated name. An earlier export
+of the same day is first renamed aside to `<nr>_<date>.old` and deleted only after the
+new folder is in place; a failure names where each folder is.
+
 The unit is the file: a file of a billion rows that fails at the end is written again
 whole.
 
 ## Row values
 
-Nothing the runner writes under `export_data/` holds a row value beyond the extract
-files themselves: `run_log.csv` holds file names, counts and manifest fields. That
-folder is what leaves MONA.
+Everything the runner writes stays on MONA: the extract files are microdata, and only
+approved aggregates leave MONA. `run_log.csv` holds file names, counts and manifest
+fields only.
 
-The console (and a batch run's `.Rout`) does. A failure prints its headline (exit
+The console (and a batch run's `.Rout`) can hold row values too. A failure prints its headline (exit
 code, the file, what failed, a driver error's SQLSTATE) and then, between marker lines
 whose header says the text may contain row values and must not be copied off MONA, the
 underlying message in full: the driver's message (SQL Server's conversion errors quote
 the offending value) or the R error's, with the runner functions it was raised in. A
 failed count prints the same block. Before 2026-11-23 these messages were withheld, and
 a failed order showed only an error class, which left the data manager unable to
-diagnose a failure on MONA (P1105 trial). The console stays on MONA; only
-`export_data/` is exported, and keeping console output, screenshots included, off MONA
-is the data manager's responsibility (coordinator, 2026-11-23). An R warning during an
+diagnose a failure on MONA (P1105 trial). Like the extract, the console stays on MONA:
+the error block must not be copied or screenshotted off it, which is the data
+manager's responsibility (coordinator, 2026-11-23). An R warning during an
 order still fails it (R warns when it cannot translate a string, so a value may have
 changed), and prints the warning in the same block.
 
@@ -301,7 +313,7 @@ Stable; the process exits with the code of the first order, in name order, that 
 Process-level, run by hand
 (`Rscript -e 'testthat::test_dir("reg_mona_runner/tests/testthat")'`; neither the gate
 nor CI runs it): the script runs under `Rscript` against an export root with no
-database, and tests read the exit code and the error log. The suite has one case per
+database, and tests read the exit code, the console and the export folder. The suite has one case per
 refusal code that fires before the database (2 to 6) and needs no SQL Server.
 
 Extraction is not in the automated suite: no test requires a SQL Server. It is verified

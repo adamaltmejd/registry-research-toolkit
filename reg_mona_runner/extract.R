@@ -1760,8 +1760,12 @@ progress_tracker <- function(counts, columns) {
 
 # ---- One order ----------------------------------------------------------------------
 
-read_order <- function(path) {
-  text <- rawToChar(readBin(path, "raw", file.size(path)))
+read_bytes <- function(path) readBin(path, "raw", file.size(path))
+
+read_order <- function(path) parse_order(read_bytes(path))
+
+parse_order <- function(bytes) {
+  text <- rawToChar(bytes)
   Encoding(text) <- "UTF-8"
   tryCatch(
     jsonlite::parse_json(text, simplifyVector = FALSE),
@@ -1784,7 +1788,9 @@ connection <- function(db) {
 }
 
 extract_order <- function(path, out, db, run) {
-  doc <- check_manifest(read_order(path))
+  # Read once: the bytes parsed are the bytes saved as the order copy.
+  bytes <- read_bytes(path)
+  doc <- check_manifest(parse_order(bytes))
   format <- doc$extract_format
   files <- plan_files(doc$files, format)
   pkg <- FORMAT_PACKAGES[[format]]
@@ -1836,10 +1842,8 @@ extract_order <- function(path, out, db, run) {
       " file(s) kept from an earlier run"
     )
   }
-  if (!file.copy(path, file.path(out, ORDER_COPY), overwrite = TRUE)) {
-    refuse("setup", "cannot write ", ORDER_COPY, " in ", out)
-  }
-  write_csv(log, file.path(out, "run_log.csv"))
+  replace_file(file.path(out, ORDER_COPY), function(tmp) writeBin(bytes, tmp))
+  write_log(log, out)
   tracker <- progress_tracker(
     counts,
     vapply(files, function(f) length(f$columns), 0L)
@@ -1900,12 +1904,13 @@ extract_order <- function(path, out, db, run) {
       dropped
     )
     # Written after every file: it is the record a resumed run keeps files by.
-    write_csv(log, file.path(out, "run_log.csv"))
+    write_log(log, out)
   }
   run$file <- NULL
   log <- log[order(log$file, method = "radix"), , drop = FALSE]
-  write_csv(log, file.path(out, "run_log.csv"))
-  nrow(log)
+  rownames(log) <- NULL
+  write_log(log, out)
+  log
 }
 
 # ---- Resuming -------------------------------------------------------------------------
@@ -1913,6 +1918,8 @@ extract_order <- function(path, out, db, run) {
 # The copy of the order an unfinished export folder keeps, so that a later run can
 # tell which of its files still stand. Removed when the order completes.
 ORDER_COPY <- "order.json"
+RUN_LOG <- "run_log.csv"
+TMP <- ".tmp"
 
 empty_log <- function() {
   data.frame(
@@ -1925,56 +1932,81 @@ empty_log <- function() {
   )
 }
 
+# Writes `path` through `write(tmp)` into <path>.tmp, then renames it over `path`,
+# so the folder always holds a whole copy. Where the rename cannot replace an
+# existing file, the old one is removed first: for that moment the folder has no
+# copy, and a run stopped then resumes nothing.
+replace_file <- function(path, write) {
+  tmp <- paste0(path, TMP)
+  write(tmp)
+  if (!file.rename(tmp, path)) {
+    unlink(path)
+    if (!file.rename(tmp, path)) {
+      refuse("setup", "cannot write ", path)
+    }
+  }
+}
+
+write_log <- function(log, out) {
+  replace_file(file.path(out, RUN_LOG), function(tmp) write_csv(log, tmp))
+}
+
+# The regular files in `out`, by their exact (case-sensitive) names.
+regular_files <- function(out) {
+  names <- list.files(out, all.files = TRUE, no.. = TRUE)
+  names[!dir.exists(file.path(out, names))]
+}
+
 # The order copy and run log an earlier, unfinished run left in `out`: its
 # manifest entries by output file name, and its log. NULL when either is missing
 # or unreadable, and then nothing is kept.
-read_prior <- function(out) {
-  order_path <- file.path(out, ORDER_COPY)
-  log_path <- file.path(out, "run_log.csv")
-  if (!file.exists(order_path) || !file.exists(log_path)) {
+read_prior <- function(out, present) {
+  if (!all(c(ORDER_COPY, RUN_LOG) %in% present)) {
     return(NULL)
   }
-  prior <- read_order(order_path)
+  prior <- read_order(file.path(out, ORDER_COPY))
   entries <- stats::setNames(
     prior$files,
     vapply(prior$files, function(e) paste0(e$name, ".", prior$extract_format), "")
   )
+  # As text, so an empty field stays "" in a text column; the numbers then read
+  # an empty field as NA.
   log <- utils::read.csv(
-    log_path,
-    colClasses = c(
-      "character",
-      "numeric",
-      "numeric",
-      "integer",
-      "character",
-      "numeric"
-    ),
-    na.strings = "",
+    file.path(out, RUN_LOG),
+    colClasses = "character",
+    na.strings = character(),
     encoding = "UTF-8"
   )
   if (!identical(names(log), names(empty_log()))) {
     return(NULL)
   }
+  for (column in c("rows", "rows_counted", "rows_without_period")) {
+    log[[column]] <- as.numeric(log[[column]])
+  }
+  log$columns <- as.integer(log$columns)
   list(entries = entries, log = log)
 }
 
-# Keeps the finished files of an earlier run of this order and clears everything
-# else from `out`, returning the kept files' log rows. A file stands only if its
-# manifest entry is unchanged (the whole entry, format included through its
-# name), it is listed in the earlier log, and its source still counts the rows it
-# was written with. The count is the only check on the source: a table changed
-# without changing its row count is not noticed (DESIGN.md, "Resuming").
+# Keeps the finished files of an earlier run of this order and clears every other
+# file from `out`, returning the kept files' log rows. A file stands only if it is
+# in the folder under its exact name, its manifest entry is unchanged (the whole
+# entry, format included through its name), it is listed in the earlier log, and
+# its source still counts the rows it was written with. The count is the only
+# check on the source: a table changed without changing its row count is not
+# noticed (DESIGN.md, "Resuming"). The order copy and the log stay until the
+# caller replaces them, so a readable checkpoint is always there.
 resume <- function(out, doc, files, counts) {
   log <- empty_log()
-  prior <- report(read_prior(out))
+  present <- regular_files(out)
+  prior <- report(read_prior(out, present))
   if (!is.null(prior)) {
     for (i in seq_along(files)) {
       name <- files[[i]]$name
       row <- prior$log[prior$log$file == name, , drop = FALSE]
       if (
-        nrow(row) == 1L &&
+        name %in% present &&
+          nrow(row) == 1L &&
           identical(prior$entries[[name]], doc$files[[i]]) &&
-          file.exists(file.path(out, name)) &&
           !is.na(counts[i]) &&
           !is.na(row$rows) &&
           row$rows == counts[i]
@@ -1983,7 +2015,8 @@ resume <- function(out, doc, files, counts) {
       }
     }
   }
-  stale <- setdiff(list.files(out, all.files = TRUE, no.. = TRUE), log$file)
+  listed <- list.files(out, all.files = TRUE, no.. = TRUE)
+  stale <- setdiff(listed, c(log$file, ORDER_COPY, RUN_LOG))
   unlink(file.path(out, stale), recursive = TRUE)
   left <- intersect(list.files(out, all.files = TRUE, no.. = TRUE), stale)
   if (length(left)) {
@@ -2020,19 +2053,75 @@ call_trace <- function(calls, e) {
   c(own, if (!is.null(raising)) paste0(name(raising), "()"))
 }
 
-# Renames the finished order's folder to its dated name, replacing an earlier
-# export of the same day, then drops the order copy.
-publish <- function(out, final) {
-  if (dir.exists(final)) {
-    unlink(final, recursive = TRUE)
-    if (dir.exists(final)) {
-      refuse("setup", "cannot replace the export folder ", final)
+# Gives the finished order's folder its dated name. The order copy goes first,
+# and the folder must then hold exactly the order's files and the run log. An
+# earlier export of the same day is renamed aside to <final>.old, the new folder
+# renamed in, and only then the old one deleted, so a locked file never leaves a
+# half-deleted export under the finished name. A failure says where each folder is.
+publish <- function(out, final, expected) {
+  unlink(file.path(out, ORDER_COPY))
+  if (file.exists(file.path(out, ORDER_COPY))) {
+    refuse("setup", "cannot remove ", ORDER_COPY, " from ", out)
+  }
+  listed <- list.files(out, all.files = TRUE, no.. = TRUE)
+  wanted <- c(expected, RUN_LOG)
+  if (!setequal(listed, wanted) || length(listed) != length(wanted)) {
+    refuse(
+      "setup",
+      out,
+      " does not hold exactly the order's files and ",
+      RUN_LOG,
+      ": unexpected ",
+      paste(setdiff(listed, wanted), collapse = ", "),
+      "; missing ",
+      paste(setdiff(wanted, listed), collapse = ", ")
+    )
+  }
+  old <- paste0(final, ".old")
+  if (file.exists(old)) {
+    unlink(old, recursive = TRUE)
+    if (file.exists(old)) {
+      refuse(
+        "setup",
+        "cannot remove ",
+        old,
+        " left by an earlier run; the new export is complete in ",
+        out
+      )
     }
   }
-  if (!file.rename(out, final)) {
-    refuse("setup", "cannot rename ", out, " to ", final)
+  if (file.exists(final) && !file.rename(final, old)) {
+    refuse(
+      "setup",
+      "cannot move the earlier export ",
+      final,
+      " aside; it is unchanged, and the new export is complete in ",
+      out
+    )
   }
-  unlink(file.path(final, ORDER_COPY))
+  if (!file.rename(out, final)) {
+    restored <- !file.exists(old) || file.rename(old, final)
+    refuse(
+      "setup",
+      "cannot rename ",
+      out,
+      " to ",
+      final,
+      "; the new export is complete in ",
+      out,
+      if (file.exists(old)) {
+        paste0(", and the earlier export is in ", old)
+      } else if (restored && file.exists(final)) {
+        paste0(", and the earlier export is back in ", final)
+      }
+    )
+  }
+  if (file.exists(old)) {
+    unlink(old, recursive = TRUE)
+    if (file.exists(old)) {
+      say("  WARNING: the earlier export of today is left in ", old, ": delete it")
+    }
+  }
 }
 
 run_order <- function(path, base, db) {
@@ -2052,7 +2141,7 @@ run_order <- function(path, base, db) {
       }
       # An R warning can mean a value was altered (a string R cannot
       # translate): it fails the order.
-      n <- withCallingHandlers(
+      log <- withCallingHandlers(
         extract_order(path, out, db, run),
         warning = function(w) {
           refuse(
@@ -2067,8 +2156,8 @@ run_order <- function(path, base, db) {
           }
         }
       )
-      publish(out, final)
-      say("  done: ", n, " file(s) in ", final)
+      publish(out, final, log$file)
+      say("  done: ", nrow(log), " file(s) in ", final)
       NULL
     },
     runner_refusal = function(e) e,
@@ -2109,7 +2198,7 @@ run_order <- function(path, base, db) {
   # still being written goes.
   partial <- list.files(
     out,
-    pattern = "\\.partial$",
+    pattern = "\\.(partial|tmp)$",
     all.files = TRUE,
     full.names = TRUE
   )
@@ -2123,7 +2212,10 @@ run_order <- function(path, base, db) {
     conditionMessage(failure)
   )
   error_block(failure$detail, run$trace)
-  finished <- setdiff(list.files(out), c(ORDER_COPY, "run_log.csv"))
+  finished <- setdiff(
+    grep("\\.(partial|tmp)$", list.files(out), value = TRUE, invert = TRUE),
+    c(ORDER_COPY, RUN_LOG)
+  )
   if (length(finished)) {
     say(
       "  ",

@@ -104,6 +104,8 @@ A failed order stays in `orders\`; the console shows the exit code and the reaso
 folder. Fix the cause and run the script again: it resumes, keeping each finished file
 whose order entry is unchanged and whose table still has the same number of rows, and
 extracts the rest. A rerun of a finished order overwrites that day's export folder.
+Run one `extract.R` at a time per order: two runs of the same order would share its
+`.partial` folder.
 
   | Code    | What to do                                                                                                                                                                                                                                                                                                                                  |
   | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -115,11 +117,11 @@ extracts the rest. A rerun of a finished order overwrites that day's export fold
 
 ## Safety
 
-Nothing the script writes under `export_data\` holds row values besides the extract files:
-`run_log.csv` has file names, counts and the order's own fields. The console does: a
-failure prints the full R or database message, which can quote a value, between marker
-lines that say so. The console, the `.Rout` file and the extract files contain
-microdata or may: they stay in MONA like any other project data.
+Everything the script writes stays on MONA. The extract files are microdata; only
+approved aggregates leave MONA. `run_log.csv` has file names, counts and the order's
+own fields. The console can hold row values too: a failure prints the full R or
+database message, which can quote a value, between marker lines that say so. Don't copy
+or screenshot that block off MONA.
 
 ## Tests
 
