@@ -270,7 +270,7 @@ pub struct Clip {
 /// # Errors
 ///
 /// The reason, when `name` is outside the runner's slug spelling, longer than 128
-/// UTF-16 units, the stem of a Windows device name or of the runner's own log (case
+/// UTF-16 units, the stem of a Windows device name or of the runner's own logs (case
 /// ignored).
 pub fn safe_file_name(name: &str) -> Result<(), &'static str> {
     const DEVICES: [&str; 4] = ["con", "prn", "aux", "nul"];
@@ -297,7 +297,7 @@ pub fn safe_file_name(name: &str) -> Result<(), &'static str> {
     if DEVICES.contains(&stem.as_str()) || numbered {
         return Err("a Windows device name");
     }
-    if stem == "run_log" {
+    if matches!(stem.as_str(), "run_log" | "error_log") {
         return Err("the runner's log name");
     }
     Ok(())
@@ -372,7 +372,7 @@ mod tests {
         assert!(safe_file_name("Lpt9.x").is_err());
         assert!(safe_file_name("com10").is_ok());
         assert!(safe_file_name("run_log").is_err());
-        assert!(safe_file_name("Run_Log.csv").is_err());
+        assert!(safe_file_name("Error_Log").is_err());
         assert!(safe_file_name("../x").is_err());
         assert!(safe_file_name("").is_err());
     }

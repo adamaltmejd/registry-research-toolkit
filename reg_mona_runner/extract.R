@@ -393,7 +393,7 @@ check_file_name <- function(x, where) {
     paste0(c("com", "lpt"), rep(1:9, each = 2))
   )
   stem <- tolower(sub("\\..*$", "", x))
-  if (stem %in% c(device, "run_log")) {
+  if (stem %in% c(device, "run_log", "error_log")) {
     refuse("manifest", where, " ", x, " is reserved")
   }
   x
