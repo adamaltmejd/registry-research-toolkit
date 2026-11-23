@@ -1315,7 +1315,7 @@ dta_column <- function(x, type, precision, column, what) {
 # simplify: the whole file is in memory; a LISA year file is about 8M rows x
 # 100 columns, so stream (or split) if a real .dta order exhausts MONA's RAM.
 dta_writer <- function(path, columns, types, names) {
-  what <- paste0("writing ", sub(PARTIAL, "", basename(path), fixed = TRUE))
+  what <- paste0("writing ", sub("\\.partial$", "", basename(path)))
   state <- new.env()
   state$chunks <- list()
   list(
@@ -1418,7 +1418,7 @@ extract_file <- function(con, file, types, format, out, progress) {
     if (DBI::dbHasCompleted(res)) break
   }
   writer$finish()
-  if (!file.rename(path, file.path(out, file$name))) {
+  if (!rename(path, file.path(out, file$name))) {
     refuse("extract", "cannot rename ", basename(path), " to ", file$name)
   }
   rows
@@ -1844,6 +1844,7 @@ extract_order <- function(path, out, db, run) {
   }
   replace_file(file.path(out, ORDER_COPY), function(tmp) writeBin(bytes, tmp))
   write_log(log, out)
+  run$log <- log
   tracker <- progress_tracker(
     counts,
     vapply(files, function(f) length(f$columns), 0L)
@@ -1905,6 +1906,7 @@ extract_order <- function(path, out, db, run) {
     )
     # Written after every file: it is the record a resumed run keeps files by.
     write_log(log, out)
+    run$log <- log
   }
   run$file <- NULL
   log <- log[order(log$file, method = "radix"), , drop = FALSE]
@@ -1932,17 +1934,23 @@ empty_log <- function() {
   )
 }
 
+# file.rename() that reports failure only by its value: on Windows it warns
+# before returning FALSE, and an order's warning handler would fail the order
+# on the warning instead of letting the caller recover.
+rename <- function(from, to) isTRUE(suppressWarnings(file.rename(from, to)))
+
 # Writes `path` through `write(tmp)` into <path>.tmp, then renames it over `path`,
 # so the folder always holds a whole copy. Where the rename cannot replace an
 # existing file, the old one is removed first: for that moment the folder has no
-# copy, and a run stopped then resumes nothing.
+# copy, and a run stopped then resumes nothing. If that fails too, the .tmp copy
+# stays and the order is refused.
 replace_file <- function(path, write) {
   tmp <- paste0(path, TMP)
   write(tmp)
-  if (!file.rename(tmp, path)) {
-    unlink(path)
-    if (!file.rename(tmp, path)) {
-      refuse("setup", "cannot write ", path)
+  if (!rename(tmp, path)) {
+    unlink(path, expand = FALSE)
+    if (!rename(tmp, path)) {
+      refuse("setup", "cannot rename ", tmp, " to ", path)
     }
   }
 }
@@ -2017,7 +2025,7 @@ resume <- function(out, doc, files, counts) {
   }
   listed <- list.files(out, all.files = TRUE, no.. = TRUE)
   stale <- setdiff(listed, c(log$file, ORDER_COPY, RUN_LOG))
-  unlink(file.path(out, stale), recursive = TRUE)
+  unlink(file.path(out, stale), recursive = TRUE, expand = FALSE)
   left <- intersect(list.files(out, all.files = TRUE, no.. = TRUE), stale)
   if (length(left)) {
     refuse(
@@ -2053,74 +2061,55 @@ call_trace <- function(calls, e) {
   c(own, if (!is.null(raising)) paste0(name(raising), "()"))
 }
 
-# Gives the finished order's folder its dated name. The order copy goes first,
-# and the folder must then hold exactly the order's files and the run log. An
-# earlier export of the same day is renamed aside to <final>.old, the new folder
-# renamed in, and only then the old one deleted, so a locked file never leaves a
-# half-deleted export under the finished name. A failure says where each folder is.
+# The refusal when an order's dated export folder already exists: it is never
+# replaced, so the .partial folder stays as it is and can be resumed.
+refuse_existing <- function(final) {
+  refuse(
+    "setup",
+    final,
+    " already exists: move or delete it, then run again"
+  )
+}
+
+# Gives the finished order's folder its dated name. The folder must hold exactly
+# the order's files, the run log and the order copy; only then is the order copy
+# removed and the folder renamed. A refusal before the rename leaves the .partial
+# folder resumable.
 publish <- function(out, final, expected) {
-  unlink(file.path(out, ORDER_COPY))
-  if (file.exists(file.path(out, ORDER_COPY))) {
-    refuse("setup", "cannot remove ", ORDER_COPY, " from ", out)
+  if (file.exists(final)) {
+    refuse_existing(final)
   }
   listed <- list.files(out, all.files = TRUE, no.. = TRUE)
-  wanted <- c(expected, RUN_LOG)
+  wanted <- c(expected, RUN_LOG, ORDER_COPY)
   if (!setequal(listed, wanted) || length(listed) != length(wanted)) {
     refuse(
       "setup",
       out,
-      " does not hold exactly the order's files and ",
+      " does not hold exactly the order's files, ",
       RUN_LOG,
+      " and ",
+      ORDER_COPY,
       ": unexpected ",
       paste(setdiff(listed, wanted), collapse = ", "),
       "; missing ",
       paste(setdiff(wanted, listed), collapse = ", ")
     )
   }
-  old <- paste0(final, ".old")
-  if (file.exists(old)) {
-    unlink(old, recursive = TRUE)
-    if (file.exists(old)) {
-      refuse(
-        "setup",
-        "cannot remove ",
-        old,
-        " left by an earlier run; the new export is complete in ",
-        out
-      )
-    }
+  unlink(file.path(out, ORDER_COPY), expand = FALSE)
+  if (file.exists(file.path(out, ORDER_COPY))) {
+    refuse("setup", "cannot remove ", ORDER_COPY, " from ", out)
   }
-  if (file.exists(final) && !file.rename(final, old)) {
-    refuse(
-      "setup",
-      "cannot move the earlier export ",
-      final,
-      " aside; it is unchanged, and the new export is complete in ",
-      out
-    )
-  }
-  if (!file.rename(out, final)) {
-    restored <- !file.exists(old) || file.rename(old, final)
+  if (!rename(out, final)) {
     refuse(
       "setup",
       "cannot rename ",
       out,
       " to ",
       final,
-      "; the new export is complete in ",
+      ": the export is complete in ",
       out,
-      if (file.exists(old)) {
-        paste0(", and the earlier export is in ", old)
-      } else if (restored && file.exists(final)) {
-        paste0(", and the earlier export is back in ", final)
-      }
+      "; rename it by hand"
     )
-  }
-  if (file.exists(old)) {
-    unlink(old, recursive = TRUE)
-    if (file.exists(old)) {
-      say("  WARNING: the earlier export of today is left in ", old, ": delete it")
-    }
   }
 }
 
@@ -2135,6 +2124,11 @@ run_order <- function(path, base, db) {
   run <- new.env()
   failure <- tryCatch(
     {
+      # Checked first too, so a run does not extract for hours to be refused at
+      # the end.
+      if (file.exists(final)) {
+        refuse_existing(final)
+      }
       dir.create(out, recursive = TRUE, showWarnings = FALSE)
       if (!dir.exists(out)) {
         refuse("setup", "cannot create the export folder ", out)
@@ -2212,14 +2206,12 @@ run_order <- function(path, base, db) {
     conditionMessage(failure)
   )
   error_block(failure$detail, run$trace)
-  finished <- setdiff(
-    grep("\\.(partial|tmp)$", list.files(out), value = TRUE, invert = TRUE),
-    c(ORDER_COPY, RUN_LOG)
-  )
-  if (length(finished)) {
+  # Resumable: the finished files the run log lists.
+  finished <- if (is.null(run$log)) 0L else nrow(run$log)
+  if (finished > 0L) {
     say(
       "  ",
-      length(finished),
+      finished,
       " finished file(s) kept in ",
       out,
       "; the next run resumes from them"

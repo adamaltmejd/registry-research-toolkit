@@ -103,7 +103,9 @@ A failed order stays in `orders\`; the console shows the exit code and the reaso
 `<nr>.partial\` keeps the files that finished. A run that was stopped leaves the same
 folder. Fix the cause and run the script again: it resumes, keeping each finished file
 whose order entry is unchanged and whose table still has the same number of rows, and
-extracts the rest. A rerun of a finished order overwrites that day's export folder.
+extracts the rest. If `export_data\<nr>_<date>\` already exists (the same order finished
+earlier that day), the run refuses before touching anything: move or delete that
+folder, then run again.
 Run one `extract.R` at a time per order: two runs of the same order would share its
 `.partial` folder.
 

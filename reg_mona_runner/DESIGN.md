@@ -33,9 +33,10 @@ with the orders. Run steps are in [README.md](README.md).
   install, so every steward runs the released `extract.R` unchanged (SWECOV move, R11).
   A missing or malformed file is exit code 2 before any order. The tests write their own
   file; there is no other override.
-- **No dry run** (maintainer, 2026-10-21). A rerun of a finished order overwrites that
-  day's export folder and archive copy, and a rerun of an unfinished one resumes it
-  ("Resuming"), so a run is cheap to repeat.
+- **No dry run** (maintainer, 2026-10-21). A rerun of an unfinished order resumes it
+  ("Resuming"), so a run is cheap to repeat. An order whose dated export folder
+  already exists is refused before anything is touched: the coordinator moves or
+  deletes that folder by hand (same-day reruns are rare).
 - **Source or Rscript.** Under `source()` in an interactive session the script reports
   its exit code instead of quitting, since quitting would end the data manager's
   session. Under `Rscript` it exits with the code.
@@ -44,7 +45,7 @@ with the orders. Run steps are in [README.md](README.md).
 
 Every `<base>/orders/*.json` runs independently, in name order; the file stem is the
 project number. An order writes into `<base>/export_data/<nr>.partial/` and, once
-complete, renames it to `<nr>_<YYYY-MM-DD>/` (replacing an earlier export of that day):
+complete, renames it to `<nr>_<YYYY-MM-DD>/`, which must not exist yet:
 
 1. Parse and check the whole manifest before touching the database: version, then mode
    and steward, then shape. The manifest, its provenance and every object the runner
@@ -262,10 +263,12 @@ the order completes.
 copy, so a readable checkpoint is always there (where the share refuses to rename over
 a file, the old one is removed first, and a run stopped in that moment resumes nothing).
 Keep-or-delete is decided from one listing of the folder's regular files by exact
-name. When the order completes, `order.json` is removed, the folder must hold exactly
-the order's files and the log, and it is renamed to its dated name. An earlier export
-of the same day is first renamed aside to `<nr>_<date>.old` and deleted only after the
-new folder is in place; a failure names where each folder is.
+name. When the order completes, the folder must hold exactly the order's files, the
+log and `order.json`; then `order.json` is removed and the folder renamed to its dated
+name. If that name already exists the order is refused, at the start of the run and
+again here, and the `.partial` folder stays resumable. A rename that fails reports
+its value rather than a warning, so the fallbacks above run and are not turned into an
+exit 8 by the order's warning rule.
 
 The unit is the file: a file of a billion rows that fails at the end is written again
 whole.
