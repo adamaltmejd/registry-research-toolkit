@@ -295,11 +295,13 @@ Choices behind the table:
   the variable label. Only a column that is not a Stata variable name has an alias, and
   no two columns of a file are written under one name, or the order is refused (exit 6).
   `%tc` holds milliseconds: a `datetime2`'s finer digits are cut and counted (above).
-- **Memory.** CSV and Parquet stream one chunk at a time (a Parquet row group per
-  chunk, split at arrow's own cap, 1,048,576 rows in current versions, and wherever a
-  text column would pass 1 GB, since an arrow string array holds under 2 GB), so their ceiling is one chunk of `fetch_rows` rows, about twice over for
-  Parquet while it is converted; the steward sizes it for the machine the runner runs
-  on. haven cannot append, so a `.dta` file is collected whole and written once: the
+- **Memory.** CSV and Parquet stream one chunk of `fetch_rows` rows at a time. A chunk
+  is written in row slices of at most 1 GB of text per column (Parquet) or per slice
+  (CSV), since an arrow string array and an R string hold under 2 GB; a Parquet row
+  group is one slice, split again at arrow's own cap (1,048,576 rows in current
+  versions). Peak memory is the fetched chunk plus its converted copy, so it grows
+  with `fetch_rows` times the width of the file; the steward sizes `fetch_rows` for
+  the machine the runner runs on. haven cannot append, so a `.dta` file is collected whole and written once: the
   ceiling is MONA's RAM for the order's widest file (`simplify:` in the script).
 
 The type table is verified by the manual run on MONA (see Tests); a long (`%12.0g`) and

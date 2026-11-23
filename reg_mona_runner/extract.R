@@ -60,7 +60,7 @@ read_config <- function() {
       !all(c("steward", "base", "odbc") %in% names(cfg)) ||
       !all(names(cfg) %in% c("steward", "base", "odbc", "fetch_rows")) ||
       anyDuplicated(names(cfg)) ||
-      (!is.null(cfg$fetch_rows) && !whole(cfg$fetch_rows)) ||
+      ("fetch_rows" %in% names(cfg) && !whole(cfg$fetch_rows)) ||
       !is_string(cfg$steward) ||
       !grepl("^[a-z0-9]+(-[a-z0-9]+)*$", cfg$steward) ||
       !is_string(cfg$base) ||
@@ -106,9 +106,9 @@ EXIT <- c(
 
 # Rows per fetch when the steward configuration names no `fetch_rows`.
 FETCH_ROWS <- 100000L
-# Text bytes per column in one Parquet row group, at most: half of what an arrow
-# string array holds.
-GROUP_TEXT_BYTES <- 1e9
+# Text bytes one write may hold, per Parquet column or per CSV slice: half of
+# what an arrow string array or an R string holds (2^31 bytes).
+SLICE_BYTES <- 1e9
 # The suffix of a file or order folder that is not finished yet.
 PARTIAL <- ".partial"
 ENCODINGS <- c("date", "year", "yyyymm", "yyyymmdd")
@@ -1268,6 +1268,42 @@ write_csv <- function(df, path) {
 
 # ---- Writers --------------------------------------------------------------------
 
+# A text vector's bytes per value, a missing value as 0.
+text_bytes <- function(x) {
+  b <- as.numeric(nchar(x, type = "bytes"))
+  b[is.na(b)] <- 0
+  b
+}
+
+# The row ranges of an n-row chunk to write one at a time: each as long as it can
+# be while every vector in `bytes` (bytes per row) sums to at most SLICE_BYTES
+# within it. One range when the chunk is small enough, as it always is at the
+# default fetch size. A single row over the limit is refused.
+row_slices <- function(bytes, n, what) {
+  if (!n) {
+    return(list())
+  }
+  if (all(vapply(bytes, sum, 0) <= SLICE_BYTES)) {
+    return(list(seq_len(n)))
+  }
+  totals <- lapply(bytes, cumsum)
+  slices <- list()
+  start <- 1L
+  while (start <= n) {
+    end <- min(vapply(totals, function(t) {
+      before <- if (start > 1L) t[start - 1L] else 0
+      findInterval(before + SLICE_BYTES, t)
+    }, 0))
+    if (end < start) {
+      refuse("extract", what, ": one row holds more than 1 GB of text")
+    }
+    end <- min(end, n)
+    slices[[length(slices) + 1L]] <- start:end
+    start <- end + 1L
+  }
+  slices
+}
+
 # A writer for one output file: write(chunk) takes each fetched chunk (the first
 # may have no rows), finish() completes the file, release() frees what an
 # unfinished file holds (its .partial file is then removed). `types` are
@@ -1288,7 +1324,16 @@ csv_writer <- function(path, columns, types, names) {
       for (j in times) {
         chunk[[j]] <- csv_time(chunk[[j]], columns[j], what)
       }
-      writeBin(csv_bytes(chunk), sink)
+      # One R string holds under 2 GB: the chunk is written in row slices. A
+      # number's field is counted as 32 bytes, more than it takes.
+      row <- Reduce(`+`, lapply(chunk, function(x) {
+        if (is.character(x)) text_bytes(x) + 3 else rep(32, length(x))
+      }))
+      slices <- row_slices(list(row), nrow(chunk), what)
+      for (rows in slices) {
+        part <- if (length(slices) == 1L) chunk else chunk[rows, , drop = FALSE]
+        writeBin(csv_bytes(part), sink)
+      }
     },
     finish = function() {
       close(sink)
@@ -1380,16 +1425,14 @@ parquet_writer <- function(path, columns, types, names) {
       if (!nrow(chunk)) {
         return(invisible())
       }
-      # An arrow string array holds under 2 GB of text: a chunk whose widest
-      # text column holds more is written in row slices, a row group each.
-      text <- vapply(chunk, function(x) {
-        if (is.character(x)) sum(as.numeric(nchar(x, type = "bytes"))) else 0
-      }, 0)
-      pieces <- max(1, ceiling(max(text, 0) / GROUP_TEXT_BYTES))
-      slice <- ceiling(nrow(chunk) / pieces)
-      for (start in seq(1L, nrow(chunk), by = slice)) {
-        rows <- start:min(nrow(chunk), start + slice - 1L)
-        write_rows(if (pieces == 1) chunk else chunk[rows, , drop = FALSE])
+      # An arrow string array holds under 2 GB of text: a chunk with more in
+      # one text column is written in row slices, a row group each.
+      text <- Filter(Negate(is.null), lapply(chunk, function(x) {
+        if (is.character(x)) text_bytes(x)
+      }))
+      slices <- row_slices(text, nrow(chunk), what)
+      for (rows in slices) {
+        write_rows(if (length(slices) == 1L) chunk else chunk[rows, , drop = FALSE])
       }
     },
     finish = close_all,

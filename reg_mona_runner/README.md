@@ -33,10 +33,11 @@ the run with exit code 2 before any order.
 
 `fetch_rows`, optional, is how many rows the runner fetches at a time (100,000 when
 absent); each fetch is one Parquet row group, split at arrow's own cap (1,048,576 rows
-in current versions) and wherever a text column would pass 1 GB. Larger row groups compress better and read faster, and larger
-fetches cost memory: a fetch is held in
-R, twice over while it is converted for Parquet. Size it for the machine the runner runs
-on (on MONA, a batch server has far more memory than an interactive session).
+in current versions) and wherever a text column would pass 1 GB. Larger row groups
+compress better and read faster. Larger fetches cost memory: the runner holds a whole
+fetch in R and, while writing it, its converted copy, so peak memory grows with
+`fetch_rows` times the width of the widest file. Size it for the machine the runner
+runs on (on MONA, a batch server has far more memory than an interactive session).
 
 ## Folders
 
