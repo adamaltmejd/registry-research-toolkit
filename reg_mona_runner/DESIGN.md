@@ -92,7 +92,12 @@ complete, renames it to `<nr>_<YYYY-MM-DD>/`, which must not exist yet:
 On success the folder is renamed and the order moves to
 `orders/archive/<nr>_<YYYY-MM-DD>.json`. On failure the order stays in `orders/`, the
 console prints the failure (below, "Row values"), and the `.partial` folder keeps its
-finished files: only the file that was being written is removed. A run that is stopped
+finished files: only the file that was being written and any `.tmp` copy are removed,
+and a `.tmp` copy whose file is missing is renamed back, since it is then the only
+whole copy. A refusal before the folder is opened (setup, or an existing dated
+folder) touches nothing. The console's last line says what is left: the files the
+next run resumes, a complete folder to rename by hand (its rename failed), or a
+published export whose order could not be archived. A run that is stopped
 (Esc, Ctrl-C, a killed batch job) leaves the same folder plus that file's `.partial`
 copy. Either way the folder name says the order did not finish, and the next run
 resumes from it (#2630).

@@ -2074,8 +2074,8 @@ refuse_existing <- function(final) {
 # Gives the finished order's folder its dated name. The folder must hold exactly
 # the order's files, the run log and the order copy; only then is the order copy
 # removed and the folder renamed. A refusal before the rename leaves the .partial
-# folder resumable.
-publish <- function(out, final, expected) {
+# folder resumable; `run$stage` records how far it got, for the failure report.
+publish <- function(out, final, expected, run) {
   if (file.exists(final)) {
     refuse_existing(final)
   }
@@ -2099,18 +2099,37 @@ publish <- function(out, final, expected) {
   if (file.exists(file.path(out, ORDER_COPY))) {
     refuse("setup", "cannot remove ", ORDER_COPY, " from ", out)
   }
+  run$stage <- "complete"
   if (!rename(out, final)) {
     refuse(
       "setup",
       "cannot rename ",
       out,
       " to ",
-      final,
-      ": the export is complete in ",
-      out,
-      "; rename it by hand"
+      final
     )
   }
+}
+
+# After a failure, removes the file that was being written (<name>.partial) and
+# any temporary copy (<name>.tmp) from `out`, so the finished files, the order
+# copy and the run log remain. A temporary copy whose file is missing is the only
+# whole copy left (replace_file removed the old one and could not rename): it is
+# renamed back, never deleted. Returns the names it could not handle.
+clean_partial <- function(out) {
+  names <- list.files(out, pattern = "\\.(partial|tmp)$", all.files = TRUE)
+  left <- character()
+  for (name in names) {
+    path <- file.path(out, name)
+    whole <- sub("\\.tmp$", "", path)
+    if (endsWith(name, TMP) && !file.exists(whole)) {
+      if (!rename(path, whole)) left <- c(left, name)
+    } else {
+      unlink(path, expand = FALSE)
+      if (file.exists(path)) left <- c(left, name)
+    }
+  }
+  left
 }
 
 run_order <- function(path, base, db) {
@@ -2133,6 +2152,8 @@ run_order <- function(path, base, db) {
       if (!dir.exists(out)) {
         refuse("setup", "cannot create the export folder ", out)
       }
+      # From here on the failure report cleans up and describes `out`.
+      run$stage <- "open"
       # An R warning can mean a value was altered (a string R cannot
       # translate): it fails the order.
       log <- withCallingHandlers(
@@ -2150,7 +2171,8 @@ run_order <- function(path, base, db) {
           }
         }
       )
-      publish(out, final, log$file)
+      publish(out, final, log$file, run)
+      run$stage <- "published"
       say("  done: ", nrow(log), " file(s) in ", final)
       NULL
     },
@@ -2188,15 +2210,8 @@ run_order <- function(path, base, db) {
       )
     )
   }
-  # Finished files stay for the next run to resume from; only a file that was
-  # still being written goes.
-  partial <- list.files(
-    out,
-    pattern = "\\.(partial|tmp)$",
-    all.files = TRUE,
-    full.names = TRUE
-  )
-  unlink(partial)
+  stage <- if (is.null(run$stage)) "none" else run$stage
+  left <- if (stage %in% c("open", "complete")) clean_partial(out) else character()
   say(
     "  FAILED (exit code ",
     failure$code,
@@ -2206,19 +2221,17 @@ run_order <- function(path, base, db) {
     conditionMessage(failure)
   )
   error_block(failure$detail, run$trace)
-  # Resumable: the finished files the run log lists.
+  # What is left, and what the coordinator does next.
   finished <- if (is.null(run$log)) 0L else nrow(run$log)
-  if (finished > 0L) {
-    say(
-      "  ",
-      finished,
-      " finished file(s) kept in ",
-      out,
-      "; the next run resumes from them"
-    )
+  if (stage == "open" && finished > 0L) {
+    say("  the next run resumes ", finished, " finished file(s) kept in ", out)
+  } else if (stage == "complete") {
+    say("  the export is complete in ", out, ": rename it to ", final, " by hand")
+  } else if (stage == "published") {
+    say("  the export is complete in ", final, "; the order could not be archived")
   }
-  if (any(file.exists(partial))) {
-    say("  WARNING: could not remove ", paste(basename(partial), collapse = ", "))
+  if (length(left)) {
+    say("  WARNING: could not remove or restore ", paste(left, collapse = ", "))
   }
   failure$code
 }
