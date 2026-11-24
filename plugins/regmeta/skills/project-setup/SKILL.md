@@ -36,9 +36,10 @@ other code exist. Then ask only for what the folder does not answer, in one roun
    ask where.
 4. Is the data delivered? If so, the full path of the folder the files are in, and their
    format. On MONA offer `//micro.intra/projekt/P<nnnn>$/P<nnnn>_Data/<subfolder>`.
-   Accept only an absolute path (a drive letter, `//server/...` or `/...`): `run.R`
-   changes to the code folder, so a relative path would look for the data beneath it.
-   Ask again rather than write a relative one.
+   Accept only an absolute path: `D:/...` or `//server/share/...` on Windows (`/delivery`
+   and `D:delivery` are not absolute there), `/...` on a POSIX server. `run.R` changes to
+   the code folder, so a relative path would look for the data beneath it. Ask again
+   rather than write a relative one.
 5. Which catalog: the global one, or a data steward's host?
 
 Do not ask about populations, estimands, outcomes or outputs. Those belong to a
