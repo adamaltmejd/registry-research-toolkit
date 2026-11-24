@@ -9,7 +9,10 @@
 //!
 //! `generate` writes one file per spec file into `DIR` in the spec's format, and
 //! `mock_manifest.json`. `--seed` defaults to 1 and `--persons` to 10 000; more than
-//! 1 000 000 persons needs `--allow-large`.
+//! 1 000 000 persons needs `--allow-large`. It prints the estimated rows and bytes first
+//! (an estimate, not the writers' exact sizes) and refuses an estimated total above 2 GiB
+//! without `--allow-large`. `compile` warns on stdout of a source with more than 50 rows
+//! per person across its years.
 //!
 //! `fetch` sends `CF-Access-Client-Id` and `CF-Access-Client-Secret` from the environment
 //! variables `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET` (a steward behind
@@ -116,6 +119,10 @@ fn run_compile(mut args: impl Iterator<Item = String>) -> ! {
     });
     let answers = load_answers(&answers).unwrap_or_else(|r| refuse(&[r]));
     let spec = compile(&project, &rules, &answers).unwrap_or_else(|r| refuse(&r));
+    let warnings = reg_mock::size::row_warnings(&spec);
+    if !warnings.is_empty() {
+        println!("{}", json!({ "warnings": warnings }));
+    }
     let mut text = serde_json::to_string_pretty(&spec).expect("the spec serializes");
     text.push('\n');
     std::fs::write(&out, text).unwrap_or_else(|e| {
@@ -182,8 +189,10 @@ fn run_generate(mut args: impl Iterator<Item = String>) -> ! {
     if !refusals.is_empty() {
         refuse(&refusals);
     }
-    let tables =
-        generate::generate(&spec, seed, persons, allow_large).unwrap_or_else(|r| refuse(&[r]));
+    let plan = generate::plan(&spec, seed, persons, allow_large).unwrap_or_else(|r| refuse(&[r]));
+    // Advisory output goes to stdout: stderr holds one refusal object when a command fails.
+    println!("{}", plan.estimate.summary());
+    let tables = plan.generate().unwrap_or_else(|r| refuse(&[r]));
     write::write_all(&spec, &tables, Path::new(&out), seed, persons)
         .unwrap_or_else(|r| refuse(&[r]));
     std::process::exit(0);
