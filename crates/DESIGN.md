@@ -2703,7 +2703,7 @@ physical-id suffix mechanism is accounted as changed, not silently forgotten.
 
 The runner keeps its operational contract ([runner
 design](../reg_mona_runner/DESIGN.md), "The run", "SQL", "Types per format", "No row
-values in logs"): named `orders/<project-number>.json`, hand-run by a data manager, one
+values in logs"): named `orders/<project>.json` (the MONA project name, e.g. `P1234`), hand-run by a data manager, one
 file per physical table/delivery, all identifiers/types resolved before rows are read,
 parameterized filters, atomic per-order failure cleanup, success archive and
 metadata-only logs. Encodings remain `year`, `yyyymm`, `yyyymmdd`, `date`; finer bounds

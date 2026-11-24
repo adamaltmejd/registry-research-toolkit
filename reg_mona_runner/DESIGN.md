@@ -44,8 +44,8 @@ with the orders. Run steps are in [README.md](README.md).
 ## The run
 
 Every `<base>/orders/*.json` runs independently, in name order; the file stem is the
-project number. An order writes into `<base>/export_data/<nr>.partial/` and, once
-complete, renames it to `<nr>_<YYYY-MM-DD>/`, which must not exist yet:
+MONA project name, as MONA writes it (`P1234`), and names everything the order writes. An order writes into `<base>/export_data/<project>.partial/` and, once
+complete, renames it to `<project>_<YYYY-MM-DD>/`, which must not exist yet:
 
 1. Parse and check the whole manifest before touching the database: version, then mode
    and steward, then shape. The manifest, its provenance and every object the runner
@@ -93,7 +93,7 @@ complete, renames it to `<nr>_<YYYY-MM-DD>/`, which must not exist yet:
    file's size on disk, is there to compare with the size estimate.
 
 On success the folder is renamed and the order moves to
-`orders/archive/<nr>_<YYYY-MM-DD>.json`. On failure the order stays in `orders/`, the
+`orders/archive/<project>_<YYYY-MM-DD>.json`. On failure the order stays in `orders/`, the
 console prints the failure (below, "Row values"), and the `.partial` folder keeps its
 finished files: only the file that was being written and any `.tmp` copy are removed,
 and a `.tmp` copy whose file is missing is renamed back, since it is then the only
@@ -160,7 +160,7 @@ flushed as it is printed: R buffers a batch run's output, and the header otherwi
 reached the `.Rout` only with the count block, minutes later.
 
 ```text
-order 1234   136 files   parquet   -> export_data/1234_2026-11-23
+order P1234   136 files   parquet   -> export_data/P1234_2026-11-23
 count      0:05   2,916,948,188 rows   ~300 GB+ est. uncompressed
   largest    table_c          1,183,402,551 rows   ~140 GB
              table_a              6,233,616 rows   ~900 MB
@@ -193,7 +193,7 @@ finished   1 order   0 failed   exit 0
   job ends with, printed in an interactive session too, where the script does not
   quit.
 - **A resumed run** says so under the header, before the count, which can take
-  minutes: `resume     an earlier run left 132 files finished in 1234.partial;
+  minutes: `resume     an earlier run left 132 files finished in P1234.partial;
   counting rows to check them`. After the count, `resume     132 of 136 files kept
   from an earlier run` says how many stand.
 - **The count block** keeps each file's count out of the console: `run_log.csv` has
@@ -335,7 +335,7 @@ a double (`%20.0g`) differ in the `.dta` display format.
 Run one `extract.R` at a time per order: two runs of the same order share its
 `.partial` folder, and nothing locks it (a coordinator rule, not code).
 
-An unfinished order's folder, `<nr>.partial/`, holds its finished files, `run_log.csv`
+An unfinished order's folder, `<project>.partial/`, holds its finished files, `run_log.csv`
 with a row for each, and `order.json`, a copy of the order that ran. The next run of
 the same order number reads both after the pre-count and keeps a finished file only if
 its whole manifest entry is identical to the new order's (the format too, through the
