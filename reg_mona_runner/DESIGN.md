@@ -290,6 +290,12 @@ Choices behind the table:
   milliseconds since 1960, computed exactly. CSV keeps every digit, trailing zeros
   dropped (found on MONA, 2026-11-23: the DSN's driver returned `datetime2` as text,
   which Arrow refused as a UTC timestamp).
+- **Long text columns are selected last.** The legacy driver reads a long value
+  (`nvarchar(max)`, `ntext`; a `char`/`varchar`/`text` column fetched as
+  `nvarchar(max)`) only after every other column of the row, and a SELECT with one
+  before an ordinary column fails with SQLSTATE 07009, Invalid Descriptor Index. The
+  extract selects them last and puts each fetched chunk back in the order's column
+  order (found on MONA, 2026-11-24: P1105's `swecov_sos_dors`, `ULORSAK varchar(max)`).
 - **A time finer than the format holds is cut, and the console says so.** `datetime2`
   holds 100 ns and system timestamps usually fill all seven digits; Parquet's
   timestamp holds a microsecond and Stata's `%tc` a millisecond. Refusing them would

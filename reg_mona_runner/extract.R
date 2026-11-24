@@ -1091,7 +1091,21 @@ filter_where <- function(file, types) {
 # One batch per file: the SELECT is assembled server-side from QUOTENAME()d
 # identifiers and run by sp_executesql with the filter bounds as parameters,
 # bound from R.
+# Whether a column is fetched as a long value (nvarchar(max) or ntext): the
+# legacy "SQL Server" driver reads such a column only after every other column
+# of the row, so a SELECT with one before an ordinary column fails with SQLSTATE
+# 07009, Invalid Descriptor Index (P1105 on MONA, 2026-11-24).
+fetched_long <- function(type, max_length) {
+  type %in% STRING_TYPES &
+    (type %in% c("text", "ntext") | is.na(max_length) | max_length < 0L | max_length > 4000L)
+}
+
+# The extract's SELECT, its long columns last (fetched_long); `fetched` is the
+# order's column positions in SELECT order, which extract_file() undoes.
 select_batch <- function(file, types) {
+  n <- length(file$columns)
+  long <- fetched_long(types$type[seq_len(n)], types$max_length[seq_len(n)])
+  fetched <- c(which(!long), which(long))
   selected <- vapply(
     seq_along(file$columns),
     function(j) {
@@ -1103,16 +1117,18 @@ select_batch <- function(file, types) {
     ""
   )
   where <- filter_where(file, types)
-  sql_batch(
+  batch <- sql_batch(
     paste0(
       "N'SELECT ' + ",
-      paste(selected, collapse = " + N', ' + "),
+      paste(selected[fetched], collapse = " + N', ' + "),
       sql_from(file),
       where$sql
     ),
     where$declared,
     where$params
   )
+  batch$fetched <- fetched
+  batch
 }
 
 # The count of the rows the extract of `file` will write: its own filter, one
@@ -1598,6 +1614,8 @@ extract_file <- function(con, file, types, format, out, progress) {
     if (ncol(chunk) != n) {
       refuse("extract", what, " returned an unexpected column count")
     }
+    # Back to the order's column order.
+    chunk <- chunk[order(batch$fetched)]
     for (j in seq_along(chunk)) {
       x <- chunk[[j]]
       if (is.character(x) && !all(validUTF8(x[!is.na(x)]))) {
