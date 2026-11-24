@@ -236,26 +236,21 @@ which keeps every row). The filter and the count read the same value. Another ty
 an encoding (a date column read as `year`) is refused before any query rather than
 guessed.
 
-**Proposed (#2604, #2608; design in [../crates/DESIGN.md](../crates/DESIGN.md), "Row
-filters by code and by spell", pending the maintainer's review).** The next manifest
-version adds two filters, both in the one `WHERE` the extract and the pre-count share:
+**Proposed (#2604; design in [../crates/DESIGN.md](../crates/DESIGN.md), "Row filters by
+code", pending the maintainer's review).** The next manifest version adds
+`code_filter`, in the one `WHERE` the extract and the pre-count share:
 
-- `code_filter = {column, codes[], prefixes[]}`, ANDed with the period filter. Each
-  entry is a bound parameter: `col = @pN` for a code (`nvarchar` on text storage,
-  `bigint` on integer storage), `col LIKE @pN` for a prefix, the bound value being the
-  prefix with `[`, `%`, `_` escaped as `[[]`, `[%]`, `[_]`, then `%`. Terms are ORed.
-  It compares under the column's own collation, so an index on the column serves it.
-  Entries outside printable ASCII are refused at the manifest check (the order never
-  writes one). The column's storage is checked like the period column's: text or
-  integer, and integer takes exact codes only; anything else is refused before any
-  query. `rows_without_period` counts rows that pass the code filter and lack a period
-  value. `filter` in `run_log.csv` names the code filter after the period filter
-  (`ATC: 1 code, 2 prefixes`); `rows` is the rows kept.
-- `row_filter.end_column`, for a spell table: a range keeps a row when
-  `start <= to` and (`end IS NULL OR end >= from`), the end read by the same
-  `period_key` as the start (blank or unreadable is NULL, so an open spell); an absent
-  bound drops its test. The end column's type is checked against the encoding as the
-  start's is.
+`code_filter = {column, codes[], prefixes[]}` is ANDed with the period filter. Each
+entry is a bound parameter: `col = @pN` for a code (`nvarchar` on text storage,
+`bigint` on integer storage), `col LIKE @pN` for a prefix, the bound value being the
+prefix with `[`, `%`, `_` escaped as `[[]`, `[%]`, `[_]`, then `%`. Terms are ORed. It
+compares under the column's own collation, so an index on the column serves it.
+Entries outside printable ASCII are refused at the manifest check (the order never
+writes one). The column's storage is checked like the period column's: text or
+integer, and integer takes exact codes only; anything else is refused before any
+query. `rows_without_period` counts rows that pass the code filter and lack a period
+value. `filter` in `run_log.csv` names the code filter after the period filter
+(`ATC: 1 code, 2 prefixes`); `rows` is the rows kept.
 
 ## CSV
 
