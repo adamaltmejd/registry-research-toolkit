@@ -605,7 +605,7 @@ export interface components {
             provenance: components["schemas"]["Provenance"];
             /**
              * Format: int32
-             * @description Always 4.
+             * @description Always 5.
              */
             version: number;
         };
@@ -619,6 +619,11 @@ export interface components {
         };
         /** @description One column of the file, with every requested variable it delivers. */
         ManifestColumn: {
+            /**
+             * @description An SCB löpnummer (a key SCB pseudonymised), by the steward's holdings: the runner writes it as int64 whatever its storage, and refuses a value that is no whole number (#2648). Absent: written in its storage type. Only true, never false or null.
+             * @enum {boolean}
+             */
+            lopnr?: true;
             /** @description The exact column name in the file. */
             name: string;
             refs: components["schemas"]["ColumnRef"][];

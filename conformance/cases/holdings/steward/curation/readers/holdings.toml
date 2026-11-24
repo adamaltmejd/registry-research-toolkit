@@ -4,3 +4,7 @@ schema_keyed = false
 prefix = "Received_"
 replacement = ""
 evidence = "Synthetic storage export explicitly prefixes the reference row key."
+
+[[lopnr]]
+prefix = "Received_"
+evidence = "Synthetic storage export: the received person key is the key SCB pseudonymised."

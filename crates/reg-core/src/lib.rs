@@ -19,7 +19,7 @@
 pub const CATALOG_SCHEMA_VERSION: u32 = 18;
 
 /// A holdings file's physical schema. Its semantic tables retain the catalog schema.
-pub const HOLDINGS_SCHEMA_VERSION: u32 = 13;
+pub const HOLDINGS_SCHEMA_VERSION: u32 = 14;
 
 mod case_folding;
 mod digest;

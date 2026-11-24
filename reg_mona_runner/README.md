@@ -1,7 +1,7 @@
 # Extract runner
 
 `extract.R` extracts a steward's orders inside MONA. Each order is an order file
-(version 4) that the steward's catalog wrote for one sub-project; the script writes the
+(version 5) that the steward's catalog wrote for one sub-project; the script writes the
 ordered columns into that sub-project's export folder, in the format the researcher
 chose for the project: Parquet, Stata `.dta` or CSV. Run it by hand in
 MONA. Use the copy at the `reg_meta` tag the steward pins:
@@ -110,8 +110,9 @@ A successful order writes `export_data\<project>_<date>\`:
   for a missing value. A `.dta` column whose name is not a Stata variable name (for
   example one over 32 characters) is written under its alias, the order's `stata_name`
   (a Stata-safe form of its first 25 characters, `_` and 6 hex digits), with the full
-  name as the variable label. [DESIGN.md](DESIGN.md), "Types per format", lists what
-  each column type becomes;
+  name as the variable label. An SCB löpnummer (a pseudonymised person or firm key the
+  order marks) is written as a 64-bit integer whatever its storage, so keys join across
+  files. [DESIGN.md](DESIGN.md), "Types per format", lists what each column type becomes;
 - `run_log.csv`: each file's row count, the count made before extracting
   (`rows_counted`, empty if that count failed), column count, the period filter applied
   and, for
@@ -139,7 +140,7 @@ Run one `extract.R` at a time per order: two runs of the same order would share 
   | 3, 4, 6 | The file is not a usable order: write it again with `materialize`                                                                                                                                                                                                                                                                           |
   | 5       | Not an order from this steward's holdings: rebuild the project in its view                                                                                                                                                                                                                                                                  |
   | 7       | A table or column is not in the database, or is stored otherwise than the order expects: report it to the catalog team. Or the format cannot hold a column (its type, or a `.dta` name that is not a Stata name even as an alias, or a full name over 80 characters, which a label cannot hold): the researcher orders it as Parquet or CSV |
-  | 8       | The query or the write failed: check disk space, then report it. Or a value does not fit `.dta` exactly (the log names the column): the researcher orders it as Parquet or CSV                                                                                                                                                              |
+  | 8       | The query or the write failed: check disk space, then report it. Or a value does not fit `.dta` exactly (the log names the column): the researcher orders it as Parquet or CSV. Or an SCB löpnummer column holds a value that is not a whole number (the log names the column and the count): report it to the catalog team                                                                                                                                                             |
 
 ## Safety
 

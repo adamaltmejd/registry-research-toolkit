@@ -582,7 +582,9 @@ impl Context<'_> {
             let name = standard_file_name(table, year, release);
             let mut built = Built::new(name, year.into_iter().collect());
             for (name, refs) in columns {
-                if let Some(column) = self.resolve(&built.file.name, name, &refs, None, refusals) {
+                if let Some(column) =
+                    self.resolve(&built.file.name, name, &refs, None, false, refusals)
+                {
                     built.push_with(column, &refs);
                 }
             }
@@ -653,11 +655,25 @@ impl Context<'_> {
                         year_periods: file_years.clone(),
                     })
                     .collect();
+                // The runner writes an SCB löpnummer (the order file's `lopnr`) as int64
+                // whatever its storage or the project's types (#2648), so the mock writes it
+                // as bigint storage.
+                let bigint = Storage {
+                    dtype: Some("bigint".to_owned()),
+                    length: None,
+                    precision: Some(19),
+                    scale: Some(0),
+                };
                 let Some(mut spec_column) = self.resolve(
                     &file.name,
                     &column.name,
                     &refs,
-                    Some(&column.storage),
+                    Some(if column.lopnr {
+                        &bigint
+                    } else {
+                        &column.storage
+                    }),
+                    column.lopnr,
                     refusals,
                 ) else {
                     continue;
@@ -708,16 +724,16 @@ impl Context<'_> {
         name: &str,
         refs: &[Column<'_>],
         storage: Option<&Storage>,
+        lopnr: bool,
         refusals: &mut Vec<Refusal>,
     ) -> Option<SpecColumn> {
         let at = format!("{file}/{name}");
-        // The project's type for any variable the column delivers.
-        let mut overrides: Vec<ColumnType> = Vec::new();
-        for t in refs.iter().filter_map(|r| self.binding_type(r)) {
-            if !overrides.contains(&t) {
-                overrides.push(t);
-            }
-        }
+        // None for an SCB löpnummer, whose `storage` the caller made bigint.
+        let overrides = if lopnr {
+            Vec::new()
+        } else {
+            self.binding_types(refs)
+        };
         if overrides.len() > 1 {
             refusals.push(Refusal::new(
                 "column_types_disagree",
@@ -813,6 +829,17 @@ impl Context<'_> {
             identifier: primary.identifier.unwrap_or(false),
             null_rate: None,
         })
+    }
+
+    /// The project's distinct types for the variables a column delivers.
+    fn binding_types(&self, refs: &[Column<'_>]) -> Vec<ColumnType> {
+        let mut types: Vec<ColumnType> = Vec::new();
+        for t in refs.iter().filter_map(|r| self.binding_type(r)) {
+            if !types.contains(&t) {
+                types.push(t);
+            }
+        }
+        types
     }
 
     /// The project's `type` for the reference's variable: its own binding's, or for a

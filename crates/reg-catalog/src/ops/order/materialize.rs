@@ -129,6 +129,7 @@ struct Stored {
     ordinal: i64,
     storage: Storage,
     slot: Option<Slot>,
+    lopnr: bool,
 }
 
 /// A file being assembled: its columns by id, with the ordering key of each.
@@ -377,6 +378,7 @@ fn build(
                     role,
                     refs,
                     slot: stored.slot,
+                    lopnr: stored.lopnr,
                 },
             ));
         }
@@ -788,7 +790,7 @@ fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
 fn stored(held: &Connection, column: i64) -> Result<Stored, Error> {
     Ok(held.query_row(
         "SELECT name, ordinal, storage_type, length, precision, scale, slot_family, slot_kind,
-                slot_index
+                slot_index, lopnr
          FROM holding_column WHERE id = ?",
         [column],
         |r| {
@@ -809,6 +811,7 @@ fn stored(held: &Connection, column: i64) -> Result<Stored, Error> {
                     }),
                     _ => None,
                 },
+                lopnr: r.get(9)?,
             })
         },
     )?)

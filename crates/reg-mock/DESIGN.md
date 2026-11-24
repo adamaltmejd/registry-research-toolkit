@@ -161,7 +161,9 @@ names once known.
 wins; else the held storage's type (`reg_core::manifest::StorageFamily`, split into
 date/datetime and boolean); else the catalog's type. With an override, the column drops
 its storage: it is written in the override's type. An unknown type, and geometry, uuid
-or binary (maintainer, 2026-11-05), is refused, never guessed. The identifier flag comes
+or binary (maintainer, 2026-11-05), is refused, never guessed. An SCB löpnummer (the order
+file's `lopnr`) is written as `bigint` storage whatever the override or its held
+storage, as the runner writes it (#2648). The identifier flag comes
 from the segment, not from `type = identifier`, except on a manual column, which has no
 segment (below). A variable's segments come from its own
 table; only a row key may take another table's (a person id carried into a steward
