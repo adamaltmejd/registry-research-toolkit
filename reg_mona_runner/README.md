@@ -70,10 +70,12 @@ All under the export root:
    format, its three largest files, the columns not in the size, any count that failed
    and how long counting took. Then one line per finished file, with rows, size on
    disk, elapsed time and the time left; a file running longer than five minutes gets
-   a progress line every five minutes. Each order ends with `done` or
-   `FAILED (exit code N)`. A failure is followed by an error block with the full R
-   or database message, which can quote row values: keep it, and screenshots of it,
-   on MONA. A date-time finer than the format holds (Parquet: a microsecond; `.dta`: a
+   a progress line every five minutes. Each order ends with a `done … exit 0` line, or
+   with `FAILED (exit code N): reason` in the failing file's row, an error block with
+   the full R or database message, what the next run does, and a `stopped … exit N`
+   line. The error block can quote row values: keep it, and screenshots of it, on
+   MONA. The run's last line is `finished … exit N`, the exit code a batch job ends
+   with (0 when every order finished, else the first failed order's code). A date-time finer than the format holds (Parquet: a microsecond; `.dta`: a
    millisecond) is cut, never rounded, and the console names each such column with the
    number of values cut; CSV keeps every digit.
 

@@ -175,8 +175,8 @@ say <- function(...) cat(paste0(...), "\n", sep = "")
 # The underlying R or driver message of a failure, between marker lines. It can
 # quote a row value, so it goes to the console only, which stays on MONA, never
 # to a file under export_data/.
-error_block <- function(detail, trace = NULL) {
-  if (!length(detail) && !length(trace)) {
+error_block <- function(detail, trace = NULL, late = NULL) {
+  if (!length(detail) && !length(trace) && !length(late)) {
     return(invisible())
   }
   say("  ---- error detail: may contain row values, do not copy off MONA ----")
@@ -185,6 +185,9 @@ error_block <- function(detail, trace = NULL) {
   }
   if (length(trace)) {
     say("  in: ", paste(trace, collapse = " > "))
+  }
+  for (line in late) {
+    say("  also, while stopping: ", line)
   }
   say("  ---- end of error detail ----")
 }
@@ -2015,6 +2018,7 @@ extract_order <- function(path, out, db, run) {
     "   -> ", file.path("export_data", basename(run$final))
   )
   run$headed <- TRUE
+  run$total <- length(files)
   pkg <- FORMAT_PACKAGES[[format]]
   if (!is.na(pkg) && !nzchar(system.file(package = pkg))) {
     install_missing(pkg)
@@ -2396,6 +2400,23 @@ clean_partial <- function(out) {
   left
 }
 
+# A failure as a refusal: an unexpected R error becomes exit 8 with its message
+# as the detail.
+as_failure <- function(e) {
+  if (inherits(e, "runner_refusal")) {
+    return(e)
+  }
+  structure(
+    class = c("runner_refusal", "error", "condition"),
+    list(
+      message = paste0("unexpected R error (", class(e)[1], ")"),
+      call = NULL,
+      code = EXIT[["extract"]],
+      detail = conditionMessage(e)
+    )
+  )
+}
+
 run_order <- function(path, base, db) {
   nr <- tools::file_path_sans_ext(basename(path))
   stamp <- format(Sys.Date(), "%Y-%m-%d")
@@ -2424,7 +2445,14 @@ run_order <- function(path, base, db) {
       # translate): it fails the order.
       log <- withCallingHandlers(
         extract_order(path, out, db, run),
+        # Once the order is failing, a warning or error raised while stopping
+        # (closing a file, clearing a result) is only noted: the first failure
+        # is the one reported.
         warning = function(w) {
+          if (!is.null(run$first)) {
+            run$late <- c(run$late, conditionMessage(w))
+            invokeRestart("muffleWarning")
+          }
           refuse(
             "extract",
             "an R warning was raised",
@@ -2432,6 +2460,11 @@ run_order <- function(path, base, db) {
           )
         },
         error = function(e) {
+          if (!is.null(run$first)) {
+            run$late <- c(run$late, conditionMessage(e))
+            return()
+          }
+          run$first <- e
           if (!inherits(e, "runner_refusal")) {
             run$trace <- report(call_trace(sys.calls(), e))
           }
@@ -2442,18 +2475,7 @@ run_order <- function(path, base, db) {
       run$done <- log
       NULL
     },
-    runner_refusal = function(e) e,
-    error = function(e) {
-      structure(
-        class = c("runner_refusal", "error", "condition"),
-        list(
-          message = paste0("unexpected R error (", class(e)[1], ")"),
-          call = NULL,
-          code = EXIT[["extract"]],
-          detail = conditionMessage(e)
-        )
-      )
-    }
+    error = function(e) as_failure(if (is.null(run$first)) e else run$first)
   )
   if (is.null(failure)) {
     archive <- file.path(base, "orders", "archive")
@@ -2500,7 +2522,7 @@ run_order <- function(path, base, db) {
   )
   # In the file's row when a file was being extracted.
   say(if (!is.null(run$file) && !is.null(run$layout)) run$layout$text(run$place, run$file, failed) else paste0("  ", failed))
-  error_block(failure$detail, run$trace)
+  error_block(failure$detail, run$trace, run$late)
   # What is left, and what the coordinator does next.
   finished <- if (is.null(run$log)) 0L else nrow(run$log)
   if (stage == "open" && finished > 0L) {
@@ -2513,6 +2535,21 @@ run_order <- function(path, base, db) {
   if (length(left)) {
     say("  WARNING: could not remove or restore ", paste(left, collapse = ", "))
   }
+  # The order's closing line, as `done` closes a finished one.
+  log <- run$log
+  note(
+    "stopped   ",
+    if (!is.null(run$total)) paste0(finished, " of ", files_text(run$total), "   "),
+    if (finished > 0L) {
+      paste0(
+        with_commas(sum(log$rows)), " rows   ",
+        bytes_text(sum(log$bytes_written, na.rm = TRUE)), "   "
+      )
+    },
+    clock_text(seconds_since(started)),
+    "   exit ",
+    failure$code
+  ) || say("stopped   exit ", failure$code)
   failure$code
 }
 
@@ -2559,10 +2596,13 @@ main <- function() {
   db <- new.env()
   db$con <- NULL
   status <- EXIT[["ok"]]
+  failed <- 0L
   for (path in orders) {
     code <- run_order(path, config$base, db)
+    failed <- failed + (code != EXIT[["ok"]])
     if (status == EXIT[["ok"]]) status <- code
   }
+  attr(status, "orders") <- c(length(orders), failed)
   if (!is.null(db$con)) {
     DBI::dbDisconnect(db$con)
   }
@@ -2570,10 +2610,23 @@ main <- function() {
 }
 
 status <- main()
+# The run's last line, whatever stopped it: the exit code a batch job ends with.
+local({
+  orders <- attr(status, "orders")
+  say(
+    "finished   ",
+    if (!is.null(orders)) {
+      paste0(
+        orders[1], if (orders[1] == 1L) " order" else " orders", "   ",
+        orders[2], " failed   "
+      )
+    },
+    "exit ", status
+  )
+})
+status <- as.integer(status)
 # Under source() in an interactive session, quitting would end the data
-# manager's R session: report instead.
-if (interactive()) {
-  say("finished with exit code ", status)
-} else {
+# manager's R session.
+if (!interactive()) {
   quit(save = "no", status = status)
 }

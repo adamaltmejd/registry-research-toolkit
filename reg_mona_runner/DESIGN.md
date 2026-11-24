@@ -170,6 +170,7 @@ extract                          rows       size  elapsed     left
    97/136  table_c     310,000,000 of 1,183,402,551  1:05    ~3:10
    97/136  table_c      1,183,402,551      81 GB     1:16    ~1:02
 done   136 files   2,916,948,188 rows   171 GB   4:12   exit 0
+finished   1 order   0 failed   exit 0
 ```
 
 - **One line per finished file**: its place among the order's files (kept files of
@@ -179,7 +180,16 @@ done   136 files   2,916,948,188 rows   171 GB   4:12   exit 0
   minutes, then at most every five minutes, so a file of a billion rows does not look
   hung.
 - **A failure** takes the file's row, `FAILED (exit code N): reason`, followed by the
-  error block and what is left ("Resuming").
+  error block, what is left ("Resuming") and a closing line in `done`'s place:
+  `stopped   132 of 136 files   <rows>   <size>   2:07   exit 8`. The first failure is
+  the one reported: a warning or error raised while the order stops (closing a file,
+  clearing a database result) is listed in the error block as `also, while stopping:`
+  and cannot replace it. On MONA (2026-11-24) such a warning, `Result already
+  cleared`, hid the fetch error that stopped P1105.
+- **The last line** of every run is `finished   <n> orders   <m> failed   exit N`, or
+  `finished   exit N` when the run stopped before any order: the exit code the batch
+  job ends with, printed in an interactive session too, where the script does not
+  quit.
 - **The count block** keeps each file's count out of the console: `run_log.csv` has
   it (`rows_counted`).
 
