@@ -175,6 +175,8 @@ refuse <- function(code, ..., detail = NULL) {
 # 2026-11-24).
 say <- function(...) {
   cat(paste0(...), "\n", sep = "")
+  # Both: R CMD BATCH writes to a file connection, Rterm and Rgui to a console.
+  flush(stdout())
   flush.console()
 }
 
