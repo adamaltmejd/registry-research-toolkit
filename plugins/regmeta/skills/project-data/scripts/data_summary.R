@@ -4,7 +4,7 @@
 # data_summary.csv to the working directory. Review that file, then send it out.
 
 # ---- Settings (written by the project-data skill; nothing here is edited) ----
-DATA_DIR <- "" # the delivered files' absolute folder
+DATA_DIR <- "" # the delivered files' absolute folder, forward slashes, never relative
 # -----------------------------------------------------------------------------
 
 # A scan that fails leaves no summary from an earlier one.

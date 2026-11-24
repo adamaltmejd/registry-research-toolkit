@@ -165,7 +165,10 @@ are assumed not to be personal data.
 
 1. Copy [scripts/data_summary.R](scripts/data_summary.R) to the project's
    `.regmeta/data_summary.R` and set `DATA_DIR` to the delivered files' absolute folder,
-   with forward slashes. The user must not need to edit it.
+   with forward slashes. Ask for the full path (on MONA
+   `//micro.intra/projekt/P<nnnn>$/P<nnnn>_Data/<subfolder>` by default, to confirm) and
+   never write a relative one: the script may run from another folder. The user must not
+   need to edit it.
 2. The user uploads it and submits it as it is (on MONA, to the batch runner). It writes
    `data_summary.csv` to the folder it runs from. The user sends the file
    out through the server's own export, which they review as any export, and saves it as

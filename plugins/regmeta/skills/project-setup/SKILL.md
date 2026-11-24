@@ -27,13 +27,18 @@ other code exist. Then ask only for what the folder does not answer, in one roun
 1. Is this a new project or an existing one? The folder the agent was started in is the
    project folder.
 2. What is the research about, in a few sentences? Skip it if `RESEARCH.md` says.
-3. Does it run on MONA? If so, the project number (`P` and four digits) and the folder
-   the project's code goes in on MONA. MONA normally gives a project `P<nnnn>_Data`
+3. Does it run on MONA? If so, the project number (`P` and four digits) and the full path
+   of the folder the project's code goes in. MONA normally gives a project `P<nnnn>_Data`
    (read-only; delivered files, often in a subfolder) and `P<nnnn>_Gem` (shared space for
-   the code). Propose `P<nnnn>_Gem\<project>` for the code, and let the user correct it:
-   some projects use another layout. Never assume the path. If not on MONA, where.
-4. Is the data delivered? If so, the absolute folder the files are in (on MONA by default
-   `P<nnnn>_Data\<subfolder>`, to confirm with the user), and their format.
+   the code). Offer these defaults, with forward slashes, and let the user correct them
+   (some projects use another layout; never assume the path):
+   `//micro.intra/projekt/P<nnnn>$/P<nnnn>_Gem/<project>` for the code. If not on MONA,
+   ask where.
+4. Is the data delivered? If so, the full path of the folder the files are in, and their
+   format. On MONA offer `//micro.intra/projekt/P<nnnn>$/P<nnnn>_Data/<subfolder>`.
+   Accept only an absolute path (a drive letter, `//server/...` or `/...`): `run.R`
+   changes to the code folder, so a relative path would look for the data beneath it.
+   Ask again rather than write a relative one.
 5. Which catalog: the global one, or a data steward's host?
 
 Do not ask about populations, estimands, outcomes or outputs. Those belong to a
@@ -66,9 +71,9 @@ results/   approved real exports, by date
    `references/data-stewards.md`. The global catalog needs nothing.
 3. **The pipeline**, copied unchanged from [template/](template/): `run.R` and
    `src/pipeline.R`, `src/inputs.R`, `src/disclosure.R`, `src/staging.R`. Set `DATA_DIR`
-   in `run.R` to the delivered files' absolute folder from the answer to question 4, with
-   forward slashes, or leave it empty until the data is delivered. Later only `PACKAGES`
-   changes, when the project adds a package.
+   in `run.R` to the absolute folder from the answer to question 4, with forward
+   slashes (never a relative path), or leave it empty until the data is delivered.
+   Later only `PACKAGES` changes, when the project adds a package.
 4. **The pinned files**, in `src/`: `cell_key.R` copied from
    [scripts/cell_key.R](scripts/cell_key.R), and `export_gate.R`,
    `aggregates.schema.json` and `aggregates.policy.json` from the toolkit at the
