@@ -180,7 +180,7 @@ error_block <- function(detail, trace = NULL, late = NULL) {
     return(invisible())
   }
   say("  ---- error detail: may contain row values, do not copy off MONA ----")
-  for (line in unlist(strsplit(detail, "\n", fixed = TRUE))) {
+  for (line in if (length(detail)) unlist(strsplit(detail, "\n", fixed = TRUE))) {
     say("  ", line)
   }
   if (length(trace)) {
@@ -1387,7 +1387,8 @@ parquet_writer <- function(path, columns, types, names) {
       properties = arrow::ParquetWriterProperties$create(columns)
     ),
     error = function(e) {
-      sink$close()
+      # The constructor's error is the one reported, whatever the close does.
+      report(sink$close())
       stop(e)
     }
   )
@@ -2417,6 +2418,11 @@ as_failure <- function(e) {
   )
 }
 
+stop_interrupted <- function() {
+  say("stopped   interrupted")
+  invokeRestart("abort")
+}
+
 run_order <- function(path, base, db) {
   nr <- tools::file_path_sans_ext(basename(path))
   stamp <- format(Sys.Date(), "%Y-%m-%d")
@@ -2451,13 +2457,18 @@ run_order <- function(path, base, db) {
         warning = function(w) {
           if (!is.null(run$first)) {
             run$late <- c(run$late, conditionMessage(w))
-            invokeRestart("muffleWarning")
+            return(tryInvokeRestart("muffleWarning"))
           }
           refuse(
             "extract",
             "an R warning was raised",
             detail = conditionMessage(w)
           )
+        },
+        # An interrupt (Esc, Ctrl-C) is a failure too, so what its cleanup
+        # raises is only noted; it then stops the whole run (below).
+        interrupt = function(i) {
+          if (is.null(run$first)) run$first <- i
         },
         error = function(e) {
           if (!is.null(run$first)) {
@@ -2475,7 +2486,15 @@ run_order <- function(path, base, db) {
       run$done <- log
       NULL
     },
-    error = function(e) as_failure(if (is.null(run$first)) e else run$first)
+    # An interrupt stops the whole run, no later order starts, even when its
+    # cleanup raised an error.
+    interrupt = function(i) stop_interrupted(),
+    error = function(e) {
+      if (inherits(run$first, "interrupt")) {
+        stop_interrupted()
+      }
+      as_failure(if (is.null(run$first)) e else run$first)
+    }
   )
   if (is.null(failure)) {
     archive <- file.path(base, "orders", "archive")
@@ -2537,7 +2556,7 @@ run_order <- function(path, base, db) {
   }
   # The order's closing line, as `done` closes a finished one.
   log <- run$log
-  note(
+  closed <- note(
     "stopped   ",
     if (!is.null(run$total)) paste0(finished, " of ", files_text(run$total), "   "),
     if (finished > 0L) {
@@ -2549,7 +2568,10 @@ run_order <- function(path, base, db) {
     clock_text(seconds_since(started)),
     "   exit ",
     failure$code
-  ) || say("stopped   exit ", failure$code)
+  )
+  if (!closed) {
+    say("stopped   exit ", failure$code)
+  }
   failure$code
 }
 
@@ -2604,7 +2626,11 @@ main <- function() {
   }
   attr(status, "orders") <- c(length(orders), failed)
   if (!is.null(db$con)) {
-    DBI::dbDisconnect(db$con)
+    tryCatch(
+      DBI::dbDisconnect(db$con),
+      error = function(e) say("  also, while stopping: ", conditionMessage(e)),
+      warning = function(w) say("  also, while stopping: ", conditionMessage(w))
+    )
   }
   status
 }

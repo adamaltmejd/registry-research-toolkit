@@ -98,8 +98,8 @@ console prints the failure (below, "Row values"), and the `.partial` folder keep
 finished files: only the file that was being written and any `.tmp` copy are removed,
 and a `.tmp` copy whose file is missing is renamed back, since it is then the only
 whole copy. A refusal before the folder is opened (setup, or an existing dated
-folder) touches nothing. The console's last line says what is left: the files the
-next run resumes, a complete folder to rename by hand (its rename failed), or a
+folder) touches nothing. After the error block a line says what is left, before the
+`stopped` and `finished` lines ("Console"): the files the next run resumes, a complete folder to rename by hand (its rename failed), or a
 published export whose order could not be archived. A run that is stopped
 (Esc, Ctrl-C, a killed batch job) leaves the same folder plus that file's `.partial`
 copy. Either way the folder name says the order did not finish, and the next run

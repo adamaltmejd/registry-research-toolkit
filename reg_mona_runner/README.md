@@ -120,8 +120,8 @@ The order then moves to `orders\archive\`.
 An order is written into `export_data\<nr>.partial\`, each file under a `.partial` name
 until it is complete, and the folder takes its dated name only when the order succeeds.
 A failed order stays in `orders\`; the console shows the exit code and the reason, and
-`<nr>.partial\` keeps the files that finished; the last line says what the next run
-resumes, or what to do by hand. A run that was stopped leaves the same
+`<nr>.partial\` keeps the files that finished; the line after the error block says
+what the next run resumes, or what to do by hand. A run that was stopped leaves the same
 folder. Fix the cause and run the script again: it resumes, keeping each finished file
 whose order entry is unchanged and whose table still has the same number of rows, and
 extracts the rest. If `export_data\<nr>_<date>\` already exists (the same order finished
