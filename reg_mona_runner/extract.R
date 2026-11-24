@@ -34,8 +34,9 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 # names. Closed keys: `steward` (the manifest's provenance.steward this deployment
 # serves), `base` (the export root holding orders/, orders/archive/ and
 # export_data/) and `odbc` (the DBI::dbConnect arguments for odbc::odbc(), all
-# strings, such as dsn, Driver, Server and Database). Read in main(), once the
-# packages are in place.
+# strings, such as dsn, Driver, Server and Database), and optionally `fetch_rows`
+# (rows per fetch, and so per Parquet row group; FETCH_ROWS when absent). Read in
+# main(), once the packages are in place.
 config <- NULL
 
 read_config <- function() {
@@ -50,10 +51,16 @@ read_config <- function() {
   strings <- function(x) {
     is_object(x) && all(nzchar(names(x))) && all(vapply(x, is_string, TRUE))
   }
+  whole <- function(x) {
+    is.numeric(x) && length(x) == 1L && !is.na(x) && x >= 1 &&
+      x <= .Machine$integer.max && x == round(x)
+  }
   if (
     !is_object(cfg) ||
-      !setequal(names(cfg), c("steward", "base", "odbc")) ||
-      length(cfg) != 3L ||
+      !all(c("steward", "base", "odbc") %in% names(cfg)) ||
+      !all(names(cfg) %in% c("steward", "base", "odbc", "fetch_rows")) ||
+      anyDuplicated(names(cfg)) ||
+      ("fetch_rows" %in% names(cfg) && !whole(cfg$fetch_rows)) ||
       !is_string(cfg$steward) ||
       !grepl("^[a-z0-9]+(-[a-z0-9]+)*$", cfg$steward) ||
       !is_string(cfg$base) ||
@@ -63,9 +70,11 @@ read_config <- function() {
     return(paste0(
       "steward configuration ",
       path,
-      " is not {\"steward\": slug, \"base\": path, \"odbc\": {name: string}}"
+      " is not {\"steward\": slug, \"base\": path, \"odbc\": {name: string}},",
+      " with an optional \"fetch_rows\": positive whole number"
     ))
   }
+  cfg$fetch_rows <- as.integer(if (is.null(cfg$fetch_rows)) FETCH_ROWS else cfg$fetch_rows)
   cfg$connect <- function() {
     do.call(
       DBI::dbConnect,
@@ -95,7 +104,11 @@ EXIT <- c(
   extract = 8L # the query or the file write failed, or a value the format cannot hold
 )
 
+# Rows per fetch when the steward configuration names no `fetch_rows`.
 FETCH_ROWS <- 100000L
+# Text bytes one write may hold, per Parquet column or per CSV slice: half of
+# what an arrow string array or an R string holds (2^31 bytes).
+SLICE_BYTES <- 1e9
 # The suffix of a file or order folder that is not finished yet.
 PARTIAL <- ".partial"
 ENCODINGS <- c("date", "year", "yyyymm", "yyyymmdd")
@@ -1255,6 +1268,42 @@ write_csv <- function(df, path) {
 
 # ---- Writers --------------------------------------------------------------------
 
+# A text vector's bytes per value, a missing value as 0.
+text_bytes <- function(x) {
+  b <- as.numeric(nchar(x, type = "bytes"))
+  b[is.na(b)] <- 0
+  b
+}
+
+# The row ranges of an n-row chunk to write one at a time: each as long as it can
+# be while every vector in `bytes` (bytes per row) sums to at most SLICE_BYTES
+# within it. One range when the chunk is small enough, as it always is at the
+# default fetch size. A single row over the limit is refused.
+row_slices <- function(bytes, n, what) {
+  if (!n) {
+    return(list())
+  }
+  if (all(vapply(bytes, sum, 0) <= SLICE_BYTES)) {
+    return(list(seq_len(n)))
+  }
+  totals <- lapply(bytes, cumsum)
+  slices <- list()
+  start <- 1L
+  while (start <= n) {
+    end <- min(vapply(totals, function(t) {
+      before <- if (start > 1L) t[start - 1L] else 0
+      findInterval(before + SLICE_BYTES, t)
+    }, 0))
+    if (end < start) {
+      refuse("extract", what, ": one row holds more than 1 GB of text")
+    }
+    end <- min(end, n)
+    slices[[length(slices) + 1L]] <- start:end
+    start <- end + 1L
+  }
+  slices
+}
+
 # A writer for one output file: write(chunk) takes each fetched chunk (the first
 # may have no rows), finish() completes the file, release() frees what an
 # unfinished file holds (its .partial file is then removed). `types` are
@@ -1275,7 +1324,16 @@ csv_writer <- function(path, columns, types, names) {
       for (j in times) {
         chunk[[j]] <- csv_time(chunk[[j]], columns[j], what)
       }
-      writeBin(csv_bytes(chunk), sink)
+      # One R string holds under 2 GB: the chunk is written in row slices. A
+      # number's field is counted as 32 bytes, more than it takes.
+      row <- Reduce(`+`, lapply(chunk, function(x) {
+        if (is.character(x)) text_bytes(x) + 3 else rep(32, length(x))
+      }))
+      slices <- row_slices(list(row), nrow(chunk), what)
+      for (rows in slices) {
+        part <- if (length(slices) == 1L) chunk else chunk[rows, , drop = FALSE]
+        writeBin(csv_bytes(part), sink)
+      }
     },
     finish = function() {
       close(sink)
@@ -1340,31 +1398,42 @@ parquet_writer <- function(path, columns, types, names) {
       tryCatch(writer$Close(), finally = sink$close())
     }
   }
+  write_rows <- function(chunk) {
+    arrays <- lapply(seq_along(chunk), function(j) {
+      x <- chunk[[j]]
+      if (types$type[j] %in% TIME_TYPES) {
+        # Read as a time of no zone, then marked UTC: arrow refuses to read
+        # text without an offset straight into a UTC timestamp.
+        parts <- time_parts(x, 6L, columns[j], what, cuts$add)
+        text <- ifelse(is.na(x), NA_character_, paste0(parts$seconds, ".", parts$fraction))
+        return(arrow::Array$create(text)$cast(arrow::timestamp("us"))$cast(schema[[j]]$type))
+      }
+      # bigint, decimal and date arrive as text: arrow parses them exactly, or
+      # fails.
+      arrow::Array$create(x)$cast(schema[[j]]$type)
+    })
+    writer$WriteTable(
+      arrow::Table$create(
+        !!!stats::setNames(arrays, columns),
+        schema = schema
+      ),
+      chunk_size = config$fetch_rows
+    )
+  }
   list(
     write = function(chunk) {
       if (!nrow(chunk)) {
         return(invisible())
       }
-      arrays <- lapply(seq_along(chunk), function(j) {
-        x <- chunk[[j]]
-        if (types$type[j] %in% TIME_TYPES) {
-          # Read as a time of no zone, then marked UTC: arrow refuses to read
-          # text without an offset straight into a UTC timestamp.
-          parts <- time_parts(x, 6L, columns[j], what, cuts$add)
-          text <- ifelse(is.na(x), NA_character_, paste0(parts$seconds, ".", parts$fraction))
-          return(arrow::Array$create(text)$cast(arrow::timestamp("us"))$cast(schema[[j]]$type))
-        }
-        # bigint, decimal and date arrive as text: arrow parses them exactly, or
-        # fails.
-        arrow::Array$create(x)$cast(schema[[j]]$type)
-      })
-      writer$WriteTable(
-        arrow::Table$create(
-          !!!stats::setNames(arrays, columns),
-          schema = schema
-        ),
-        chunk_size = FETCH_ROWS
-      )
+      # An arrow string array holds under 2 GB of text: a chunk with more in
+      # one text column is written in row slices, a row group each.
+      text <- Filter(Negate(is.null), lapply(chunk, function(x) {
+        if (is.character(x)) text_bytes(x)
+      }))
+      slices <- row_slices(text, nrow(chunk), what)
+      for (rows in slices) {
+        write_rows(if (length(slices) == 1L) chunk else chunk[rows, , drop = FALSE])
+      }
     },
     finish = close_all,
     cut = cuts$counts,
@@ -1517,7 +1586,7 @@ extract_file <- function(con, file, types, format, out, progress) {
   rows <- 0
   repeat {
     chunk <- tryCatch(
-      DBI::dbFetch(res, n = FETCH_ROWS),
+      DBI::dbFetch(res, n = config$fetch_rows),
       error = function(e) driver_refusal(e, "extract", what, " failed")
     )
     if (ncol(chunk) != n) {

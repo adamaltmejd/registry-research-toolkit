@@ -131,3 +131,16 @@ test_that("two columns written under one Stata name are refused (6)", {
   expect_identical(run$status, 6L)
   expect_refused(base, "900", 6L, run$output)
 })
+
+test_that("a fetch_rows that is not a positive whole number is a setup failure (2)", {
+  # Zero, a fraction, a string or null must stop the run, not reach dbFetch.
+  base <- export_root()
+  path <- file.path(base, "extract-config.json")
+  plain <- sub("}$", "", paste(readLines(path, warn = FALSE), collapse = ""))
+  for (bad in c("0", "2.5", "\"1000000\"", "null")) {
+    writeLines(paste0(plain, ",\"fetch_rows\":", bad, "}"), path)
+    run <- run_runner(base)
+    expect_identical(run$status, 2L)
+    expect_match(run$output, "optional \"fetch_rows\"", fixed = TRUE, all = FALSE)
+  }
+})
