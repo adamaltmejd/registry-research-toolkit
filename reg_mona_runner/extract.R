@@ -1582,7 +1582,9 @@ extract_file <- function(con, file, types, format, out, progress) {
     },
     error = function(e) driver_refusal(e, "extract", what, " failed")
   )
-  on.exit(DBI::dbClearResult(res), add = TRUE, after = FALSE)
+  # odbc may already have dropped the result when a fetch failed, and clearing it
+  # again warns: a warning here would replace the fetch's own error.
+  on.exit(if (DBI::dbIsValid(res)) DBI::dbClearResult(res), add = TRUE, after = FALSE)
   rows <- 0
   repeat {
     chunk <- tryCatch(
