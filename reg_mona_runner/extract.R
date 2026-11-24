@@ -2020,6 +2020,15 @@ extract_order <- function(path, out, db, run) {
   )
   run$headed <- TRUE
   run$total <- length(files)
+  # Said before the count, which can take minutes: which files stay is decided
+  # after it ("resume" below).
+  prior <- report(read_prior(out, regular_files(out)))
+  if (!is.null(prior) && nrow(prior$log)) {
+    say(
+      sprintf("%-11s", "resume"), "an earlier run left ", files_text(nrow(prior$log)),
+      " finished in ", basename(out), "; counting rows to check them"
+    )
+  }
   pkg <- FORMAT_PACKAGES[[format]]
   if (!is.na(pkg) && !nzchar(system.file(package = pkg))) {
     install_missing(pkg)

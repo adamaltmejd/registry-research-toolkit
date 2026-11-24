@@ -190,6 +190,10 @@ finished   1 order   0 failed   exit 0
   `finished   exit N` when the run stopped before any order: the exit code the batch
   job ends with, printed in an interactive session too, where the script does not
   quit.
+- **A resumed run** says so under the header, before the count, which can take
+  minutes: `resume     an earlier run left 132 files finished in 1234.partial;
+  counting rows to check them`. After the count, `resume     132 of 136 files kept
+  from an earlier run` says how many stand.
 - **The count block** keeps each file's count out of the console: `run_log.csv` has
   it (`rows_counted`).
 
