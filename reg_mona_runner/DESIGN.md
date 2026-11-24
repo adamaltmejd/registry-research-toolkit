@@ -166,9 +166,9 @@ reached the `.Rout` only with the count block, minutes later.
 ```text
 order P1234   136 files   parquet   -> export_data/P1234_2026-11-23
 count      0:05   2,916,948,188 rows   ~33 GB+ est. on disk
-  largest    table_c          1,183,402,551 rows   ~140 GB
-             table_a              6,233,616 rows   ~900 MB
-             table_b                912,004 rows   ~88 MB+
+  largest    table_c          1,183,402,551 rows   ~15 GB
+             table_a              6,233,616 rows   ~99 MB
+             table_b                912,004 rows   ~9.7 MB+
   not sized  table_d          COLUMN_X (varchar(max))
   failed     none
 extract                          rows       size  elapsed     left
