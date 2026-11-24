@@ -4,8 +4,8 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 #
 # For every order manifest in <base>/orders/*.json (the order.json the catalog
 # writes, renamed to the MONA project name as MONA writes it, e.g. P1234), extract
-# the ordered columns from the steward's holdings: one file per manifest file, in the order's extract_format
-# (Stata .dta, Parquet or CSV), plus run_log.csv. An order is written into
+# the ordered columns from the steward's holdings: one file per manifest file, in
+# the order's extract_format (Stata .dta, Parquet or CSV), plus run_log.csv. An order is written into
 # <base>/export_data/<project>.partial/, each file under a .partial name until it is
 # complete; a success renames the folder to <project>_<YYYY-MM-DD>/ and moves the order
 # to orders/archive/<project>_<YYYY-MM-DD>.json. A failure, or a run that is stopped,
