@@ -275,7 +275,9 @@ large id. What each SQL type becomes:
 An SCB löpnummer column (the order's `lopnr`, [../crates/DESIGN.md](../crates/DESIGN.md),
 "SCB löpnummer columns") is written as `bigint` whatever its storage: int64 in Parquet,
 digits in CSV, and in `.dta` a double `%20.0g`, refused at or above 2^53. Its storage
-must be a number or text (else exit 7 before any row is read).
+must be an integer, a decimal, a double-precision `float` or text, as the holdings
+compiler requires (else exit 7 before any row is read): a `real` (`float(1..24)`) has
+already merged distinct keys above 2^24.
 
 Choices behind the table:
 
@@ -285,7 +287,8 @@ Choices behind the table:
   `123.0`) breaks a join silently. The value is read in its storage type and converted
   in R: an integer as it is; a `decimal` or a `float` only when whole (a `float` below
   2^53, above which it may have rounded in storage); text only when digits with an
-  optional minus, a `char` column's padding trimmed. Leading zeros are dropped. Any
+  optional minus, a `char` or `nchar` column's trailing spaces trimmed (no other
+  whitespace). Leading zeros are dropped. Any
   other value, or one beyond int64, fails the order (exit 8) naming the file, the column
   and how many such values the fetched chunk holds, never a value. `.dta` follows the
   `bigint` rule below: Stata has no 64-bit integer, and a double holds every

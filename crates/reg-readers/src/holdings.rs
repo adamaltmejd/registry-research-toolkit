@@ -7,8 +7,6 @@ use std::path::Path;
 
 use serde::Deserialize;
 
-use reg_core::manifest::StorageFamily;
-
 use crate::{ReadError, config, error};
 
 /// Reader vocabulary, evidenced exact-name renames and literal prefix rewrites. Both
@@ -35,6 +33,18 @@ struct Config {
 struct Lopnr {
     prefix: String,
     evidence: String,
+}
+
+/// The SQL storage an SCB löpnummer may have: exactly what the runner converts, its
+/// `LOPNR_TYPES` and `lopnr_storage_ok` in `reg_mona_runner/extract.R`. Single precision
+/// (`real`, `float(1..24)`) is refused: above 2^24 it has already merged distinct keys.
+fn lopnr_storage(storage: &Storage) -> bool {
+    match storage.data_type.to_ascii_lowercase().as_str() {
+        "tinyint" | "smallint" | "int" | "bigint" | "decimal" | "numeric" | "char" | "varchar"
+        | "nchar" | "nvarchar" | "text" | "ntext" => true,
+        "float" => storage.precision.is_none_or(|p| p > 24),
+        _ => false,
+    }
 }
 
 impl Lopnr {
@@ -215,16 +225,10 @@ pub fn read(storage_export: &Path, config_path: &Path) -> Result<ReadOutput, Rea
                 (*used, lopnr) = (true, true);
             }
         }
-        // The runner converts integers, reals and text; a date or binary is no löpnummer.
-        if lopnr
-            && !matches!(
-                StorageFamily::of(&fact.storage.data_type),
-                Some(StorageFamily::Integer | StorageFamily::Real | StorageFamily::Text)
-            )
-        {
+        if lopnr && !lopnr_storage(&fact.storage) {
             return Err(at(
                 row,
-                "holdings_lopnr_storage: a [[lopnr]] column is stored neither as a number nor as text",
+                "holdings_lopnr_storage: a [[lopnr]] column is stored neither as an integer, a decimal, a double-precision float nor as text",
             ));
         }
         table.columns.push(Column {

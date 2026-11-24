@@ -2229,7 +2229,9 @@ A column is marked when any entry's prefix starts its exact physical name; the m
 does not touch matching. The reader refuses, naming the entry or the export row, never
 a name: `holdings_reader` for an empty prefix or evidence, `holdings_lopnr_unused` for an
 entry that marks no held column (a typo or a stale entry), and `holdings_lopnr_storage`
-for a marked column stored as neither a number nor text. Holdings schema 14 stores the
+for a marked column stored otherwise than as an integer, a decimal, a double-precision
+`float` or text: a `real` (`float(1..24)`) has already merged distinct keys above 2^24,
+and `bit` or `money` is no key. The runner admits the same storage. Holdings schema 14 stores the
 mark as `holding_column.lopnr`; `verify` re-derives it from the pinned config and export
 (`holdings_lopnr_source_mismatch`), and `reg-build diff --holdings` lists the columns
 that gained or lost it.

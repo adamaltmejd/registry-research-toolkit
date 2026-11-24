@@ -15,7 +15,7 @@
     "location": "storage_export:row=27"
   },
   {
-    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition) SELECT id,'Invented',10,'int','candidate' FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message) SELECT holding_id,id,'mapping_missing','Not documented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='23' WHERE key='held_columns'",
+    "sql": "INSERT INTO holding_column(holding_id,name,ordinal,storage_type,disposition,lopnr) SELECT id,'Invented',10,'int','candidate',0 FROM holding_table WHERE physical_name='Pool'; INSERT INTO holding_notice(holding_id,column_id,code,message) SELECT holding_id,id,'mapping_missing','Not documented' FROM holding_column WHERE name='Invented'; UPDATE meta SET value='23' WHERE key='held_columns'",
     "code": "holdings_source_column_extra",
     "location": "column=10"
   },

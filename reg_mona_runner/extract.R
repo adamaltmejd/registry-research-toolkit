@@ -785,15 +785,23 @@ check_storage <- function(file, types) {
   }
 }
 
-# The SQL types an SCB lopnummer column (the order's `lopnr`) may be stored as:
-# numbers and text, which lopnr_digits() reads as int64 (#2648).
-LOPNR_TYPES <- c(NUMBER_TYPES, STRING_TYPES)
+# The SQL types an SCB lopnummer column (the order's `lopnr`) may be stored as,
+# which lopnr_digits() reads as int64 (#2648): integers, decimals, a
+# double-precision float and text. lopnr_storage in
+# crates/reg-readers/src/holdings.rs admits the same, so a steward learns of any
+# other at build time. Single precision (real, float(1..24)) is refused: above
+# 2^24 it has already merged distinct keys.
+LOPNR_TYPES <- c(INT_TYPES, "bigint", "decimal", "numeric", "float", STRING_TYPES)
 
-# Refuse, before any row is read, an SCB lopnummer column stored as neither a
-# number nor text (a date, say): no value of it is a whole number.
+lopnr_storage_ok <- function(type, precision) {
+  type %in% LOPNR_TYPES && !(type == "float" && !is.na(precision) && precision <= 24)
+}
+
+# Refuse, before any row is read, an SCB lopnummer column stored otherwise than
+# LOPNR_TYPES admits (a date, a real, money): it is no key read exactly.
 check_lopnr <- function(file, types) {
   for (j in which(file$lopnr)) {
-    if (!types$type[j] %in% LOPNR_TYPES) {
+    if (!lopnr_storage_ok(types$type[j], types$precision[j])) {
       refuse(
         "resolve",
         file$name,
@@ -822,17 +830,24 @@ written_types <- function(file, types) {
 INT64_MAX <- "9223372036854775807"
 
 # An SCB lopnummer column's values as int64 digits, which every writer takes as
-# a bigint's: an integer as it is, a decimal or a real only when whole, text only
-# when digits (an optional minus, a char column's padding trimmed), leading zeros
-# dropped. Any other value, or one beyond int64, refuses the file with its count,
+# a bigint's: an integer as it is, a decimal or a double only when whole, text
+# only when digits (an optional minus; a char or nchar column's trailing padding
+# trimmed, nothing else), leading zeros dropped. Any other value, or one beyond int64, refuses the file with its count,
 # never the value. `rows` is how many rows the file wrote before this chunk.
 lopnr_digits <- function(x, type, column, what, rows) {
+  if (!length(x)) {
+    return(character())
+  }
   if (is.double(x)) {
-    # A real at or above 2^53 may already have rounded in storage.
+    # A double at or above 2^53 may already have rounded in storage.
     whole <- is.finite(x) & x == trunc(x) & abs(x) < DOUBLE_EXACT
-    text <- ifelse(whole, sprintf("%.0f", x), NA_character_)
+    text <- rep(NA_character_, length(x))
+    text[whole] <- sprintf("%.0f", x[whole])
   } else {
-    text <- trimws(as.character(x))
+    text <- as.character(x)
+    if (type %in% c("char", "nchar")) {
+      text <- sub(" +$", "", text)
+    }
     if (type %in% c("decimal", "numeric")) {
       text <- sub("\\.0*$", "", text)
     }
