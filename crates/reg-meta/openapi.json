@@ -2366,7 +2366,10 @@
         "properties": {
           "lopnr": {
             "type": "boolean",
-            "description": "An SCB löpnummer (a key SCB pseudonymised), by the steward's holdings: the runner\nwrites it as int64 whatever its storage, and refuses a value that is no whole\nnumber (#2648). Absent: written in its storage type."
+            "description": "An SCB löpnummer (a key SCB pseudonymised), by the steward's holdings: the runner writes it as int64 whatever its storage, and refuses a value that is no whole number (#2648). Absent: written in its storage type. Only true, never false or null.",
+            "enum": [
+              true
+            ]
           },
           "name": {
             "type": "string",

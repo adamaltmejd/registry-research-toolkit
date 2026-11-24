@@ -242,7 +242,10 @@ pub fn read(storage_export: &Path, config_path: &Path) -> Result<ReadOutput, Rea
     if let Some(n) = lopnr_used.iter().position(|used| !used) {
         return Err(error(
             "holdings_reader",
-            format!("holdings_lopnr_unused: lopnr {n} marks no held column"),
+            format!(
+                "holdings_lopnr_unused: lopnr {} marks no held column",
+                n + 1
+            ),
         ));
     }
     let mut tables: Vec<Table> = tables.into_values().collect();

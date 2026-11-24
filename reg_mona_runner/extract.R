@@ -365,8 +365,9 @@ check_column <- function(col, where, format) {
     c("name", "storage", "role", "refs"),
     c("stata_name", "slot", "lopnr")
   )
-  # Absent is false, so a present one is true.
-  if (!is.null(col$lopnr) && !isTRUE(col$lopnr)) {
+  # Absent is false, so a present one is true (not false, not null), as
+  # crates/reg-core/src/manifest.rs reads it.
+  if ("lopnr" %in% names(col) && !isTRUE(col$lopnr)) {
     refuse("manifest", where, ".lopnr is not true")
   }
   check_name(col$name, paste0(where, ".name"))
@@ -1229,10 +1230,14 @@ select_batch <- function(file, types) {
   selected <- vapply(
     seq_along(file$columns),
     function(j) {
-      sql_splice(
-        select_expr(types$type[j], types$max_length[j]),
-        sql_quoted(file$columns[j])
-      )
+      # A marked int is fetched as a bigint, as text: R's integer reads
+      # -2147483648 as NA, which would lose that key.
+      expr <- if (file$lopnr[j] && types$type[j] %in% INT_TYPES) {
+        "CAST(@col AS bigint) AS @col"
+      } else {
+        select_expr(types$type[j], types$max_length[j])
+      }
+      sql_splice(expr, sql_quoted(file$columns[j]))
     },
     ""
   )
