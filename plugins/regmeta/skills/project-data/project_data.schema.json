@@ -83,6 +83,10 @@
             "null"
           ]
         },
+        "filter": {
+          "$ref": "#/$defs/ProjectCodeFilter",
+          "description": "Keep only rows whose value is one of these codes (crates/DESIGN.md, \"Row filters\nby code\"); at most one binding of a source has one."
+        },
         "follow_successor": {
           "type": "boolean",
           "description": "Follow the variable's continues successors after it ends; absent means false.",
@@ -132,6 +136,25 @@
         "table": {
           "type": "string",
           "description": "A table's public id: `<provider>/<register>` for a register's implicit table,\nelse `<provider>/<register>/<table>`."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectCodeFilter": {
+      "type": "object",
+      "description": "A binding's code filter: a row is kept when its value equals one of `codes` or\nstarts with one of `prefixes`. At least one entry; every entry printable ASCII.",
+      "properties": {
+        "codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prefixes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "additionalProperties": false

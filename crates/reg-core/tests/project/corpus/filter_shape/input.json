@@ -1,0 +1,44 @@
+{
+  "schema_version": "8.0.0",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "catalog": "global",
+  "name": "filter_shape",
+  "extract_format": "parquet",
+  "sources": [
+    {
+      "name": "two_filters",
+      "table": "sos/lmed",
+      "period": 2019,
+      "bindings": [
+        {"variable": "sos/lmed/atc", "filter": {"codes": ["R03AC02"], "prefixes": ["N06A", "N05"]}},
+        {"variable": "sos/lmed/vnr", "filter": {"codes": ["1"]}}
+      ]
+    },
+    {
+      "name": "bad_entries",
+      "table": "sos/lmed",
+      "period": 2019,
+      "bindings": [
+        {"variable": "sos/lmed/atc", "filter": {"codes": ["N06A", " ", "N06A"], "prefixes": ["Ö1"], "ranges": []}}
+      ]
+    },
+    {
+      "name": "empty",
+      "table": "sos/lmed",
+      "period": 2019,
+      "bindings": [{"variable": "sos/lmed/atc", "filter": {"codes": []}}]
+    },
+    {
+      "name": "not_object",
+      "table": "sos/lmed",
+      "period": 2019,
+      "bindings": [{"variable": "sos/lmed/atc", "filter": ["N06A"]}]
+    },
+    {
+      "name": "by_hand",
+      "manual": {"provider": "UHR", "register": "NyA"},
+      "period": 2019,
+      "bindings": [{"manual": {"column": "Kod", "type": "text"}, "filter": {"codes": ["A"]}}]
+    }
+  ]
+}
