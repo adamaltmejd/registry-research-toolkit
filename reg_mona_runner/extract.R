@@ -3,13 +3,13 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 # extract.R: a steward's order extract runner, run by hand inside MONA.
 #
 # For every order manifest in <base>/orders/*.json (the order.json the catalog
-# writes, renamed to the project number), extract the ordered columns from the
-# steward's holdings: one file per manifest file, in the order's extract_format
+# writes, renamed to the MONA project name as MONA writes it, e.g. P1234), extract
+# the ordered columns from the steward's holdings: one file per manifest file, in the order's extract_format
 # (Stata .dta, Parquet or CSV), plus run_log.csv. An order is written into
-# <base>/export_data/<nr>.partial/, each file under a .partial name until it is
-# complete; a success renames the folder to <nr>_<YYYY-MM-DD>/ and moves the order
-# to orders/archive/<nr>_<YYYY-MM-DD>.json. A failure, or a run that is stopped,
-# leaves the order in orders/ and its finished files in <nr>.partial/, and the
+# <base>/export_data/<project>.partial/, each file under a .partial name until it is
+# complete; a success renames the folder to <project>_<YYYY-MM-DD>/ and moves the order
+# to orders/archive/<project>_<YYYY-MM-DD>.json. A failure, or a run that is stopped,
+# leaves the order in orders/ and its finished files in <project>.partial/, and the
 # next run resumes from them.
 #
 # Run: source("extract.R") in R on MONA, `Rscript extract.R`, or

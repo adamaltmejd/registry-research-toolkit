@@ -45,11 +45,13 @@ All under the export root:
 
 ```text
 <base>\
-  orders\                  orders waiting to run, named <project number>.json
-  orders\archive\          orders that ran, as <project number>_<date>.json
-  export_data\             one folder per finished order, <project number>_<date>\, and
-                           <project number>.partial\ for one that has not finished
+  orders\                  orders waiting to run, named <project>.json
+  orders\archive\          orders that ran, as <project>_<date>.json
+  export_data\             one folder per finished order, <project>_<date>\, and
+                           <project>.partial\ for one that has not finished
 ```
+
+`<project>` is the MONA project name, as MONA writes it: `P1234`, never the bare number.
 
 ## Run an order
 
@@ -59,7 +61,8 @@ All under the export root:
    repository documents its own order workflow (SWECOV: `mona/ORDERS.md`).
 
 2. Upload the order file to MONA together with `extract.R` and `extract-config.json`,
-   and save it as `orders\<project number>.json` (for example `orders\1234.json`).
+   and save it as `orders\<project>.json`, named by the MONA project name as MONA
+   writes it (for example `orders\P1234.json`).
 
 3. In R on MONA, with the working directory holding `extract-config.json`,
    `source("extract.R")`, or run `Rscript extract.R`. Every order in `orders\` runs, one
@@ -97,7 +100,7 @@ library, no or unreachable mirror).
 
 ## Results
 
-A successful order writes `export_data\<nr>_<date>\`:
+A successful order writes `export_data\<project>_<date>\`:
 
 - one file per delivered table in the order's format, named after the database table,
   such as `sos_sv.dta` (or `.parquet`, `.csv`); a register delivered as one table per
@@ -117,14 +120,14 @@ A successful order writes `export_data\<nr>_<date>\`:
 
 The order then moves to `orders\archive\`.
 
-An order is written into `export_data\<nr>.partial\`, each file under a `.partial` name
+An order is written into `export_data\<project>.partial\`, each file under a `.partial` name
 until it is complete, and the folder takes its dated name only when the order succeeds.
 A failed order stays in `orders\`; the console shows the exit code and the reason, and
-`<nr>.partial\` keeps the files that finished; the line after the error block says
+`<project>.partial\` keeps the files that finished; the line after the error block says
 what the next run resumes, or what to do by hand. A run that was stopped leaves the same
 folder. Fix the cause and run the script again: it resumes, keeping each finished file
 whose order entry is unchanged and whose table still has the same number of rows, and
-extracts the rest. If `export_data\<nr>_<date>\` already exists (the same order finished
+extracts the rest. If `export_data\<project>_<date>\` already exists (the same order finished
 earlier that day), the run refuses before touching anything: move or delete that
 folder, then run again.
 Run one `extract.R` at a time per order: two runs of the same order would share its
