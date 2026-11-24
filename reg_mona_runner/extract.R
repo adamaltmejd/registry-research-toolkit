@@ -1659,6 +1659,16 @@ extract_file <- function(con, file, types, format, out, progress) {
 # lines: a long file shows it is moving, a short one prints only its closing line.
 PROGRESS_SECONDS <- 300
 
+# Written Parquet bytes per byte of written_width()'s uncompressed estimate: one
+# factor, from P1105 on MONA (2026-11-24: 136 files, 33 GB written against 300 GB
+# estimated). Per-type factors (integers 0.22, date-times 0.86, strings 0.056;
+# decimals not identified) did not bring single files within 2x either, so one
+# factor it is: the order total is what it is for. simplify: calibrated on one
+# project, where a file's actual size ran 0.4x to 5.7x its estimate (5th to 95th
+# percentile); recalibrate if an order's total is off by more than about 2x.
+# .dta and CSV are written uncompressed: their factor is 1.
+PARQUET_DISK_FACTOR <- 0.11
+
 # Roughly how many bytes one value of a column takes in the written file: the
 # written type's width ("Types per format"; .csv: its usual text plus a comma),
 # a string at its declared length. NA where no width is known: a string with no
@@ -1858,7 +1868,11 @@ precount <- function(con, files, resolved, format) {
       )
     }
     # No column of known width: the size is unknown, not zero.
-    bytes[i] <- if (length(gaps) == n) NA_real_ else counts[i] * sum(widths, na.rm = TRUE)
+    bytes[i] <- if (length(gaps) == n) {
+      NA_real_
+    } else {
+      counts[i] * sum(widths, na.rm = TRUE) * if (format == "parquet") PARQUET_DISK_FACTOR else 1
+    }
   }
   list(
     counts = counts,
@@ -1870,8 +1884,8 @@ precount <- function(con, files, resolved, format) {
 }
 
 # The count block: totals, the three largest files, the columns not in the size
-# and the failed counts, each failure's message in an error block. The size is a
-# ceiling: each value at its declared width, before any compression.
+# and the failed counts, each failure's message in an error block. The size is an
+# estimate of the files on disk (PARQUET_DISK_FACTOR).
 print_count <- function(pre, files, format) {
   names <- short_name(vapply(files, `[[`, "", "name"), format)
   width <- max(nchar(names))
@@ -1895,8 +1909,7 @@ print_count <- function(pre, files, format) {
           sum(pre$bytes, na.rm = TRUE),
           any(counted & (is.na(pre$bytes) | nzchar(pre$unsized)))
         ),
-        " est.",
-        if (format == "parquet") " uncompressed"
+        " est. on disk"
       )
     }
   )
