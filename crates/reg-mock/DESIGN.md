@@ -238,7 +238,10 @@ one is, so a column may hold a code its own value set lacks; with no codes at al
 the county seat (`<county>80`). A value set of sentinels only is drawn as such, text is
 no wider than its held storage, and decimals keep every digit. Values are missing at the
 column's rate (the spec's 2% by default), as a sentinel code where the value set has
-one; keys and the year never are. A timeless file is drawn in the window's last year,
+one; keys and the year never are. Proposed (#2604, #2608; [../DESIGN.md](../DESIGN.md),
+"Row filters by code and by spell"): a column under a code filter draws only the codes
+the filter admits and is never missing, and a spell table's end column is drawn in its
+row's year like the start. A timeless file is drawn in the window's last year,
 and a spec with only timeless files in 2024.
 
 **Writers** (`write.rs`) follow the runner's types (reg_mona_runner/DESIGN.md, "Types

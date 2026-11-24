@@ -2445,7 +2445,7 @@ catalog's half-open day convention:
 
   | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
   | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, optional `release` (the catalog name of the primary release the file is), `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
+  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, optional `release` (the catalog name of the primary release the file is), `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, optional `period_end_column_id` (a spell table's end column, "Row filters by code and by spell"; proposed), pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
   | `holding_route`   | `holding_id`, public `table_pid`: the table's default logical routes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
   | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                   |
   | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot family/kind/index as topology evidence, `disposition` (`candidate`, `hold`, `unmap`) with its reason and follow-up issue, and `lopnr` (an SCB löpnummer, written as int64). Includes every exported column, even when it maps to nothing.                                                                                                                                                                                                                                                                    |
@@ -2838,6 +2838,199 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   the selected days (the Operator's 2026-10-19 warn-not-hold call); an automatically
   added key's caveat is located at its source.
 
+### Row filters by code and by spell
+
+**Status: design for #2604 and #2608 (overnight 2026-11-24, rulings delegated to the
+Operator), awaiting the maintainer's review. Nothing below is built yet.**
+
+An order selects rows by period only. Two trials showed what that costs: the
+long-COVID extract (2026-11-24) delivered prescriptions (LMED) 2015–2026 as one file of
+about 1.5 billion rows, most of 33 GB, for a project that needs a few ATC groups; spell
+tables (FK sickness and disability benefit) are delivered whole, one from 1994, because
+a single period column cannot say which spells overlap the request. Two filters close
+those gaps. Both only remove rows from a file the order already plans: neither changes
+which files, columns, keys, references or clips an order has.
+
+#### Code filter (#2604)
+
+**Project contract.** A catalog binding may carry `filter`, the codes of that variable
+the project wants rows for:
+
+```json
+{"variable": "sos/lmed/atc", "filter": {"codes": ["R03AC02"], "prefixes": ["N06A", "N05"]}}
+```
+
+A row is kept when the binding's column equals one of `codes` or starts with one of
+`prefixes`. At most one binding of a source has a filter (ruling 1: one variable per
+source; equality or prefix only). The filter sits on the binding, not the source,
+because the binding already resolves the variable to its physical column in each file;
+a filter naming a variable the source does not order would need a second resolution
+path. A researcher who wants the rows but not the column still orders it: the column is
+small and makes the selection visible in the data.
+
+Structural refusals (reg-core, located at `/sources/{s}/bindings/{b}/filter...`):
+
+| Code | When |
+| --- | --- |
+| `invalid_field_type` | `filter` not an object; `codes` or `prefixes` not a list of strings; a blank entry; an entry outside printable ASCII (see "Runner") |
+| `unexpected_field` | a field other than `codes` and `prefixes`; `filter` on a manual binding |
+| `filter_empty` | neither list has an entry |
+| `filter_duplicate` | an entry repeating an earlier one in its list |
+| `filter_multiple` | a second binding of the source with a filter (located at the second) |
+
+Order-check findings (the logical `order`, so `validate` reports them on every catalog;
+ruling 2). The codes a filter is checked against are the union, over the binding's
+selected segments, of each segment's value set and, when it has one, its classification
+version's value set (`vs_item.code_text`): LMED's ATC column is bound to the ATC
+classification, whose codes are wider than the delivered value set.
+
+| Code | Level | When |
+| --- | --- | --- |
+| `filter_variable_not_coded` | error | a selected segment has `coded = no`, or is an identifier (a key list is the separate cohort filter, ruling 6) |
+| `filter_type` | error | a prefix on a variable whose catalog type is not `text`, or an exact code that does not read as an integer on an `integer` variable; other types (`decimal`, `date`, ...) refuse any filter |
+| `filter_code_unknown` | error | an exact code in no checked value set, at `.../filter/codes/{k}` |
+| `filter_prefix_unknown` | error | a prefix that starts no code of a checked value set, at `.../filter/prefixes/{k}` |
+| `filter_codes_unchecked` | warning | no selected segment has a value set or classification: the codes are passed on unchecked |
+
+`coded = unknown` is admitted like `yes`. A code valid in one selected segment and not
+another is admitted: codes come and go across years, and the union is what the file
+can hold.
+
+**Order file.** Each file gets an optional `code_filter` beside `row_filter`:
+
+```json
+"code_filter": {"column": "ATC", "codes": ["R03AC02"], "prefixes": ["N05", "N06A"]}
+```
+
+`column` is the physical column that places the filtered variable in this file.
+`codes` and `prefixes` are sorted and minimal: an entry a kept prefix already covers is
+dropped (`N06A` goes when `N06` is kept). A row passes the file when it passes
+`row_filter` (if any) and `code_filter` (if any).
+
+Materialization (ruling 3), each located at the filtered binding:
+
+- Sources sharing a file: when every source with a reference in the file filters the
+  same physical column, the file's `code_filter` is the union of their entries; each
+  source whose own entries are narrower gets the info `code_filter_union` ("This table
+  shares its file with another table of the project, so its rows are kept for the
+  codes ..."), as `row_filter_union`. When any of them does not filter, or they filter
+  different columns, the file has no `code_filter` and each filtering source gets the
+  info `code_filter_dropped` naming the reason. The file then keeps the union of the
+  period ranges and the union of the code lists independently, a superset of each
+  source's own (period and code) selection; the findings say so, as today.
+- A file of the source that does not place the filtered variable (a partition member
+  without the column, a projection) cannot be filtered: blocking `filter_column_missing`.
+  So is a file where the variable is placed in two physical columns over the file's days
+  (`filter_column_split`). Both are rare; narrowing the period is the remedy and the
+  message says so.
+- The held storage decides how the runner compares: a text family takes codes and
+  prefixes, an integer family exact integer codes only. A prefix or a non-integer code
+  against integer storage, or any filter against real or date storage, blocks
+  (`filter_storage`). The catalog type was checked at the order check; this catches a
+  holdings storage that differs from it.
+- More than 1,000 entries in a file's union blocks (`filter_too_large`): every entry is
+  one bound parameter, and `sp_executesql` takes at most 2,100. simplify: parameters, not
+  a temporary table; move to a table-valued load if a real order needs more codes.
+
+**Runner** ([runner design](../reg_mona_runner/DESIGN.md), "SQL", ruling 4). The terms
+are bound parameters, never SQL text: an exact code is `col = @pN` (as `nvarchar` for
+text storage, `bigint` for integer storage), a prefix `col LIKE @pN` with the bound
+value the prefix with `[`, `%` and `_` escaped as `[[]`, `[%]`, `[_]`, plus `%`. The
+comparison runs under the column's own collation, so the filter can use an index on the
+column; codes are matched as SQL Server compares them there (MONA's default collation
+ignores case, the catalog's codes are upper case). A NULL code passes no term. Entries
+are printable ASCII (refused otherwise, at both ends): a non-ASCII parameter has not
+been shown to reach SQL Server intact from R on MONA, as non-ASCII names had not
+(simplify: lift the rule by binding such entries as the `NCHAR()` expression `sql_text`
+already builds, once a value set needs one). The pre-count uses the same `WHERE`.
+`run_log.csv` keeps its columns: `rows` is the rows the filter kept, `filter` describes
+the code filter after the period filter (`ATC: 1 code, 2 prefixes`), and
+`rows_without_period` counts rows that pass the code filter but have no period value,
+since rows the code filter drops would be gone in any case. No count of rows before the
+code filter: it would be one more scan of the largest tables.
+
+**Mock** (ruling 5, [reg-mock design](reg-mock/DESIGN.md), "Generate"). A filtered
+column draws only codes its filter admits and is never missing (a NULL row would not
+pass the runner's filter). With a value set, it draws from the codes the filter admits;
+without one (`filter_codes_unchecked`), from the exact codes and the prefixes as written
+(simplify: a prefix is drawn as itself, not completed to a longer code). The filter is
+taken where the file's rows are decided: the manifest's `code_filter` in the delivery
+layout, and in the standard layout the same union rule over the sources sharing the
+table-year file. The union rule is one function in `reg_core::manifest`, which both
+`materialize_order` and `reg-mock compile` call.
+
+**Out of scope** (ruling 6): packed columns (several codes in one text column), cohort
+filters (a key list on MONA), a steward refusing a large unfiltered order, more than
+one filtered variable per source, ranges and negation.
+
+#### Spell overlap (#2608)
+
+**This reverses part of the maintainer's 2026-11-21 ruling on #2608** ("spell tables
+stay unfiltered ... no end column, no overlap filter"), on the Operator's 2026-11-24
+ruling 7. It keeps that ruling's resolution, so the reason #2609 was closed does not
+return: #2609 resolved a spell-filtered file over the requested days, and every later
+step (keys, references, clips, release attribution, projection precedence, the mock)
+then met spells that began before them (eight review rounds, one root cause). Here a
+spell-filtered file is resolved exactly as an unfiltered file is today, over its whole
+delivery, as the 2026-11-21 ruling has it. The overlap filter only drops spells that end
+before the request or begin after it, so the delivered rows are a subset of a delivery
+the order already covers, and no step after the filter changes.
+
+**Holdings.** A steward table may declare `period_end_column` beside `period_column`
+(then the spell start); both share `period_encoding`. `period_end_column` without
+`period_column` is `holdings_period_column_invalid`, and so is an end column that names
+the start column or a column the table does not have. The holdings DDL gains
+`holding_table.period_end_column_id` (with `CHECK (period_end_column_id IS NULL OR
+period_column_id IS NOT NULL)`), so `reg_core::HOLDINGS_SCHEMA_VERSION` goes from 13 to
+14; the catalog DDL is unchanged. A row key with `period_key = "column"` keeps reading
+the start column. Declaring the columns on the SWECOV tables is a steward-repository
+change after a release (ruling 10).
+
+**Order file.** `row_filter` gains optional `end_column`. Without it a row is kept
+when its period value lies in a range, as today. With it, a row is kept for a range when
+`start <= to` and (`end IS NULL` or `end >= from`); an absent bound drops its test.
+Ranges are computed from the requested days as today (union, widened to the encoding's
+grain, a bound omitted where it cuts no held day).
+
+**Resolution.** For a file with `end_column`, keys, column references, clips and the
+mock's years are those of an unfiltered file: the whole delivery
+(`delivery_files`'s existing `simplify:` applies unchanged). The info for such a file
+is `rows_spell_overlap` in place of `rows_unfiltered`: "Spells that overlap your period
+are included, with the days they cover outside it." `row_filter_widened` and
+`row_filter_union` are reported as for any filtered file.
+
+**Open ends.** A NULL end is an open spell. Blank text reads as NULL, as `period_key`
+already reads it, and so does an unreadable end (`20170230`): such a spell is kept,
+never silently dropped. A high sentinel (`9999-12-31`, `99991231`) already passes
+`end >= from`. Ruling 7's declared sentinel is therefore not built (simplify: add
+`period_end_open = [...]` to the holdings table when a steward table closes open
+spells with a low sentinel such as `0` or `19000101`).
+
+**NULL start** (ruling 8). Already built (#2620): a filtered file drops a row whose
+period value (here the start) is NULL or unreadable, and `run_log.csv` counts them
+(`rows_without_period`). No change.
+
+**Mock.** The end column, when delivered, is drawn like the start (its year, in the
+filter's encoding), so a mock spell lies inside its year and passes the runner's
+filter.
+
+#### Versions and checks
+
+- Project document 8.1.0 (below) for `filter`; every `project_hash` changes.
+- The manifest version takes one step for `code_filter` and `end_column` together: 5, or
+  6 if #2648 (int64 keys) bumps it first; `extract.R` and `reg-mock` refuse every other.
+- `HOLDINGS_SCHEMA_VERSION` 13 → 14; `CATALOG_SCHEMA_VERSION` unchanged.
+- New codes are registered in `conformance/api/errors.toml`; the generated OpenAPI and
+  SPA types follow from `bash scripts/gate.sh regen`.
+- The `project-data` skill learns `filter` (with the `values` tool to find codes); the
+  plugin version is bumped.
+- Tests (AGENTS.md, Testing policy): one materialize conformance case per filter at its
+  hardest case: two sources sharing a file, one filtering by code (the union and
+  `code_filter_dropped`); a spell table whose request cuts its held span (`end_column`
+  and whole-delivery keys). One order case for `filter_prefix_unknown` beside an
+  admitted prefix. The runner's testthat suite gains the manifest refusals only; the SQL
+  is checked by hand on MONA.
+
 ### Integer-coded text
 
 Reader text (`char`) whose documented code list is all plain integers publishes as
@@ -2942,6 +3135,15 @@ another catalog is a hand edit of the field, not a feature. `reg-mock fetch` nee
 check of its own: it asks the server, which refuses. The SPA leaves a project drafted
 on another catalog as it is (no study-window clamp at open) and checks it even when it
 has no tables, so the mismatch is shown.
+
+### Project document 8.1.0
+
+`schema_version` `8.1.0` adds the optional catalog-binding field `filter`
+(`{codes, prefixes}`), the codes of the binding's variable the project wants rows for
+(#2604; "Row filters by code and by spell", design pending the maintainer's review).
+Its structural and order-check refusals are listed there. Every `project_hash` changes.
+An 8.0.0 document is re-authored by setting `schema_version`; 8.0.0 below holds
+otherwise.
 
 ### Project document 8.0.0
 
