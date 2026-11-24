@@ -208,8 +208,9 @@ eligible units per year in the simulated population, multiplies by `rows_per_uni
 prices a row by its columns' kinds in the format (CSV text widths, Parquet about half the
 fixed widths, `.dta` fixed widths). It prints the total and the five largest files on
 stdout (stderr holds only a refusal) and refuses a total above 2 GiB (`size_too_large`) unless `--allow-large`, the one
-flag for both limits. The bytes are an estimate (measured within about ±10% for CSV and
-`.dta`, conservative for Parquet), the rows exact in expectation. A table with no year
+flag for both limits. The bytes are a rough estimate, off in either direction (it is a guard, not a
+measurement; it does not model mapped text widths, decimal scale, missing values, Parquet
+dictionary encoding or age windows across years), the rows exact in expectation. A table with no year
 column holds a row set per year over its whole period, so a yearly rate multiplies across
 decades; `compile` warns (`rows_per_person`, stdout `{"warnings": [...]}`, exit 0) when a
 person source's rows per person across its distinct years, summed over its files and capped by its age bounds, exceed 50.

@@ -137,10 +137,11 @@ The same spec, seed and size give the same bytes. More than 1 000 000 persons ne
 
 `generate` prints an estimate (stdout) of the rows and bytes it will write, the largest
 files first, before writing anything, and refuses an estimated total above 2 GiB unless
-`--allow-large` is given. It is an estimate, within a factor of two. A table with no
+`--allow-large` is given. It is a rough estimate that can be off in either direction. A table with no
 year column repeats its yearly rate over every year it holds, so a large estimate usually
-means a source with many years: order fewer years or lower its `rows_per_unit`, then run
-`compile` again. `compile` warns (`rows_per_person` on stdout, exit 0) for a source whose
+means a source with many years. Ordering fewer years changes the project, so `compile` refuses the saved
+answers (`answers_stale`): edit the project, run `fetch` again, then `compile`. Lowering only a source's `rows_per_unit` in the
+rules needs only `compile` again. `compile` warns (`rows_per_person` on stdout, exit 0) for a source whose
 expected rows per person across its years exceed 50; show the researcher that warning.
 
 Delete `.regmeta/mock-data/` before generating again: `generate` leaves
