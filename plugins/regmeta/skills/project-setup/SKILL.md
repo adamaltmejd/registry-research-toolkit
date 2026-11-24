@@ -27,8 +27,13 @@ other code exist. Then ask only for what the folder does not answer, in one roun
 1. Is this a new project or an existing one? The folder the agent was started in is the
    project folder.
 2. What is the research about, in a few sentences? Skip it if `RESEARCH.md` says.
-3. Does it run on MONA? If so, the project code (`P` and four digits). If not, where.
-4. Is the data delivered? If so, the absolute folder the files are in, and their format.
+3. Does it run on MONA? If so, the project number (`P` and four digits) and the folder
+   the project's code goes in on MONA. MONA normally gives a project `P<nnnn>_Data`
+   (read-only; delivered files, often in a subfolder) and `P<nnnn>_Gem` (shared space for
+   the code). Propose `P<nnnn>_Gem\<project>` for the code, and let the user correct it:
+   some projects use another layout. Never assume the path. If not on MONA, where.
+4. Is the data delivered? If so, the absolute folder the files are in (on MONA by default
+   `P<nnnn>_Data\<subfolder>`, to confirm with the user), and their format.
 5. Which catalog: the global one, or a data steward's host?
 
 Do not ask about populations, estimands, outcomes or outputs. Those belong to a
@@ -61,9 +66,9 @@ results/   approved real exports, by date
    `references/data-stewards.md`. The global catalog needs nothing.
 3. **The pipeline**, copied unchanged from [template/](template/): `run.R` and
    `src/pipeline.R`, `src/inputs.R`, `src/disclosure.R`, `src/staging.R`. Set `DATA_DIR`
-   in `run.R` to the delivered files' absolute folder, with forward slashes, or leave it
-   empty until the data is delivered. Later only `PACKAGES` changes, when the project
-   adds a package.
+   in `run.R` to the delivered files' absolute folder from the answer to question 4, with
+   forward slashes, or leave it empty until the data is delivered. Later only `PACKAGES`
+   changes, when the project adds a package.
 4. **The pinned files**, in `src/`: `cell_key.R` copied from
    [scripts/cell_key.R](scripts/cell_key.R), and `export_gate.R`,
    `aggregates.schema.json` and `aggregates.policy.json` from the toolkit at the
@@ -90,7 +95,8 @@ results/   approved real exports, by date
 6. **`.gitignore`**, from [template/gitignore](template/gitignore), and the empty
    `tests/` and `.regmeta/` folders. Add to an existing `.gitignore`; do not replace it.
 7. **`AGENTS.md`**, from [template/AGENTS.md](template/AGENTS.md), with the project's
-   values filled in. It holds pointers, not explanations: keep it that short. If the
+   values filled in, including the MONA project number and the code folder from
+   question 3. It holds pointers, not explanations: keep it that short. If the
    project already has an instructions file (`AGENTS.md` or `CLAUDE.md`), add to it; do
    not replace it or write a second one. For a server other than MONA, rewrite the batch
    section from the `research` skill's `references/operator-review.md`.

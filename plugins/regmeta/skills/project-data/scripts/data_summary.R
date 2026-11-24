@@ -121,5 +121,11 @@ other <- data.frame(
   ordinal_position = blank(NA_integer_),
   row_count = blank(NA_real_)
 )
-utils::write.csv(rbind(summary, other), out, row.names = FALSE, na = "")
+utils::write.csv(
+  rbind(summary, other),
+  out,
+  row.names = FALSE,
+  na = "",
+  fileEncoding = "UTF-8"
+)
 cat("wrote", out, "\n")

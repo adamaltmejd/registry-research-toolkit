@@ -22,7 +22,7 @@ code, catalog metadata and mock data. Everything on MONA is done by the research
 
 ## The project folder on MONA
 
-The project folder is a folder in `PXXXX_Gem`, with the same layout as the local one.
+The project folder is a folder in `PXXXX_Gem` by default (the researcher says where), with the same layout as the local one.
 Everything the project writes on MONA stays inside it.
 
 ```text

@@ -93,8 +93,8 @@ Stage exactly the columns the schema declares for each file, nothing more:
 unchanged into the project as `src/cell_key.R`, pinned in `run.R` beside the gate's
 files. Its record keys are a secret key file, `.regmeta/keys/cell_keys.csv` in the
 project folder on the server that holds the data. It is never uploaded, exported or
-committed, and the agent never opens it. On MONA the project folder is in `PXXXX_Gem`,
-which the MONA project's members share: they already read the data. The helper also
+committed, and the agent never opens it. On MONA the project folder is usually in
+`PXXXX_Gem`, which the MONA project's members share: they already read the data. The helper also
 writes the file with mode 0600, which a folder's inherited access rights (a default
 ACL, Windows permissions) can override. The keys come from a cryptographic generator, the `openssl` R package, which
 also checks the p-table's SHA-256: it is the helper's one package requirement on every R
