@@ -155,7 +155,9 @@ and marks one that leaves such a column or file out with `+`.
 The coordinator follows a batch run by reading its `.Rout` file, where no line can
 be overwritten, so the console prints few lines in fixed-width, ASCII-only columns
 (#2631; trial on MONA, 2026-11-23). Durations are `h:mm`, an estimate has a `~`, and
-a file is named without the order's format, which the header gives.
+a file is named without the order's format, which the header gives. Every line is
+flushed as it is printed: R buffers a batch run's output, and the header otherwise
+reached the `.Rout` only with the count block, minutes later.
 
 ```text
 order 1234   136 files   parquet   -> export_data/1234_2026-11-23

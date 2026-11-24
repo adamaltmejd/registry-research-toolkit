@@ -170,7 +170,13 @@ refuse <- function(code, ..., detail = NULL) {
   ))
 }
 
-say <- function(...) cat(paste0(...), "\n", sep = "")
+# Flushed after every line: in a batch run R buffers its output, and a line
+# printed before a minutes-long step reached the .Rout only after it (MONA,
+# 2026-11-24).
+say <- function(...) {
+  cat(paste0(...), "\n", sep = "")
+  flush.console()
+}
 
 # The underlying R or driver message of a failure, between marker lines. It can
 # quote a row value, so it goes to the console only, which stays on MONA, never
