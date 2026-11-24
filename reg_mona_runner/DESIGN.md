@@ -124,11 +124,15 @@ information only and never gates, prompts or refuses.
 - **Size.** Rows times the column widths written in the order's format ("Types per
   format"): a `.dta` long 4 bytes, a double 8; Parquet's own widths before
   compression; a CSV field's usual text plus its comma; a string at its declared length.
-  It is rough: a declared string length is a maximum, Parquet compresses and a CSV
-  number's text varies. A string with no declared length (`max`, `text`, `ntext`), and
+  Parquet's figure is then scaled to the size on disk by one factor, 0.11, calibrated
+  on P1105 (2026-11-24: 33 GB written against 300 GB estimated); `.dta` and CSV are
+  written uncompressed. It is rough: a declared string length is a maximum, and a CSV
+  number's text varies. P1105's files ran 0.4 to 5.7 times their estimate (5th to
+  95th percentile); per-type factors did not narrow that to 2x, so the order total is
+  the figure to plan by. Recalibrate when an order's total is off by more than 2x. A string with no declared length (`max`, `text`, `ntext`), and
   a CSV column of a type the table does not list, has no width: the console names
   those columns as not in the size. A file with no column of known width has an
-  unknown size, not zero. The console shows the size as an estimate, `~300 GB est.`,
+  unknown size, not zero. The console shows the size as an estimate, `~33 GB est. on disk`,
 and marks one that leaves such a column or file out with `+`.
 - **Time left.** No throughput is known before the first rows arrive, so there is no
   time before the extract starts. During it, the rate is the cells (rows times
@@ -161,10 +165,10 @@ reached the `.Rout` only with the count block, minutes later.
 
 ```text
 order P1234   136 files   parquet   -> export_data/P1234_2026-11-23
-count      0:05   2,916,948,188 rows   ~300 GB+ est. uncompressed
-  largest    table_c          1,183,402,551 rows   ~140 GB
-             table_a              6,233,616 rows   ~900 MB
-             table_b                912,004 rows   ~88 MB+
+count      0:05   2,916,948,188 rows   ~33 GB+ est. on disk
+  largest    table_c          1,183,402,551 rows   ~15 GB
+             table_a              6,233,616 rows   ~99 MB
+             table_b                912,004 rows   ~9.7 MB+
   not sized  table_d          COLUMN_X (varchar(max))
   failed     none
 extract                          rows       size  elapsed     left
