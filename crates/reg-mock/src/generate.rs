@@ -124,7 +124,9 @@ fn window(spec: &Spec) -> (i32, i32) {
 }
 
 /// A run that passed its checks and is sized, not yet generated.
-pub struct Plan {
+pub struct Plan<'a> {
+    spec: &'a Spec,
+    seed: u64,
     population: Population,
     last: i32,
     pub estimate: Estimate,
@@ -141,7 +143,7 @@ pub fn generate(
     persons: u64,
     allow_large: bool,
 ) -> Result<Vec<(String, Table)>, Refusal> {
-    plan(spec, seed, persons, allow_large)?.generate(spec, seed)
+    plan(spec, seed, persons, allow_large)?.generate()
 }
 
 /// Check the spec and the size, simulate the population and estimate what the run would
@@ -152,7 +154,7 @@ pub fn generate(
 /// A refusal from [`crate::compile::check_spec`]; `size_too_large` past [`MAX_PERSONS`]
 /// persons, or an estimated size past [`size::MAX_BYTES`], unless `allow_large`;
 /// `year_invalid` for a year outside [`YEARS`].
-pub fn plan(spec: &Spec, seed: u64, persons: u64, allow_large: bool) -> Result<Plan, Refusal> {
+pub fn plan(spec: &Spec, seed: u64, persons: u64, allow_large: bool) -> Result<Plan<'_>, Refusal> {
     // A spec is a file anyone can edit: check what compile checked.
     if let Some(refusal) = crate::compile::check_spec(spec).into_iter().next() {
         return Err(refusal);
@@ -201,24 +203,23 @@ pub fn plan(spec: &Spec, seed: u64, persons: u64, allow_large: bool) -> Result<P
         ));
     }
     Ok(Plan {
+        spec,
+        seed,
         population,
         last,
         estimate,
     })
 }
 
-impl Plan {
-    /// Generate every file of the spec this plan was made for.
+impl Plan<'_> {
+    /// Generate every file of the spec the plan estimated, with its seed.
     ///
     /// # Errors
     ///
     /// `code_invalid` when a code does not fit its column's type; `storage_unsupported`
     /// for a type or storage the runner does not write in the format.
-    pub fn generate(self, spec: &Spec, seed: u64) -> Result<Vec<(String, Table)>, Refusal> {
-        let Self {
-            population, last, ..
-        } = self;
-        tables(spec, seed, &population, last)
+    pub fn generate(self) -> Result<Vec<(String, Table)>, Refusal> {
+        tables(self.spec, self.seed, &self.population, self.last)
     }
 }
 

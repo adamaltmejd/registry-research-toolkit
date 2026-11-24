@@ -3,6 +3,7 @@
 //! person across all their years are too many (`compile`). The bytes are an estimate
 //! from each column's kind, not the writers' exact output.
 
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
 
 use reg_core::project::ExtractFormat;
@@ -11,6 +12,7 @@ use serde::Serialize;
 use crate::generate::Kind;
 use crate::population::Population;
 use crate::spec::{Attribute, Spec, SpecColumn, SpecFile, Unit};
+use crate::write::{DtaStorage, dta_storage};
 
 /// A run estimated above this many bytes needs `--allow-large` (COS ruling, 2026-11-24;
 /// a 10 000-person run of a long-COVID spec wrote 915 MB, #2651).
@@ -36,12 +38,16 @@ pub struct Estimate {
 impl Estimate {
     #[must_use]
     pub fn total_bytes(&self) -> u64 {
-        self.files.iter().map(|f| f.bytes).sum()
+        self.files
+            .iter()
+            .fold(0, |n, f| u64::saturating_add(n, f.bytes))
     }
 
     #[must_use]
     pub fn total_rows(&self) -> u64 {
-        self.files.iter().map(|f| f.rows).sum()
+        self.files
+            .iter()
+            .fold(0, |n, f| u64::saturating_add(n, f.rows))
     }
 
     /// The estimate as the lines `generate` prints: the total, then the largest files.
@@ -89,21 +95,20 @@ pub fn estimate(spec: &Spec, population: &Population, last: i32) -> Estimate {
                         .count() as u64,
                     Unit::Firm => population.firms.len() as u64,
                 })
-                .sum();
+                .fold(0, u64::saturating_add);
             #[allow(clippy::cast_precision_loss)]
             let units = units as f64;
             // The mean is the rate itself at or below 1, else 1 plus a Poisson of rate - 1.
+            // A float cast saturates, so a huge rate is a huge estimate, not a wrap.
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
             let rows = (units * file.rows_per_unit).round() as u64;
-            let row_bytes: u64 = file
-                .columns
-                .iter()
-                .map(|c| column_bytes(c, spec.format))
-                .sum();
+            let row_bytes: u64 = file.columns.iter().fold(0, |n, c| {
+                u64::saturating_add(n, column_bytes(c, spec.format))
+            });
             FileSize {
                 name: file.name.clone(),
                 rows,
-                bytes: rows * row_bytes,
+                bytes: rows.saturating_mul(row_bytes),
             }
         })
         .collect();
@@ -144,19 +149,14 @@ fn column_bytes(column: &SpecColumn, format: ExtractFormat) -> u64 {
             Kind::Bool => 1,
             Kind::Text => text() + 1,
         },
-        // Fixed width.
-        ExtractFormat::Dta => match kind {
-            Kind::Int32 | Kind::Float32 | Kind::Date => 4,
-            Kind::Int64 | Kind::Float64 | Kind::DateTime => 8,
-            Kind::Decimal(precision, _) => {
-                if precision > 15 {
-                    u64::from(precision) + 2
-                } else {
-                    8
-                }
-            }
-            Kind::Bool => 1,
-            Kind::Text => text(),
+        // Fixed width, as the writer stores the kind.
+        ExtractFormat::Dta => match dta_storage(kind) {
+            DtaStorage::Long => 4,
+            DtaStorage::Double => 8,
+            DtaStorage::Str => match kind {
+                Kind::Decimal(precision, _) => u64::from(precision) + 2,
+                _ => text(),
+            },
         },
     }
 }
@@ -182,39 +182,57 @@ pub struct Warning {
     pub message: String,
 }
 
-/// Person files whose expected rows per person across all their years pass
-/// [`MAX_ROWS_PER_PERSON`].
+/// Person sources whose expected rows per person across all their years, summed over the
+/// source's files, pass [`MAX_ROWS_PER_PERSON`].
 #[must_use]
 pub fn row_warnings(spec: &Spec) -> Vec<Warning> {
-    let mut warnings = Vec::new();
+    #[derive(Default)]
+    struct Source {
+        rows_per_unit: f64,
+        years: BTreeSet<Option<i32>>,
+        admitted: u32,
+        year_column: bool,
+    }
+    let mut sources: BTreeMap<&str, Source> = BTreeMap::new();
     for file in spec.files.iter().filter(|f| f.unit == Unit::Person) {
+        let source = sources.entry(file.source.as_str()).or_default();
+        source.rows_per_unit = source.rows_per_unit.max(file.rows_per_unit);
+        // A timeless file counts as one year.
+        if file.years.is_empty() {
+            source.years.insert(None);
+        }
+        source.years.extend(file.years.iter().map(|&y| Some(y)));
         // A person is in the register for the years its age bounds admit, at most.
         let admitted = u32::from(file.population.age_max.unwrap_or(100))
             .saturating_sub(u32::from(file.population.age_min.unwrap_or(0)))
             + 1;
-        let years = file.years.len().max(1).min(admitted as usize);
-        #[allow(clippy::cast_precision_loss)]
-        let per_person = file.rows_per_unit * years as f64;
-        if per_person <= MAX_ROWS_PER_PERSON {
-            continue;
-        }
-        let has_year = file
+        source.admitted = source.admitted.max(admitted);
+        source.year_column |= file
             .columns
             .iter()
             .any(|c| c.attribute == Some(Attribute::Year));
-        let cause = if has_year {
-            format!("the file holds {years} years")
+    }
+    let mut warnings = Vec::new();
+    for (name, source) in sources {
+        let years = source.years.len().min(source.admitted as usize);
+        #[allow(clippy::cast_precision_loss)]
+        let per_person = source.rows_per_unit * years as f64;
+        if per_person <= MAX_ROWS_PER_PERSON {
+            continue;
+        }
+        let cause = if source.year_column {
+            format!("the source holds {years} years")
         } else {
-            // The year is written into no column, so nothing asks for these years: the
-            // file repeats its yearly rate over every year its sources are held.
+            // Nothing in the files names the year, so the yearly rate repeats over every
+            // year the source is held.
             format!(
-                "the file has no year column, so its rate of {} rows per person and year repeats over {years} years",
-                file.rows_per_unit
+                "its files have no year column, so its rate of {} rows per person and year repeats over {years} years",
+                source.rows_per_unit
             )
         };
         warnings.push(Warning {
             code: "rows_per_person",
-            at: file.name.clone(),
+            at: name.to_owned(),
             message: format!(
                 "expected {per_person:.0} rows per person ({cause}): order fewer years, or lower the \
                  source's rows_per_unit in the rules; generate refuses a run estimated above {} \

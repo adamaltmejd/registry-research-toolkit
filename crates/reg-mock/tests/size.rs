@@ -41,3 +41,19 @@ fn rows_per_person_above_fifty_warn_with_the_cause() {
     assert!(warnings[0].message.contains("no year column"));
     assert_eq!(row_warnings(&spec(1.0)), vec![]);
 }
+
+#[test]
+fn a_source_split_into_annual_files_warns_over_its_years() {
+    let mut spec = spec(2.0);
+    // Thirty annual files of one source, one year each: no file passes 50, the source does.
+    let template = spec.files.remove(0);
+    for year in 1995..2025 {
+        let mut file = template.clone();
+        file.name = format!("persons_{year}");
+        file.years = vec![year];
+        spec.files.push(file);
+    }
+    let warnings = row_warnings(&spec);
+    assert_eq!(warnings.len(), 1, "{warnings:?}");
+    assert_eq!(warnings[0].at, template.source);
+}

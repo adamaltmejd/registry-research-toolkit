@@ -207,12 +207,12 @@ writes one file per spec file, `<name>.<dta|parquet|csv>`, and `mock_manifest.js
 eligible units per year in the simulated population, multiplies by `rows_per_unit`, and
 prices a row by its columns' kinds in the format (CSV text widths, Parquet about half the
 fixed widths, `.dta` fixed widths). It prints the total and the five largest files on
-stderr and refuses a total above 2 GiB (`size_too_large`) unless `--allow-large`, the one
+stdout (stderr holds only a refusal) and refuses a total above 2 GiB (`size_too_large`) unless `--allow-large`, the one
 flag for both limits. The bytes are an estimate (measured within about ±10% for CSV and
 `.dta`, conservative for Parquet), the rows exact in expectation. A table with no year
 column holds a row set per year over its whole period, so a yearly rate multiplies across
-decades; `compile` warns (`rows_per_person`, stderr `{"warnings": [...]}`, exit 0) when a
-person source's rows per person across its years, capped by its age bounds, exceed 50.
+decades; `compile` warns (`rows_per_person`, stdout `{"warnings": [...]}`, exit 0) when a
+person source's rows per person across its distinct years, summed over its files and capped by its age bounds, exceed 50.
 
 **Population** (`population.rs`). One simulated population serves every file, so keys
 join across files. Its structure comes from SCB's public demography 1968–2024

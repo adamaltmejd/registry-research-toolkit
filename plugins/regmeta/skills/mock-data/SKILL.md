@@ -135,13 +135,15 @@ reg-mock generate --spec .regmeta/mock/mock_spec.json --out .regmeta/mock-data \
 The same spec, seed and size give the same bytes. More than 1 000 000 persons needs
 `--allow-large`.
 
-`generate` prints an estimate (stderr) of the rows and bytes it will write, the largest
+`generate` prints an estimate (stdout) of the rows and bytes it will write, the largest
 files first, before writing anything, and refuses an estimated total above 2 GiB unless
 `--allow-large` is given. It is an estimate, within a factor of two. A table with no
 year column repeats its yearly rate over every year it holds, so a large estimate usually
 means a source with many years: order fewer years or lower its `rows_per_unit`, then run
-`compile` again. `compile` warns (`rows_per_person` on stderr, exit 0) for a source whose
-expected rows per person across its years exceed 50; show the researcher that warning. Delete `.regmeta/mock-data/` before generating again: `generate` leaves
+`compile` again. `compile` warns (`rows_per_person` on stdout, exit 0) for a source whose
+expected rows per person across its years exceed 50; show the researcher that warning.
+
+Delete `.regmeta/mock-data/` before generating again: `generate` leaves
 files from an earlier spec in place. Each file states it is mock data (the `.dta` label, Parquet
 metadata) and `mock_manifest.json` lists the files and row counts.
 

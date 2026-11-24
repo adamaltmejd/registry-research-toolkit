@@ -340,28 +340,18 @@ pub fn dta(out: impl Write + Seek, columns: &[SpecColumn], table: &Table) -> Res
     let err = |e: &dyn std::fmt::Display| e.to_string();
     let mut schema = DtaSchema::builder();
     for (i, (column, kind)) in columns.iter().zip(&table.kinds).enumerate() {
-        let (variable_type, format) = match *kind {
-            Kind::Int32 | Kind::Bool => (VariableType::Long, "%12.0g".to_owned()),
-            Kind::Decimal(p, _) if p > 15 => (
-                VariableType::FixedString(str_width(table, i, *kind)?),
-                String::new(),
-            ),
-            Kind::Int64 | Kind::Decimal(..) => (VariableType::Double, "%20.0g".to_owned()),
-            Kind::Float64 | Kind::Float32 => (VariableType::Double, "%10.0g".to_owned()),
-            Kind::Date => (VariableType::Long, "%td".to_owned()),
-            Kind::DateTime => (VariableType::Double, "%tc".to_owned()),
-            Kind::Text => (
-                VariableType::FixedString(str_width(table, i, *kind)?),
-                String::new(),
-            ),
+        let variable_type = match dta_storage(*kind) {
+            DtaStorage::Long => VariableType::Long,
+            DtaStorage::Double => VariableType::Double,
+            DtaStorage::Str => VariableType::FixedString(str_width(table, i, *kind)?),
         };
-        let format = if format.is_empty() {
-            let VariableType::FixedString(w) = variable_type else {
-                unreachable!()
-            };
-            format!("%-{w}s")
-        } else {
-            format
+        let format = match (variable_type, *kind) {
+            (VariableType::FixedString(w), _) => format!("%-{w}s"),
+            (_, Kind::Int32 | Kind::Bool) => "%12.0g".to_owned(),
+            (_, Kind::Int64 | Kind::Decimal(..)) => "%20.0g".to_owned(),
+            (_, Kind::Float64 | Kind::Float32) => "%10.0g".to_owned(),
+            (_, Kind::Date) => "%td".to_owned(),
+            _ => "%tc".to_owned(),
         };
         let name = column.stata_name.as_deref().unwrap_or(&column.name);
         let mut variable = Variable::builder(variable_type, name).format(format);
@@ -397,6 +387,28 @@ pub fn dta(out: impl Write + Seek, columns: &[SpecColumn], table: &Table) -> Res
         .finish()
         .map_err(|e| err(&e))?;
     Ok(())
+}
+
+/// How a `.dta` file stores a kind: the writer and the size estimate share it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum DtaStorage {
+    /// A 4-byte long.
+    Long,
+    /// An 8-byte double.
+    Double,
+    /// A fixed-width string.
+    Str,
+}
+
+pub(crate) fn dta_storage(kind: Kind) -> DtaStorage {
+    match kind {
+        Kind::Int32 | Kind::Bool | Kind::Date => DtaStorage::Long,
+        Kind::Decimal(p, _) if p > 15 => DtaStorage::Str,
+        Kind::Text => DtaStorage::Str,
+        Kind::Int64 | Kind::Decimal(..) | Kind::Float64 | Kind::Float32 | Kind::DateTime => {
+            DtaStorage::Double
+        }
+    }
 }
 
 /// One cell as Stata holds it, or why it cannot (as the runner refuses it).
