@@ -929,7 +929,7 @@ pub(super) fn write(
                         "candidate"
                     };
                     tx.execute(
-                        "INSERT INTO holding_column VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        "INSERT INTO holding_column VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                         params![
                             cid,
                             id,
@@ -945,6 +945,7 @@ pub(super) fn write(
                             disposition,
                             hold.or(unmap),
                             decision.and_then(|c| c.follow_up.as_deref()),
+                            column.lopnr,
                         ],
                     )
                     .map_err(|_| {

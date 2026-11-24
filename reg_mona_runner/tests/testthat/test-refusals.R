@@ -14,20 +14,20 @@ test_that("an export root without orders/ is a setup failure (2)", {
 
 test_that("an order that is not JSON is refused (3)", {
   # Regression: a truncated upload reaches the shape checks or the database.
-  base <- export_root(text = list(`900` = "{\"version\": 4, \"files\": ["))
+  base <- export_root(text = list(`900` = "{\"version\": 5, \"files\": ["))
   run <- run_runner(base)
   expect_identical(run$status, 3L)
   expect_refused(base, "900", 3L, run$output)
 })
 
-test_that("a manifest version other than 4 is refused (4)", {
-  # Regression: a retired v3 order, whose entries this runner no longer reads,
-  # fails as malformed (6) instead of as stale, or a v4 shape is read under
-  # another version's semantics.
+test_that("a manifest version other than 5 is refused (4)", {
+  # Regression: a v4 order, which marks no SCB lopnummer, is read as v5 and
+  # writes each person key in its storage type, or a retired shape fails as
+  # malformed (6) instead of as stale.
   base <- export_root(
     text = list(
       `900` = order_text("pooled-disjoint-periods", function(doc) {
-        doc$version <- 3L
+        doc$version <- 4L
         doc
       })
     )

@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "extract_format": "parquet",
   "provenance": {
     "mode": "steward_holdings",
@@ -34,6 +34,7 @@
       "columns": [
         {
           "name": "Received_Id",
+          "lopnr": true,
           "storage": {
             "type": "int",
             "length": null,

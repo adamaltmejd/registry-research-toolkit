@@ -4840,7 +4840,7 @@
               "$ref": "#/$defs/Provenance"
             },
             "version": {
-              "description": "Always 4.",
+              "description": "Always 5.",
               "format": "int32",
               "minimum": 0,
               "type": "integer"
@@ -4896,6 +4896,10 @@
           "additionalProperties": false,
           "description": "One column of the file, with every requested variable it delivers.",
           "properties": {
+            "lopnr": {
+              "description": "An SCB löpnummer (a key SCB pseudonymised), by the steward's holdings: the runner\nwrites it as int64 whatever its storage, and refuses a value that is no whole\nnumber (#2648). Absent: written in its storage type.",
+              "type": "boolean"
+            },
             "name": {
               "description": "The exact column name in the file.",
               "type": "string"

@@ -584,6 +584,35 @@ fn spaces(p: &Pair) -> Result<Section> {
     )
 }
 
+/// The columns marked as löpnummer (pseudonymised keys, written as int64), by table and column. Holdings
+/// before schema 14 mark none: the section says so and compares nothing.
+fn lopnr(p: &Pair) -> Result<Section> {
+    let has = |conn: &rusqlite::Connection| -> Result<bool> {
+        Ok(conn.query_row(
+            "SELECT EXISTS(SELECT 1 FROM pragma_table_info('holding_column') WHERE name = 'lopnr')",
+            [],
+            |r| r.get(0),
+        )?)
+    };
+    if !has(&p.old)? || !has(&p.new)? {
+        return Ok(Section::flat(
+            "lopnr",
+            "löpnummer columns",
+            vec![shown(Item::new(
+                json!({"compared": false}),
+                "lopnr: not compared, one side predates holdings schema 14".to_owned(),
+            ))],
+        ));
+    }
+    delta(
+        "lopnr",
+        "löpnummer columns (by table/column)",
+        p,
+        "SELECT 'lopnr', json_array(t.schema_name, t.physical_name) || '/' || c.name, '', '' \
+         FROM holding_column c JOIN holding_table t ON t.id = c.holding_id WHERE c.lopnr = 1",
+    )
+}
+
 /// The holdings sections, and (old, current) holdings schemas when they differ. Equal
 /// schemas diff as always. Otherwise NEW must be on this build's holdings schema and OLD
 /// on an older one, each with `user_version` equal to `meta.schema_version`.
@@ -676,6 +705,7 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
     )?);
     out.push(editions(p)?);
     out.push(spaces(p)?);
+    out.push(lopnr(p)?);
     out.push(dispositions(p)?);
     Ok(out)
 }

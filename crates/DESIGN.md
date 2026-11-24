@@ -2202,6 +2202,45 @@ column decision (`unmap`, `hold` or an explicit mapping) on one of them. The rea
 not refuse it earlier: a reader refusal would come before the column decision that fixes
 it, and the steward would have to drop the rename for every table.
 
+#### SCB löpnummer columns
+
+An SCB löpnummer is a key SCB pseudonymised (person, firm and the like). It is always a
+whole number, but MONA stores it as `int`, `bigint`, `decimal`, `float` or text,
+differing between tables, loads and years of one table: one long-COVID delivery held one
+person key as int32, double, decimal and string (#2648). The runner writes these
+columns as int64 whatever their storage, so every file of an order joins on them without
+a cast (maintainer ruling 2026-11-24). A holder's own serial (SIR's `lopnrSiri`, a
+tumour's number in `sos/can/lopnr`) keeps its stored type.
+
+The steward declares them, not the catalog. Neither the catalog's `identifier` flag nor
+a `lopnr` slug or spelling tells the two apart: both cover holder serials, survey serials
+and case ids, and SCB's own metadata names the identity column (`PersonNr`), not the
+pseudonym SCB put in its place ("Identifier slug canon" is a naming rule, not this fact).
+What marks an SCB löpnummer on MONA is SCB's physical naming of the pseudonymised
+columns, which the steward knows. The holdings reader config lists them by name prefix:
+
+```toml
+[[lopnr]]
+prefix = "P1234_LopNr_"   # ASCII case ignored, as SQL Server does
+evidence = "SCB names every pseudonymised key column P1234_LopNr_<original>."
+```
+
+A column is marked when any entry's prefix starts its exact physical name; the mark
+does not touch matching. The reader refuses, naming the entry or the export row, never
+a name: `holdings_reader` for an empty prefix or evidence, `holdings_lopnr_unused` for an
+entry that marks no held column (a typo or a stale entry), and `holdings_lopnr_storage`
+for a marked column stored as neither a number nor text. Holdings schema 14 stores the
+mark as `holding_column.lopnr`; `verify` re-derives it from the pinned config and export
+(`holdings_lopnr_source_mismatch`), and `reg-build diff --holdings` lists the columns
+that gained or lost it.
+
+The order file carries it on the column as `"lopnr": true` (absent: false), manifest
+version 5 ("MONA order file"). The runner reads the column in its storage type and
+writes it as a `bigint` ([runner design](../reg_mona_runner/DESIGN.md), "Types per
+format"); `reg-mock` writes it as one too, so mock and delivered types agree. The
+catalog's types and the storage drift check are unchanged: the catalog records the
+storage, the delivery need not repeat it.
+
 #### Schema-keyed holdings
 
 The holdings reader config states `schema_keyed` (no default). A steward whose export
@@ -2296,9 +2335,9 @@ also run on a steward server, resolves it before placement:
 Placement, contested cells, column windows and the logical order's row keys read only
 the chosen space's tables (the steward row-key cache is keyed by table and space), so
 every file of an order comes from one database and `row_keys` names the key it carries.
-Each file's `schema` already names it through the steward config, so the order file
-stays version 4 with no new field: the MONA runner refuses unknown fields, and a
-single-space steward's orders change only in `project_hash`.
+Each file's `schema` already names it through the steward config, so spaces add no
+order-file field: the MONA runner refuses unknown fields, and a single-space steward's
+orders change only in `project_hash`.
 
 There is no cross-database order: no option, flag or key-file field. A researcher who
 needs two databases makes one project for each, and the extracts are joined outside the
@@ -2397,6 +2436,8 @@ Holdings schema 12 takes column ordinals from the storage export's `ordinal_posi
 and renames the accounting meta keys to `held_tables` and `held_columns` (see "Physical
 possession"). A steward meets it at its bump to the release that ships it.
 
+Holdings schema 14 adds `holding_column.lopnr` (see "SCB löpnummer columns").
+
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
 
@@ -2405,7 +2446,7 @@ catalog's half-open day convention:
   | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, optional `release` (the catalog name of the primary release the file is), `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
   | `holding_route`   | `holding_id`, public `table_pid`: the table's default logical routes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
   | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                   |
-  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot family/kind/index as topology evidence, `disposition` (`candidate`, `hold`, `unmap`) with its reason and follow-up issue. Includes every exported column, even when it maps to nothing.                                                                                                                                                                                                                                                                    |
+  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot family/kind/index as topology evidence, `disposition` (`candidate`, `hold`, `unmap`) with its reason and follow-up issue, and `lopnr` (an SCB löpnummer, written as int64). Includes every exported column, even when it maps to nothing.                                                                                                                                                                                                                                                                    |
   | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried` and caveat/window. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                                                     |
 
 Required held keys are the received row's entity components and time components,
@@ -2663,8 +2704,9 @@ entry:
 - each file: safe `name`, exact physical `schema`, `table`, `delivery`, optional
   partition or projection, one optional `row_filter`, and ordered `columns`;
 - each column: exact physical `name`, optional `stata_name`, expected storage metadata,
-  logical source/binding/table/variable/period/spelling references, row-key/carried role
-  and optional steward slot topology metadata (maintainer 2026-10-29). Several logical
+  logical source/binding/table/variable/period/spelling references, row-key/carried role,
+  optional steward slot topology metadata (maintainer 2026-10-29) and `lopnr` when the
+  column is an SCB löpnummer, which the runner writes as int64 ("SCB löpnummer columns"). Several logical
   references may share one physical column.
 
 For a 2019–2020 request on `SWECOV_SOS_SV`, the logical interval is
@@ -2733,7 +2775,8 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 `reg_core::issue` so the manifest owns its findings type. The cases are
 `conformance/cases/materialize/`.
 
-- `version` is the integer `4`; the runner refuses v3. `extract_format` is the
+- `version` is the integer `5`; the runner refuses every other (v5 adds the column's
+  `lopnr`, "SCB löpnummer columns"). `extract_format` is the
   project's. `stata_name` is
   the v3 rule byte for byte, emitted only on a `dta` order.
 - Provenance: `catalog.generation` is the served pair (`meta.generation`),
@@ -2819,9 +2862,9 @@ decimal: D's 2026-10-28 ruling keeps integer/decimal switches to evidenced curat
 a code list proves its codes, not that an uncoded amount is integral.
 
 The adopted type is catalog metadata. Extract files take their types from SQL storage
-(`reg_mona_runner/DESIGN.md`, "Types per format"), so the rule changes no `.dta`,
-Parquet or CSV byte; the holdings compiler's storage notices compare it with the held
-storage as with any adopted type.
+(`reg_mona_runner/DESIGN.md`, "Types per format"), an SCB löpnummer as int64, so the
+rule changes no `.dta`, Parquet or CSV byte; the holdings compiler's storage notices
+compare it with the held storage as with any adopted type.
 
 For a concrete pattern input, `DIA1` in the SV pivot is a diagnosis code slot: its
 alphanumeric codes keep it text. `P1105_LopNr_PersonNr` and `P1105_LopNr_Barn_PersonNr`

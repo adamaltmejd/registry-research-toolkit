@@ -18,6 +18,7 @@ struct StoredColumn {
     slot_family: Option<String>,
     slot_kind: Option<String>,
     slot_index: Option<String>,
+    lopnr: bool,
 }
 
 /// Compare artifact coordinates with the independently re-read, admitted sources.
@@ -230,7 +231,7 @@ fn sources(
             return Err(format!("{location}: holdings_period_source_mismatch").into());
         }
         let mut query = db.prepare(
-            "SELECT name,ordinal,storage_type,length,precision,scale,slot_family,slot_kind,slot_index
+            "SELECT name,ordinal,storage_type,length,precision,scale,slot_family,slot_kind,slot_index,lopnr
             FROM holding_column WHERE holding_id=?1",
         )?;
         let mut columns: BTreeMap<String, StoredColumn> = query
@@ -246,6 +247,7 @@ fn sources(
                         slot_family: r.get(6)?,
                         slot_kind: r.get(7)?,
                         slot_index: r.get(8)?,
+                        lopnr: r.get(9)?,
                     },
                 ))
             })?
@@ -276,6 +278,9 @@ fn sources(
                     != (fact.length, fact.precision, fact.scale)
             {
                 return Err(format!("{location}: holdings_source_storage_mismatch").into());
+            }
+            if stored.lopnr != column.lopnr {
+                return Err(format!("{location}: holdings_lopnr_source_mismatch").into());
             }
         }
         if let Some((_, stored)) = columns.first_key_value() {

@@ -1,7 +1,7 @@
 # Design: the MONA extract runner (`reg_mona_runner`)
 
 `extract.R` turns order files into extract files inside MONA. It reads the MONA order
-file (version 4) that `materialize_order` writes, whose contract is
+file (version 5) that `materialize_order` writes, whose contract is
 [../crates/DESIGN.md](../crates/DESIGN.md) ("MONA order file") and
 `crates/reg-core/src/manifest.rs`. A steward's data manager runs it by hand; no agent
 and no network reach MONA, so the script is one self-contained file that gets uploaded
@@ -272,7 +272,24 @@ large id. What each SQL type becomes:
   | `time`, `datetimeoffset`                                   | -               | refused at resolve (7)                    | refused at resolve (7) | refused at resolve (7) |
   | any other (`money`, binary, ...)                           | as odbc returns | refused at resolve (7)                    | refused at resolve (7) | as text               |
 
+An SCB löpnummer column (the order's `lopnr`, [../crates/DESIGN.md](../crates/DESIGN.md),
+"SCB löpnummer columns") is written as `bigint` whatever its storage: int64 in Parquet,
+digits in CSV, and in `.dta` a double `%20.0g`, refused at or above 2^53. Its storage
+must be a number or text (else exit 7 before any row is read).
+
 Choices behind the table:
+
+- **An SCB löpnummer is int64, whatever MONA stores** (#2648, maintainer 2026-11-24). MONA
+  stores one person key as `int`, `bigint`, `decimal`, `float` or text, differing between
+  tables and even between years of one table, and a careless cast (a double to text gives
+  `123.0`) breaks a join silently. The value is read in its storage type and converted
+  in R: an integer as it is; a `decimal` or a `float` only when whole (a `float` below
+  2^53, above which it may have rounded in storage); text only when digits with an
+  optional minus, a `char` column's padding trimmed. Leading zeros are dropped. Any
+  other value, or one beyond int64, fails the order (exit 8) naming the file, the column
+  and how many such values the fetched chunk holds, never a value. `.dta` follows the
+  `bigint` rule below: Stata has no 64-bit integer, and a double holds every
+  pseudonymised key exactly. A holder's own serial is not marked and keeps its type.
 
 - **Never round, never cut**, with one exception below (a date-time's fraction). A
   value a `.dta` file cannot hold exactly fails the order (exit 8) naming the column,

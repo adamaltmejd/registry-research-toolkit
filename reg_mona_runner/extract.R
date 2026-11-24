@@ -95,7 +95,7 @@ EXIT <- c(
   ok = 0L,
   setup = 2L, # steward configuration, export root, packages or database connection
   json = 3L, # the order is not JSON
-  version = 4L, # manifest version is not 4
+  version = 4L, # manifest version is not 5
   mode = 5L, # not a steward_holdings order for this steward
   manifest = 6L, # unknown field, missing or malformed field, unsafe file name
   # table or column not found in its schema, a column stored otherwise than the
@@ -363,8 +363,12 @@ check_column <- function(col, where, format) {
     col,
     where,
     c("name", "storage", "role", "refs"),
-    c("stata_name", "slot")
+    c("stata_name", "slot", "lopnr")
   )
+  # Absent is false, so a present one is true.
+  if (!is.null(col$lopnr) && !isTRUE(col$lopnr)) {
+    refuse("manifest", where, ".lopnr is not true")
+  }
   check_name(col$name, paste0(where, ".name"))
   if (!is.null(col$stata_name)) {
     check_string(col$stata_name, paste0(where, ".stata_name"))
@@ -485,12 +489,12 @@ check_manifest <- function(doc) {
     refuse("manifest", "the order is not a JSON object")
   }
   v <- doc$version
-  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 4)) {
+  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 5)) {
     refuse(
       "version",
       "manifest version ",
       format(v),
-      " is not supported; this runner reads version 4"
+      " is not supported; this runner reads version 5"
     )
   }
   p <- doc$provenance
@@ -548,6 +552,7 @@ plan_files <- function(manifest_files, format) {
       columns = vapply(f$columns, `[[`, "", "name"),
       names = vapply(f$columns, written_name, ""),
       storage = lapply(f$columns, `[[`, "storage"),
+      lopnr = vapply(f$columns, function(c) isTRUE(c$lopnr), NA),
       filter = f$row_filter
     )
   })
@@ -778,6 +783,93 @@ check_storage <- function(file, types) {
       )
     }
   }
+}
+
+# The SQL types an SCB lopnummer column (the order's `lopnr`) may be stored as:
+# numbers and text, which lopnr_digits() reads as int64 (#2648).
+LOPNR_TYPES <- c(NUMBER_TYPES, STRING_TYPES)
+
+# Refuse, before any row is read, an SCB lopnummer column stored as neither a
+# number nor text (a date, say): no value of it is a whole number.
+check_lopnr <- function(file, types) {
+  for (j in which(file$lopnr)) {
+    if (!types$type[j] %in% LOPNR_TYPES) {
+      refuse(
+        "resolve",
+        file$name,
+        ": column ",
+        file$columns[j],
+        " is an SCB lopnummer, written as int64, but is stored as ",
+        types$type[j]
+      )
+    }
+  }
+}
+
+# The types the file's columns are written in: the SQL types, an SCB lopnummer
+# column's as bigint, whatever its storage ("Types per format").
+written_types <- function(file, types) {
+  n <- length(file$columns)
+  written <- lapply(types, `[`, seq_len(n))
+  lopnr <- which(file$lopnr)
+  written$type[lopnr] <- "bigint"
+  written$max_length[lopnr] <- NA
+  written$precision[lopnr] <- 19L
+  written$scale[lopnr] <- 0L
+  written
+}
+
+INT64_MAX <- "9223372036854775807"
+
+# An SCB lopnummer column's values as int64 digits, which every writer takes as
+# a bigint's: an integer as it is, a decimal or a real only when whole, text only
+# when digits (an optional minus, a char column's padding trimmed), leading zeros
+# dropped. Any other value, or one beyond int64, refuses the file with its count,
+# never the value. `rows` is how many rows the file wrote before this chunk.
+lopnr_digits <- function(x, type, column, what, rows) {
+  if (is.double(x)) {
+    # A real at or above 2^53 may already have rounded in storage.
+    whole <- is.finite(x) & x == trunc(x) & abs(x) < DOUBLE_EXACT
+    text <- ifelse(whole, sprintf("%.0f", x), NA_character_)
+  } else {
+    text <- trimws(as.character(x))
+    if (type %in% c("decimal", "numeric")) {
+      text <- sub("\\.0*$", "", text)
+    }
+    whole <- grepl("^-?[0-9]+$", text)
+    text[!whole] <- NA_character_
+  }
+  negative <- startsWith(text, "-")
+  digits <- sub("^-?0*", "", text)
+  digits[!is.na(digits) & !nzchar(digits)] <- "0"
+  # Equal-length digit strings compare as numbers, in two exact halves.
+  above <- function(d, limit) {
+    high <- as.numeric(substr(d, 1L, 10L))
+    low <- as.numeric(substr(d, 11L, 19L))
+    high > as.numeric(substr(limit, 1L, 10L)) |
+      (high == as.numeric(substr(limit, 1L, 10L)) & low > as.numeric(substr(limit, 11L, 19L)))
+  }
+  wide <- !is.na(digits) & nchar(digits) >= 19L
+  beyond <- wide
+  beyond[wide] <- nchar(digits[wide]) > 19L |
+    above(digits[wide], ifelse(negative[wide], "9223372036854775808", INT64_MAX))
+  bad <- (!is.na(x) & !whole) | beyond
+  if (any(bad)) {
+    refuse(
+      "extract",
+      what,
+      ": column ",
+      column,
+      " is an SCB lopnummer, written as int64, but ",
+      sum(bad),
+      " of its values in rows ",
+      format(rows + 1, scientific = FALSE),
+      " to ",
+      format(rows + length(x), scientific = FALSE),
+      " are not whole numbers within int64"
+    )
+  }
+  ifelse(is.na(digits), NA_character_, paste0(ifelse(negative & digits != "0", "-", ""), digits))
 }
 
 # Whether `name` is a variable name a .dta file (format 118) can hold: Stata's
@@ -1603,7 +1695,7 @@ extract_file <- function(con, file, types, format, out, progress) {
   batch <- select_batch(file, types)
   n <- length(file$columns)
   path <- file.path(out, paste0(file$name, PARTIAL))
-  column_types <- lapply(types, `[`, seq_len(n))
+  column_types <- written_types(file, types)
   writer <- WRITERS[[format]](path, file$columns, column_types, file$names)
   on.exit(writer$release(), add = TRUE)
   what <- paste0("extracting ", file$name)
@@ -1629,6 +1721,9 @@ extract_file <- function(con, file, types, format, out, progress) {
     }
     # Back to the order's column order.
     chunk <- chunk[order(batch$fetched)]
+    for (j in which(file$lopnr)) {
+      chunk[[j]] <- lopnr_digits(chunk[[j]], types$type[j], file$columns[j], what, rows)
+    }
     for (j in seq_along(chunk)) {
       x <- chunk[[j]]
       if (is.character(x) && !all(validUTF8(x[!is.na(x)]))) {
@@ -1845,13 +1940,14 @@ precount <- function(con, files, resolved, format) {
       warning = function(w) fail(f, "the count raised an R warning", conditionMessage(w))
     )
     n <- length(f$columns)
+    written <- written_types(f, types)
     widths <- vapply(
       seq_len(n),
       function(j) {
         written_width(
-          types$type[j],
-          types$max_length[j],
-          types$precision[j],
+          written$type[j],
+          written$max_length[j],
+          written$precision[j],
           format
         )
       },
@@ -2100,6 +2196,7 @@ extract_order <- function(path, out, db, run) {
       c(f$columns, f$filter$column)
     )
     check_storage(f, types)
+    check_lopnr(f, types)
     if (!is.null(f$filter)) {
       filter_key(f, types)
     }

@@ -662,6 +662,17 @@ impl Context<'_> {
                 ) else {
                     continue;
                 };
+                if column.lopnr {
+                    // The runner writes an SCB löpnummer as int64 whatever its storage or
+                    // the project's type (#2648), so the mock writes it as bigint storage.
+                    spec_column.dtype = ColumnType::Integer;
+                    spec_column.storage = Some(Storage {
+                        dtype: Some("bigint".to_owned()),
+                        length: None,
+                        precision: Some(19),
+                        scale: Some(0),
+                    });
+                }
                 spec_column.stata_name.clone_from(&column.stata_name);
                 spec_column.label = column.stata_name.as_ref().map(|_| column.name.clone());
                 if let Some(filter) = row_filter {

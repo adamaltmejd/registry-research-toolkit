@@ -10,14 +10,14 @@ use crate::issue::{Issue, Period};
 use crate::project::ExtractFormat;
 
 /// The manifest `version` this crate writes; the runner refuses every other.
-pub const MANIFEST_VERSION: u32 = 4;
+pub const MANIFEST_VERSION: u32 = 5;
 
 /// The order file: one file per table and delivery, with its columns.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
 pub struct Manifest {
-    /// Always 4.
+    /// Always 5.
     pub version: u32,
     /// The project's `extract_format`.
     pub extract_format: ExtractFormat,
@@ -166,6 +166,11 @@ pub struct Column {
     pub refs: Vec<Ref>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub slot: Option<Slot>,
+    /// An SCB löpnummer (a key SCB pseudonymised), by the steward's holdings: the runner
+    /// writes it as int64 whatever its storage, and refuses a value that is no whole
+    /// number (#2648). Absent: written in its storage type.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub lopnr: bool,
 }
 
 /// The expected SQL storage, checked before extraction.

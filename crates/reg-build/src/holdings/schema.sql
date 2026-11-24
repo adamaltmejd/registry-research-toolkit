@@ -73,6 +73,7 @@ CREATE TABLE holding_column (
  disposition TEXT NOT NULL CHECK(disposition IN ('candidate','hold','unmap')),
  reason TEXT,
  follow_up TEXT,
+ lopnr INTEGER NOT NULL CHECK(lopnr IN (0,1)),
  UNIQUE(holding_id,name),
  UNIQUE(holding_id,ordinal),
  CHECK((slot_kind IS NULL) = (slot_index IS NULL)),

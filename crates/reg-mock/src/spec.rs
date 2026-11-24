@@ -98,8 +98,9 @@ pub struct SpecColumn {
     /// [`crate::compile::resolve_type`].
     #[serde(rename = "type")]
     pub dtype: ColumnType,
-    /// The held SQL storage the runner maps the column from; absent when unknown or
-    /// when the project overrides the type.
+    /// The SQL storage the runner writes the column from: the held storage, or `bigint`
+    /// for an SCB löpnummer (the order's `lopnr`); absent when unknown or when the
+    /// project overrides the type.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub storage: Option<Storage>,
     #[serde(default, skip_serializing_if = "Option::is_none")]

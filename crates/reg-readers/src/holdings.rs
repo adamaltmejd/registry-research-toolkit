@@ -7,6 +7,8 @@ use std::path::Path;
 
 use serde::Deserialize;
 
+use reg_core::manifest::StorageFamily;
+
 use crate::{ReadError, config, error};
 
 /// Reader vocabulary, evidenced exact-name renames and literal prefix rewrites. Both
@@ -20,6 +22,27 @@ struct Config {
     rename: Vec<Rename>,
     #[serde(default)]
     rewrite: Vec<Rewrite>,
+    #[serde(default)]
+    lopnr: Vec<Lopnr>,
+}
+
+/// The physical columns that hold an SCB löpnummer (a key SCB pseudonymised: person,
+/// firm and the like), by name prefix, ASCII case ignored as SQL Server does. The order
+/// marks them and the runner writes them as int64 (#2648). A holder's own serial is
+/// not one, whatever its name.
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Lopnr {
+    prefix: String,
+    evidence: String,
+}
+
+impl Lopnr {
+    fn marks(&self, column: &str) -> bool {
+        column
+            .get(..self.prefix.len())
+            .is_some_and(|head| head.eq_ignore_ascii_case(&self.prefix))
+    }
 }
 
 /// One exact physical name matched as one catalog name (`catalog`) or as one catalog
@@ -81,6 +104,8 @@ pub struct Column {
     pub ordinal: i64,
     pub match_name: Match,
     pub storage: Storage,
+    /// An SCB löpnummer by the config's `[[lopnr]]`.
+    pub lopnr: bool,
 }
 
 pub struct Storage {
@@ -137,6 +162,14 @@ pub fn read(storage_export: &Path, config_path: &Path) -> Result<ReadOutput, Rea
     {
         return Err(error("holdings_reader", "empty rewrite prefix or evidence"));
     }
+    if config
+        .lopnr
+        .iter()
+        .any(|l| l.prefix.is_empty() || l.evidence.trim().is_empty())
+    {
+        return Err(error("holdings_reader", "empty lopnr prefix or evidence"));
+    }
+    let mut lopnr_used = vec![false; config.lopnr.len()];
     let (renames, rename_targets) = renames(&config.rename)?;
     let mut csv =
         csv::Reader::from_path(storage_export).map_err(|_| error(ROLE, "cannot open CSV"))?;
@@ -176,12 +209,37 @@ pub fn read(storage_export: &Path, config_path: &Path) -> Result<ReadOutput, Rea
         if matches!(&match_name, Match::Spelling(name) if name.is_empty()) {
             return Err(at(row, "rewrite removed entire column identifier"));
         }
+        let mut lopnr = false;
+        for (used, l) in lopnr_used.iter_mut().zip(&config.lopnr) {
+            if l.marks(&fact.column) {
+                (*used, lopnr) = (true, true);
+            }
+        }
+        // The runner converts integers, reals and text; a date or binary is no löpnummer.
+        if lopnr
+            && !matches!(
+                StorageFamily::of(&fact.storage.data_type),
+                Some(StorageFamily::Integer | StorageFamily::Real | StorageFamily::Text)
+            )
+        {
+            return Err(at(
+                row,
+                "holdings_lopnr_storage: a [[lopnr]] column is stored neither as a number nor as text",
+            ));
+        }
         table.columns.push(Column {
             name: fact.column,
             ordinal: fact.ordinal,
             match_name,
             storage: fact.storage,
+            lopnr,
         });
+    }
+    if let Some(n) = lopnr_used.iter().position(|used| !used) {
+        return Err(error(
+            "holdings_reader",
+            format!("holdings_lopnr_unused: lopnr {n} marks no held column"),
+        ));
     }
     let mut tables: Vec<Table> = tables.into_values().collect();
     for table in &mut tables {
