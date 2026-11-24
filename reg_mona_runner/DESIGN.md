@@ -292,7 +292,8 @@ Choices behind the table:
   which Arrow refused as a UTC timestamp).
 - **Long text columns are selected last.** The legacy driver reads a long value
   (`nvarchar(max)`, `ntext`; a `char`/`varchar`/`text` column fetched as
-  `nvarchar(max)`) only after every other column of the row, and a SELECT with one
+  `nvarchar(max)`; in a CSV order also `xml`, `image` and `varbinary(max)`) only after
+  every other column of the row, and a SELECT with one
   before an ordinary column fails with SQLSTATE 07009, Invalid Descriptor Index. The
   extract selects them last and puts each fetched chunk back in the order's column
   order (found on MONA, 2026-11-24: P1105's `swecov_sos_dors`, `ULORSAK varchar(max)`).

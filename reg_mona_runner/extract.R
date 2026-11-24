@@ -1091,13 +1091,17 @@ filter_where <- function(file, types) {
 # One batch per file: the SELECT is assembled server-side from QUOTENAME()d
 # identifiers and run by sp_executesql with the filter bounds as parameters,
 # bound from R.
-# Whether a column is fetched as a long value (nvarchar(max) or ntext): the
-# legacy "SQL Server" driver reads such a column only after every other column
+# Whether a column is fetched as a long value: nvarchar(max) or ntext, and in a
+# CSV order xml, image and varbinary(max), which the legacy driver exposes as
+# ntext and image. That driver reads such a column only after every other column
 # of the row, so a SELECT with one before an ordinary column fails with SQLSTATE
-# 07009, Invalid Descriptor Index (P1105 on MONA, 2026-11-24).
+# 07009, Invalid Descriptor Index (P1105 on MONA, 2026-11-24). A max length reads
+# as -1 (CHARACTER_MAXIMUM_LENGTH), text, ntext and image as 2^31 - 1.
 fetched_long <- function(type, max_length) {
-  type %in% STRING_TYPES &
-    (type %in% c("text", "ntext") | is.na(max_length) | max_length < 0L | max_length > 4000L)
+  unbounded <- is.na(max_length) | max_length < 0L
+  type %in% c("text", "ntext", "xml", "image") |
+    (type %in% STRING_TYPES & (unbounded | max_length > 4000L)) |
+    (type == "varbinary" & unbounded)
 }
 
 # The extract's SELECT, its long columns last (fetched_long); `fetched` is the
