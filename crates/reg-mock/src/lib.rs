@@ -10,6 +10,7 @@ pub mod input;
 pub mod population;
 mod rng;
 pub mod rules;
+pub mod size;
 pub mod spec;
 pub mod write;
 

@@ -9,6 +9,7 @@ use reg_core::project::{ColumnType, ExtractFormat};
 use crate::Refusal;
 use crate::population::{Demography, Exit, Population, day_in, year_of};
 use crate::rng::Rng;
+use crate::size::{self, Estimate};
 use crate::spec::{Attribute, Spec, SpecColumn, SpecFile, Unit};
 
 /// The default population size, and the size no run passes without `--allow-large`
@@ -122,19 +123,36 @@ fn window(spec: &Spec) -> (i32, i32) {
     if min > max { (2024, 2024) } else { (min, max) }
 }
 
+/// A run that passed its checks and is sized, not yet generated.
+pub struct Plan {
+    population: Population,
+    last: i32,
+    pub estimate: Estimate,
+}
+
 /// Generate every file of the spec.
 ///
 /// # Errors
 ///
-/// A refusal from [`crate::compile::check_spec`]; `size_too_large` past [`MAX_PERSONS`]
-/// unless `allow_large`; `code_invalid` when a code does not fit its column's type;
-/// `storage_unsupported` for a type or storage the runner does not write in the format.
+/// As [`plan`] and [`Plan::generate`].
 pub fn generate(
     spec: &Spec,
     seed: u64,
     persons: u64,
     allow_large: bool,
 ) -> Result<Vec<(String, Table)>, Refusal> {
+    plan(spec, seed, persons, allow_large)?.generate(spec, seed)
+}
+
+/// Check the spec and the size, simulate the population and estimate what the run would
+/// write, so a caller can say it before generating.
+///
+/// # Errors
+///
+/// A refusal from [`crate::compile::check_spec`]; `size_too_large` past [`MAX_PERSONS`]
+/// persons, or an estimated size past [`size::MAX_BYTES`], unless `allow_large`;
+/// `year_invalid` for a year outside [`YEARS`].
+pub fn plan(spec: &Spec, seed: u64, persons: u64, allow_large: bool) -> Result<Plan, Refusal> {
     // A spec is a file anyone can edit: check what compile checked.
     if let Some(refusal) = crate::compile::check_spec(spec).into_iter().next() {
         return Err(refusal);
@@ -168,6 +186,48 @@ pub fn generate(
     }
     let (first, last) = window(spec);
     let population = Population::simulate(&Demography::embedded(), seed, persons, first, last);
+    let estimate = size::estimate(spec, &population, last);
+    if estimate.total_bytes() > size::MAX_BYTES && !allow_large {
+        return Err(Refusal::new(
+            "size_too_large",
+            "estimate",
+            format!(
+                "the run would write about {} (an estimate), above {}: lower --persons, order \
+                 fewer years, or pass --allow-large\n{}",
+                size::human(estimate.total_bytes()),
+                size::human(size::MAX_BYTES),
+                estimate.summary()
+            ),
+        ));
+    }
+    Ok(Plan {
+        population,
+        last,
+        estimate,
+    })
+}
+
+impl Plan {
+    /// Generate every file of the spec this plan was made for.
+    ///
+    /// # Errors
+    ///
+    /// `code_invalid` when a code does not fit its column's type; `storage_unsupported`
+    /// for a type or storage the runner does not write in the format.
+    pub fn generate(self, spec: &Spec, seed: u64) -> Result<Vec<(String, Table)>, Refusal> {
+        let Self {
+            population, last, ..
+        } = self;
+        tables(spec, seed, &population, last)
+    }
+}
+
+fn tables(
+    spec: &Spec,
+    seed: u64,
+    population: &Population,
+    last: i32,
+) -> Result<Vec<(String, Table)>, Refusal> {
     // Every municipality code the spec holds: a unit's municipality is drawn from them
     // once, so files whose value sets differ still agree on it.
     let mut municipalities: Vec<&str> = spec
@@ -196,7 +256,7 @@ pub fn generate(
                 })
             })
             .collect::<Result<Vec<_>, _>>()?;
-        let rows = rows(spec, file, &kinds, &population, &municipalities, seed, last)?;
+        let rows = rows(spec, file, &kinds, population, &municipalities, seed, last)?;
         tables.push((file.name.clone(), Table { kinds, rows }));
     }
     Ok(tables)
@@ -297,7 +357,7 @@ fn rows(
     Ok(rows)
 }
 
-fn eligible(file: &SpecFile, person: &crate::population::Person, year: i32) -> bool {
+pub(crate) fn eligible(file: &SpecFile, person: &crate::population::Person, year: i32) -> bool {
     let age = year - person.birth_year();
     let present = if file.population.include_departed {
         person.entered <= year && age >= 0
