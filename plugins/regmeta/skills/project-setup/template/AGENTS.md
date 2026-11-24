@@ -4,7 +4,7 @@ A register research project. `RESEARCH.md` says what it studies.
 
 ## Boundaries
 
-- No agent runs on the server that holds the row-level data (<MONA, project PXXXX>).
+- No agent runs on the server that holds the row-level data (<MONA, project P1234>).
   The researcher uploads, runs and exports.
 - Row-level data never leaves that server. Only what the export gate passed and the
   researcher reviewed.
@@ -40,8 +40,8 @@ results/           approved real exports, by date
 
 1. Commit, then a mock run from the clean checkout that passes the gate.
 2. The researcher uploads every file in `src/`, empties `src\` in
-   `<PXXXX_Gem\project>`, moves the uploaded files into it and submits `run.R` to the
-   batch runner.
+   `<MONA code folder, e.g. //micro.intra/projekt/P1234$/P1234_Gem/project>`, moves the
+   uploaded files into it and submits `run.R` to the batch runner.
 3. The source id in the log equals the mock run's. The researcher reviews
    `output\review\`, zips `output\export\` and exports it.
 
