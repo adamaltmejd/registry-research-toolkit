@@ -48,7 +48,7 @@ results/           approved real exports, by date
 ## Pins
 
 - Catalog: <global | steward host>, release `reg_meta/v<X.Y.Z>`; `reg-mock` the same.
-- Export gate 0.6.0, schema `aggregates`, policy `aggregates-min5`, cell key 0.1.0.
+- Export gate 0.6.0, schema `aggregates`, policy `aggregates-min5`, cell key 0.2.0.
   Their hashes are `PINS` in `run.R`; a run stops on a file that differs.
 
 ## Skills (plugin `regmeta`)

@@ -20,12 +20,14 @@
 #   ck_keys_create(ids, path, new_epoch = FALSE)  write the key file
 #   ck_keys_extend(ids, path)                     add keys for new persons
 #   ck_perturb(data, by, id, keys)                perturbed person counts
+#   ck_lookup(n_true, cell_key)                   the p-table's noise for given
+#                                                 true counts and cell keys
 #
 # The key file stays on MONA, never in Git, never exported. Its epoch is
 # returned with every result (attribute "key_epoch"); the pipeline writes it to
 # the project's run record on MONA, never to the export.
 
-CELL_KEY_VERSION <- "0.1.0"
+CELL_KEY_VERSION <- "0.2.0"
 
 CK_MODULUS <- 2^26
 
@@ -359,6 +361,26 @@ ck_cells <- function(frame, by) {
   match(key, unique(key))
 }
 
+#' The p-table's perturbation for each true count (a whole number from 0) and
+#' cell key in [0, 1): the v whose interval holds the key, in the row of the
+#' count (counts above the table's largest i use that row). For a caller that
+#' makes its own cell keys, such as reg_mona_runner/key_check.R.
+ck_lookup <- function(n_true, cell_key, pt = ck_ptable()) {
+  if (length(n_true) != length(cell_key) || !all(is.finite(n_true)) || anyNA(cell_key) ||
+      any(n_true < 0 | n_true != round(n_true)) || any(cell_key < 0 | cell_key >= 1)) {
+    ck_stop("cell_key_bad_lookup", "true counts must be finite, whole and >= 0, cell keys in [0, 1)")
+  }
+  row <- pmin(n_true, max(pt$i))
+  v <- integer(length(n_true))
+  for (i in unique(row)) {
+    r <- pt[pt$i == i, ]
+    r <- r[order(r$p_int_lb), ]
+    at <- row == i
+    v[at] <- r$v[findInterval(cell_key[at], r$p_int_lb)]
+  }
+  v
+}
+
 #' Perturbed person counts by `by`.
 #'
 #' `data` holds one row per person and cell at least (duplicates are dropped:
@@ -409,15 +431,7 @@ ck_perturb <- function(data, by, id, keys, min_cell_count = 5L) {
   cell_key <- (rowsum(as.double(record_key), cell, reorder = TRUE)[, 1] %% CK_MODULUS) /
     CK_MODULUS
 
-  row <- pmin(n_true, max(pt$i))
-  v <- integer(length(n_true))
-  for (i in unique(row)) {
-    r <- pt[pt$i == i, ]
-    r <- r[order(r$p_int_lb), ]
-    at <- row == i
-    v[at] <- r$v[findInterval(cell_key[at], r$p_int_lb)]
-  }
-  published <- n_true + v
+  published <- n_true + ck_lookup(n_true, cell_key, pt)
   published[published < min_cell_count] <- NA_integer_
 
   out$n_true <- as.integer(n_true)

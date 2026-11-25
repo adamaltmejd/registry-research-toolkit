@@ -207,8 +207,8 @@ FORMATS <- c("dta", "parquet", "csv")
 # MONA without arrow still runs .dta and .csv orders.
 FORMAT_PACKAGES <- c(dta = "haven", parquet = "arrow", csv = NA)
 
-# Same helper in reg_export_gate/export_gate.R: each script is uploaded to MONA
-# alone. Installs each package into R's default library (.libPaths()[1]) from
+# Same helper in reg_export_gate/export_gate.R and key_check.R: each script is
+# uploaded to MONA alone. Installs each package into R's default library (.libPaths()[1]) from
 # the repository R's options name (MONA's own mirror), so neither `lib` nor
 # `repos` is set. It installs only when that library is writable and a mirror
 # is set: otherwise install.packages() would prompt (personal library, mirror
