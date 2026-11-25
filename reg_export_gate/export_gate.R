@@ -968,8 +968,8 @@ export_gate <- local({
     }
   }
 
-  # Same helper in reg_mona_runner/extract.R and key_check.R: each script is
-  # uploaded to MONA alone. Installs each package into R's default library (.libPaths()[1])
+  # Same helper in reg_mona_runner/extract.R: each script is uploaded to
+  # MONA alone. Installs each package into R's default library (.libPaths()[1])
   # from the repository R's options name (MONA's own mirror), so neither `lib`
   # nor `repos` is set. It installs only when that library is writable and a
   # mirror is set: otherwise install.packages() would prompt (personal library,

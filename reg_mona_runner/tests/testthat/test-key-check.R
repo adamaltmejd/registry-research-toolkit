@@ -1,6 +1,6 @@
-# key_check.R's export rule for lengths (reg_mona_runner/DESIGN.md, "Key
-# check"): no SQL Server here, so the script's definitions are loaded without
-# its run and one table's CSV rows are built from given aggregates.
+# key_check.R's export rule (reg_mona_runner/DESIGN.md, "Key check"): no SQL
+# Server here, so the script's definitions are loaded without its run and one
+# table's CSV rows are built from given aggregates.
 
 key_check <- local({
   exprs <- parse(file.path(runner_dir, "key_check.R"), keep.source = FALSE)
@@ -10,35 +10,36 @@ key_check <- local({
   env
 })
 
-test_that("a length is exported only over 5 supporting values and beside no masked count", {
-  # Fails if a number's length support ignores not_bigint (A: 4 values convert),
-  # or if lengths are shown beside a masked nulls they would bound (B: rows 10,
-  # nulls <5, a length shown says nulls is 1 to 4 and support at least 5 -- with
-  # rows 6 it would pin nulls at 1). C and D, with no masked count, keep theirs.
+test_that("counts round up to multiples of 5 and lengths need 5 supporting values", {
+  # Fails if a small count is published exactly or masked as <5: B's rows 6,
+  # nulls 1 and not_bigint 5 (not_bigint counts only non-null values) would
+  # give nulls = 1 by difference, so all three must publish as 10, 5, 5, while
+  # a zero stays 0. Also fails if a number's length support ignores not_bigint
+  # (A: 4 values convert, so no length).
   cols <- data.frame(
     table_schema = "dbo",
     table_name = "T",
-    column_name = c("A", "B", "C", "D"),
-    data_type = c("decimal", "varchar", "varchar", "bigint"),
+    column_name = c("A", "B", "C"),
+    data_type = c("decimal", "varchar", "bigint"),
     group = "scb_key"
   )
   batch <- key_check$table_batch("dbo", "T", cols$column_name, cols$data_type)
   given <- list(
-    A = c(nulls = 0, not_bigint = 6, not_whole = 0, min_length = 9, max_length = 9),
-    B = c(nulls = 1, not_bigint = 0, leading_zeros = 0, spaces = 0, not_digits = 0,
-          min_length = 9, max_length = 9),
-    C = c(nulls = 0, not_bigint = 0, leading_zeros = 0, spaces = 0, not_digits = 0,
-          min_length = 8, max_length = 10),
-    D = c(nulls = 0, not_bigint = 0, min_length = 1, max_length = 7)
+    A = c(nulls = 0, not_bigint = 2, not_whole = 0, min_length = 9, max_length = 9),
+    B = c(nulls = 1, not_bigint = 5, leading_zeros = 0, spaces = 0, not_digits = 5,
+          min_length = 9, max_length = 12),
+    C = c(nulls = 0, not_bigint = 0, min_length = 1, max_length = 7)
   )
   result <- c(
-    list(m0 = 10),
+    list(m0 = 6),
     lapply(seq_len(nrow(batch$slots)), function(k) {
       given[[batch$slots$column[k]]][[batch$slots$field[k]]]
     })
   )
   rows <- key_check$table_rows(cols, "ok", result, batch$slots)
-  expect_identical(rows$nulls, c("0", "<5", "0", "0"))
-  expect_identical(rows$min_length, c("", "", "8", "1"))
-  expect_identical(rows$max_length, c("", "", "10", "7"))
+  expect_identical(rows$rows, c("10", "10", "10"))
+  expect_identical(rows$nulls, c("0", "5", "0"))
+  expect_identical(rows$not_bigint, c("5", "5", "0"))
+  expect_identical(rows$min_length, c("", "9", "1"))
+  expect_identical(rows$max_length, c("", "12", "7"))
 })

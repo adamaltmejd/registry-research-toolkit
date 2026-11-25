@@ -9,8 +9,8 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 # in one SELECT: rows, nulls, values that do not convert to bigint, and the
 # storage-specific shapes that decide whether extract.R can write an SCB
 # lopnummer as int64. It writes key_check.csv: names, SQL types and counts only,
-# any count from 1 to 4 written as <5. No value leaves the database, not even a
-# min or max: only lengths, and only over at least 5 values.
+# every nonzero count rounded up to a multiple of 5. No value leaves the
+# database, not even a min or max: only lengths, and only over at least 5 values.
 #
 # Run: source("key_check.R") in R on MONA, `Rscript key_check.R`, or
 # `R CMD BATCH key_check.R`, beside the steward's extract-config.json (its
@@ -49,9 +49,8 @@ OUTPUT <- "key_check.csv"
 
 EXIT <- c(ok = 0L, setup = 2L, failed = 8L)
 
-# Counts below this are written as <5 (zero stays 0). A length is left out when
-# fewer values than this support it, or when a count it depends on is <5
-# (table_rows).
+# Every nonzero count is rounded up to a multiple of this (zero stays exact),
+# and a length is left out when fewer values than this support it (table_rows).
 DISCLOSURE_FLOOR <- 5L
 
 INTEGER_TYPES <- c("bit", "tinyint", "smallint", "int", "bigint")
@@ -90,6 +89,12 @@ COUNTS <- c(
   "not_digits"
 )
 
+# A text value, spaces trimmed, without one leading minus.
+UNSIGNED <- paste0(
+  "(CASE WHEN LTRIM(RTRIM(@col)) LIKE N'-%' THEN STUFF(LTRIM(RTRIM(@col)), 1, 1, N'')",
+  " ELSE LTRIM(RTRIM(@col)) END)"
+)
+
 # The T-SQL per measure, @col standing for the quoted column. Each is an
 # aggregate over the one scan. A text value is checked as stored, with
 # Latin1_General_BIN2 so [0-9] is ASCII digits only, whatever the collation.
@@ -106,14 +111,19 @@ MEASURES <- list(
   not_whole = "COUNT_BIG(CASE WHEN @col <> ROUND(@col, 0, 1) THEN 1 END)",
   beyond_float = "COUNT_BIG(CASE WHEN ABS(@col) >= 9007199254740992E0 THEN 1 END)",
   beyond_real = "COUNT_BIG(CASE WHEN ABS(@col) >= 16777216E0 THEN 1 END)",
-  leading_zeros = "COUNT_BIG(CASE WHEN LTRIM(@col) COLLATE Latin1_General_BIN2 LIKE N'0[0-9]%' THEN 1 END)",
+  # extract.R reads text as an optional minus and digits (lopnr_digits), so the
+  # minus is skipped before the leading-zero and digit checks.
+  leading_zeros = paste0(
+    "COUNT_BIG(CASE WHEN LTRIM(@col) COLLATE Latin1_General_BIN2 LIKE N'0[0-9]%'",
+    " OR LTRIM(@col) COLLATE Latin1_General_BIN2 LIKE N'-0[0-9]%' THEN 1 END)"
+  ),
   # A char or nchar value is padded with trailing spaces by its type, which
   # extract.R trims: only leading spaces count there.
   spaces_fixed = "COUNT_BIG(CASE WHEN @col LIKE N' %' THEN 1 END)",
   spaces = "COUNT_BIG(CASE WHEN @col LIKE N' %' OR DATALENGTH(@col) > DATALENGTH(RTRIM(@col)) THEN 1 END)",
   not_digits = paste0(
-    "COUNT_BIG(CASE WHEN LTRIM(RTRIM(@col)) COLLATE Latin1_General_BIN2 LIKE N'%[^0-9]%'",
-    " OR LTRIM(RTRIM(@col)) = N'' THEN 1 END)"
+    "COUNT_BIG(CASE WHEN ", UNSIGNED, " COLLATE Latin1_General_BIN2 LIKE N'%[^0-9]%'",
+    " OR ", UNSIGNED, " = N'' THEN 1 END)"
   ),
   min_text = "MIN(LEN(@col))",
   max_text = "MAX(LEN(@col))",
@@ -317,6 +327,9 @@ column_expr <- function(name, type) {
   paste0("N'CAST(' + ", sql_quoted(name), " + N' AS ", wide, ")'")
 }
 
+# simplify: one SELECT per table, never split, so SQL Server's 4,096-column
+# limit caps a table at about 580 matched text columns (7 measures each); split
+# the batch if a table with more matched columns fails on that limit.
 # The one SELECT for a table: COUNT_BIG(*) as m0, then each column's measures as
 # m1, m2, ... (positional aliases, so no name is spliced as an alias). Returns
 # the batch and, per measure, the column index and CSV field it fills.
@@ -413,8 +426,11 @@ FIELDS <- c(
   "max_length"
 )
 
-# A count as written: empty when it does not apply, 0, <5 for 1 to 4, else the
-# number.
+# A count as written: empty when it does not apply, 0 when zero, else rounded
+# up to the next multiple of DISCLOSURE_FLOOR. Rounding every count up, the
+# table's rows too, means no difference of published counts is an exact small
+# count (rows 6, nulls 1, not_bigint 5 publish as 10, 5, 5), while zero stays
+# exact.
 count_text <- function(n) {
   ifelse(
     is.na(n),
@@ -422,7 +438,7 @@ count_text <- function(n) {
     ifelse(
       n == 0,
       "0",
-      ifelse(n < DISCLOSURE_FLOOR, "<5", format(n, scientific = FALSE, trim = TRUE))
+      format(ceiling(n / DISCLOSURE_FLOOR) * DISCLOSURE_FLOOR, scientific = FALSE, trim = TRUE)
     )
   )
 }
@@ -451,18 +467,16 @@ csv_header <- function(database) {
   c(
     "# key_check.csv: counts of the shape of key-like columns, made by key_check.R.",
     paste0("# Database ", database, ", ", format(Sys.time(), "%Y-%m-%d %H:%M"), "."),
-    "# Aggregates only: no value; a count from 1 to 4 is <5; a length is empty unless at least 5 values support it and no count it depends on is <5.",
+    "# Aggregates only: no value; every nonzero count is rounded up to a multiple of 5; a length is empty unless at least 5 values support it.",
     "# Read: reg_mona_runner/README.md, \"Key check\". Skip lines starting with #.",
     paste(FIELDS, collapse = ",")
   )
 }
 
 # One table's CSV rows: counts as written. A length is shown only when the
-# values it is over number at least DISCLOSURE_FLOOR (a number's length is over
-# the values that convert to bigint, a text's over every non-null value) and no
-# count that support is derived from is <5: shown lengths imply a support of at
-# least 5, which would bound a masked nulls or not_bigint from the other side
-# (rows 6, nulls <5 and a length shown would give nulls = 1).
+# values it is over, counted exactly, number at least DISCLOSURE_FLOOR (a
+# number's length is over the values that convert to bigint, a text's over
+# every non-null value).
 table_rows <- function(cols, status, result = NULL, slots = NULL) {
   rows <- data.frame(
     schema = cols$table_schema,
@@ -485,9 +499,7 @@ table_rows <- function(cols, status, result = NULL, slots = NULL) {
     }
     number <- vapply(cols$data_type, type_class, "") %in% c("integer", "exact", "float")
     unconverted <- ifelse(number, values[, "not_bigint"], 0)
-    masked <- function(n) !is.na(n) & n > 0 & n < DISCLOSURE_FLOOR
-    hidden <- values[, "rows"] - values[, "nulls"] - unconverted < DISCLOSURE_FLOOR |
-      masked(values[, "nulls"]) | (number & masked(values[, "not_bigint"]))
+    hidden <- values[, "rows"] - values[, "nulls"] - unconverted < DISCLOSURE_FLOOR
     values[hidden, c("min_length", "max_length")] <- NA
   }
   for (field in COUNTS) {

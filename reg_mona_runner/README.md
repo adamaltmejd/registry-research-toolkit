@@ -189,9 +189,9 @@ comment lines, then one row per column with `schema`, `table`, `column`, `group`
   | `not_bigint`    | numbers, text      | `TRY_CAST(… AS bigint)` cannot convert (text over 40 characters counts)  |
   | `not_whole`     | decimal, float     | have a fraction                                                          |
   | `beyond_exact`  | float, real        | are at or beyond 2^53 (real: 2^24), where distinct keys may have merged  |
-  | `leading_zeros` | text               | start with `0` and another digit (`012` is written as `12`)              |
+  | `leading_zeros` | text               | start with `0` or `-0` and another digit (`012` is written as `12`)      |
   | `spaces`        | text               | have a leading space, or a trailing one in `varchar`/`nvarchar`          |
-  | `not_digits`    | text               | are empty or hold anything but ASCII digits once spaces are trimmed      |
+  | `not_digits`    | text               | are empty or not ASCII digits (after one leading `-`), spaces trimmed    |
 
 and `min_length`, `max_length`: the characters of a text value (trailing spaces
 excluded) or the digits of a number that converts to bigint. A count that does not
@@ -200,13 +200,11 @@ apply to the storage is empty. Legacy `text` and `ntext` columns are checked as 
 An SCB key converts under `extract.R` when `not_bigint`, `not_whole`, `beyond_exact`,
 `spaces` and `not_digits` are all 0 and its storage is one `extract.R` takes for a key
 (an integer other than `bit`, `decimal`, `numeric`, `float` other than `real`, or text;
-`bit`, `money`, `smallmoney`, `real` and dates are refused). A negative key also counts
-as `not_digits`, though `extract.R` writes it. `leading_zeros` above 0 means some keys
+`bit`, `money`, `smallmoney`, `real` and dates are refused). `leading_zeros` above 0 means some keys
 change representation (`012` becomes `12`), so a collision with another key is
 possible.
 
-**Safe to export.** The CSV holds names, SQL types and aggregate counts only: any count
-from 1 to 4 is written as `<5`, and a length is left out when fewer than 5 values
-support it or when a count it depends on (`nulls`, and for a number `not_bigint`) is
-`<5`. There is no value, and no minimum or maximum of values. The console's error
+**Safe to export.** The CSV holds names, SQL types and aggregate counts only: every
+nonzero count, `rows` included, is rounded up to the next multiple of 5 (0 stays 0, so
+"no failures" is exact), and a length is left out when fewer than 5 values support it. There is no value, and no minimum or maximum of values. The console's error
 block, like `extract.R`'s, may quote a value and stays on MONA.

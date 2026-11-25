@@ -469,17 +469,18 @@ exports its CSV, which is why it counts only.
   (`LOPNR_TYPES`, mirrored by hand, so `bit`, `money` and `real` keys are flagged): what `TRY_CAST(… AS
   bigint)` refuses, fractions, floats at or beyond 2^53 (2^24 for `real`), and for text
   leading zeros, spaces (a `char` column's padding excluded, as `extract.R` trims it) and
-  non-digits under `Latin1_General_BIN2`, so `[0-9]` is ASCII only. Legacy `text` and
+  non-digits, after `extract.R`'s optional leading minus, under `Latin1_General_BIN2`, so `[0-9]` is ASCII only. Legacy `text` and
   `ntext` are read as `varchar(max)` and `nvarchar(max)`; text is cast to bigint from its
   first 40 characters, since `TRY_CAST` of a (max) value over 8000 bytes fails the query.
 - **Disclosure.** The CSV is an export, so it holds names, types and counts only: a
-  count from 1 to 4 is `<5` (the export gate's floor of 5), and no value or min/max of
-  values is computed. A length is shown only when at least 5 values support it (a
-  number's: those that convert to bigint, `rows - nulls - not_bigint`; a text's: every
-  non-null value) and no count that support is derived from (`nulls`, and for a number
-  `not_bigint`) is `<5`. Shown lengths imply a support of at least 5, so beside a masked
-  count they would bound it from the other side (rows 6, `nulls` `<5`, a length shown:
-  `nulls` is 1). The driver's message, which can quote a value, goes to the console's
+  nonzero count, `rows` included, is rounded up to the next multiple of 5 (the export
+  gate's floor), and no value or min/max of values is computed. Rounding replaced `<5`
+  masking (Codex review, #2658): `not_bigint` counts only non-null values, so rows 6,
+  `nulls` `<5` and `not_bigint` 5 gave `nulls` 1, and the row total repeated on every
+  column leaks the same way. Rounded counts give no exact small difference, and 0 stays
+  exact, which is the answer the coordinator needs. A length is shown only when at
+  least 5 values, counted exactly, support it (a number's: those that convert to bigint,
+  `rows - nulls - not_bigint`; a text's: every non-null value). The driver's message, which can quote a value, goes to the console's
   error block only.
 - **Fail-safe per table.** A table whose query fails is a `failed: SQLSTATE …` row per
   column and the run goes on; the CSV is appended after every table, so an interrupted
