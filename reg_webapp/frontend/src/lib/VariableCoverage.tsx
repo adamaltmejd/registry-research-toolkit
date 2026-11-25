@@ -56,7 +56,7 @@ import {
   type ProjectStudyWindow,
 } from "./project_data";
 import { projectStore } from "./project_store";
-import { columnYearRuns, inTableCadence, studyWindow } from "./study_window";
+import { columnYearRuns, displayedPeriods, studyWindow } from "./study_window";
 import { AddBar } from "./ui/AddBar";
 import { Button } from "./ui/Button";
 import { StatusRow } from "./ui/StatusRow";
@@ -141,6 +141,9 @@ export function useSuccession(
       ]),
     ) as ReadonlyMap<string, readonly VariableColumn[]>,
     names: names as ReadonlyMap<string, string>,
+    tables: Object.values(neighbourRegisters).flatMap(
+      (read) => read.value?.tables ?? [],
+    ) as readonly TablePeriodMetadata[],
     error: failed(graphReads)
       ? "Succession relations did not load."
       : failed(neighbours)
@@ -165,6 +168,7 @@ export function useVariableCoverage({
   validation,
   successions = [],
   neighbourColumns = new Map(),
+  neighbourTables = [],
   successionError = null,
   allowAdd = true,
   focus = null,
@@ -179,6 +183,8 @@ export function useVariableCoverage({
   validation: OrderCheck | null;
   successions?: readonly Graph[];
   neighbourColumns?: ReadonlyMap<string, readonly VariableColumn[]>;
+  /** The neighbours' other registers' tables, for their cadence. */
+  neighbourTables?: readonly TablePeriodMetadata[];
   successionError?: string | null;
   allowAdd?: boolean;
   /** The subject whose lane takes focus when first drawn. */
@@ -258,10 +264,24 @@ export function useVariableCoverage({
     binding.columns.filter(
       (column) => columnWindowPeriod(offered(column), window) !== null,
     );
+  // What every lane, row and the axis draw a segment over, the page's and its
+  // neighbours' alike, from each table's cadence; the years to add stay on
+  // the delivered days.
+  const drawnSegments = [
+    ...subjects.flatMap((subject) => subject.segments),
+    ...[...neighbourColumns.values()].flatMap((columns) =>
+      columns.flatMap((column) => column.segments),
+    ),
+  ];
   const cadences = new Map(
-    (tables ?? []).map((table) => [table.fqid, table.cadence]),
+    [...(tables ?? []), ...neighbourTables].map((table) => [
+      table.fqid,
+      table.cadence,
+    ]),
   );
-  const cadenceOf = (table: string) => cadences.get(table);
+  const displayed = displayedPeriods(drawnSegments, (table) =>
+    cadences.get(table),
+  );
   const runs = columnYearRuns(
     subjects.flatMap((subject) => subject.segments),
     catalogBounds,
@@ -283,28 +303,15 @@ export function useVariableCoverage({
     live && available
       ? clampYearWindow(period ?? seed, available.from, available.to)
       : seed;
-  // The drawing's years: a delivery drawn over its table's cadence can end
-  // past its last delivered day, so the axis reaches it; the years to add stay
-  // on the delivered ones.
-  const drawnRuns = columnYearRuns(
-    inTableCadence(
-      subjects.flatMap((subject) => subject.segments),
-      cadenceOf,
-    ),
-    catalogBounds,
-  );
   const differs = !sameYearWindow(active, seed);
   const axis = dataAxis(
     [
-      ...drawnRuns.flatMap((run) => [run.from, run.to]),
-      ...[...neighbourColumns.values()].flatMap((entries) =>
-        entries.flatMap((column) =>
-          columnYearRuns(column.segments, catalogBounds).flatMap((run) => [
-            run.from,
-            run.to,
-          ]),
-        ),
-      ),
+      // The drawing's years, as its lanes draw them: a delivery drawn over
+      // its table's cadence can end past its last delivered day.
+      ...columnYearRuns(
+        drawnSegments.map((segment) => ({ period: displayed(segment) })),
+        catalogBounds,
+      ).flatMap((run) => [run.from, run.to]),
       active.from,
       active.to,
     ],
@@ -325,7 +332,7 @@ export function useVariableCoverage({
       subject.fqid,
       variableSpans({
         columns: columnsOf.get(subject.fqid) ?? [],
-        cadence: cadenceOf,
+        displayed,
         variable: subject,
         names,
         project: draft,
@@ -361,6 +368,7 @@ export function useVariableCoverage({
         project: draft,
         axis,
         catalogBounds,
+        displayed,
       }),
     ),
   );

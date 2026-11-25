@@ -127,6 +127,15 @@ pub fn merge(json: &str) -> String {
     json!(intervals(json).map(reg_core::merge)).to_string()
 }
 
+/// `reg_core::add_iso_months`: the ISO date `months` calendar months after `day`, a
+/// month's last day mapping to the target month's last; empty for a day that is not a
+/// calendar date or a result past 9999.
+#[wasm_bindgen]
+#[must_use]
+pub fn add_iso_months(day: &str, months: u32) -> String {
+    reg_core::add_iso_months(day, months).unwrap_or_default()
+}
+
 /// `reg_core::overlap` of two JSON lists of ascending, disjoint ISO intervals;
 /// `null` when either is not such a list.
 #[wasm_bindgen]

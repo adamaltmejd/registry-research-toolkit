@@ -7,7 +7,7 @@ import {
   type SharedDays,
   type VariableColumn,
 } from "./add_columns";
-import type { Graph, VariableShow } from "./api";
+import type { CatalogPeriod, CatalogSegment, Graph, VariableShow } from "./api";
 import { catalogHref } from "./catalog";
 import { segmentYears, sourcePeriodLabel } from "./catalog_period";
 import { inDatabase, type Space } from "./databases";
@@ -19,12 +19,7 @@ import type {
 } from "./LaneGraph";
 import { periodCoverageUnion, periodWindowRelation } from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
-import {
-  columnDateRuns,
-  columnYearRuns,
-  inTableCadence,
-  studyWindow,
-} from "./study_window";
+import { columnDateRuns, columnYearRuns, studyWindow } from "./study_window";
 import type { ColumnState } from "./ui/Pill";
 
 const RANK: Record<ColumnState, number> = { out: 0, default: 1, in: 2 };
@@ -52,7 +47,7 @@ export function variableSpans({
   notInDatabase = new Set(),
   sharedDays = new Map(),
   tableName = (table) => names.get(table) ?? "Table name unavailable",
-  cadence = () => null,
+  displayed = (segment) => segment.period,
 }: {
   columns: readonly VariableColumn[];
   variable: Pick<VariableShow, "fqid" | "name">;
@@ -77,9 +72,9 @@ export function variableSpans({
   sharedDays?: ReadonlyMap<string, SharedDays>;
   /** How the accessible name names a table. */
   tableName?: (table: string) => string;
-  /** A table's cadence (`ShowTable.cadence`): each delivery is drawn over at
-   * least one step of it. None draws the catalog's own dates. */
-  cadence?: (table: string) => string | null | undefined;
+  /** The period a lane draws a segment over (`displayedPeriods`); the
+   * catalog's own by default. */
+  displayed?: (segment: CatalogSegment) => CatalogPeriod;
 }): LaneSpanModel[] {
   const study = studyWindow(project);
   const tables = [...new Set(columns.map((column) => column.table))];
@@ -130,8 +125,6 @@ export function variableSpans({
       ]),
     );
     const every = [...parts.values()];
-    // The table's deliveries, in every database: what a cadence step stretches.
-    const deliveries = here.flatMap(({ all }) => all.segments);
     const absent = every.every((part) => part.absent);
     const inside = every.some((part) => part.inside);
     // Whether a committed binding can be ordered from the database turns on
@@ -182,85 +175,86 @@ export function variableSpans({
     const selectable = !readOnly && !!project && (!!source || inside);
     const isSelected = selectable && selected.has(lane);
     const staged = isSelected ? (source ? "remove" : "add") : null;
-    return columnRows(every.map((part) => part.drawn)).flatMap(
-      (row, index): LaneSpanModel[] => {
-        // In date order, so abutting parts of one name join into one run.
-        const segments = row
-          .flatMap((column): LaneSpanSegment[] => {
-            const part = parts.get(column.id);
-            if (!part) return [];
-            const state: ColumnState = source
-              ? part.taken
-                ? "in"
-                : readOnly
-                  ? "default"
-                  : "out"
-              : readOnly || part.inside
+    return columnRows(
+      every.map((part) => part.drawn),
+      displayed,
+    ).flatMap((row, index): LaneSpanModel[] => {
+      // In date order, so abutting parts of one name join into one run.
+      const segments = row
+        .flatMap((column): LaneSpanSegment[] => {
+          const part = parts.get(column.id);
+          if (!part) return [];
+          const state: ColumnState = source
+            ? part.taken
+              ? "in"
+              : readOnly
                 ? "default"
-                : "out";
-            return columnDateRuns(
-              inTableCadence(column.segments, cadence, deliveries),
-              catalogBounds,
-              axis[0],
-            ).map((run) => ({
-              name: column.spelling,
-              ...run,
-              state,
-              // The columns the staged change takes in or out.
-              staged: staged === "add" ? part.inside : part.taken,
-            }));
-          })
-          .sort((a, b) => a.from - b.from);
-        if (!segments.length) return [];
-        // One name per spelling: releases that share years repeat it.
-        const spellings = [...new Set(row.map((column) => column.spelling))];
-        const years = segmentYears(row.flatMap((column) => column.segments));
-        return [
-          {
-            id: `${lane}#${index}`,
-            lane,
-            name: spellings.join(", "),
-            tableRef: table,
-            from: Math.min(...segments.map((segment) => segment.from)),
-            to: Math.max(...segments.map((segment) => segment.to)),
-            segments,
+                : "out"
+            : readOnly || part.inside
+              ? "default"
+              : "out";
+          return columnDateRuns(
+            column.segments.map((segment) => ({ period: displayed(segment) })),
+            catalogBounds,
+            axis[0],
+          ).map((run) => ({
+            name: column.spelling,
+            ...run,
+            state,
+            // The columns the staged change takes in or out.
+            staged: staged === "add" ? part.inside : part.taken,
+          }));
+        })
+        .sort((a, b) => a.from - b.from);
+      if (!segments.length) return [];
+      // One name per spelling: releases that share years repeat it.
+      const spellings = [...new Set(row.map((column) => column.spelling))];
+      const years = segmentYears(row.flatMap((column) => column.segments));
+      return [
+        {
+          id: `${lane}#${index}`,
+          lane,
+          name: spellings.join(", "),
+          tableRef: table,
+          from: Math.min(...segments.map((segment) => segment.from)),
+          to: Math.max(...segments.map((segment) => segment.to)),
+          segments,
+          years,
+          // One line per spelling, over all its columns' years.
+          columns:
+            spellings.length > 1
+              ? spellings.map((name) => ({
+                  name,
+                  years: segmentYears(
+                    row
+                      .filter((column) => column.spelling === name)
+                      .flatMap((column) => column.segments),
+                  ),
+                }))
+              : undefined,
+          state: segments.reduce<ColumnState>(
+            (best, segment) =>
+              segment.state && RANK[segment.state] > RANK[best]
+                ? segment.state
+                : best,
+            "out",
+          ),
+          selectable,
+          isSelected: readOnly ? undefined : isSelected,
+          staged,
+          blocked: !readOnly && (relation === "disjoint" || unusable),
+          accessibleName: [
+            ...spellings,
+            variable.name,
+            tableName(table),
             years,
-            // One line per spelling, over all its columns' years.
-            columns:
-              spellings.length > 1
-                ? spellings.map((name) => ({
-                    name,
-                    years: segmentYears(
-                      row
-                        .filter((column) => column.spelling === name)
-                        .flatMap((column) => column.segments),
-                    ),
-                  }))
-                : undefined,
-            state: segments.reduce<ColumnState>(
-              (best, segment) =>
-                segment.state && RANK[segment.state] > RANK[best]
-                  ? segment.state
-                  : best,
-              "out",
-            ),
-            selectable,
-            isSelected: readOnly ? undefined : isSelected,
-            staged,
-            blocked: !readOnly && (relation === "disjoint" || unusable),
-            accessibleName: [
-              ...spellings,
-              variable.name,
-              tableName(table),
-              years,
-              note,
-            ]
-              .filter(Boolean)
-              .join(", "),
-          },
-        ];
-      },
-    );
+            note,
+          ]
+            .filter(Boolean)
+            .join(", "),
+        },
+      ];
+    });
   });
 }
 
@@ -274,6 +268,7 @@ export function successionLanes({
   project,
   axis,
   catalogBounds,
+  displayed,
 }: {
   focusSpans: readonly LaneSpanModel[];
   /** The page's other subjects' spans (a group's other members): a relation
@@ -285,6 +280,8 @@ export function successionLanes({
   project: ProjectData | null;
   axis: [number, number];
   catalogBounds: [number, number];
+  /** As `variableSpans` reads it. */
+  displayed?: (segment: CatalogSegment) => CatalogPeriod;
 }): {
   lanes: LaneModel[];
   spans: LaneSpanModel[];
@@ -334,6 +331,7 @@ export function successionLanes({
       axis,
       catalogBounds,
       selection: { from: axis[0], to: axis[1] },
+      displayed,
       selected: new Set(),
       idPrefix: `${fqid}|`,
       readOnly: true,

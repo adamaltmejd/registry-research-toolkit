@@ -215,10 +215,20 @@ export function columnsInSource(
 /** A variable's columns in one table, as rows that never overlap in time:
  * successive spellings share a row; columns delivered side by side in one
  * file (a slot's members) take a row each (#2408). Releases that share a
- * year take a row each there (crates/DESIGN.md, "Concurrent releases"). */
+ * year take a row each there (crates/DESIGN.md, "Concurrent releases").
+ * Overlap is read on the days a lane draws (`displayedPeriods`). */
 export function columnRows(
   columns: readonly VariableColumn[],
+  periodOf: (segment: CatalogSegment) => CatalogPeriod = (segment) =>
+    segment.period,
 ): VariableColumn[][] {
+  const segmentDays = (segment: CatalogSegment): Interval => {
+    const period = periodOf(segment);
+    return [
+      period.start ?? "0001-01-01",
+      catalogLastDate(period) ?? "9999-12-31",
+    ];
+  };
   const first = (column: VariableColumn) =>
     column.segments.reduce(
       (least, segment) =>

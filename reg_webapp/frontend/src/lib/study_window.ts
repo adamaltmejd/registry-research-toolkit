@@ -1,6 +1,7 @@
 import type { CatalogPeriod, CatalogSegment, RegisterShow } from "./api";
 import { catalogLastDate } from "./catalog_period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
+import { addIsoMonths, type Interval, mergeIntervals } from "./reg_core";
 
 /** No open project means no study band, even when browsing has a saved window. */
 export function studyWindow(
@@ -124,72 +125,56 @@ const CADENCE_MONTHS: Record<string, number> = {
   month: 1,
 };
 
-/** `months` months after an ISO day, on the same day of the month or the
- * month's last. */
-function addMonths(day: string, months: number): string {
-  const month = Number(day.slice(0, 4)) * 12 + Number(day.slice(5, 7)) - 1;
-  const next = month + months;
-  const year = Math.floor(next / 12);
-  const last = new Date(Date.UTC(year, (next % 12) + 1, 0)).getUTCDate();
-  const date = Math.min(Number(day.slice(8, 10)), last);
-  return `${String(year).padStart(4, "0")}-${String((next % 12) + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
-}
-
 /**
- * Segments drawn over their table's cadence, as the catalog measures gaps:
- * a delivery covers at least one cadence step from its first day, so a yearly
- * test taken in the spring term draws its whole year, not half of one with a
- * gap after it (maintainer, #2661, 2026-11-25). A gap is drawn only where no
+ * The period a lane draws each segment over: the one place a drawing reads
+ * a segment's extent (its rows, its spans, its axis), so every lane shows a
+ * delivery alike. A delivery covers at least one step of its table's catalog
+ * cadence from its first day, as the catalog measures gaps, so a yearly test
+ * taken in the spring term draws its whole year, not half of one with a gap
+ * after it (maintainer, #2661, 2026-11-25). A gap is drawn only where no
  * delivery is.
  *
- * A delivery is a file's days, read from `deliveries` (a segment's own where
- * it names no file): only the segment that ends it is stretched, so a file's
- * internal boundaries (a rename inside it) stay where they are. A one-day
- * period (a snapshot) is left as it is, for `columnDateRuns` to draw as its
- * year, and so are open ends and tables with no step (`day`, `irregular`).
- * The text keeps the catalog's own periods.
+ * A delivery is a run of one variable's abutting days in one table: a split
+ * the catalog makes inside it (a changed wording, a rename) is no boundary,
+ * and only the segment that ends it is stretched. A one-day period (a
+ * snapshot) is drawn as it is, for `columnDateRuns` to give its year, and so
+ * are open ends and tables with no step (`day`, `irregular`). Text and the
+ * years to add keep the catalog's own periods.
  */
-export function inTableCadence<
-  T extends Pick<CatalogSegment, "period" | "file" | "table">,
->(
-  segments: readonly T[],
+export function displayedPeriods(
+  segments: readonly CatalogSegment[],
   cadenceOf: (table: string) => string | null | undefined,
-  deliveries: readonly T[] = segments,
-): T[] {
-  const key = (segment: T) =>
-    JSON.stringify([
-      segment.table,
-      segment.file ?? [segment.period.start, segment.period.end],
-    ]);
-  // Each dated delivery's days, half-open; ISO days compare as text.
-  const days = new Map<string, { start: string; end: string }>();
-  for (const segment of deliveries) {
-    const { start, end } = segment.period;
-    if (start === null || end === null) continue;
-    const seen = days.get(key(segment));
-    days.set(key(segment), {
-      start: seen && seen.start < start ? seen.start : start,
-      end: seen && seen.end > end ? seen.end : end,
+): (segment: CatalogSegment) => CatalogPeriod {
+  const shown = new Map<CatalogSegment, CatalogPeriod>();
+  const groups = Map.groupBy(segments, (segment) =>
+    JSON.stringify([segment.table, segment.variable]),
+  );
+  for (const group of groups.values()) {
+    const step = CADENCE_MONTHS[cadenceOf(group[0].table) ?? ""];
+    if (!step) continue;
+    // Inclusive days of each dated segment; open ends are never stretched.
+    const dated = group.flatMap((segment) => {
+      const { start, end } = segment.period;
+      const last = catalogLastDate(segment.period);
+      return start !== null && end !== null && last !== null
+        ? [{ segment, start, end, last }]
+        : [];
     });
+    const deliveries = mergeIntervals(
+      dated.map(({ start, last }): Interval => [start, last]),
+    );
+    for (const { segment, start, end, last } of dated) {
+      if (last === start) continue;
+      const delivery = deliveries.find(
+        ([first, final]) => first <= start && last <= final,
+      );
+      if (delivery?.[1] !== last) continue;
+      const stretched = addIsoMonths(delivery[0], step);
+      if (stretched && stretched > end)
+        shown.set(segment, { start, end: stretched });
+    }
   }
-  return segments.map((segment) => {
-    const step = CADENCE_MONTHS[cadenceOf(segment.table) ?? ""];
-    const { start, end } = segment.period;
-    const delivery = days.get(key(segment));
-    if (
-      !step ||
-      !delivery ||
-      start === null ||
-      end === null ||
-      end !== delivery.end ||
-      catalogLastDate(segment.period) === start
-    )
-      return segment;
-    const stretched = addMonths(delivery.start, step);
-    return stretched > end
-      ? { ...segment, period: { start, end: stretched } }
-      : segment;
-  });
+  return (segment) => shown.get(segment) ?? segment.period;
 }
 
 /** A list row's delivered years (`VariableRow`): `columnYearRuns` less the
