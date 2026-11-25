@@ -450,8 +450,8 @@ Stable; the process exits with the code of the first order, in name order, that 
 
 `key_check.R` answers, on MONA and before a steward marks its SCB löpnummer columns for
 int64 delivery (#2656), whether every such key converts, and how the other key-like
-columns are stored. Agents cannot run anything on MONA, so the coordinator runs it and
-exports its CSV, which is why it counts only.
+columns are stored. Agents cannot run anything on MONA, so the coordinator runs it, reads
+the answer on the console, and exports its CSV, which is why it counts only.
 
 - **A separate script, not an `extract.R` mode.** It reads no order and writes no
   extract; folding it in would add a second entry point to the runner. It shares only the
@@ -462,41 +462,63 @@ exports its CSV, which is why it counts only.
 - **Settings at the top**, edited by the coordinator per run: SCB key names and
   prefixes (mirroring the steward's `[[lopnr]]` entries), patterns for other key-like
   names, and optional schema and table filters. Base tables only, never views: see
-  "Disclosure". Matching is done in R on the
-  listing from `INFORMATION_SCHEMA.COLUMNS`, never spliced into SQL.
-- **One scan per table.** All of a table's matched columns are measured in one
-  `SELECT` of `COUNT_BIG(CASE …)` aggregates, so an LMED-size table is read once. The
-  measures follow `extract.R`'s int64 rule (`lopnr_digits`) and its key storage list
-  (`LOPNR_TYPES`, mirrored by hand, so `bit`, `money` and `real` keys are flagged): what `TRY_CAST(… AS
-  bigint)` refuses, fractions, floats at or beyond 2^53 (2^24 for `real`), and for text
-  leading zeros, spaces (a `char` column's padding excluded, as `extract.R` trims it) and
-  non-digits, after `extract.R`'s optional leading minus, under `Latin1_General_BIN2`, so `[0-9]` is ASCII only. Legacy `text` and
-  `ntext` are read as `varchar(max)` and `nvarchar(max)`; text is cast to bigint from its
-  sign and at most 40 digits with leading zeros dropped (as `lopnr_digits` reads it, so a
-  zero-padded key counts under `leading_zeros`, not `not_bigint`), since `TRY_CAST` of a
-  (max) value over 8000 bytes fails the query. `-0` counts with the leading zeros: it is
-  written as `0`.
-- **Disclosure.** The CSV is an export, so it holds names, types and counts only: a
-  nonzero count, `rows` included, is rounded up to the next multiple of 5 (the export
-  gate's floor), and no value or min/max of values is computed. Rounding replaced `<5`
-  masking (Codex review, #2658): `not_bigint` counts only non-null values, so rows 6,
-  `nulls` `<5` and `not_bigint` 5 gave `nulls` 1, and the row total repeated on every
-  column leaks the same way. Rounded counts give no exact small difference, and 0 stays
-  exact, which is the answer the coordinator needs. A length is shown only when at
-  least 5 values, counted exactly, support it (a number's: those that convert to bigint,
-  `rows - nulls - not_bigint`; a text's: every non-null value). Rounding protects one
-  object's counts, not those of objects that overlap: five yearly tables each with
-  `nulls` 5 beside their UNION ALL view with `nulls` 5 give exactly 1 per year (Codex
-  review, #2658). So only base tables are scanned, with no option for views, and the
-  coordinator does not set the table filter to take in tables derived from other
-  scanned ones. The CSV still goes through MONA's export review. The driver's message,
-  which can quote a value, goes to the console's error block only.
+  "Disclosure". Matching is done in R on the listing from `INFORMATION_SCHEMA.COLUMNS`,
+  never spliced into SQL.
+- **One scan per table.** All of a table's matched columns are measured in one `SELECT`
+  of `COUNT_BIG(CASE …)` aggregates, so an LMED-size table is read once; it returns true
+  counts. The measures follow `extract.R`'s int64 rule (`lopnr_digits`) and its key
+  storage list (`LOPNR_TYPES`, mirrored by hand, so `bit`, `money` and `real` keys are
+  flagged): what `TRY_CAST(… AS bigint)` refuses, fractions, floats at or beyond 2^53
+  (2^24 for `real`), and for text leading zeros, spaces (a `char` column's padding
+  excluded, as `extract.R` trims it) and non-digits, after `extract.R`'s optional
+  leading minus, all under `Latin1_General_BIN2`, so `[0-9]` is ASCII only and no
+  collation reads a full-width hyphen as a minus. Legacy `text` and `ntext` are read as
+  `varchar(max)` and `nvarchar(max)`; text is cast to bigint from its sign and at most
+  40 digits with leading zeros dropped (as `lopnr_digits` reads it, so a zero-padded key
+  counts under `leading_zeros`, not `not_bigint`), since `TRY_CAST` of a (max) value
+  over 8000 bytes fails the query. The zeros are dropped with `PATINDEX` and
+  `SUBSTRING`, without concatenation, which on a full-length `nvarchar(4000)` would
+  truncate. `-0` counts with the leading zeros: it is written as `0`. A number's length
+  counts digits, not the minus.
+- **The answer is on the console.** The `check:` line is judged on the true counts and
+  stays on MONA; the exported CSV holds perturbed counts, in which a published 0 can
+  stand for a true 1 to 4.
+- **Disclosure: the toolkit's cell key method** (maintainer ruling 2026-11-25). The
+  toolkit has one disclosure model (`reg_export_gate/DESIGN.md`: cell keys, no rounding,
+  no secondary suppression), and the CSV is an export, so its counts are perturbed by
+  it rather than rounded or masked (both were tried in review on #2658: `<5` masking
+  leaked by difference, since `not_bigint` counts only non-null values, and rounding is
+  not the toolkit's model). Each published count, `rows` included, gets a cell key:
+  HMAC-SHA256, under a salt, of the cell (schema, table, column, measure, each prefixed
+  by its byte length) and its true count, its first 28 bits read modulo 2^26 over 2^26,
+  `cell_key.R`'s resolution. The true count and the key select the noise from
+  `cell_key.R`'s p-table through `ck_lookup()`, the lookup `ck_perturb()` uses, added
+  for this caller (`CELL_KEY_VERSION` 0.2.0); the p-table is not copied and its SHA-256
+  is still checked. A table's rows count is one cell, with an empty column, so its
+  columns repeat one published value rather than several draws around it. A true 0
+  publishes 0 (the p-table's row 0), and 1 to 4 are never published.
+- **The salt.** 32 random bytes from openssl, made on the first run in a file beside
+  the script (`SALT_FILE`), written owner-only and reused on every later run; a
+  malformed file is refused, not replaced. It is never exported, printed or logged. The
+  coordinator uploads `key_check.R` and `cell_key.R` once and again only when either
+  changes, and the salt file stays on MONA: the same cell gives the same output on every
+  rerun (no averaging across runs), and a count one higher gets an unrelated key (no
+  differencing).
+- **What it does not protect.** Overlapping objects: five yearly tables beside their
+  UNION ALL view give each year's count twice over, under independent noise. So only
+  base tables are scanned, with no option for views, and the coordinator does not set the
+  table filter to take in tables derived from other scanned ones. A length is shown only
+  when at least 5 values, counted exactly, support it (a number's: those that convert to
+  bigint, `rows - nulls - not_bigint`; a text's: every non-null value). The CSV still
+  goes through MONA's export review. The driver's message, which can quote a value, goes
+  to the console's error block only.
 - **Fail-safe per table.** A table whose query fails is a `failed: SQLSTATE …` row per
   column and the run goes on; the CSV is appended after every table, so an interrupted
   run keeps what it counted. Exit 8 when any table failed, 2 for setup.
 - **Unverified here.** No test reaches SQL Server; the SQL is checked by reading and by
-  the coordinator's first run on MONA. The suite has one case, for the length rule above,
-  built from given aggregates without a database.
+  the coordinator's first run on MONA. The suite has one case, for the published counts
+  (p-table outputs, the same on a rerun, keyed by salt and true count), built from given
+  true counts without a database.
 
 ## Tests
 

@@ -163,56 +163,75 @@ entries) for int64 delivery, that every such key converts, and shows what the ot
 key-like columns (holders' own serials, `…id` columns) look like. It counts only; no
 value leaves the database.
 
-1. Edit the settings at the top of the script: `SCB_KEY_NAMES` and `SCB_KEY_PREFIXES`
+1. Upload `key_check.R` and the plugin's `cell_key.R` (version 0.2.0 or later, from the
+   `project-setup` skill's `scripts/`) to one folder on MONA, once. Upload them again only
+   when either changes. Keep that folder: the first run makes the salt file
+   `key_check.salt` in it, and every later run reuses it (see "What the CSV protects").
+2. Edit the settings at the top of the script: `SCB_KEY_NAMES` and `SCB_KEY_PREFIXES`
    as the steward's `[[lopnr]]` entries name them (exact names and name prefixes, both
    case-insensitive, for example `P1234_LopNr_`), `OTHER_KEY_PATTERNS` for the other
    key-like names, and optionally `SCHEMAS` and `TABLE_PATTERN`. Only base tables are
-   scanned, never views (see "What the CSV protects" below); don't widen the table
-   filter to tables derived from other scanned tables either.
-2. Upload it to MONA and run it beside the steward's `extract-config.json` (only its
-   `odbc` connection is used; the connection's database is the one checked):
-   `Rscript key_check.R`, `R CMD BATCH key_check.R`, or `source("key_check.R")`. It
-   installs DBI, odbc and jsonlite when missing, as `extract.R` does.
-3. Each table is read once, in one `SELECT` for all its matched columns; on a large
+   scanned, never views; don't widen the table filter to tables derived from other
+   scanned tables either.
+3. Run it from that folder beside the steward's `extract-config.json` (only its `odbc`
+   connection is used; the connection's database is the one checked): `Rscript
+   key_check.R`, `R CMD BATCH key_check.R`, or `source("key_check.R")`. It installs DBI,
+   odbc, jsonlite and openssl when missing, as `extract.R` does.
+4. Each table is read once, in one `SELECT` for all its matched columns; on a large
    table that is a full scan. The console prints one line per table (rows, columns,
    time, and `check:` naming the SCB key columns `extract.R` would not write as
-   distinct int64 keys). A table whose query fails prints `FAILED (SQLSTATE …)` and the
-   driver's message in an error block that stays on MONA; the run goes on with the
-   next table. The last line is `finished … exit N`: 0, 8 when any table failed, 2 for
-   a setup failure (packages, configuration, connection, the column listing).
+   distinct int64 keys, judged on the true counts). A table whose query fails prints
+   `FAILED (SQLSTATE …)` and the driver's message in an error block that stays on MONA;
+   the run goes on with the next table. The last line is `finished … exit N`: 0, 8 when
+   any table failed, 2 for a setup failure (packages, configuration, `cell_key.R`, the
+   salt file, connection, the column listing).
+
+The console's `check:` line is the answer: it uses the true counts and stays on MONA.
+The CSV is the exported record, with perturbed counts.
 
 It writes `key_check.csv` (in R's working directory) after every table: a few `#`
 comment lines, then one row per column with `schema`, `table`, `column`, `group`
 (`scb_key` or `other_key`), `sql_type`, `status` (`ok` or `failed: SQLSTATE …`) and:
 
-  | Count           | Storage            | Counts the non-null values that …                                     |
-  | --------------- | ------------------ | ------------------------------------------------------------------------ |
-  | `rows`, `nulls` | any                | (the table's rows; the column's NULLs)                                   |
-  | `not_bigint`    | numbers, text      | `TRY_CAST(… AS bigint)` cannot convert (text over 40 characters counts)  |
-  | `not_whole`     | decimal, float     | have a fraction                                                          |
-  | `beyond_exact`  | float, real        | are at or beyond 2^53 (real: 2^24), where distinct keys may have merged  |
-  | `leading_zeros` | text               | start with `0` or `-0` and another digit, or are `-0` (`012` becomes `12`) |
-  | `spaces`        | text               | have a leading space, or a trailing one in `varchar`/`nvarchar`          |
-  | `not_digits`    | text               | are empty or not ASCII digits (after one leading `-`), spaces trimmed    |
+  | Count           | Storage            | Counts the non-null values that …                                         |
+  | --------------- | ------------------ | ---------------------------------------------------------------------------- |
+  | `rows`, `nulls` | any                | (the table's rows; the column's NULLs)                                       |
+  | `not_bigint`    | numbers, text      | `TRY_CAST(… AS bigint)` cannot convert (text over 40 digits counts)          |
+  | `not_whole`     | decimal, float     | have a fraction                                                              |
+  | `beyond_exact`  | float, real        | are at or beyond 2^53 (real: 2^24), where distinct keys may have merged      |
+  | `leading_zeros` | text               | start with `0` or `-0` and another digit, or are `-0` (`012` becomes `12`)   |
+  | `spaces`        | text               | have a leading space, or a trailing one in `varchar`/`nvarchar`              |
+  | `not_digits`    | text               | are empty or not ASCII digits (after one leading `-`), spaces trimmed        |
 
 and `min_length`, `max_length`: the characters of a text value (trailing spaces
-excluded) or the digits of a number that converts to bigint. A count that does not
-apply to the storage is empty. Legacy `text` and `ntext` columns are checked as text.
+excluded) or the digits of a number that converts to bigint (a minus not counted). A
+count that does not apply to the storage is empty. Legacy `text` and `ntext` columns
+are checked as text.
 
 An SCB key converts under `extract.R` when `not_bigint`, `not_whole`, `beyond_exact`,
 `spaces` and `not_digits` are all 0 and its storage is one `extract.R` takes for a key
 (an integer other than `bit`, `decimal`, `numeric`, `float` other than `real`, or text;
-`bit`, `money`, `smallmoney`, `real` and dates are refused). `leading_zeros` above 0 means some keys
-change representation (`012` becomes `12`), so a collision with another key is
-possible.
+`bit`, `money`, `smallmoney`, `real` and dates are refused). `leading_zeros` above 0
+means some keys change representation (`012` becomes `12`), so a collision with another
+key is possible.
 
-**What the CSV protects.** It holds names, SQL types and aggregate counts only: every
-nonzero count, `rows` included, is rounded up to the next multiple of 5 (0 stays 0, so
-"no failures" is exact), and a length is left out when fewer than 5 values support it.
-There is no value, and no minimum or maximum of values. Rounding keeps one object's
-counts, and their differences, from giving an exact small count. It does not protect
-counts of objects that overlap: a UNION ALL view's rounded `nulls` beside its yearly
-tables' can be differenced to an exact count per year. That is why views are not
-scanned and why the table filter must not take in derived copies of scanned tables.
-The CSV still goes through MONA's normal export review. The console's error block, like
-`extract.R`'s, may quote a value and stays on MONA.
+**What the CSV protects.** It holds names, SQL types and counts only, with no value and
+no minimum or maximum of values; a length is left out when fewer than 5 values support
+it. Every count, `rows` included, is perturbed by the toolkit's one disclosure method,
+the cell key method with the p-table in `cell_key.R` (`reg_export_gate/DESIGN.md`). A
+true 0 is published as 0 and no count from 1 to 4 is published, but a published 0 can
+stand for a true 1 to 4: read the console's `check:` line, not the CSV, for whether a
+key converts. Each count's noise follows from the salt, the cell (schema, table,
+column, measure) and the true count:
+
+- the same cell gives the same output on every rerun, so reruns cannot be averaged:
+  keep `key_check.salt` and reuse it (the script refuses a malformed one; a new salt
+  gives new noise, so do not export again under a new salt);
+- a count one higher gets an unrelated key, so two counts cannot be differenced.
+
+It does not protect counts of objects that overlap: a UNION ALL view's `nulls` beside
+its yearly tables' narrows each year's count. That is why views are not scanned and why
+the table filter must not take in derived copies of scanned tables. The salt file stays
+on MONA, never exported or printed. The CSV still goes through MONA's normal export
+review. The console's error block, like `extract.R`'s, may quote a value and stays on
+MONA.

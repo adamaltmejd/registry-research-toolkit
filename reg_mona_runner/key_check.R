@@ -9,13 +9,16 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 # in one SELECT: rows, nulls, values that do not convert to bigint, and the
 # storage-specific shapes that decide whether extract.R can write an SCB
 # lopnummer as int64. It writes key_check.csv: names, SQL types and counts only,
-# every nonzero count rounded up to a multiple of 5. No value leaves the
-# database, not even a min or max: only lengths, and only over at least 5 values.
+# every count perturbed by the cell key method with the toolkit's p-table
+# (cell_key.R). No value leaves the database, not even a min or max: only
+# lengths, and only over at least 5 values. The console, which stays on MONA,
+# judges the keys on the true counts.
 #
 # Run: source("key_check.R") in R on MONA, `Rscript key_check.R`, or
 # `R CMD BATCH key_check.R`, beside the steward's extract-config.json (its
-# `odbc` connection only; REG_EXTRACT_CONFIG names another path). Packages: base
-# R (>= 4.2), DBI, odbc and jsonlite, installed first when missing. Rationale:
+# `odbc` connection only; REG_EXTRACT_CONFIG names another path) and the
+# plugin's cell_key.R (version 0.2.0 or later). Packages: base R (>= 4.2), DBI,
+# odbc, jsonlite and openssl, installed first when missing. Rationale:
 # reg_mona_runner/DESIGN.md, "Key check".
 #
 # This file is ASCII only: a non-ASCII name reaches SQL Server as NCHAR() code
@@ -36,8 +39,8 @@ OTHER_KEY_PATTERNS <- c("lopnr", "id$")
 
 # Optional filters: exact schema names (empty: every schema) and a regular
 # expression on the table name ("": every table). Only base tables are
-# scanned, never views: rounded counts of overlapping objects (yearly tables
-# and their UNION ALL view) can be differenced to an exact small count. For the
+# scanned, never views: perturbed counts of overlapping objects (yearly tables
+# and their UNION ALL view) can be compared to narrow a small count. For the
 # same reason, do not widen the filter to tables derived from other scanned
 # tables.
 SCHEMAS <- character()
@@ -46,13 +49,18 @@ TABLE_PATTERN <- ""
 # The output file, written in R's working directory unless a path is given.
 OUTPUT <- "key_check.csv"
 
+# The plugin's cell_key.R, uploaded beside this script, and the salt file: a
+# random secret made on the first run and reused after, so a rerun publishes
+# the same counts. It stays on MONA: never export, copy or print it.
+CELL_KEY_FILE <- "cell_key.R"
+SALT_FILE <- "key_check.salt"
+
 # ---- Constants ----------------------------------------------------------------------
 
 EXIT <- c(ok = 0L, setup = 2L, failed = 8L)
 
-# Every nonzero count is rounded up to a multiple of this (zero stays exact),
-# and a length is left out when fewer values than this support it (table_rows).
-DISCLOSURE_FLOOR <- 5L
+# A length is left out when fewer values than this support it (publish_rows).
+LENGTH_SUPPORT <- 5L
 
 INTEGER_TYPES <- c("bit", "tinyint", "smallint", "int", "bigint")
 EXACT_TYPES <- c("decimal", "numeric", "money", "smallmoney")
@@ -90,16 +98,22 @@ COUNTS <- c(
   "not_digits"
 )
 
+# Whether a text value, spaces trimmed, starts with an ASCII minus (binary, so
+# no collation reads a full-width hyphen as one).
+NEGATIVE <- "LTRIM(RTRIM(@col)) COLLATE Latin1_General_BIN2 LIKE N'-%'"
 # A text value, spaces trimmed, without one leading minus.
 UNSIGNED <- paste0(
-  "(CASE WHEN LTRIM(RTRIM(@col)) LIKE N'-%' THEN STUFF(LTRIM(RTRIM(@col)), 1, 1, N'')",
+  "(CASE WHEN ", NEGATIVE, " THEN STUFF(LTRIM(RTRIM(@col)), 1, 1, N'')",
   " ELSE LTRIM(RTRIM(@col)) END)"
 )
 # That value's sign and its digits without leading zeros, as extract.R's
-# lopnr_digits reads it (empty for all zeros, which is cast as 0).
-SIGN <- "(CASE WHEN LTRIM(RTRIM(@col)) LIKE N'-%' THEN N'-' ELSE N'' END)"
+# lopnr_digits reads it (empty for all zeros, which is cast as 0). No
+# concatenation: on an (n)varchar(n) at its full length it would truncate.
+SIGN <- paste0("(CASE WHEN ", NEGATIVE, " THEN N'-' ELSE N'' END)")
+FIRST_NONZERO <- paste0("PATINDEX(N'%[^0]%', ", UNSIGNED, " COLLATE Latin1_General_BIN2)")
 STRIPPED <- paste0(
-  "SUBSTRING(", UNSIGNED, ", PATINDEX(N'%[^0]%', ", UNSIGNED, " + N'x'), 2147483647)"
+  "(CASE WHEN ", FIRST_NONZERO, " = 0 THEN N'' ELSE SUBSTRING(", UNSIGNED, ", ",
+  FIRST_NONZERO, ", 2147483647) END)"
 )
 
 # The T-SQL per measure, @col standing for the quoted column. Each is an
@@ -127,7 +141,7 @@ MEASURES <- list(
     "COUNT_BIG(CASE WHEN LTRIM(@col) COLLATE Latin1_General_BIN2 LIKE N'0[0-9]%'",
     " OR LTRIM(@col) COLLATE Latin1_General_BIN2 LIKE N'-0[0-9]%'",
     # -0 is written as 0, a change of representation like a leading zero.
-    " OR LTRIM(RTRIM(@col)) = N'-0' THEN 1 END)"
+    " OR LTRIM(RTRIM(@col)) COLLATE Latin1_General_BIN2 = N'-0' THEN 1 END)"
   ),
   # A char or nchar value is padded with trailing spaces by its type, which
   # extract.R trims: only leading spaces count there.
@@ -139,8 +153,9 @@ MEASURES <- list(
   ),
   min_text = "MIN(LEN(@col))",
   max_text = "MAX(LEN(@col))",
-  min_number = "MIN(LEN(CONVERT(varchar(20), TRY_CAST(@col AS bigint))))",
-  max_number = "MAX(LEN(CONVERT(varchar(20), TRY_CAST(@col AS bigint))))"
+  # Digits only: a negative number's minus is not counted.
+  min_number = "MIN(LEN(REPLACE(CONVERT(varchar(20), TRY_CAST(@col AS bigint)), '-', '')))",
+  max_number = "MAX(LEN(REPLACE(CONVERT(varchar(20), TRY_CAST(@col AS bigint)), '-', '')))"
 )
 
 # The measures a column of SQL type `type` gets, named by the CSV field each fills.
@@ -215,7 +230,7 @@ clock_text <- function(seconds) {
 
 # ---- Packages and connection --------------------------------------------------------
 
-PACKAGES <- c("DBI", "odbc", "jsonlite")
+PACKAGES <- c("DBI", "odbc", "jsonlite", "openssl")
 
 # Same helper in reg_mona_runner/extract.R and reg_export_gate/export_gate.R:
 # each script is uploaded to MONA alone. Installs each package into R's default
@@ -438,21 +453,114 @@ FIELDS <- c(
   "max_length"
 )
 
-# A count as written: empty when it does not apply, 0 when zero, else rounded
-# up to the next multiple of DISCLOSURE_FLOOR. Rounding every count up, the
-# table's rows too, means no difference of published counts is an exact small
-# count (rows 6, nulls 1, not_bigint 5 publish as 10, 5, 5), while zero stays
-# exact.
-count_text <- function(n) {
-  ifelse(
-    is.na(n),
-    "",
-    ifelse(
-      n == 0,
-      "0",
-      format(ceiling(n / DISCLOSURE_FLOOR) * DISCLOSURE_FLOOR, scientific = FALSE, trim = TRUE)
-    )
+# ---- Disclosure -----------------------------------------------------------------------
+
+# The salt: 32 random bytes as 64 hex digits on one line. Made on the first run
+# (from openssl's generator, never R's, so no seed reproduces it), written
+# owner-only and read back; afterwards read, and refused if malformed rather
+# than replaced, since a new salt gives every count new noise. Returns the salt
+# or a message; never prints it.
+read_salt <- function(path) {
+  valid <- function(lines) length(lines) == 1L && grepl("^[0-9a-f]{64}$", lines)
+  if (!file.exists(path)) {
+    old_umask <- Sys.umask("077")
+    on.exit(Sys.umask(old_umask), add = TRUE)
+    tmp <- tempfile("salt_", tmpdir = dirname(path))
+    writeLines(paste(as.character(openssl::rand_bytes(32L)), collapse = ""), tmp)
+    if (!valid(readLines(tmp, warn = FALSE)) || !file.rename(tmp, path)) {
+      unlink(tmp)
+      return(paste0("could not write the salt file ", path))
+    }
+    say("made a new salt file ", path, ": keep it on MONA for every later run")
+  }
+  lines <- tryCatch(readLines(path, warn = FALSE), error = function(e) character())
+  if (!valid(lines)) {
+    return(paste0(
+      "salt file ", path, " is not one line of 64 hex digits; restore it from where",
+      " it was kept (a new salt changes every published count)"
+    ))
+  }
+  lines
+}
+
+# The cell-key method (reg_export_gate/DESIGN.md; cell_key.R) with a cell key
+# per published count: HMAC-SHA256 under the salt of the cell (schema, table,
+# column, measure) and its true count, its first 28 bits read mod 2^26, the
+# resolution of cell_key.R's record keys. The same cell and count give the same
+# key on every run, so reruns cannot be averaged; a count one higher gives an
+# unrelated key, so counts cannot be differenced. Each part is prefixed by its
+# byte length, so no two cells share a message. A table's rows count is one
+# cell (an empty column), however many of its columns repeat it.
+cell_keys <- function(salt, schema, table, column, measure, n, modulus) {
+  part <- function(x) {
+    x <- enc2utf8(as.character(x))
+    paste0(nchar(x, "bytes"), ":", x)
+  }
+  message <- paste(
+    part(schema), part(table), part(column), part(measure),
+    part(format(n, scientific = FALSE, trim = TRUE)),
+    sep = "|"
   )
+  hmac <- as.character(openssl::sha256(message, key = salt))
+  (strtoi(substr(hmac, 1L, 7L), 16L) %% modulus) / modulus
+}
+
+# The published counts: each true count plus cell_key.R's ck_lookup() noise
+# (`disclosure`: salt, the sourced cell_key.R environment and its checked
+# p-table). Zero stays zero (the p-table's row 0); no count from 1 to 4 is
+# published (the p-table moves them to 0 or 5 and above). NA (does not apply)
+# stays NA.
+perturb <- function(counts, cols, disclosure) {
+  out <- counts
+  at <- which(!is.na(counts), arr.ind = TRUE)
+  if (!nrow(at)) {
+    return(out)
+  }
+  field <- colnames(counts)[at[, 2]]
+  j <- at[, 1]
+  n <- counts[at]
+  keys <- cell_keys(
+    disclosure$salt,
+    cols$table_schema[j],
+    cols$table_name[j],
+    ifelse(field == "rows", "", cols$column_name[j]),
+    field,
+    n,
+    disclosure$ck$CK_MODULUS
+  )
+  out[at] <- n + disclosure$ck$ck_lookup(n, keys, disclosure$pt)
+  out
+}
+
+# Loads cell_key.R and makes or reads the salt: a list for perturb(), or a
+# message.
+load_disclosure <- function() {
+  if (!file.exists(CELL_KEY_FILE)) {
+    return(paste0("no ", CELL_KEY_FILE, ": upload the plugin's cell_key.R beside key_check.R"))
+  }
+  ck <- new.env()
+  loaded <- tryCatch(
+    {
+      sys.source(CELL_KEY_FILE, ck)
+      if (!exists("ck_lookup", ck, inherits = FALSE)) {
+        stop(CELL_KEY_FILE, " is older than 0.2.0: it has no ck_lookup()")
+      }
+      ck$ck_ptable()
+    },
+    error = function(e) e
+  )
+  if (inherits(loaded, "error")) {
+    return(paste0("cannot use ", CELL_KEY_FILE, ": ", conditionMessage(loaded)))
+  }
+  salt <- read_salt(SALT_FILE)
+  if (!grepl("^[0-9a-f]{64}$", salt)) {
+    return(salt)
+  }
+  list(salt = salt, ck = ck, pt = loaded, version = ck$CELL_KEY_VERSION)
+}
+
+count_text <- function(n) {
+  ifelse(is.na(n), "", format(n, scientific = FALSE, trim = TRUE))
 }
 
 csv_field <- function(x) {
@@ -475,21 +583,41 @@ append_lines <- function(lines, path, append = TRUE) {
   writeLines(enc2utf8(lines), con, useBytes = TRUE)
 }
 
-csv_header <- function(database) {
+csv_header <- function(database, version) {
   c(
     "# key_check.csv: counts of the shape of key-like columns, made by key_check.R.",
     paste0("# Database ", database, ", ", format(Sys.time(), "%Y-%m-%d %H:%M"), "."),
-    "# Aggregates only: no value; every nonzero count is rounded up to a multiple of 5; a length is empty unless at least 5 values support it.",
+    paste0(
+      "# Aggregates only, no value. Every count is perturbed by the cell key method",
+      " (cell_key.R ", version, "): 0 is exact, and 1 to 4 are never published;",
+      " a length is empty unless at least 5 values support it."
+    ),
     "# Read: reg_mona_runner/README.md, \"Key check\". Skip lines starting with #.",
     paste(FIELDS, collapse = ",")
   )
 }
 
-# One table's CSV rows: counts as written. A length is shown only when the
-# values it is over, counted exactly, number at least DISCLOSURE_FLOOR (a
-# number's length is over the values that convert to bigint, a text's over
-# every non-null value).
-table_rows <- function(cols, status, result = NULL, slots = NULL) {
+# One table's true counts and lengths, a matrix by column and CSV field, from
+# the SELECT's result.
+table_counts <- function(cols, result, slots) {
+  values <- matrix(
+    NA_real_,
+    nrow(cols),
+    length(COUNTS) + 2L,
+    dimnames = list(NULL, c(COUNTS, "min_length", "max_length"))
+  )
+  values[, "rows"] <- as.numeric(result[[1L]])
+  for (k in seq_len(nrow(slots))) {
+    values[slots$column[k], slots$field[k]] <- as.numeric(result[[k + 1L]])
+  }
+  values
+}
+
+# One table's CSV rows: the counts perturbed, and a length only when the values
+# it is over, counted exactly, number at least LENGTH_SUPPORT (a number's
+# length is over the values that convert to bigint, a text's over every
+# non-null value). A failed table (no values) has its status and no counts.
+publish_rows <- function(cols, status, values = NULL, disclosure = NULL) {
   rows <- data.frame(
     schema = cols$table_schema,
     table = cols$table_name,
@@ -498,45 +626,38 @@ table_rows <- function(cols, status, result = NULL, slots = NULL) {
     sql_type = cols$data_type,
     status = status
   )
-  values <- matrix(
-    NA_real_,
-    nrow(cols),
-    length(COUNTS) + 2L,
-    dimnames = list(NULL, c(COUNTS, "min_length", "max_length"))
-  )
-  if (!is.null(result)) {
-    values[, "rows"] <- as.numeric(result[[1L]])
-    for (k in seq_len(nrow(slots))) {
-      values[slots$column[k], slots$field[k]] <- as.numeric(result[[k + 1L]])
-    }
-    number <- vapply(cols$data_type, type_class, "") %in% c("integer", "exact", "float")
-    unconverted <- ifelse(number, values[, "not_bigint"], 0)
-    hidden <- values[, "rows"] - values[, "nulls"] - unconverted < DISCLOSURE_FLOOR
-    values[hidden, c("min_length", "max_length")] <- NA
+  if (is.null(values)) {
+    for (field in c(COUNTS, "min_length", "max_length")) rows[[field]] <- ""
+    return(rows)
   }
+  published <- perturb(values[, COUNTS, drop = FALSE], cols, disclosure)
+  number <- vapply(cols$data_type, type_class, "") %in% c("integer", "exact", "float")
+  unconverted <- ifelse(number, values[, "not_bigint"], 0)
+  lengths <- values[, c("min_length", "max_length"), drop = FALSE]
+  lengths[values[, "rows"] - values[, "nulls"] - unconverted < LENGTH_SUPPORT, ] <- NA
   for (field in COUNTS) {
-    rows[[field]] <- count_text(values[, field])
+    rows[[field]] <- count_text(published[, field])
   }
-  for (field in c("min_length", "max_length")) {
-    rows[[field]] <- ifelse(is.na(values[, field]), "", format(values[, field], trim = TRUE))
+  for (field in colnames(lengths)) {
+    rows[[field]] <- count_text(lengths[, field])
   }
   rows
 }
 
-# The SCB key columns that extract.R would not write as distinct int64 keys:
-# storage extract.R refuses, any value that does not convert, or a leading zero
-# (the key's digits change, so two keys may collide).
-needs_check <- function(rows) {
-  scb <- rows[rows$group == "scb_key" & rows$status == "ok", ]
+# The SCB key columns that extract.R would not write as distinct int64 keys,
+# judged on the true counts (console only): storage extract.R refuses, any value
+# that does not convert, or a leading zero (the key's digits change, so two
+# keys may collide).
+needs_check <- function(cols, values) {
   shape <- c("not_bigint", "not_whole", "beyond_exact", "leading_zeros", "spaces", "not_digits")
-  bad <- Reduce(`|`, lapply(shape, function(f) !scb[[f]] %in% c("", "0")), FALSE) |
-    !scb$sql_type %in% LOPNR_TYPES
-  scb$column[bad]
+  bad <- rowSums(values[, shape, drop = FALSE] > 0, na.rm = TRUE) > 0 |
+    !cols$data_type %in% LOPNR_TYPES
+  cols$column_name[cols$group == "scb_key" & bad]
 }
 
 # ---- Main -----------------------------------------------------------------------------
 
-scan_table <- function(con, cols) {
+scan_table <- function(con, cols, disclosure) {
   label <- paste0(cols$table_schema[1], ".", cols$table_name[1])
   started <- Sys.time()
   batch <- tryCatch(
@@ -557,10 +678,11 @@ scan_table <- function(con, cols) {
     status <- paste0("failed: ", sqlstate(result))
     say("  ", label, "   ", nrow(cols), " columns   FAILED (", sqlstate(result), ")   ", elapsed)
     error_block(conditionMessage(result))
-    return(table_rows(cols, status))
+    return(publish_rows(cols, status))
   }
-  rows <- table_rows(cols, "ok", result, batch$slots)
-  check <- needs_check(rows)
+  values <- table_counts(cols, result, batch$slots)
+  rows <- publish_rows(cols, "ok", values, disclosure)
+  check <- needs_check(cols, values)
   say(
     "  ",
     label,
@@ -587,6 +709,11 @@ main <- function() {
   odbc <- read_odbc()
   if (is.character(odbc)) {
     say(odbc)
+    return(EXIT[["setup"]])
+  }
+  disclosure <- load_disclosure()
+  if (is.character(disclosure)) {
+    say(disclosure)
     return(EXIT[["setup"]])
   }
   con <- tryCatch(
@@ -627,13 +754,13 @@ main <- function() {
     sum(cols$group == "other_key"),
     " other key columns"
   )
-  append_lines(csv_header(setup$database), OUTPUT, append = FALSE)
+  append_lines(csv_header(setup$database, disclosure$version), OUTPUT, append = FALSE)
   failed <- 0L
   for (i in seq_len(nrow(tables))) {
     mine <- cols[
       cols$table_schema == tables$table_schema[i] & cols$table_name == tables$table_name[i],
     ]
-    rows <- scan_table(con, mine)
+    rows <- scan_table(con, mine, disclosure)
     failed <- failed + any(startsWith(rows$status, "failed"))
     # Written after every table, so a long run that stops keeps what it counted.
     append_lines(csv_lines(rows), OUTPUT)
