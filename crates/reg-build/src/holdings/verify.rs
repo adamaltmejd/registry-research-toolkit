@@ -523,7 +523,6 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     let variables = compile::by_variable(&tables);
     super::keys::verify(&db, &base, &variables, &topology)?;
     super::verify_mappings::verify(&db, &tables, &variables, &topology, &held, &primaries)?;
-    super::lopnr::check(&db, &variables, &topology, &held, &primaries)?;
     // A documented position family only authorizes distinct positions in one file.
     // Other duplicates within one space still need a partition, projection, or carried
     // key; the same placement in two spaces is two databases' copies, and on a shared

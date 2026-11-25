@@ -135,8 +135,8 @@ pub struct Column {
     pub ordinal: i64,
     pub match_name: Match,
     pub storage: Storage,
-    /// The 1-based position of the first `[[lopnr]]` entry that marks the column as an SCB
-    /// löpnummer.
+    /// The 1-based position of the first `[[lopnr]]` entry that marks the column as a
+    /// löpnummer. Diagnostics name this entry; a later entry marking it too is not kept.
     pub lopnr: Option<usize>,
 }
 
