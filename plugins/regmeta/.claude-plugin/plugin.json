@@ -1,7 +1,7 @@
 {
   "name": "regmeta",
   "description": "Tooling for working with Swedish administrative register microdata: register metadata search through the hosted catalog MCP server, a project's project_data.json (data order and inventory), local mock data, project setup, and research in a project whose results leave the data server only through the toolkit export gate.",
-  "version": "0.13.6",
+  "version": "0.13.7",
   "author": {
     "name": "Adam Altmejd",
     "email": "adam@altmejd.se"
