@@ -155,3 +155,54 @@ or screenshot that block off MONA.
 The automated suite (testthat, run by hand) covers only the refusals and validation that
 fire before the database, and needs no database. Extraction itself is verified by a
 manual run on MONA with real code.
+
+## Key check
+
+`key_check.R` checks, before a steward marks its SCB löpnummer columns (its `[[lopnr]]`
+entries) for int64 delivery, that every such key converts, and shows what the other
+key-like columns (holders' own serials, `…id` columns) look like. It counts only; no
+value leaves the database.
+
+1. Edit the settings at the top of the script: `SCB_KEY_NAMES` and `SCB_KEY_PREFIXES`
+   as the steward's `[[lopnr]]` entries name them (exact names and name prefixes, both
+   case-insensitive, for example `P1234_LopNr_`), `OTHER_KEY_PATTERNS` for the other
+   key-like names, and optionally `SCHEMAS`, `TABLE_PATTERN` and `TABLE_TYPES`.
+2. Upload it to MONA and run it beside the steward's `extract-config.json` (only its
+   `odbc` connection is used; the connection's database is the one checked):
+   `Rscript key_check.R`, `R CMD BATCH key_check.R`, or `source("key_check.R")`. It
+   installs DBI, odbc and jsonlite when missing, as `extract.R` does.
+3. Each table is read once, in one `SELECT` for all its matched columns; on a large
+   table that is a full scan. The console prints one line per table (rows, columns,
+   time, and `check:` naming the SCB key columns `extract.R` would not write as
+   distinct int64 keys). A table whose query fails prints `FAILED (SQLSTATE …)` and the
+   driver's message in an error block that stays on MONA; the run goes on with the
+   next table. The last line is `finished … exit N`: 0, 8 when any table failed, 2 for
+   a setup failure (packages, configuration, connection, the column listing).
+
+It writes `key_check.csv` (in R's working directory) after every table: a few `#`
+comment lines, then one row per column with `schema`, `table`, `column`, `group`
+(`scb_key` or `other_key`), `sql_type`, `status` (`ok` or `failed: SQLSTATE …`) and:
+
+  | Count           | Storage            | Counts the non-null values that …                                     |
+  | --------------- | ------------------ | ------------------------------------------------------------------------ |
+  | `rows`, `nulls` | any                | (the table's rows; the column's NULLs)                                   |
+  | `not_bigint`    | numbers, text      | `TRY_CAST(… AS bigint)` cannot convert                                   |
+  | `not_whole`     | decimal, float     | have a fraction                                                          |
+  | `beyond_exact`  | float, real        | are at or beyond 2^53 (real: 2^24), where distinct keys may have merged  |
+  | `leading_zeros` | text               | start with `0` and another digit (`012` and `12` would become one key)   |
+  | `spaces`        | text               | have a leading space, or a trailing one in `varchar`/`nvarchar`          |
+  | `not_digits`    | text               | are empty or hold anything but ASCII digits once spaces are trimmed      |
+
+and `min_length`, `max_length`: the characters of a text value (trailing spaces
+excluded) or the digits of a number. A count that does not apply to the storage is
+empty.
+
+An SCB key converts under `extract.R` when `not_bigint`, `not_whole`, `beyond_exact`,
+`spaces` and `not_digits` are all 0 and the storage is not `real` (a negative key also
+counts as `not_digits`, though `extract.R` writes it); `leading_zeros` above 0 means
+two keys would merge.
+
+**Safe to export.** The CSV holds names, SQL types and aggregate counts only: any count
+from 1 to 4 is written as `<5`, and a length is left out when fewer than 5 values are
+non-null. There is no value, and no minimum or maximum of values. The console's error
+block, like `extract.R`'s, may quote a value and stays on MONA.

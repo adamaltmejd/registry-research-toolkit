@@ -446,6 +446,39 @@ Stable; the process exits with the code of the first order, in name order, that 
   | 7    | a table not in its schema, a missing column, storage drift, a wrong period type, a column the format cannot hold (SQL type, `.dta` name, label) |
   | 8    | a query or a file write failed, or a value the format cannot hold exactly                                                                       |
 
+## Key check
+
+`key_check.R` answers, on MONA and before a steward marks its SCB löpnummer columns for
+int64 delivery (#2656), whether every such key converts, and how the other key-like
+columns are stored. Agents cannot run anything on MONA, so the coordinator runs it and
+exports its CSV, which is why it counts only.
+
+- **A separate script, not an `extract.R` mode.** It reads no order and writes no
+  extract; folding it in would add a second entry point to the runner. It shares only the
+  steward's `extract-config.json` (its `odbc` object) and copies the helpers it needs
+  (`install_missing`, `sql_text`, `sqlstate`, `say`), since each script is uploaded
+  alone. The same ASCII rule holds: names reach SQL Server as `NCHAR()` expressions
+  through `QUOTENAME` and `sp_executesql`.
+- **Settings at the top**, edited by the coordinator per run: SCB key names and
+  prefixes (mirroring the steward's `[[lopnr]]` entries), patterns for other key-like
+  names, and optional schema, table and table-type filters. Matching is done in R on the
+  listing from `INFORMATION_SCHEMA.COLUMNS`, never spliced into SQL.
+- **One scan per table.** All of a table's matched columns are measured in one
+  `SELECT` of `COUNT_BIG(CASE …)` aggregates, so an LMED-size table is read once. The
+  measures follow `extract.R`'s int64 rule (`lopnr_digits`): what `TRY_CAST(… AS
+  bigint)` refuses, fractions, floats at or beyond 2^53 (2^24 for `real`), and for text
+  leading zeros, spaces (a `char` column's padding excluded, as `extract.R` trims it) and
+  non-digits under `Latin1_General_BIN2`, so `[0-9]` is ASCII only.
+- **Disclosure.** The CSV is an export, so it holds names, types and counts only: a
+  count from 1 to 4 is `<5` (the export gate's floor of 5), a length over fewer than 5
+  non-null values is left out, and no value or min/max of values is computed. The
+  driver's message, which can quote a value, goes to the console's error block only.
+- **Fail-safe per table.** A table whose query fails is a `failed: SQLSTATE …` row per
+  column and the run goes on; the CSV is appended after every table, so an interrupted
+  run keeps what it counted. Exit 8 when any table failed, 2 for setup.
+- **Unverified here.** No test reaches SQL Server; the SQL is checked by reading and by
+  the coordinator's first run on MONA. The automated suite does not cover the script.
+
 ## Tests
 
 Process-level, run by hand

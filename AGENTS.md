@@ -22,7 +22,8 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
 - `reg_mona_runner` — `extract.R`, the extract runner a steward's data manager runs
   inside MONA, configured by the steward's `extract-config.json`: order manifests in,
   one file per manifest file out, in the order's format: Stata `.dta`, Parquet or CSV
-  (R: DBI, odbc, jsonlite, haven, arrow).
+  (R: DBI, odbc, jsonlite, haven, arrow); and `key_check.R`, a counts-only check of the
+  key-like columns the coordinator runs there before an SCB löpnummer is delivered as int64.
 - `reg_export_gate` — the export gate: `export_gate.R`, the version-pinned check a MONA
   pipeline runs as its last step (inventory, structure, disclosure, identifier backstop;
   Parquet plus `receipt.json` out only on a pass), the toolkit's fixed schemas and
