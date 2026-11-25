@@ -12,6 +12,7 @@
 import type { ValidationResultModel } from "./api";
 import type { ProjectSourcePeriod } from "./project_data";
 import init, {
+  add_iso_months,
   check_project,
   fold_identity,
   initSync,
@@ -135,6 +136,14 @@ export function studyWindowInterval(window: {
   return JSON.parse(
     study_window_interval(JSON.stringify({ from: window.from, to: window.to })),
   ) as Interval | null;
+}
+
+/** `reg_core::add_iso_months`: the ISO day `months` months after `day`, a
+ * month's last day mapping to the target month's last; null for a day that is
+ * not a calendar date or a result past 9999. */
+export function addIsoMonths(day: string, months: number): string | null {
+  requireReady();
+  return add_iso_months(day, months) || null;
 }
 
 /** `intervals` sorted and coalesced: overlapping and day-adjacent intervals join. */

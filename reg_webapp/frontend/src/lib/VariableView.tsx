@@ -192,6 +192,7 @@ function VariablePage({
     validation,
     successions: succession.graphs,
     neighbourColumns: succession.neighbourColumns,
+    neighbourTables: succession.tables,
     successionError: succession.error,
     allowAdd: context !== null,
     focus,

@@ -56,7 +56,7 @@ import {
   setSourcePeriod,
   setSourceReleases,
 } from "./source_edits";
-import { columnDateRuns, tableYears } from "./study_window";
+import { columnDateRuns, displayedPeriods, tableYears } from "./study_window";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EntityPill } from "./ui/EntityPill";
@@ -247,7 +247,12 @@ export function SourceCard({
       // One row per run of the variable's columns, successive spellings on one
       // row (#2408). A lane is in the project for its source's days only, so a
       // column is drawn over those days and one outside them is not drawn.
-      columnRows(columns).forEach((row, index) => {
+      // Rows pack on the days a lane draws: a snapshot takes its year. The
+      // card keeps the source's cut, so no cadence widens it (#2416).
+      columnRows(
+        columns,
+        displayedPeriods(onTable, () => null),
+      ).forEach((row, index) => {
         const drawn = row.flatMap((column) => {
           const inProject = drawnTaken.get(column.id) ?? [];
           return inProject.length ? [{ column, inProject }] : [];
