@@ -982,8 +982,8 @@ Time is the axis every relation is drawn on.
   implementer). A `/project` source card keeps the source's cut (#2416). Abutting
   parts of one name in one state join into one part before the name is placed, so a
   column delivered in a file a year reads as one run, across a value-set change too
-  (a marker for the change awaits a design trial, maintainer, #2661, 2026-11-25). Every part
-  carries its column name, cut as below where it is narrow (#2661: "Every chip shows
+  (a marker for the change awaits a design trial, maintainer, #2661, 2026-11-25).
+  Every part carries its column name, cut as below where it is narrow (#2661: "Every chip shows
   its column name"). The spellings sharing the row say the rename; it has no mark and
   no sentence: "No renames on the same row are just explained by them being on the same
   row. No need for dashed lines or additional explanations." (maintainer, 2026-11-17).
