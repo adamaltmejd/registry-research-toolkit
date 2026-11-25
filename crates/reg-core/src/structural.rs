@@ -21,9 +21,12 @@
 //! `"_default"` is a period like any other here: whether it fits the table is a catalog
 //! rule (`period_default_on_dated_table`).
 
+use std::collections::BTreeMap;
+
 use serde_json::{Map, Value};
 
 use crate::grammar::{Date, PeriodToken, iso};
+use crate::manifest::{CODE_ENTRY_MAX, CodeFilter};
 use crate::project::{ColumnType, ExtractFormat};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
@@ -41,13 +44,15 @@ const MANUAL_ORIGIN_KEYS: [&str; 2] = ["provider", "register"];
 const MANUAL_BINDING_KEYS: [&str; 2] = ["manual", "display_name"];
 const MANUAL_COLUMN_KEYS: [&str; 3] = ["column", "type", "codes"];
 const MANUAL_CODE_KEYS: [&str; 3] = ["code", "label", "sentinel"];
-const BINDING_KEYS: [&str; 5] = [
+const BINDING_KEYS: [&str; 6] = [
     "variable",
     "follow_successor",
     "type",
     "display_name",
     "classification",
+    "filter",
 ];
+const FILTER_KEYS: [&str; 2] = ["codes", "prefixes"];
 const PANEL_KEYS: [&str; 3] = ["panel_id", "members", "comment"];
 const WINDOW_KEYS: [&str; 2] = ["from", "to"];
 const LINKAGE_KEYS: [&str; 1] = ["database"];
@@ -645,6 +650,7 @@ fn check_source<'a>(
     let mut display_names: Vec<(&str, String)> = Vec::new();
     let mut columns: Vec<(&str, String)> = Vec::new();
     let mut catalog_bindings = 0;
+    let mut filtered: Option<String> = None;
     for (j, binding) in bindings.iter().enumerate() {
         let binding_base = format!("{base}/bindings/{j}");
         let Some(binding) = binding.as_object() else {
@@ -683,6 +689,19 @@ fn check_source<'a>(
             (true, false) => {
                 catalog_bindings += 1;
                 check_binding(binding, &binding_base, prefix, issues);
+                if binding.contains_key("filter") {
+                    match &filtered {
+                        Some(first) => issues.error(
+                            "filter_multiple",
+                            format!("{binding_base}/filter"),
+                            format!(
+                                "a source filters rows by one variable only; {first} already \
+                                 has a filter"
+                            ),
+                        ),
+                        None => filtered = Some(binding_base.clone()),
+                    }
+                }
             }
             (false, true) => {
                 if let Some(column) = check_manual_binding(binding, &binding_base, issues) {
@@ -1043,6 +1062,72 @@ fn check_binding(
             format!("{base}/classification"),
             "classification must be a string".into(),
         ),
+    }
+    if let Some(filter) = binding.get("filter") {
+        check_filter(filter, &format!("{base}/filter"), issues);
+    }
+}
+
+/// A catalog binding's `filter`: a closed `{codes, prefixes}` with at least one entry,
+/// each a non-blank printable-ASCII string, none repeated within its list. ASCII because
+/// the runner binds them as parameters, and a non-ASCII value has not been shown to reach
+/// SQL Server intact from R on MONA (crates/DESIGN.md, "Row filters by code").
+fn check_filter(filter: &Value, fbase: &str, issues: &mut Issues) {
+    let Some(filter) = filter.as_object() else {
+        issues.error(
+            "invalid_field_type",
+            fbase.into(),
+            "binding 'filter' must be an object {'codes': [...], 'prefixes': [...]}".into(),
+        );
+        return;
+    };
+    check_unexpected_keys(filter, &FILTER_KEYS, fbase, "binding 'filter'", issues);
+    let mut entries = 0;
+    for field in FILTER_KEYS {
+        let Some(list) = filter.get(field) else {
+            continue;
+        };
+        let lbase = format!("{fbase}/{field}");
+        let Some(list) = list.as_array() else {
+            issues.error(
+                "invalid_field_type",
+                lbase,
+                format!("filter {} must be an array of strings", q(field)),
+            );
+            continue;
+        };
+        entries += list.len();
+        let mut seen: BTreeMap<&str, usize> = BTreeMap::new();
+        for (k, entry) in list.iter().enumerate() {
+            let Some(entry) = entry.as_str().filter(|e| CodeFilter::entry_ok(e)) else {
+                issues.error(
+                    "invalid_field_type",
+                    format!("{lbase}/{k}"),
+                    format!(
+                        "a filter entry must be a non-blank string of at most \
+                         {CODE_ENTRY_MAX} printable ASCII characters"
+                    ),
+                );
+                continue;
+            };
+            match seen.get(entry) {
+                Some(first) => issues.error(
+                    "filter_duplicate",
+                    format!("{lbase}/{k}"),
+                    format!("filter entry {} duplicates {lbase}/{first}", q(entry)),
+                ),
+                None => {
+                    seen.insert(entry, k);
+                }
+            }
+        }
+    }
+    if entries == 0 {
+        issues.error(
+            "filter_empty",
+            fbase.into(),
+            "binding 'filter' needs at least one code or prefix".into(),
+        );
     }
 }
 

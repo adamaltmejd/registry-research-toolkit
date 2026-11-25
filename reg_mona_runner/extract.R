@@ -95,7 +95,7 @@ EXIT <- c(
   ok = 0L,
   setup = 2L, # steward configuration, export root, packages or database connection
   json = 3L, # the order is not JSON
-  version = 4L, # manifest version is not 5
+  version = 4L, # manifest version is not 6
   mode = 5L, # not a steward_holdings order for this steward
   manifest = 6L, # unknown field, missing or malformed field, unsafe file name
   # table or column not found in its schema, a column stored otherwise than the
@@ -358,6 +358,46 @@ check_filter <- function(f, where) {
   f
 }
 
+# A code filter's limits, the twins of crates/reg-core/src/manifest.rs: entries per
+# file, characters per entry, and the parameters sp_executesql binds per file
+# (codes, prefixes and period bounds). The order never writes more.
+CODE_FILTER_MAX <- 1000L
+CODE_ENTRY_MAX <- 64L
+PARAMS_MAX <- 2100L
+
+# A code filter (crates/DESIGN.md, "Row filters by code"): the column, and arrays of
+# non-blank printable-ASCII codes and prefixes, at least one entry in all. ASCII
+# because the entries are bound as parameters, and a non-ASCII value has not been
+# shown to reach SQL Server intact from R on MONA.
+check_code_filter <- function(f, where) {
+  check_object(f, where, c("column", "codes", "prefixes"))
+  check_name(f$column, paste0(where, ".column"))
+  n <- 0L
+  for (k in c("codes", "prefixes")) {
+    entries <- f[[k]]
+    if (!is_array(entries)) {
+      refuse("manifest", where, ".", k, " is not an array")
+    }
+    for (i in seq_along(entries)) {
+      e <- entries[[i]]
+      if (!is_string(e) || !grepl("^[ -~]+$", e) || !nzchar(trimws(e)) ||
+        nchar(e) > CODE_ENTRY_MAX) {
+        refuse(
+          "manifest",
+          sprintf("%s.%s[%d]", where, k, i - 1L),
+          " is not a non-blank string of at most ", CODE_ENTRY_MAX,
+          " printable ASCII characters"
+        )
+      }
+    }
+    n <- n + length(entries)
+  }
+  if (n == 0L || n > CODE_FILTER_MAX) {
+    refuse("manifest", where, " has ", n, " entries; it takes 1 to ", CODE_FILTER_MAX)
+  }
+  f
+}
+
 check_column <- function(col, where, format) {
   check_object(
     col,
@@ -434,7 +474,7 @@ check_file <- function(f, where, format) {
     f,
     where,
     c("name", "schema", "table", "delivery", "columns"),
-    c("partition", "projection", "row_filter")
+    c("partition", "projection", "row_filter", "code_filter")
   )
   check_file_name(f$name, paste0(where, ".name"))
   check_name(f$schema, paste0(where, ".schema"))
@@ -448,6 +488,18 @@ check_file <- function(f, where, format) {
   if (!is.null(f$row_filter)) {
     check_filter(f$row_filter, paste0(where, ".row_filter"))
   }
+  if (!is.null(f$code_filter)) {
+    check_code_filter(f$code_filter, paste0(where, ".code_filter"))
+    bounds <- vapply(
+      f$row_filter$ranges,
+      function(r) as.integer(!is.null(r$from)) + as.integer(!is.null(r$to)),
+      0L
+    )
+    n <- length(f$code_filter$codes) + length(f$code_filter$prefixes) + sum(bounds)
+    if (n > PARAMS_MAX) {
+      refuse("manifest", where, " binds ", n, " parameters; at most ", PARAMS_MAX)
+    }
+  }
   if (!is_array(f$columns) || !length(f$columns)) {
     refuse("manifest", where, ".columns is not a non-empty array")
   }
@@ -459,6 +511,15 @@ check_file <- function(f, where, format) {
     )
   }
   columns <- vapply(f$columns, `[[`, "", "name")
+  if (!is.null(f$code_filter) && !f$code_filter$column %in% columns) {
+    refuse("manifest", where, ".code_filter.column is not a column of the file")
+  }
+  # A lopnummer is a key, not a code: the order refuses a filter on it
+  # (filter_variable_not_coded), so a manifest that carries one is malformed.
+  if (!is.null(f$code_filter) &&
+    isTRUE(f$columns[[match(f$code_filter$column, columns)]]$lopnr)) {
+    refuse("manifest", where, ".code_filter.column is a lopnummer (lopnr)")
+  }
   twice <- unique(columns[duplicated(columns)])
   if (length(twice)) {
     refuse(
@@ -490,12 +551,12 @@ check_manifest <- function(doc) {
     refuse("manifest", "the order is not a JSON object")
   }
   v <- doc$version
-  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 5)) {
+  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 6)) {
     refuse(
       "version",
       "manifest version ",
       format(v),
-      " is not supported; this runner reads version 5"
+      " is not supported; this runner reads version 6"
     )
   }
   p <- doc$provenance
@@ -554,7 +615,8 @@ plan_files <- function(manifest_files, format) {
       names = vapply(f$columns, written_name, ""),
       storage = lapply(f$columns, `[[`, "storage"),
       lopnr = vapply(f$columns, function(c) isTRUE(c$lopnr), NA),
-      filter = f$row_filter
+      filter = f$row_filter,
+      codes = f$code_filter
     )
   })
   # Case-insensitive: MONA's Windows file system would let one file overwrite
@@ -571,10 +633,31 @@ plan_files <- function(manifest_files, format) {
   files
 }
 
-describe_filter <- function(f) {
-  if (is.null(f)) {
-    return("")
+# The file's filters for run_log.csv: the period ranges, then the code filter's
+# size (its entries are in the order file): `AR (year): 2019..2020; ATC: 1 code, 2
+# prefixes`.
+describe_filter <- function(f, codes = NULL) {
+  parts <- character()
+  if (!is.null(f)) {
+    parts <- describe_ranges(f)
   }
+  if (!is.null(codes)) {
+    count <- function(n, unit) paste0(n, " ", unit, if (n == 1L) "" else if (unit == "prefix") "es" else "s")
+    parts <- c(
+      parts,
+      paste0(
+        codes$column,
+        ": ",
+        count(length(codes$codes), "code"),
+        ", ",
+        count(length(codes$prefixes), "prefix")
+      )
+    )
+  }
+  paste(parts, collapse = "; ")
+}
+
+describe_ranges <- function(f) {
   ranges <- vapply(
     f$ranges,
     function(r) {
@@ -1161,9 +1244,16 @@ sql_batch <- function(select, declared, params) {
 # unfiltered file), with the declared parameters and the bounds bound from R. The
 # extract and its pre-count share it, so both select the same rows.
 filter_where <- function(file, types) {
-  where <- ""
   declared <- character()
   params <- list()
+  # Binds `value` as the next parameter of SQL type `type`; its name.
+  bind <- function(value, type) {
+    name <- sprintf("@p%d", length(params) + 1L)
+    params[[length(params) + 1L]] <<- value
+    declared <<- c(declared, paste(name, type))
+    name
+  }
+  clauses <- character()
   f <- file$filter
   if (!is.null(f)) {
     key <- filter_key(file, types)
@@ -1174,9 +1264,7 @@ filter_where <- function(file, types) {
         if (is.null(r[[side]])) {
           next
         }
-        name <- sprintf("@p%d", length(params) + 1L)
-        params[[length(params) + 1L]] <- bound(r[[side]], f$encoding)
-        declared <- c(declared, paste(name, key$type))
+        name <- bind(bound(r[[side]], f$encoding), key$type)
         parts <- c(
           parts,
           paste0(
@@ -1197,12 +1285,79 @@ filter_where <- function(file, types) {
         paste0("N'(' + ", paste(parts, collapse = " + N' AND ' + "), " + N')'")
       )
     }
-    where <- paste0(
-      " + N' WHERE ' + ",
-      paste(terms, collapse = " + N' OR ' + ")
+    clauses <- c(
+      clauses,
+      paste0("N'(' + ", paste(terms, collapse = " + N' OR ' + "), " + N')'")
     )
   }
+  codes <- file$codes
+  if (!is.null(codes)) {
+    col <- sql_quoted(codes$column)
+    type <- code_param_type(types$type[match(codes$column, file$columns)])
+    terms <- character()
+    # Each code compared exactly, in a parameter of the column's own kind so an
+    # index on the column serves it; bound as text, which SQL Server converts
+    # exactly to bigint for an integer column.
+    for (code in codes$codes) {
+      terms <- c(terms, paste0(col, " + N' = ", bind(code, type), "'"))
+    }
+    # A prefix as a LIKE pattern with its own wildcards escaped.
+    for (prefix in codes$prefixes) {
+      pattern <- paste0(gsub("([\\[%_])", "[\\1]", prefix, perl = TRUE), "%")
+      terms <- c(terms, paste0(col, " + N' LIKE ", bind(pattern, type), "'"))
+    }
+    clauses <- c(
+      clauses,
+      paste0("N'(' + ", paste(terms, collapse = " + N' OR ' + "), " + N')'")
+    )
+  }
+  where <- if (length(clauses)) {
+    paste0(" + N' WHERE ' + ", paste(clauses, collapse = " + N' AND ' + "))
+  } else {
+    ""
+  }
   list(sql = where, declared = declared, params = params)
+}
+
+# The parameter type a code filter binds its entries in, for the column's SQL
+# type: varchar or nvarchar like the column (the entries are ASCII), or bigint for
+# an integer column, which takes exact codes only (check_codes).
+code_param_type <- function(type) {
+  if (type %in% c("char", "varchar")) {
+    return("varchar(8000)")
+  }
+  if (type %in% c("nchar", "nvarchar")) {
+    return("nvarchar(4000)")
+  }
+  "bigint"
+}
+
+# Refuse, before any row is read, a code filter its column's storage cannot
+# serve: text takes codes and prefixes, an integer exact whole-number codes only.
+# Twin: CodeFilter::storage and CodeFilter::integer_code in
+# crates/reg-core/src/manifest.rs.
+check_codes <- function(file, types) {
+  codes <- file$codes
+  if (is.null(codes)) {
+    return(invisible())
+  }
+  type <- types$type[match(codes$column, file$columns)]
+  integer <- type %in% c(INT_TYPES, "bigint")
+  ok <- type %in% TEXT_TYPES ||
+    (integer && !length(codes$prefixes) &&
+      all(grepl("^-?[0-9]{1,18}$", unlist(codes$codes))))
+  if (!ok) {
+    refuse(
+      "resolve",
+      file$name,
+      ": code filter column ",
+      codes$column,
+      " is stored as ",
+      type,
+      ", which ",
+      if (integer) "takes exact whole-number codes only" else "a code filter cannot read"
+    )
+  }
 }
 
 # One batch per file: the SELECT is assembled server-side from QUOTENAME()d
@@ -1274,16 +1429,22 @@ count_batch <- function(file, types) {
 # The count of a filtered file's rows that pass no range for a NULL or
 # unreadable period value: an aggregate the run log reports.
 null_period_batch <- function(file, types) {
+  # Rows the code filter drops are gone whatever their period, so only rows it
+  # keeps are counted.
+  codes <- filter_where(modifyList(file, list(filter = NULL)), types)
+  missing <- paste0(filter_key(file, types)$sql, " + N' IS NULL'")
   sql_batch(
     paste0(
       "N'SELECT CAST(COUNT_BIG(*) AS float) AS n'",
       sql_from(file),
-      " + N' WHERE ' + ",
-      filter_key(file, types)$sql,
-      " + N' IS NULL'"
+      if (nzchar(codes$sql)) {
+        paste0(codes$sql, " + N' AND ' + ", missing)
+      } else {
+        paste0(" + N' WHERE ' + ", missing)
+      }
     ),
-    character(),
-    list()
+    codes$declared,
+    codes$params
   )
 }
 
@@ -2217,6 +2378,7 @@ extract_order <- function(path, out, db, run) {
     )
     check_storage(f, types)
     check_lopnr(f, types)
+    check_codes(f, types)
     if (!is.null(f$filter)) {
       filter_key(f, types)
     }
@@ -2285,11 +2447,13 @@ extract_order <- function(path, out, db, run) {
     dropped <- if (is.null(f$filter)) {
       NA_real_
     } else {
+      batch <- null_period_batch(f, resolved[[i]])
       as.numeric(
         query(
           con,
-          null_period_batch(f, resolved[[i]])$sql,
-          paste0("counting ", f$name, "'s rows without a period value")
+          batch$sql,
+          paste0("counting ", f$name, "'s rows without a period value"),
+          batch$params
         )$n
       )
     }
@@ -2326,7 +2490,7 @@ extract_order <- function(path, out, db, run) {
       rows,
       counts[i],
       length(f$columns),
-      describe_filter(f$filter),
+      describe_filter(f$filter, f$codes),
       dropped,
       written
     )

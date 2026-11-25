@@ -1464,6 +1464,33 @@
           "relabelled"
         ]
       },
+      "CodeFilter": {
+        "type": "object",
+        "description": "Keep a row whose `column` equals one of `codes` or starts with one of `prefixes`\n(crates/DESIGN.md, \"Row filters by code\"). Built by [`CodeFilter::new`]: both lists\nsorted, each once, without a prefix another kept prefix covers.",
+        "required": [
+          "column",
+          "codes",
+          "prefixes"
+        ],
+        "properties": {
+          "codes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "column": {
+            "type": "string"
+          },
+          "prefixes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "ColumnRef": {
         "type": "object",
         "description": "A requested variable this column delivers.",
@@ -2312,7 +2339,7 @@
           "version": {
             "type": "integer",
             "format": "int32",
-            "description": "Always 5.",
+            "description": "Always 6.",
             "minimum": 0
           }
         },
@@ -2418,6 +2445,17 @@
           "columns"
         ],
         "properties": {
+          "code_filter": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CodeFilter",
+                "description": "Absent: no code filter. A row is kept when it passes both filters."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "columns": {
             "type": "array",
             "items": {
@@ -3138,6 +3176,10 @@
               "null"
             ]
           },
+          "filter": {
+            "$ref": "#/components/schemas/ProjectCodeFilter",
+            "description": "Keep only rows whose value is one of these codes (crates/DESIGN.md, \"Row filters\nby code\"); at most one binding of a source has one."
+          },
           "follow_successor": {
             "type": "boolean",
             "description": "Follow the variable's continues successors after it ends; absent means false.",
@@ -3187,6 +3229,25 @@
           "table": {
             "type": "string",
             "description": "A table's public id: `<provider>/<register>` for a register's implicit table,\nelse `<provider>/<register>/<table>`."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectCodeFilter": {
+        "type": "object",
+        "description": "A binding's code filter: a row is kept when its value equals one of `codes` or\nstarts with one of `prefixes`. At least one entry; every entry printable ASCII.",
+        "properties": {
+          "codes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "prefixes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "additionalProperties": false

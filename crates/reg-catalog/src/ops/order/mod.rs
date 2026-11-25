@@ -21,6 +21,7 @@
 mod absent;
 mod breaks;
 mod eras;
+mod filter;
 mod materialize;
 pub(super) mod releases;
 pub(crate) mod rows;
@@ -1121,6 +1122,13 @@ fn check_source(
     for (b, binding) in source.catalog_bindings() {
         let outcome = window::binding(&scope, b, binding)?;
         let mut found = outcome.findings;
+        found.extend(filter::check(
+            conn,
+            composed,
+            (source.name.as_str(), index, b),
+            binding,
+            &outcome.coding,
+        )?);
         found.sort_by_key(Issue::key);
         checked.findings.extend(found);
         checked.entries.extend(outcome.entries);

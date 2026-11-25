@@ -10,14 +10,14 @@ use crate::issue::{Issue, Period};
 use crate::project::ExtractFormat;
 
 /// The manifest `version` this crate writes; the runner refuses every other.
-pub const MANIFEST_VERSION: u32 = 5;
+pub const MANIFEST_VERSION: u32 = 6;
 
 /// The order file: one file per table and delivery, with its columns.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
 pub struct Manifest {
-    /// Always 5.
+    /// Always 6.
     pub version: u32,
     /// The project's `extract_format`.
     pub extract_format: ExtractFormat,
@@ -102,6 +102,9 @@ pub struct File {
     /// Absent: every row of the table.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub row_filter: Option<RowFilter>,
+    /// Absent: no code filter. A row is kept when it passes both filters.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub code_filter: Option<CodeFilter>,
     /// Requested columns in request order, then the row keys.
     pub columns: Vec<Column>,
 }
@@ -115,6 +118,123 @@ pub struct RowFilter {
     pub encoding: Encoding,
     /// Sorted and disjoint.
     pub ranges: Vec<Range>,
+}
+
+/// A code filter's limits, checked again by `extract.R` (its `CODE_FILTER_MAX`,
+/// `CODE_ENTRY_MAX` and `PARAMS_MAX`): entries per file, characters per entry, and the
+/// parameters `sp_executesql` binds per file (codes, prefixes and period bounds).
+pub const CODE_FILTER_MAX: usize = 1_000;
+pub const CODE_ENTRY_MAX: usize = 64;
+pub const PARAMS_MAX: usize = 2_100;
+
+/// Keep a row whose `column` equals one of `codes` or starts with one of `prefixes`
+/// (crates/DESIGN.md, "Row filters by code"). Built by [`CodeFilter::new`]: both lists
+/// sorted, each once, without a prefix another kept prefix covers.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
+#[serde(deny_unknown_fields)]
+pub struct CodeFilter {
+    pub column: String,
+    pub codes: Vec<String>,
+    pub prefixes: Vec<String>,
+}
+
+impl CodeFilter {
+    /// The filter on `column` keeping `codes` and `prefixes`, sorted, each once, with a
+    /// prefix that a shorter kept prefix starts dropped.
+    #[must_use]
+    pub fn new<'a>(
+        column: &str,
+        codes: impl IntoIterator<Item = &'a str>,
+        prefixes: impl IntoIterator<Item = &'a str>,
+    ) -> Self {
+        // In sorted order every string between a prefix and one it covers also starts
+        // with it, so one pass against the last kept prefix drops the covered ones.
+        let mut all: Vec<&str> = prefixes.into_iter().collect();
+        all.sort_unstable();
+        let mut kept: Vec<String> = Vec::new();
+        for p in all {
+            if kept.last().is_none_or(|k| !p.starts_with(k.as_str())) {
+                kept.push(p.to_owned());
+            }
+        }
+        // A code a prefix covers stays: SQL Server's `=` ignores trailing spaces and
+        // `LIKE` does not, so `A ` as a code and as a prefix keep different rows.
+        let mut codes: Vec<String> = codes.into_iter().map(str::to_owned).collect();
+        codes.sort_unstable();
+        codes.dedup();
+        Self {
+            column: column.to_owned(),
+            codes,
+            prefixes: kept,
+        }
+    }
+
+    /// The filter a file shared by several sources keeps: the union of their entries when
+    /// every source filters, all on one column; none when one does not filter or two
+    /// filter different columns, since one column's list cannot keep another's rows.
+    #[must_use]
+    pub fn union<'a>(filters: impl IntoIterator<Item = Option<&'a Self>>) -> Option<Self> {
+        let filters: Vec<&Self> = filters.into_iter().collect::<Option<_>>()?;
+        let column = &filters.first()?.column;
+        if filters.iter().any(|f| f.column != *column) {
+            return None;
+        }
+        Some(Self::new(
+            column,
+            filters
+                .iter()
+                .flat_map(|f| f.codes.iter().map(String::as_str)),
+            filters
+                .iter()
+                .flat_map(|f| f.prefixes.iter().map(String::as_str)),
+        ))
+    }
+
+    /// The family a code filter selects a column stored as `sql_type` in: text for
+    /// `char`, `varchar`, `nchar` and `nvarchar`, integer for `tinyint`, `smallint`,
+    /// `int` and `bigint`; none for any other type. Twin: `check_codes` in `extract.R`.
+    #[must_use]
+    pub fn storage(sql_type: &str) -> Option<StorageFamily> {
+        match sql_type.to_ascii_lowercase().as_str() {
+            "char" | "varchar" | "nchar" | "nvarchar" => Some(StorageFamily::Text),
+            "tinyint" | "smallint" | "int" | "bigint" => Some(StorageFamily::Integer),
+            _ => None,
+        }
+    }
+
+    /// Whether `entry` is a well-formed code or prefix: non-blank, at most
+    /// [`CODE_ENTRY_MAX`] characters, printable ASCII only (crates/DESIGN.md, "Row
+    /// filters by code"). Twin: `check_code_filter` in `extract.R`.
+    #[must_use]
+    pub fn entry_ok(entry: &str) -> bool {
+        !entry.trim().is_empty()
+            && entry.len() <= CODE_ENTRY_MAX
+            && entry.bytes().all(|b| (0x20..=0x7e).contains(&b))
+    }
+
+    /// Whether `code` is an exact code of an integer column: an optional `-` and 1 to
+    /// 18 digits, the range `check_codes` in `extract.R` binds as `bigint`.
+    #[must_use]
+    pub fn integer_code(code: &str) -> bool {
+        let digits = code.strip_prefix('-').unwrap_or(code);
+        (1..=18).contains(&digits.len()) && digits.bytes().all(|b| b.is_ascii_digit())
+    }
+
+    /// Whether the filter keeps a row holding `value`, compared as the runner's SQL
+    /// compares it: as numbers in an `integer` column (`01` keeps 1, and a value that is
+    /// not a number is kept by nothing), else as text, exactly or by prefix.
+    #[must_use]
+    pub fn admits(&self, value: &str, integer: bool) -> bool {
+        if integer {
+            let Ok(n) = value.trim().parse::<i64>() else {
+                return false;
+            };
+            return self.codes.iter().any(|c| c.parse::<i64>() == Ok(n));
+        }
+        self.codes.iter().any(|c| c == value)
+            || self.prefixes.iter().any(|p| value.starts_with(p.as_str()))
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

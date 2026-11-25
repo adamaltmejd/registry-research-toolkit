@@ -20,14 +20,13 @@ test_that("an order that is not JSON is refused (3)", {
   expect_refused(base, "900", 3L, run$output)
 })
 
-test_that("a manifest version other than 5 is refused (4)", {
-  # Regression: a v4 order, which marks no SCB lopnummer, is read as v5 and
-  # writes each person key in its storage type, or a retired shape fails as
+test_that("a manifest version other than 6 is refused (4)", {
+  # Fails if a stale order is read as the current version, or refused as
   # malformed (6) instead of as stale.
   base <- export_root(
     text = list(
       `900` = order_text("pooled-disjoint-periods", function(doc) {
-        doc$version <- 4L
+        doc$version <- 5L
         doc
       })
     )

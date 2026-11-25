@@ -1,0 +1,34 @@
+{
+  "note": "Fails if two sources filtering one shared file by code on the same column do not get one code_filter with the union of their codes, sorted and once each, beside the period filter, with a code_filter_union finding for each source whose own codes are narrower; or if a variable with no documented code list stops passing its codes on unchecked (filter_codes_unchecked).",
+  "project": {
+    "schema_version": "8.1.0",
+    "extract_format": "parquet",
+    "reg_meta_version": "0.92.6",
+    "catalog": "fixture",
+    "name": "Code filter union",
+    "sources": [
+      {
+        "name": "a",
+        "table": "demo/held",
+        "period": 2017,
+        "bindings": [
+          {
+            "variable": "demo/held/value",
+            "filter": {"codes": ["3", "1"]}
+          }
+        ]
+      },
+      {
+        "name": "b",
+        "table": "demo/held",
+        "period": 2018,
+        "bindings": [
+          {
+            "variable": "demo/held/value",
+            "filter": {"codes": ["1", "2"]}
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -23,7 +23,7 @@ use crate::{
 };
 
 /// The `project_data.json` contract this runtime reads, exactly.
-pub const SCHEMA_VERSION: &str = "8.0.0";
+pub const SCHEMA_VERSION: &str = "8.1.0";
 
 /// The project in `raw`, or the issues that reject it without a catalog: the single
 /// entry point the server's validate and order operations share.
@@ -401,6 +401,23 @@ pub struct CatalogBinding {
     )]
     #[serde(default)]
     pub classification: Option<String>,
+    /// Keep only rows whose value is one of these codes (crates/DESIGN.md, "Row filters
+    /// by code"); at most one binding of a source has one.
+    #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
+    pub filter: Option<CodeFilter>,
+}
+
+/// A binding's code filter: a row is kept when its value equals one of `codes` or
+/// starts with one of `prefixes`. At least one entry; every entry printable ASCII.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectCodeFilter))]
+#[serde(deny_unknown_fields)]
+pub struct CodeFilter {
+    #[serde(default)]
+    pub codes: Vec<String>,
+    #[serde(default)]
+    pub prefixes: Vec<String>,
 }
 
 /// A column the catalog does not document, entered by hand.

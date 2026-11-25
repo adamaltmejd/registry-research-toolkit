@@ -4568,6 +4568,33 @@
           ],
           "type": "object"
         },
+        "CodeFilter": {
+          "additionalProperties": false,
+          "description": "Keep a row whose `column` equals one of `codes` or starts with one of `prefixes`\n(crates/DESIGN.md, \"Row filters by code\"). Built by [`CodeFilter::new`]: both lists\nsorted, each once, without a prefix another kept prefix covers.",
+          "properties": {
+            "codes": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "column": {
+              "type": "string"
+            },
+            "prefixes": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "column",
+            "codes",
+            "prefixes"
+          ],
+          "type": "object"
+        },
         "ColumnRef": {
           "additionalProperties": false,
           "description": "A requested variable this column delivers.",
@@ -4840,7 +4867,7 @@
               "$ref": "#/$defs/Provenance"
             },
             "version": {
-              "description": "Always 5.",
+              "description": "Always 6.",
               "format": "int32",
               "minimum": 0,
               "type": "integer"
@@ -4949,6 +4976,17 @@
           "additionalProperties": false,
           "description": "One output file: one of the holder's tables in one delivery.",
           "properties": {
+            "code_filter": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/CodeFilter",
+                  "description": "Absent: no code filter. A row is kept when it passes both filters."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
             "columns": {
               "description": "Requested columns in request order, then the row keys.",
               "items": {

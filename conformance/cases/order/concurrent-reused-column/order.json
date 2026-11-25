@@ -70,7 +70,7 @@
   "project": {
     "name": "Order case",
     "reg_meta_version": "0.64.0",
-    "schema_version": "8.0.0"
+    "schema_version": "8.1.0"
   },
   "row_keys": []
 }

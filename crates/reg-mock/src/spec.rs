@@ -60,6 +60,10 @@ pub struct SpecFile {
     #[serde(default)]
     pub years: Vec<i32>,
     pub columns: Vec<SpecColumn>,
+    /// The rows the runner keeps by code (crates/DESIGN.md, "Row filters by code"): a
+    /// generated row whose value in the filter's column it does not admit is dropped.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub code_filter: Option<reg_core::manifest::CodeFilter>,
 }
 
 /// What one row describes.

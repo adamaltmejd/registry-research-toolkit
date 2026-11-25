@@ -1,0 +1,52 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "filter_multiple",
+      "path": "/sources/0/bindings/1/filter",
+      "message": "a source filters rows by one variable only; /sources/0/bindings/0 already has a filter"
+    },
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/sources/1/bindings/0/filter/ranges",
+      "message": "unexpected key 'ranges' on binding 'filter'"
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/1/bindings/0/filter/codes/1",
+      "message": "a filter entry must be a non-blank string of at most 64 printable ASCII characters"
+    },
+    {
+      "level": "error",
+      "code": "filter_duplicate",
+      "path": "/sources/1/bindings/0/filter/codes/2",
+      "message": "filter entry 'N06A' duplicates /sources/1/bindings/0/filter/codes/0"
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/1/bindings/0/filter/prefixes/0",
+      "message": "a filter entry must be a non-blank string of at most 64 printable ASCII characters"
+    },
+    {
+      "level": "error",
+      "code": "filter_empty",
+      "path": "/sources/2/bindings/0/filter",
+      "message": "binding 'filter' needs at least one code or prefix"
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/3/bindings/0/filter",
+      "message": "binding 'filter' must be an object {'codes': [...], 'prefixes': [...]}"
+    },
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/sources/4/bindings/0/filter",
+      "message": "unexpected key 'filter' on manual binding"
+    }
+  ]
+}

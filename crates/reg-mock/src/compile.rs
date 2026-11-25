@@ -414,7 +414,7 @@ pub fn compile(project: &Value, rules: &Rules, answers: &Answers) -> Result<Spec
     };
     let mut built = built;
     ctx.manual_files(&mut built, &mut refusals);
-    let mut files = apply_rules(built, rules, &mut refusals);
+    let mut files = apply_rules(built, rules, format, &mut refusals);
     // Each rename applies once, to a compiled name; check_files then refuses a final
     // name two files share.
     for from in rules.rename.keys() {
@@ -581,6 +581,7 @@ impl Context<'_> {
         for ((table, year, release), columns) in files {
             let name = standard_file_name(table, year, release);
             let mut built = Built::new(name, year.into_iter().collect());
+            built.file.code_filter = self.code_filter(&built.file.name, &columns, refusals);
             for (name, refs) in columns {
                 if let Some(column) =
                     self.resolve(&built.file.name, name, &refs, None, false, refusals)
@@ -599,6 +600,7 @@ impl Context<'_> {
         let mut files = Vec::new();
         for file in &manifest.files {
             let mut built = Built::new(file.name.clone(), Vec::new());
+            built.file.code_filter.clone_from(&file.code_filter);
             // simplify: the runner extracts a file without a row filter over its whole
             // delivery; the mock holds only the requested years, upgrade if a pipeline
             // reads years it did not order.
@@ -703,6 +705,91 @@ impl Context<'_> {
             files.push(built);
         }
         files
+    }
+
+    /// A standard file's code filter: the union of its sources' filters, as the order
+    /// file takes it (`manifest::CodeFilter::union`), each on the one column placing the
+    /// filtered binding here. Refused as the materializer refuses it
+    /// (`filter_column_missing`, `filter_column_split`, `filter_column_mixed`).
+    fn code_filter(
+        &self,
+        file: &str,
+        columns: &[NamedRefs<'_>],
+        refusals: &mut Vec<Refusal>,
+    ) -> Option<manifest::CodeFilter> {
+        let sources: BTreeSet<&str> = columns
+            .iter()
+            .flat_map(|(_, refs)| refs)
+            .filter(|r| r.binding.is_some())
+            .map(|r| r.source)
+            .collect();
+        let mut own: Vec<Option<manifest::CodeFilter>> = Vec::new();
+        let mut blocked = false;
+        for source in sources {
+            let Some((b, binding)) = self
+                .project
+                .sources
+                .iter()
+                .find(|s| s.name() == source)
+                .and_then(Source::catalog)
+                .and_then(|s| s.catalog_bindings().find(|(_, c)| c.filter.is_some()))
+            else {
+                own.push(None);
+                continue;
+            };
+            let placing: Vec<&NamedRefs<'_>> = columns
+                .iter()
+                .filter(|(_, refs)| {
+                    refs.iter()
+                        .any(|r| r.source == source && r.binding == Some(b))
+                })
+                .collect();
+            let (code, message) = match placing.as_slice() {
+                [(name, refs)]
+                    if refs.iter().all(|r| {
+                        r.binding.is_none()
+                            || refs.iter().any(|p| {
+                                p.source == source
+                                    && p.binding == Some(b)
+                                    && p.variable == r.variable
+                            })
+                    }) =>
+                {
+                    let f = binding.filter.as_ref().expect("a filtered binding");
+                    own.push(Some(manifest::CodeFilter::new(
+                        name,
+                        f.codes.iter().map(String::as_str),
+                        f.prefixes.iter().map(String::as_str),
+                    )));
+                    continue;
+                }
+                [_] => (
+                    "filter_column_mixed",
+                    "the filtered variable's column holds another variable in some rows of \
+                     this file: remove the filter or order the other variable separately",
+                ),
+                [] => (
+                    "filter_column_missing",
+                    "this file does not hold the filtered variable: narrow the period to \
+                     the years that hold it",
+                ),
+                _ => (
+                    "filter_column_split",
+                    "this file holds the filtered variable in more than one column: narrow \
+                     the period to the years one column covers",
+                ),
+            };
+            refusals.push(Refusal::new(
+                code,
+                format!("{file}: /sources/{source}/bindings/{b}/filter"),
+                message,
+            ));
+            blocked = true;
+        }
+        if blocked {
+            return None;
+        }
+        manifest::CodeFilter::union(own.iter().map(Option::as_ref))
     }
 
     /// The years a held placement holds, from its segment rows; empty when the saved
@@ -1175,6 +1262,7 @@ impl Built {
                 rows_per_unit: 1.0,
                 years,
                 columns: Vec::new(),
+                code_filter: None,
             },
             column_sources: Vec::new(),
             manual: Vec::new(),
@@ -1207,7 +1295,12 @@ impl Built {
 /// agree when a file delivers several sources; each column its own source's column
 /// rules. A column rule that matches no column is refused: a misspelt name would
 /// otherwise silently do nothing.
-fn apply_rules(built: Vec<Built>, rules: &Rules, refusals: &mut Vec<Refusal>) -> Vec<SpecFile> {
+fn apply_rules(
+    built: Vec<Built>,
+    rules: &Rules,
+    format: ExtractFormat,
+    refusals: &mut Vec<Refusal>,
+) -> Vec<SpecFile> {
     let mut used = BTreeSet::new();
     let mut files = Vec::new();
     for Built {
@@ -1263,6 +1356,11 @@ fn apply_rules(built: Vec<Built>, rules: &Rules, refusals: &mut Vec<Refusal>) ->
                 column.codes.clone_from(codes);
             }
         }
+        if let Some(filter) = &file.code_filter
+            && let Some(column) = file.columns.iter_mut().find(|c| c.name == filter.column)
+        {
+            admit(column, filter, format);
+        }
         files.push(file);
     }
     for (source, source_rules) in &rules.sources {
@@ -1288,7 +1386,8 @@ pub fn check_spec(spec: &Spec) -> Vec<Refusal> {
 }
 
 /// File names the runner would accept, unique ignoring case; rates in `[0, 1]`, rows
-/// per unit above 0, an age range not reversed, a value map only on an attribute.
+/// per unit above 0, an age range not reversed, a value map only on an attribute, a
+/// code filter on a column of its file.
 fn check_files(files: &[SpecFile], null_rate: f64, refusals: &mut Vec<Refusal>) {
     let rate_ok = |rate: f64| (0.0..=1.0).contains(&rate);
     if !rate_ok(null_rate) {
@@ -1327,6 +1426,21 @@ fn check_files(files: &[SpecFile], null_rate: f64, refusals: &mut Vec<Refusal>) 
                 "age_min is above age_max",
             ));
         }
+        if let Some(filter) = &file.code_filter {
+            check_filter(file, filter, refusals);
+        }
+        if let Some(filter) = &file.code_filter
+            && !file.columns.iter().any(|c| c.name == filter.column)
+        {
+            refusals.push(Refusal::new(
+                "filter_column_missing",
+                file.name.clone(),
+                format!(
+                    "the code filter's column {} is not a column of the file",
+                    filter.column
+                ),
+            ));
+        }
         for column in &file.columns {
             if column.attribute.is_none() && !column.map.is_empty() {
                 refusals.push(Refusal::new(
@@ -1343,6 +1457,74 @@ fn check_files(files: &[SpecFile], null_rate: f64, refusals: &mut Vec<Refusal>) 
                 ));
             }
         }
+    }
+}
+
+/// A spec's code filter has the shape the project validator requires of a binding's:
+/// at least one entry, each well formed ([`manifest::CodeFilter::entry_ok`]).
+fn check_filter(file: &SpecFile, filter: &manifest::CodeFilter, refusals: &mut Vec<Refusal>) {
+    if filter.codes.is_empty() && filter.prefixes.is_empty() {
+        refusals.push(Refusal::new(
+            "filter_empty",
+            file.name.clone(),
+            "the code filter needs at least one code or prefix",
+        ));
+    }
+    if let Some(entry) = filter
+        .codes
+        .iter()
+        .chain(&filter.prefixes)
+        .find(|e| !manifest::CodeFilter::entry_ok(e))
+    {
+        refusals.push(Refusal::new(
+            "filter_entry_invalid",
+            file.name.clone(),
+            format!(
+                "the code filter entry {entry:?} is not a non-blank string of at most \
+                 {} printable ASCII characters",
+                manifest::CODE_ENTRY_MAX
+            ),
+        ));
+    }
+}
+
+/// A column under a code filter draws only codes the filter keeps, and is never
+/// missing, so that few generated rows fail the filter (the generator drops those). A
+/// documented list with no kept code stays as it is: none of its rows survive, as none
+/// of the runner's would. Without a list (no value set), it draws the filter's codes and
+/// prefixes as written that its storage holds (none of `999` in a `tinyint`), and with
+/// none left draws as without a filter, every row then dropped. simplify: a prefix is drawn as itself, not completed to a
+/// longer code; complete it from the classification if a pipeline checks code lengths.
+fn admit(column: &mut SpecColumn, filter: &manifest::CodeFilter, format: ExtractFormat) {
+    if column.codes.is_empty() {
+        column.codes = filter
+            .codes
+            .iter()
+            .chain(&filter.prefixes)
+            .filter(|code| crate::generate::holds(column, format, code))
+            .map(|code| Code {
+                code: code.clone(),
+                label: None,
+                sentinel: false,
+            })
+            .collect();
+    } else {
+        let integer = integer_filtered(column);
+        if column.codes.iter().any(|c| filter.admits(&c.code, integer)) {
+            column.codes.retain(|c| filter.admits(&c.code, integer));
+        }
+    }
+    column.null_rate = Some(0.0);
+}
+
+/// Whether a code filter on `column` compares numbers: on integer held storage, or
+/// without one on an integer type. simplify: a project's type override hides the held
+/// storage, so a text variable overridden to integer compares as numbers; carry the
+/// held family into the spec if such a filter ever matters.
+pub(crate) fn integer_filtered(column: &SpecColumn) -> bool {
+    match column.storage.as_ref().and_then(|s| s.dtype.as_deref()) {
+        Some(sql) => manifest::CodeFilter::storage(sql) == Some(StorageFamily::Integer),
+        None => column.dtype == ColumnType::Integer,
     }
 }
 

@@ -1,0 +1,29 @@
+{
+  "note": "Fails if a code filter on a column that holds another variable in rows the runner reads is passed on because the project does not request that variable: Shared holds first in 2017 and second in 2019, the table has no period column, so the file reads 2019 too; it blocks as filter_column_mixed.",
+  "project": {
+    "schema_version": "8.1.0",
+    "reg_meta_version": "0.71.0",
+    "catalog": "fixture",
+    "name": "Mixed",
+    "extract_format": "parquet",
+    "sources": [
+      {
+        "name": "a",
+        "table": "demo/owners",
+        "period": [
+          2017
+        ],
+        "bindings": [
+          {
+            "variable": "demo/owners/first",
+            "filter": {
+              "codes": [
+                "1"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

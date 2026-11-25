@@ -358,6 +358,16 @@ export interface components {
          * @enum {string}
          */
         Change: "added" | "removed" | "relabelled";
+        /**
+         * @description Keep a row whose `column` equals one of `codes` or starts with one of `prefixes`
+         *     (crates/DESIGN.md, "Row filters by code"). Built by [`CodeFilter::new`]: both lists
+         *     sorted, each once, without a prefix another kept prefix covers.
+         */
+        CodeFilter: {
+            codes: string[];
+            column: string;
+            prefixes: string[];
+        };
         /** @description A requested variable this column delivers. */
         ColumnRef: {
             /** @description The variable's position in the source; null for a row key nobody requested. */
@@ -605,7 +615,7 @@ export interface components {
             provenance: components["schemas"]["Provenance"];
             /**
              * Format: int32
-             * @description Always 5.
+             * @description Always 6.
              */
             version: number;
         };
@@ -635,6 +645,7 @@ export interface components {
         };
         /** @description One output file: one of the holder's tables in one delivery. */
         ManifestFile: {
+            code_filter?: components["schemas"]["CodeFilter"] | null;
             /** @description Requested columns in request order, then the row keys. */
             columns: components["schemas"]["ManifestColumn"][];
             /** @description The authored delivery period; null for a timeless table. */
@@ -847,6 +858,11 @@ export interface components {
             classification?: string | null;
             display_name?: string | null;
             /**
+             * @description Keep only rows whose value is one of these codes (crates/DESIGN.md, "Row filters
+             *     by code"); at most one binding of a source has one.
+             */
+            filter?: components["schemas"]["ProjectCodeFilter"];
+            /**
              * @description Follow the variable's continues successors after it ends; absent means false.
              * @default false
              */
@@ -877,6 +893,14 @@ export interface components {
              *     else `<provider>/<register>/<table>`.
              */
             table: string;
+        };
+        /**
+         * @description A binding's code filter: a row is kept when its value equals one of `codes` or
+         *     starts with one of `prefixes`. At least one entry; every entry printable ASCII.
+         */
+        ProjectCodeFilter: {
+            codes?: string[];
+            prefixes?: string[];
         };
         /** @enum {string} */
         ProjectColumnType: "integer" | "decimal" | "text" | "date" | "datetime" | "boolean" | "geometry" | "uuid" | "binary" | "identifier";
