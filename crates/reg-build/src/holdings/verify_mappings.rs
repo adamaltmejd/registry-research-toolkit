@@ -23,7 +23,7 @@ pub(super) struct Attributes {
 
 pub(super) struct Claim {
     pub(super) attributes: Attributes,
-    spans: Vec<Span>,
+    pub(super) spans: Vec<Span>,
     pub(super) ambiguous: bool,
     /// The segment's catalog identifier flag; `None` when it states none.
     pub(super) identifier: Option<bool>,

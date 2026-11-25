@@ -5,15 +5,17 @@
 //! declared mapping, and the release rule), not a second selection.
 use std::collections::BTreeSet;
 
+use reg_core::days;
+
 use super::verify_mappings::{Claim, Mappings};
 use crate::error::Result;
 
 /// Refuse a marked column mapped to a variable whose identifier flag is false in a
 /// segment its table is served; collect `(entry, variable)` for a flag that is unknown.
-/// `claims` count only where the mapping was actually placed: not blocked ambiguous
-/// ones, and only a (table, variable) in `mapped`. A marked column with no mapping, and
-/// an identifier column without the mark, pass. Names the `[[lopnr]]` entry by position
-/// and the variable by public id, never a physical name.
+/// `claims` count only on the days the mapping was accepted: not blocked ambiguous ones,
+/// and only where a `mapped` interval of their (table, variable) overlaps their spans. A
+/// marked column with no mapping, and an identifier column without the mark, pass. Names the
+/// `[[lopnr]]` entry by position and the variable by public id, never a physical name.
 pub(super) fn check(
     n: usize,
     claims: &[Claim],
@@ -22,9 +24,11 @@ pub(super) fn check(
 ) -> Result<()> {
     for claim in claims.iter().filter(|c| {
         !c.ambiguous
-            && mapped
-                .keys()
-                .any(|a| a.table == c.attributes.table && a.variable == c.attributes.variable)
+            && mapped.iter().any(|(a, spans)| {
+                a.table == c.attributes.table
+                    && a.variable == c.attributes.variable
+                    && !days::overlap(&c.spans, spans).is_empty()
+            })
     }) {
         let variable = &claim.attributes.variable;
         match claim.identifier {
