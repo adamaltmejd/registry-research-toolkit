@@ -10,9 +10,8 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 # storage-specific shapes that decide whether extract.R can write an SCB
 # lopnummer as int64. It writes key_check.csv: names, SQL types and counts only,
 # every count perturbed by the cell key method with the toolkit's p-table
-# (cell_key.R). No value leaves the database, not even a min or max: only
-# lengths, and only over at least 5 values. The console, which stays on MONA,
-# judges the keys on the true counts.
+# (cell_key.R). No value leaves the database. The console, which stays on MONA,
+# holds the int64 conversion check on the true counts and each column's lengths.
 #
 # Run: source("key_check.R") in R on MONA, `Rscript key_check.R`, or
 # `R CMD BATCH key_check.R`, beside the steward's extract-config.json (its
@@ -61,9 +60,6 @@ SALT_FILE <- "key_check.salt"
 # ---- Constants ----------------------------------------------------------------------
 
 EXIT <- c(ok = 0L, setup = 2L, failed = 8L)
-
-# A length is left out when fewer values than this support it (publish_rows).
-LENGTH_SUPPORT <- 5L
 
 INTEGER_TYPES <- c("bit", "tinyint", "smallint", "int", "bigint")
 EXACT_TYPES <- c("decimal", "numeric", "money", "smallmoney")
@@ -416,30 +412,31 @@ table_batch <- function(schema, table, columns, types) {
 # ASCII case folded, as SQL Server and the holdings reader's [[lopnr]] match.
 ascii_lower <- function(x) chartr(paste(LETTERS, collapse = ""), paste(letters, collapse = ""), x)
 
-# "scb_key", "other_key" or NA per column of a table, the SCB keys matched as
-# the holdings reader's [[lopnr]] entries match (crates/reg-readers/src/
-# holdings.rs, Lopnr::marks): a name prefix, an exact name, or one column of
-# one table (in every schema).
-key_group <- function(tables, names) {
-  low <- ascii_lower(names)
-  table_low <- ascii_lower(tables)
-  scb <- low %in% ascii_lower(SCB_KEY_NAMES) |
-    Reduce(`|`, lapply(ascii_lower(SCB_KEY_PREFIXES), startsWith, x = low), FALSE) |
-    Reduce(
-      `|`,
-      lapply(SCB_KEY_COLUMNS, function(tc) {
-        table_low == ascii_lower(tc[["table"]]) & low == ascii_lower(tc[["column"]])
-      }),
-      FALSE
+# The SCB key selectors, matched as the holdings reader's [[lopnr]] entries
+# match (crates/reg-readers/src/holdings.rs, Lopnr::marks): a name prefix, an
+# exact name, or one column of one table (in every schema). A label per
+# selector and a function of (tables, names) marking the columns it selects.
+scb_selectors <- function() {
+  named <- lapply(SCB_KEY_NAMES, function(n) {
+    list(label = paste0("name ", n), marks = function(t, c) ascii_lower(c) == ascii_lower(n))
+  })
+  prefixed <- lapply(SCB_KEY_PREFIXES, function(p) {
+    list(label = paste0("prefix ", p), marks = function(t, c) startsWith(ascii_lower(c), ascii_lower(p)))
+  })
+  columns <- lapply(SCB_KEY_COLUMNS, function(tc) {
+    list(
+      label = paste0("table ", tc[["table"]], " column ", tc[["column"]]),
+      marks = function(t, c) {
+        ascii_lower(t) == ascii_lower(tc[["table"]]) & ascii_lower(c) == ascii_lower(tc[["column"]])
+      }
     )
-  other <- Reduce(
-    `|`,
-    lapply(OTHER_KEY_PATTERNS, grepl, x = names, ignore.case = TRUE, perl = TRUE),
-    FALSE
-  )
-  ifelse(scb, "scb_key", ifelse(other, "other_key", NA_character_))
+  })
+  c(named, prefixed, columns)
 }
 
+# Every base-table column with its group ("scb_key", "other_key" or NA) and
+# the labels of the SCB selectors that matched no column at all, judged before
+# the optional scan filters, as the holdings reader refuses an unused [[lopnr]].
 list_columns <- function(con) {
   cols <- DBI::dbGetQuery(
     con,
@@ -453,7 +450,16 @@ list_columns <- function(con) {
     )
   )
   cols$data_type <- tolower(cols$data_type)
-  cols$group <- key_group(cols$table_name, cols$column_name)
+  selectors <- scb_selectors()
+  hits <- lapply(selectors, function(s) s$marks(cols$table_name, cols$column_name))
+  scb <- Reduce(`|`, hits, rep(FALSE, nrow(cols)))
+  other <- Reduce(
+    `|`,
+    lapply(OTHER_KEY_PATTERNS, grepl, x = cols$column_name, ignore.case = TRUE, perl = TRUE),
+    rep(FALSE, nrow(cols))
+  )
+  cols$group <- ifelse(scb, "scb_key", ifelse(other, "other_key", NA_character_))
+  unused <- vapply(selectors, `[[`, "", "label")[!vapply(hits, any, TRUE)]
   keep <- !is.na(cols$group)
   if (length(SCHEMAS)) {
     keep <- keep & cols$table_schema %in% SCHEMAS
@@ -462,24 +468,18 @@ list_columns <- function(con) {
     keep <- keep & grepl(TABLE_PATTERN, cols$table_name, perl = TRUE)
   }
   cols <- cols[keep, ]
-  cols[
-    order(cols$table_schema, cols$table_name, cols$position, method = "radix"),
-  ]
+  list(
+    cols = cols[order(cols$table_schema, cols$table_name, cols$position, method = "radix"), ],
+    unused = unused
+  )
 }
 
 # ---- Output ---------------------------------------------------------------------------
 
-FIELDS <- c(
-  "schema",
-  "table",
-  "column",
-  "group",
-  "sql_type",
-  "status",
-  COUNTS,
-  "min_length",
-  "max_length"
-)
+# The CSV's fields: counts only. Lengths go to the console: a blank length
+# would say how many values support it, and beside a published rows count that
+# can pin a small true count.
+FIELDS <- c("schema", "table", "column", "group", "sql_type", "status", COUNTS)
 
 # ---- Disclosure -----------------------------------------------------------------------
 
@@ -487,7 +487,7 @@ FIELDS <- c(
 # (from openssl's generator, never R's, so no seed reproduces it), written
 # owner-only and read back; afterwards read, and refused if malformed rather
 # than replaced, since a new salt gives every count new noise. Returns the salt
-# or a message; never prints it.
+# or a message, which main() prints on the setup path; never prints the salt.
 # simplify: no lock; one coordinator runs one batch job at a time, so two runs
 # never race to make the salt. Add a lock if runs are ever scheduled in parallel.
 read_salt <- function(path) {
@@ -496,8 +496,15 @@ read_salt <- function(path) {
     old_umask <- Sys.umask("077")
     on.exit(Sys.umask(old_umask), add = TRUE)
     tmp <- tempfile("salt_", tmpdir = dirname(path))
-    writeLines(paste(as.character(openssl::rand_bytes(32L)), collapse = ""), tmp)
-    if (!valid(readLines(tmp, warn = FALSE)) || !file.rename(tmp, path)) {
+    made <- tryCatch(
+      {
+        writeLines(paste(as.character(openssl::rand_bytes(32L)), collapse = ""), tmp)
+        valid(readLines(tmp, warn = FALSE)) && file.rename(tmp, path)
+      },
+      error = function(e) FALSE,
+      warning = function(w) FALSE
+    )
+    if (!made) {
       unlink(tmp)
       return(paste0("could not write the salt file ", path))
     }
@@ -514,29 +521,15 @@ read_salt <- function(path) {
 }
 
 # The cell-key method (reg_export_gate/DESIGN.md; cell_key.R) with a cell key
-# per published count: HMAC-SHA256 under the salt of its scope and true count,
-# its first 28 bits read mod 2^26, the resolution of cell_key.R's record keys.
-# The scope is the column (schema, table, "column:" and its name), or for the
-# table's rows count the table (schema, table, "rows"); not the measure. So
-# equal counts in one column share their noise: two measures counting the same
-# rows (one non-numeric marker is both not_bigint and not_digits) publish one
-# value, not two draws to average, as record keys would give identical rows
-# identical noise. The same scope and count give the same key on every run, so
-# reruns cannot be averaged; a count one higher gives an unrelated key, so
-# counts cannot be differenced. Each part is prefixed by its byte length, so no
-# two scopes share a message. `column` NA is the table's rows.
-cell_keys <- function(salt, schema, table, column, n, modulus) {
-  part <- function(x) {
-    x <- enc2utf8(as.character(x))
-    paste0(nchar(x, "bytes"), ":", x)
-  }
-  message <- paste(
-    part(schema), part(table),
-    part(ifelse(is.na(column), "rows", paste0("column:", column))),
-    part(format(n, scientific = FALSE, trim = TRUE)),
-    sep = "|"
-  )
-  hmac <- as.character(openssl::sha256(message, key = salt))
+# per published count: HMAC-SHA256 under the salt of the true count alone, its
+# first 28 bits read mod 2^26, the resolution of cell_key.R's record keys. With
+# no record keys, keying on the count alone is the only choice that rules out
+# averaging: every cell with the same true count, in any column, table or run,
+# gets the same noise, so no set of published counts carries independent draws
+# of one count. A count one higher gets an unrelated key, so counts cannot be
+# differenced.
+cell_keys <- function(salt, n, modulus) {
+  hmac <- as.character(openssl::sha256(format(n, scientific = FALSE, trim = TRUE), key = salt))
   (strtoi(substr(hmac, 1L, 7L), 16L) %% modulus) / modulus
 }
 
@@ -544,25 +537,15 @@ cell_keys <- function(salt, schema, table, column, n, modulus) {
 # (`disclosure`: salt, the sourced cell_key.R environment and its checked
 # p-table). A true 0 publishes 0 (the p-table's row 0), but so can a true 1 to
 # 5; no count from 1 to 4 is published. NA (does not apply) stays NA.
-perturb <- function(counts, cols, disclosure) {
-  out <- counts
-  at <- which(!is.na(counts), arr.ind = TRUE)
-  if (!nrow(at)) {
-    return(out)
-  }
-  field <- colnames(counts)[at[, 2]]
-  j <- at[, 1]
+perturb <- function(counts, disclosure) {
+  at <- !is.na(counts)
   n <- counts[at]
-  keys <- cell_keys(
-    disclosure$salt,
-    cols$table_schema[j],
-    cols$table_name[j],
-    ifelse(field == "rows", NA_character_, cols$column_name[j]),
+  counts[at] <- n + disclosure$ck$ck_lookup(
     n,
-    disclosure$ck$CK_MODULUS
+    cell_keys(disclosure$salt, n, disclosure$ck$CK_MODULUS),
+    disclosure$pt
   )
-  out[at] <- n + disclosure$ck$ck_lookup(n, keys, disclosure$pt)
-  out
+  counts
 }
 
 # Loads cell_key.R and makes or reads the salt: a list for perturb(), or a
@@ -623,16 +606,17 @@ csv_header <- function(database, version) {
     paste0(
       "# Aggregates only, no value. Every count is perturbed by the cell key method",
       " (cell_key.R ", version, "): a published 0 can stand for a true 0 to 5, and 1 to 4",
-      " are never published; a length is empty unless at least 5 values support it.",
-      " Whether each key column converts is on the run's console only, never here."
+      " are never published. A published 0 does not establish that every key converts;",
+      " a positive count shows at least one failure. The int64 conversion check and the",
+      " lengths are on the run's console only, never here."
     ),
     "# Read: reg_mona_runner/README.md, \"Key check\". Skip lines starting with #.",
     paste(FIELDS, collapse = ",")
   )
 }
 
-# One table's true counts and lengths, a matrix by column and CSV field, from
-# the SELECT's result.
+# One table's true counts and lengths, a matrix by column and field, from the
+# SELECT's result.
 table_counts <- function(cols, result, slots) {
   values <- matrix(
     NA_real_,
@@ -647,10 +631,8 @@ table_counts <- function(cols, result, slots) {
   values
 }
 
-# One table's CSV rows: the counts perturbed, and a length only when the values
-# it is over, counted exactly, number at least LENGTH_SUPPORT (a number's
-# length is over the values that convert to bigint, a text's over every
-# non-null value). A failed table (no values) has its status and no counts.
+# One table's CSV rows: the counts perturbed. A failed table (no values) has
+# its status and no counts.
 publish_rows <- function(cols, status, values = NULL, disclosure = NULL) {
   rows <- data.frame(
     schema = cols$table_schema,
@@ -660,29 +642,17 @@ publish_rows <- function(cols, status, values = NULL, disclosure = NULL) {
     sql_type = cols$data_type,
     status = status
   )
-  if (is.null(values)) {
-    for (field in c(COUNTS, "min_length", "max_length")) rows[[field]] <- ""
-    return(rows)
-  }
-  published <- perturb(values[, COUNTS, drop = FALSE], cols, disclosure)
-  number <- vapply(cols$data_type, type_class, "") %in% c("integer", "exact", "float")
-  unconverted <- ifelse(number, values[, "not_bigint"], 0)
-  lengths <- values[, c("min_length", "max_length"), drop = FALSE]
-  lengths[values[, "rows"] - values[, "nulls"] - unconverted < LENGTH_SUPPORT, ] <- NA
+  published <- if (!is.null(values)) perturb(values[, COUNTS, drop = FALSE], disclosure)
   for (field in COUNTS) {
-    rows[[field]] <- count_text(published[, field])
-  }
-  for (field in colnames(lengths)) {
-    rows[[field]] <- count_text(lengths[, field])
+    rows[[field]] <- if (is.null(published)) "" else count_text(published[, field])
   }
   rows
 }
 
-# The SCB key columns that extract.R would not write as distinct int64 keys,
-# judged on the true counts (console only): storage extract.R refuses, any value
-# that does not convert, or a leading zero (the key's digits change, so two
-# keys may collide).
-needs_check <- function(cols, values) {
+# The SCB key columns that fail the int64 conversion check, on the true counts
+# (console only): storage extract.R refuses, any value that does not convert,
+# or a leading zero (the key's digits change, so two keys may collide).
+conversion_failures <- function(cols, values) {
   shape <- c("not_bigint", "not_whole", "beyond_exact", "leading_zeros", "spaces", "not_digits")
   bad <- rowSums(values[, shape, drop = FALSE] > 0, na.rm = TRUE) > 0 |
     !cols$data_type %in% LOPNR_TYPES
@@ -715,8 +685,7 @@ scan_table <- function(con, cols, disclosure) {
     return(publish_rows(cols, status))
   }
   values <- table_counts(cols, result, batch$slots)
-  rows <- publish_rows(cols, "ok", values, disclosure)
-  check <- needs_check(cols, values)
+  failures <- conversion_failures(cols, values)
   say(
     "  ",
     label,
@@ -729,12 +698,19 @@ scan_table <- function(con, cols, disclosure) {
     if (any(cols$group == "scb_key")) {
       # The exact verdict, on true counts: console only, never in the CSV.
       paste0(
-        "   SCB keys (true counts, console only): ",
-        if (length(check)) paste0("check ", paste(check, collapse = ", ")) else "all convert"
+        "   int64 conversion check (true counts, console only): ",
+        if (length(failures)) paste0("FAILS ", paste(failures, collapse = ", ")) else "all convert"
       )
     }
   )
-  rows
+  # Lengths on true values, console only (see FIELDS).
+  for (j in which(!is.na(values[, "min_length"]))) {
+    say(
+      "    ", cols$column_name[j], "   length ",
+      values[j, "min_length"], " to ", values[j, "max_length"]
+    )
+  }
+  publish_rows(cols, "ok", values, disclosure)
 }
 
 main <- function() {
@@ -770,15 +746,22 @@ main <- function() {
   }
   on.exit(tryCatch(DBI::dbDisconnect(con), error = function(e) NULL))
   setup <- tryCatch(
-    list(
-      cols = list_columns(con),
-      database = DBI::dbGetQuery(con, "SELECT DB_NAME() AS db")$db
+    c(
+      list_columns(con),
+      list(database = DBI::dbGetQuery(con, "SELECT DB_NAME() AS db")$db)
     ),
     error = function(e) e
   )
   if (inherits(setup, "error")) {
     say("cannot list the columns (", sqlstate(setup), ")")
     error_block(conditionMessage(setup))
+    return(EXIT[["setup"]])
+  }
+  if (length(setup$unused)) {
+    for (label in setup$unused) {
+      say("SCB key selector ", label, " matches no column of any base table")
+    }
+    say("correct or remove those selectors (SCB_KEY_NAMES, SCB_KEY_PREFIXES, SCB_KEY_COLUMNS)")
     return(EXIT[["setup"]])
   }
   cols <- setup$cols
@@ -793,6 +776,11 @@ main <- function() {
     " SCB key columns   ",
     sum(cols$group == "other_key"),
     " other key columns"
+  )
+  say(
+    "  the int64 conversion check is what extract.R needs to write a key as int64; a .dta",
+    " order also refuses a key at or above 2^53 (9,007,199,254,740,992), which this check",
+    " does not test"
   )
   append_lines(csv_header(setup$database, disclosure$version), OUTPUT, append = FALSE)
   failed <- 0L

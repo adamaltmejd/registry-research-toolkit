@@ -366,9 +366,9 @@ ck_cells <- function(frame, by) {
 #' count (counts above the table's largest i use that row). For a caller that
 #' makes its own cell keys, such as reg_mona_runner/key_check.R.
 ck_lookup <- function(n_true, cell_key, pt = ck_ptable()) {
-  if (length(n_true) != length(cell_key) || anyNA(n_true) || anyNA(cell_key) ||
+  if (length(n_true) != length(cell_key) || !all(is.finite(n_true)) || anyNA(cell_key) ||
       any(n_true < 0 | n_true != round(n_true)) || any(cell_key < 0 | cell_key >= 1)) {
-    ck_stop("cell_key_bad_lookup", "true counts must be whole and >= 0, cell keys in [0, 1)")
+    ck_stop("cell_key_bad_lookup", "true counts must be finite, whole and >= 0, cell keys in [0, 1)")
   }
   row <- pmin(n_true, max(pt$i))
   v <- integer(length(n_true))

@@ -15,17 +15,16 @@ cell_key_r <- file.path(
   repo_dir, "plugins", "regmeta", "skills", "project-setup", "scripts", "cell_key.R"
 )
 
-test_that("published counts follow the salted cell keys and the p-table, one draw per column and count", {
+test_that("published counts follow the salted count-only cell keys and the p-table", {
   # Expected values computed outside the script: openssl HMAC-SHA256 under the
-  # salt of "3:dbo|1:T|4:rows|1:6", "3:dbo|1:T|8:column:A|1:1" and
-  # "3:dbo|1:T|8:column:A|1:5", first 7 hex digits mod 2^26 over 2^26, gives
-  # keys 0.31595092, 0.75716889 and 0.20261306; in cell_key.R's p-table, row 6
-  # [0, 0.38893783) is v = -1, row 1 [0, 0.81486748) is v = -1, row 5
-  # [0.17591612, 0.51907381) is v = 0. So rows 6 -> 5, nulls 1 -> 0, and both
-  # counts of 5 in column A -> 5; true zeros -> 0.
+  # salt of "6", "1" and "5", first 7 hex digits mod 2^26 over 2^26, gives keys
+  # 0.50576788, 0.90691589 and 0.79734258; in cell_key.R's p-table, row 6
+  # [0.38893783, 0.77787565) is v = 0, row 1 [0.81486748, 0.92566260) is v = 4,
+  # row 5 [0.75578428, 0.89377079) is v = 2. So rows 6 -> 6, nulls 1 -> 5, both
+  # counts of 5 -> 7; true zeros -> 0. No lengths in the CSV.
   # Fails if the key's message, salt use or lookup changes, if a rerun draws
-  # other noise (reruns could be averaged), or if two measures with the same
-  # count in one column draw separately (they could be averaged).
+  # other noise, or if equal counts anywhere draw separately (averaging them
+  # would recover the count).
   ck <- new.env()
   sys.source(cell_key_r, ck)
   salt <- strrep("ab", 32L)
@@ -49,8 +48,8 @@ test_that("published counts follow the salted cell keys and the p-table, one dra
   expect_identical(
     key_check$csv_lines(rows),
     c(
-      "dbo,T,A,scb_key,varchar,ok,5,0,5,,,0,0,5,9,12",
-      "dbo,T,B,scb_key,bigint,ok,5,0,0,,,,,,1,7"
+      "dbo,T,A,scb_key,varchar,ok,6,5,7,,,0,0,7",
+      "dbo,T,B,scb_key,bigint,ok,6,0,0,,,,,"
     )
   )
   expect_identical(rows, key_check$publish_rows(cols, "ok", values, disclosure))

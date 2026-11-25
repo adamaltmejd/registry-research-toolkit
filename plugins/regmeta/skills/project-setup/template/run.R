@@ -15,7 +15,7 @@ PINS <- c(
   "export_gate.R" = "51d6f810ef0c93faccb69f748382b6cdce93243af838788f9165e094a103869a",
   "aggregates.schema.json" = "8160f4cb2250b5d22e609bf0a58935a221bd61ec407dd0403e2ccdd0537f1f93",
   "aggregates.policy.json" = "e3c0835c7963efa39f035216087c08b7558ab5f3887c3ae7bbae2ed0f0098f5c",
-  "cell_key.R" = "4205912d53233e686f7046a03c8bc2f13aced4409bed8484c2b8d5f3e52e29a4"
+  "cell_key.R" = "900278e12375c2c121379867c94ae20c0e9026ac1c73c42b8aae60ba614d3f35"
 )
 # Every package the run loads. Locally the same names are in rproject.toml (rv).
 PACKAGES <- c("targets", "arrow", "jsonlite", "openssl")
