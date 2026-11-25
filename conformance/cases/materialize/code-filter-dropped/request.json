@@ -1,0 +1,33 @@
+{
+  "note": "Fails if a file shared by a source filtering by code and a source that does not filter keeps a code_filter (the unfiltered source's rows would be lost) or drops it silently: the file has no code_filter and the filtering source gets code_filter_dropped.",
+  "project": {
+    "schema_version": "8.1.0",
+    "extract_format": "parquet",
+    "reg_meta_version": "0.92.6",
+    "catalog": "fixture",
+    "name": "Code filter dropped",
+    "sources": [
+      {
+        "name": "a",
+        "table": "demo/held",
+        "period": 2017,
+        "bindings": [
+          {
+            "variable": "demo/held/value",
+            "filter": {"codes": ["1"]}
+          }
+        ]
+      },
+      {
+        "name": "b",
+        "table": "demo/held",
+        "period": 2020,
+        "bindings": [
+          {
+            "variable": "demo/held/late"
+          }
+        ]
+      }
+    ]
+  }
+}

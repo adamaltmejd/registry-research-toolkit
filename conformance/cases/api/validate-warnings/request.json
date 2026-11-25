@@ -7,7 +7,7 @@
       "method": "POST",
       "path": "/api/project/validate",
       "body": {
-        "schema_version": "8.0.0",
+        "schema_version": "8.1.0",
         "extract_format": "parquet",
         "reg_meta_version": "0.64.0",
         "catalog": "global",
@@ -66,7 +66,7 @@
       "method": "POST",
       "path": "/api/project/validate",
       "query": {"verbose": "true"},
-      "body": {"schema_version": "8.0.0", "reg_meta_version": "0.64.0", "catalog": "global", "name": "Order case", "extract_format": "parquet", "sources": []}
+      "body": {"schema_version": "8.1.0", "reg_meta_version": "0.64.0", "catalog": "global", "name": "Order case", "extract_format": "parquet", "sources": []}
     }
   ]
 }

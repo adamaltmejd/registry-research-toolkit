@@ -238,8 +238,8 @@ one is, so a column may hold a code its own value set lacks; with no codes at al
 the county seat (`<county>80`). A value set of sentinels only is drawn as such, text is
 no wider than its held storage, and decimals keep every digit. Values are missing at the
 column's rate (the spec's 2% by default), as a sentinel code where the value set has
-one; keys and the year never are. Proposed (#2604; [../DESIGN.md](../DESIGN.md), "Row
-filters by code"): a column under a code filter draws only the codes the filter admits
+one; keys and the year never are. Under a code filter (#2604; [../DESIGN.md](../DESIGN.md),
+"Row filters by code"), a column under a code filter draws only the codes the filter admits
 and is never missing. A timeless file is drawn in the window's last year, and a
 spec with only timeless files in 2024.
 

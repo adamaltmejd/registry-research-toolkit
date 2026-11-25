@@ -1330,7 +1330,7 @@ with `--catalog <steward>` ("Holdings").
 
 ## The logical order
 
-`order` runs the order check of design v4 §9 on an 8.0.0 project and returns the logical
+`order` runs the order check of design v4 §9 on an 8.1.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
 implementation in `reg-catalog`, which is what makes their results identical, except
@@ -1486,7 +1486,7 @@ and `sun2000niva`.
 {
   "data": {
     "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
-    "project": {"name": "income-panel", "schema_version": "8.0.0",
+    "project": {"name": "income-panel", "schema_version": "8.1.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
@@ -1539,7 +1539,7 @@ and `sun2000niva`.
        "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
     ]
   },
-  "meta": {"api_version": "7.1.0", "project_schema_version": "8.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"api_version": "7.1.0", "project_schema_version": "8.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1569,7 +1569,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
       ]
     }
   },
-  "meta": {"api_version": "7.1.0", "project_schema_version": "8.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"api_version": "7.1.0", "project_schema_version": "8.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -2568,7 +2568,7 @@ holdings pair come from startup configuration, with no request owner override. T
 order file is written in the project's `extract_format` (`dta`, `parquet` or `csv`),
 required from project schema 8.0.0 ("Project document 8.0.0"), so materialization
 resolves no default. `project.rs::SCHEMA_VERSION` admits
-8.0.0 exactly; every other version is `unsupported_schema_version`. Older projects are
+8.1.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
 compatibility"; ARCHITECTURE.md, "Project schema version"). A project that states no
 format is refused with `missing_required_field` at `/extract_format`. The manifest
@@ -2840,8 +2840,8 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 
 ### Row filters by code
 
-**Status: design for #2604 (overnight 2026-11-24; "ruling N" is the Operator's numbered ruling, under the
-maintainer's delegation), awaiting the maintainer's review. Nothing below is built yet.**
+#2604 (overnight 2026-11-24; "ruling N" is the Operator's numbered ruling, under the
+maintainer's delegation), awaiting the maintainer's review.
 
 An order selects rows by period only. The long-COVID extract (2026-11-24) delivered
 prescriptions (LMED) 2015–2026 as one file of about 1.5 billion rows, most of 33 GB,
@@ -2905,13 +2905,15 @@ can hold.
 dropped (`N06A` goes when `N06` is kept). A row passes the file when it passes
 `row_filter` (if any) and `code_filter` (if any).
 
-Materialization (ruling 3), each located at the filtered binding:
+Materialization (ruling 3). Blocking findings are located at the filtered binding's
+`filter`; `code_filter_union`, `code_filter_dropped` and `filter_too_large` at the
+source, as `row_filter_union`:
 
-- Sources sharing a file: when every source with a reference in the file filters the
+- Sources sharing a file: when every source with an ordered column in the file filters the
   same physical column, the file's `code_filter` is the union of their entries; each
   source whose own entries are narrower gets the info `code_filter_union` ("This table
-  shares its file with another table of the project, so its rows are kept for the
-  codes ..."), as `row_filter_union`. When any of them does not filter, or they filter
+  shares its file with another table of the project, so the file keeps rows with
+  the codes ..."), as `row_filter_union`. When any of them does not filter, or they filter
   different columns, the file has no `code_filter` and each filtering source gets the
   info `code_filter_dropped` naming the reason. The file then keeps the union of the
   period ranges and the union of the code lists independently, a superset of each
@@ -2920,7 +2922,8 @@ Materialization (ruling 3), each located at the filtered binding:
   without the column, a projection) cannot be filtered: blocking `filter_column_missing`.
   So is a file where the variable is placed in two physical columns over the file's days
   (`filter_column_split`). Both are rare; narrowing the period is the remedy and the
-  message says so.
+  message says so. A source with only row keys in a file neither filters nor widens it
+  (a `simplify:` in `code_filter`).
 - The held storage decides how the runner compares: a text family takes codes and
   prefixes, an integer family exact integer codes only. A prefix or a non-integer code
   against integer storage, or any filter against real or date storage, blocks
@@ -2931,8 +2934,9 @@ Materialization (ruling 3), each located at the filtered binding:
   a temporary table; move to a table-valued load if a real order needs more codes.
 
 **Runner** ([runner design](../reg_mona_runner/DESIGN.md), "SQL", ruling 4). The terms
-are bound parameters, never SQL text: an exact code is `col = @pN` (as `nvarchar` for
-text storage, `bigint` for integer storage), a prefix `col LIKE @pN` with the bound
+are bound parameters, never SQL text: an exact code is `col = @pN` (bound as text, in a
+parameter of the column's own kind: `varchar` or `nvarchar`, or `bigint`, which SQL
+Server converts exactly), a prefix `col LIKE @pN` with the bound
 value the prefix with `[`, `%` and `_` escaped as `[[]`, `[%]`, `[_]`, plus `%`. The
 comparison runs under the column's own collation, so the filter can use an index on the
 column; codes are matched as SQL Server compares them there (MONA's default collation
@@ -2967,8 +2971,9 @@ one filtered variable per source, ranges and negation.
 - The manifest version takes the step after #2656's (v5, the `lopnr` mark) for
   `code_filter`: 6; `extract.R` and `reg-mock` refuse every other.
 - `HOLDINGS_SCHEMA_VERSION` and `CATALOG_SCHEMA_VERSION` unchanged.
-- New codes are registered in `conformance/api/errors.toml`; the generated OpenAPI and
-  SPA types follow from `bash scripts/gate.sh regen`.
+- The new codes are findings, not error codes, so `errors.toml` is unchanged; the SPA
+  titles them (`validation.ts`). The generated OpenAPI and project schema follow from
+  `bash scripts/gate.sh regen`.
 - The `project-data` skill learns `filter` (with the `values` tool to find codes); the
   plugin version is bumped.
 - Tests (AGENTS.md, Testing policy): one materialize conformance case at the hardest
@@ -3086,7 +3091,7 @@ has no tables, so the mismatch is shown.
 
 `schema_version` `8.1.0` adds the optional catalog-binding field `filter`
 (`{codes, prefixes}`), the codes of the binding's variable the project wants rows for
-(#2604; "Row filters by code", design pending the maintainer's review).
+(#2604; "Row filters by code").
 Its structural and order-check refusals are listed there. Every `project_hash` changes.
 An 8.0.0 document is re-authored by setting `schema_version`; 8.0.0 below holds
 otherwise.

@@ -581,6 +581,7 @@ impl Context<'_> {
         for ((table, year, release), columns) in files {
             let name = standard_file_name(table, year, release);
             let mut built = Built::new(name, year.into_iter().collect());
+            built.code_filter = self.code_filter(&columns);
             for (name, refs) in columns {
                 if let Some(column) =
                     self.resolve(&built.file.name, name, &refs, None, false, refusals)
@@ -599,6 +600,7 @@ impl Context<'_> {
         let mut files = Vec::new();
         for file in &manifest.files {
             let mut built = Built::new(file.name.clone(), Vec::new());
+            built.code_filter.clone_from(&file.code_filter);
             // simplify: the runner extracts a file without a row filter over its whole
             // delivery; the mock holds only the requested years, upgrade if a pipeline
             // reads years it did not order.
@@ -703,6 +705,37 @@ impl Context<'_> {
             files.push(built);
         }
         files
+    }
+
+    /// A standard file's code filter: the union of its sources' filters, as the order
+    /// file takes it (`manifest::CodeFilter::union`), each on the column placing the
+    /// filtered binding here.
+    fn code_filter(&self, columns: &[NamedRefs<'_>]) -> Option<manifest::CodeFilter> {
+        let mut own: BTreeMap<&str, Option<manifest::CodeFilter>> = BTreeMap::new();
+        for (name, refs) in columns {
+            for r in refs {
+                let Some(b) = r.binding else { continue };
+                let filter = self
+                    .project
+                    .sources
+                    .iter()
+                    .find(|s| s.name() == r.source)
+                    .and_then(Source::catalog)
+                    .and_then(|s| s.catalog_bindings().find(|(_, c)| c.filter.is_some()));
+                let entry = own.entry(r.source).or_default();
+                if let Some((fb, binding)) = filter
+                    && fb == b
+                {
+                    let f = binding.filter.as_ref().expect("a filtered binding");
+                    *entry = Some(manifest::CodeFilter::new(
+                        name,
+                        f.codes.iter().map(String::as_str),
+                        f.prefixes.iter().map(String::as_str),
+                    ));
+                }
+            }
+        }
+        manifest::CodeFilter::union(own.values().map(Option::as_ref))
     }
 
     /// The years a held placement holds, from its segment rows; empty when the saved
@@ -1162,6 +1195,8 @@ struct Built {
     column_sources: Vec<Vec<String>>,
     /// The names of the columns entered by hand.
     manual: Vec<String>,
+    /// The rows the runner keeps by code (crates/DESIGN.md, "Row filters by code").
+    code_filter: Option<manifest::CodeFilter>,
 }
 
 impl Built {
@@ -1178,6 +1213,7 @@ impl Built {
             },
             column_sources: Vec::new(),
             manual: Vec::new(),
+            code_filter: None,
         }
     }
 
@@ -1213,6 +1249,7 @@ fn apply_rules(built: Vec<Built>, rules: &Rules, refusals: &mut Vec<Refusal>) ->
     for Built {
         mut file,
         column_sources,
+        code_filter,
         ..
     } in built
     {
@@ -1262,6 +1299,11 @@ fn apply_rules(built: Vec<Built>, rules: &Rules, refusals: &mut Vec<Refusal>) ->
             if let Some(codes) = &column_rules.codes {
                 column.codes.clone_from(codes);
             }
+        }
+        if let Some(filter) = &code_filter
+            && let Some(column) = file.columns.iter_mut().find(|c| c.name == filter.column)
+        {
+            admit(column, filter);
         }
         files.push(file);
     }
@@ -1344,6 +1386,28 @@ fn check_files(files: &[SpecFile], null_rate: f64, refusals: &mut Vec<Refusal>) 
             }
         }
     }
+}
+
+/// A column under a code filter draws only codes the filter keeps, and is never
+/// missing: the runner's filter keeps no row whose code is NULL. Without such a code
+/// in its list (no value set), it draws the filter's codes and prefixes as written.
+/// simplify: a prefix is drawn as itself, not completed to a longer code; complete it
+/// from the classification if a pipeline checks code lengths.
+fn admit(column: &mut SpecColumn, filter: &manifest::CodeFilter) {
+    column.codes.retain(|c| filter.admits(&c.code));
+    if column.codes.is_empty() {
+        column.codes = filter
+            .codes
+            .iter()
+            .chain(&filter.prefixes)
+            .map(|code| Code {
+                code: code.clone(),
+                label: None,
+                sentinel: false,
+            })
+            .collect();
+    }
+    column.null_rate = Some(0.0);
 }
 
 #[cfg(test)]

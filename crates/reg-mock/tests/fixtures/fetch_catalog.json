@@ -1,9 +1,9 @@
 {
-  "project": { "schema_version": "8.0.0", "name": "stub" },
+  "project": { "schema_version": "8.1.0", "name": "stub" },
   "calls": [
     {
       "tool": "order",
-      "arguments": { "operation": "order", "project": { "schema_version": "8.0.0", "name": "stub" } },
+      "arguments": { "operation": "order", "project": { "schema_version": "8.1.0", "name": "stub" } },
       "saved_as": "order.json",
       "document": {
         "data": {

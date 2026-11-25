@@ -1,0 +1,206 @@
+{
+  "clips": [],
+  "extract_format": "parquet",
+  "files": [
+    {
+      "columns": [
+        {
+          "name": "Old",
+          "refs": [
+            {
+              "binding": 0,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "a",
+              "spelling": "Old",
+              "table": "demo/held",
+              "variable": "demo/held/value"
+            }
+          ],
+          "role": "ordered",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "Late",
+          "refs": [
+            {
+              "binding": 0,
+              "period": {
+                "end": "2021-01-01",
+                "start": "2020-01-01"
+              },
+              "source": "b",
+              "spelling": "Late",
+              "table": "demo/held",
+              "variable": "demo/held/late"
+            }
+          ],
+          "role": "ordered",
+          "slot": {
+            "index": "2010",
+            "kind": "year"
+          },
+          "storage": {
+            "length": 10,
+            "precision": null,
+            "scale": null,
+            "type": "nvarchar"
+          }
+        },
+        {
+          "lopnr": true,
+          "name": "Received_Id",
+          "refs": [
+            {
+              "binding": null,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "a",
+              "spelling": "Received_Id",
+              "table": "demo/held",
+              "variable": "demo/held/id"
+            },
+            {
+              "binding": null,
+              "period": {
+                "end": "2021-01-01",
+                "start": "2020-01-01"
+              },
+              "source": "a",
+              "spelling": "Received_Id",
+              "table": "demo/held",
+              "variable": "demo/held/id"
+            },
+            {
+              "binding": null,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "b",
+              "spelling": "Received_Id",
+              "table": "demo/held",
+              "variable": "demo/held/id"
+            },
+            {
+              "binding": null,
+              "period": {
+                "end": "2021-01-01",
+                "start": "2020-01-01"
+              },
+              "source": "b",
+              "spelling": "Received_Id",
+              "table": "demo/held",
+              "variable": "demo/held/id"
+            }
+          ],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "Year",
+          "refs": [],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        }
+      ],
+      "delivery": "2017..2020",
+      "name": "pool",
+      "row_filter": {
+        "column": "Year",
+        "encoding": "year",
+        "ranges": [
+          {
+            "to": "2017-12-31"
+          },
+          {
+            "from": "2020-01-01"
+          }
+        ]
+      },
+      "schema": "dbo",
+      "table": "Pool"
+    }
+  ],
+  "findings": [
+    {
+      "code": "filter_codes_unchecked",
+      "level": "warning",
+      "message": "demo/held/value has no documented code list here, so the filter's codes are passed on unchecked.",
+      "path": "/sources/0/bindings/0/filter",
+      "period": null,
+      "source": "a",
+      "successor_fqid": null,
+      "table": null,
+      "variable": "demo/held/value"
+    },
+    {
+      "code": "code_filter_dropped",
+      "level": "info",
+      "message": "This table shares its file with another table of the project that keeps other rows, so the file's rows are not selected by code.",
+      "path": "/sources/0",
+      "period": null,
+      "source": "a",
+      "successor_fqid": null,
+      "table": null,
+      "variable": null
+    },
+    {
+      "code": "row_filter_union",
+      "level": "info",
+      "message": "This table shares its file with another table of the project, so its columns are delivered for 2017 and 2020.",
+      "path": "/sources/0",
+      "period": null,
+      "source": "a",
+      "successor_fqid": null,
+      "table": null,
+      "variable": null
+    },
+    {
+      "code": "row_filter_union",
+      "level": "info",
+      "message": "This table shares its file with another table of the project, so its columns are delivered for 2017 and 2020.",
+      "path": "/sources/1",
+      "period": null,
+      "source": "b",
+      "successor_fqid": null,
+      "table": null,
+      "variable": null
+    }
+  ],
+  "provenance": {
+    "catalog": {
+      "release": "dev",
+      "schema": "18"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "mode": "steward_holdings",
+    "project": {
+      "name": "Code filter dropped",
+      "schema_version": "8.1.0"
+    },
+    "steward": "fixture"
+  },
+  "version": 6
+}

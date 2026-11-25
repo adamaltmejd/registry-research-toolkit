@@ -1,7 +1,7 @@
 {
   "note": "Fails if a dta order lacks the v3 alias on a header that is no Stata name (first 25 characters made safe, _ and 6 hex digits of its SHA-256), or gives one to a valid name.",
   "project": {
-    "schema_version": "8.0.0",
+    "schema_version": "8.1.0",
     "extract_format": "dta",
     "reg_meta_version": "0.71.0",
     "catalog": "fixture",

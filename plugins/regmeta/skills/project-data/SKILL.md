@@ -112,6 +112,20 @@ the `catalog-search` skill.
    submits nothing; the steward writes the order it runs. It needs a non-blank `name`
    (`project_unnamed`) and at least one catalog source (`order_manual_only`).
 
+A large table the study needs only part of (prescriptions by ATC group, diagnoses by
+chapter) can be ordered by code: give one binding of the source a `filter` with exact
+`codes` and/or `prefixes`, and only rows whose value is one of them are delivered:
+`{"variable": "sos/lmed/atc", "filter": {"prefixes": ["N06A", "R03"]}}`. Use it whenever
+the study needs a known subset of a coded variable: it is the main way to keep an
+extract small. One filtered binding per source, codes or prefixes only (no ranges, no
+exclusions), printable ASCII. Find the codes with `values`; `validate` refuses a code or
+prefix the variable does not have (`filter_code_unknown`, `filter_prefix_unknown`), a
+prefix on an integer variable, and a filter on a variable that is not coded or is an
+identifier. `filter_codes_unchecked` means the variable has no code list in the catalog:
+check the codes against its documentation. Tables sharing a file keep each other's
+codes (`code_filter_union`), and a shared file with an unfiltered table is not filtered
+(`code_filter_dropped`): tell the user. Mock data draws only the filtered codes.
+
 Every ordered table also delivers its row-key columns, the ids that identify a row
 (the person key in a person table), without a binding: `order` lists them per source
 and period in `row_keys`, under the register's own spelling (`PersonNr` or `personnr`
@@ -129,7 +143,7 @@ A minimal document on the global catalog (set `schema_version`, `reg_meta_versio
 
 ```json
 {
-  "schema_version": "8.0.0",
+  "schema_version": "8.1.0",
   "reg_meta_version": "reg_meta/vX.Y.Z",
   "catalog": "global",
   "name": "example",

@@ -15,9 +15,9 @@ use std::collections::{BTreeMap, BTreeSet};
 use reg_core::IssueLevel;
 use reg_core::days::{merge, minus, overlap};
 use reg_core::manifest::{
-    CatalogIdentity, Clip, Column, Encoding, File, HoldingsIdentity, MANIFEST_VERSION, Manifest,
-    Mode, ProjectIdentity, Provenance, Range, Ref, Role, RowFilter, Slot, Storage, StorageFamily,
-    safe_file_name, stata_name,
+    CatalogIdentity, Clip, CodeFilter, Column, Encoding, File, HoldingsIdentity, MANIFEST_VERSION,
+    Manifest, Mode, ProjectIdentity, Provenance, Range, Ref, Role, RowFilter, Slot, Storage,
+    StorageFamily, safe_file_name, stata_name,
 };
 use reg_core::placement::Placement;
 use reg_core::project::{ColumnType, ExtractFormat, ProjectData};
@@ -383,6 +383,7 @@ fn build(
             ));
         }
         columns.sort_by_key(|(key, _)| *key);
+        let code_filter = code_filter(&project.sources, &index, &columns, &mut findings);
         files.push((
             draft.first,
             File {
@@ -393,6 +394,7 @@ fn build(
                 partition: holding.partition,
                 projection: holding.projection,
                 row_filter,
+                code_filter,
                 columns: columns.into_iter().map(|(_, c)| c).collect(),
             },
         ));
@@ -1466,4 +1468,191 @@ fn row_filter(
             })
             .collect(),
     })
+}
+
+/// Code-filter entries one file may bind as parameters: `sp_executesql` takes at most
+/// 2,100. simplify: parameters, not a temporary table; load the codes into a table if a
+/// real order needs more.
+const CODE_FILTER_MAX: usize = 1_000;
+
+/// The file's code filter (crates/DESIGN.md, "Row filters by code"): each source with an
+/// ordered column in the file and a filtered binding filters on the column placing that
+/// binding here; the file keeps their union when every such source filters one column.
+/// A source with only row keys here neither filters nor widens the file. simplify: its
+/// key rows follow the others' filter; give such files a rule if a key-only file of a
+/// filtering source appears.
+fn code_filter(
+    sources: &[reg_core::project::Source],
+    index: &BTreeMap<&str, usize>,
+    columns: &[(ColumnKey, Column)],
+    findings: &mut Vec<Issue>,
+) -> Option<CodeFilter> {
+    let mut own: BTreeMap<usize, Option<CodeFilter>> = BTreeMap::new();
+    let mut blocked = false;
+    for &s in columns
+        .iter()
+        .flat_map(|(_, c)| &c.refs)
+        .filter(|r| r.binding.is_some())
+        .map(|r| &index[r.source.as_str()])
+        .collect::<BTreeSet<_>>()
+    {
+        match source_filter(&sources[s], s, columns) {
+            Ok(filter) => {
+                own.insert(s, filter);
+            }
+            Err(issue) => {
+                findings.push(*issue);
+                blocked = true;
+            }
+        }
+    }
+    if blocked {
+        return None;
+    }
+    let union = CodeFilter::union(own.values().map(Option::as_ref));
+    let info = |s: usize, code: &str, message: String| Issue {
+        source: Some(sources[s].name().to_owned()),
+        ..Issue::new(IssueLevel::Info, code, format!("/sources/{s}"), message)
+    };
+    for (&s, filter) in &own {
+        let Some(filter) = filter else { continue };
+        match &union {
+            Some(union) if union != filter => {
+                let issue = info(
+                    s,
+                    "code_filter_union",
+                    format!(
+                        "This table shares its file with another table of the project, so \
+                         the file keeps rows with the codes {}.",
+                        filter_words(union)
+                    ),
+                );
+                if !findings.contains(&issue) {
+                    findings.push(issue);
+                }
+            }
+            Some(_) => {}
+            None => {
+                let issue = info(
+                    s,
+                    "code_filter_dropped",
+                    "This table shares its file with another table of the project that \
+                     keeps other rows, so the file's rows are not selected by code."
+                        .into(),
+                );
+                if !findings.contains(&issue) {
+                    findings.push(issue);
+                }
+            }
+        }
+    }
+    let union = union?;
+    if union.codes.len() + union.prefixes.len() > CODE_FILTER_MAX {
+        for &s in own.keys() {
+            findings.push(Issue {
+                source: Some(sources[s].name().to_owned()),
+                ..Issue::new(
+                    IssueLevel::Error,
+                    "filter_too_large",
+                    format!("/sources/{s}"),
+                    format!(
+                        "A file of this table would be selected by {} codes and prefixes; \
+                         at most {CODE_FILTER_MAX} are supported. Use shorter prefixes.",
+                        union.codes.len() + union.prefixes.len()
+                    ),
+                )
+            });
+        }
+        return None;
+    }
+    Some(union)
+}
+
+/// The code filter of one source's filtered binding, on the one column of the file that
+/// places it, or the blocking finding when no single column can hold it.
+fn source_filter(
+    source: &reg_core::project::Source,
+    s: usize,
+    columns: &[(ColumnKey, Column)],
+) -> Result<Option<CodeFilter>, Box<Issue>> {
+    let Some((b, filter)) = source.catalog().and_then(|c| {
+        c.catalog_bindings()
+            .find_map(|(b, binding)| binding.filter.as_ref().map(|f| (b, f)))
+    }) else {
+        return Ok(None);
+    };
+    let name = source.name();
+    let placing: Vec<&Column> = columns
+        .iter()
+        .map(|(_, c)| c)
+        .filter(|c| {
+            c.refs
+                .iter()
+                .any(|r| r.source == name && r.binding == Some(b))
+        })
+        .collect();
+    let error = |code: &str, message: String| {
+        Box::new(Issue {
+            source: Some(name.to_owned()),
+            ..Issue::new(
+                IssueLevel::Error,
+                code,
+                format!("/sources/{s}/bindings/{b}/filter"),
+                message,
+            )
+        })
+    };
+    let column = match placing.as_slice() {
+        [column] => *column,
+        [] => {
+            return Err(error(
+                "filter_column_missing",
+                "A file of this table does not hold the filtered variable, so its rows \
+                 cannot be selected by code. Narrow the period to the years that hold it."
+                    .into(),
+            ));
+        }
+        _ => {
+            return Err(error(
+                "filter_column_split",
+                "A file of this table holds the filtered variable in more than one \
+                 column, so its rows cannot be selected by one of them. Narrow the \
+                 period to the years one column covers."
+                    .into(),
+            ));
+        }
+    };
+    let family = column.storage.dtype.as_deref().and_then(StorageFamily::of);
+    let fits = match family {
+        Some(StorageFamily::Text) => true,
+        Some(StorageFamily::Integer) => {
+            filter.prefixes.is_empty() && filter.codes.iter().all(|c| c.parse::<i64>().is_ok())
+        }
+        _ => false,
+    };
+    if !fits {
+        return Err(error(
+            "filter_storage",
+            format!(
+                "The held column {} is stored as {}, which a code filter can select by \
+                 exact whole-number codes only if it is an integer, and not at all \
+                 otherwise. Remove the filter or the entries it cannot hold.",
+                column.name,
+                column.storage.dtype.as_deref().unwrap_or("an unknown type")
+            ),
+        ));
+    }
+    Ok(Some(CodeFilter::new(
+        &column.name,
+        filter.codes.iter().map(String::as_str),
+        filter.prefixes.iter().map(String::as_str),
+    )))
+}
+
+/// A code filter's entries in words: `N05*, N06A*, R03AC02`.
+fn filter_words(filter: &CodeFilter) -> String {
+    let mut all: Vec<String> = filter.prefixes.iter().map(|p| format!("{p}*")).collect();
+    all.extend(filter.codes.iter().cloned());
+    all.sort();
+    all.join(", ")
 }

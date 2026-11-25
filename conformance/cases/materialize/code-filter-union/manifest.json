@@ -1,0 +1,196 @@
+{
+  "clips": [],
+  "extract_format": "parquet",
+  "files": [
+    {
+      "code_filter": {
+        "codes": [
+          "1",
+          "2",
+          "3"
+        ],
+        "column": "Old",
+        "prefixes": []
+      },
+      "columns": [
+        {
+          "name": "Old",
+          "refs": [
+            {
+              "binding": 0,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "a",
+              "spelling": "Old",
+              "table": "demo/held",
+              "variable": "demo/held/value"
+            },
+            {
+              "binding": 0,
+              "period": {
+                "end": "2019-01-01",
+                "start": "2018-01-01"
+              },
+              "source": "b",
+              "spelling": "Old",
+              "table": "demo/held",
+              "variable": "demo/held/value"
+            }
+          ],
+          "role": "ordered",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "lopnr": true,
+          "name": "Received_Id",
+          "refs": [
+            {
+              "binding": null,
+              "period": {
+                "end": "2019-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "a",
+              "spelling": "Received_Id",
+              "table": "demo/held",
+              "variable": "demo/held/id"
+            },
+            {
+              "binding": null,
+              "period": {
+                "end": "2019-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "b",
+              "spelling": "Received_Id",
+              "table": "demo/held",
+              "variable": "demo/held/id"
+            }
+          ],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "Year",
+          "refs": [],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        }
+      ],
+      "delivery": "2017..2020",
+      "name": "pool",
+      "row_filter": {
+        "column": "Year",
+        "encoding": "year",
+        "ranges": [
+          {
+            "to": "2018-12-31"
+          }
+        ]
+      },
+      "schema": "dbo",
+      "table": "Pool"
+    }
+  ],
+  "findings": [
+    {
+      "code": "filter_codes_unchecked",
+      "level": "warning",
+      "message": "demo/held/value has no documented code list here, so the filter's codes are passed on unchecked.",
+      "path": "/sources/0/bindings/0/filter",
+      "period": null,
+      "source": "a",
+      "successor_fqid": null,
+      "table": null,
+      "variable": "demo/held/value"
+    },
+    {
+      "code": "filter_codes_unchecked",
+      "level": "warning",
+      "message": "demo/held/value has no documented code list here, so the filter's codes are passed on unchecked.",
+      "path": "/sources/1/bindings/0/filter",
+      "period": null,
+      "source": "b",
+      "successor_fqid": null,
+      "table": null,
+      "variable": "demo/held/value"
+    },
+    {
+      "code": "code_filter_union",
+      "level": "info",
+      "message": "This table shares its file with another table of the project, so the file keeps rows with the codes 1, 2, 3.",
+      "path": "/sources/0",
+      "period": null,
+      "source": "a",
+      "successor_fqid": null,
+      "table": null,
+      "variable": null
+    },
+    {
+      "code": "row_filter_union",
+      "level": "info",
+      "message": "This table shares its file with another table of the project, so its columns are delivered for 2017 to 2018.",
+      "path": "/sources/0",
+      "period": null,
+      "source": "a",
+      "successor_fqid": null,
+      "table": null,
+      "variable": null
+    },
+    {
+      "code": "code_filter_union",
+      "level": "info",
+      "message": "This table shares its file with another table of the project, so the file keeps rows with the codes 1, 2, 3.",
+      "path": "/sources/1",
+      "period": null,
+      "source": "b",
+      "successor_fqid": null,
+      "table": null,
+      "variable": null
+    },
+    {
+      "code": "row_filter_union",
+      "level": "info",
+      "message": "This table shares its file with another table of the project, so its columns are delivered for 2017 to 2018.",
+      "path": "/sources/1",
+      "period": null,
+      "source": "b",
+      "successor_fqid": null,
+      "table": null,
+      "variable": null
+    }
+  ],
+  "provenance": {
+    "catalog": {
+      "release": "dev",
+      "schema": "18"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "mode": "steward_holdings",
+    "project": {
+      "name": "Code filter union",
+      "schema_version": "8.1.0"
+    },
+    "steward": "fixture"
+  },
+  "version": 6
+}

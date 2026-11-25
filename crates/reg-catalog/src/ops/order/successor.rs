@@ -160,6 +160,7 @@ fn materialize(
         out.findings.extend(checked.findings);
         out.missing.extend(checked.missing);
         out.entries.extend(checked.entries);
+        out.coding.extend(checked.coding);
     }
     if !first {
         out.serving.extend(serving);

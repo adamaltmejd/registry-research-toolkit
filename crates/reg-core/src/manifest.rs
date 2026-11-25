@@ -10,14 +10,14 @@ use crate::issue::{Issue, Period};
 use crate::project::ExtractFormat;
 
 /// The manifest `version` this crate writes; the runner refuses every other.
-pub const MANIFEST_VERSION: u32 = 5;
+pub const MANIFEST_VERSION: u32 = 6;
 
 /// The order file: one file per table and delivery, with its columns.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
 pub struct Manifest {
-    /// Always 5.
+    /// Always 6.
     pub version: u32,
     /// The project's `extract_format`.
     pub extract_format: ExtractFormat,
@@ -102,6 +102,9 @@ pub struct File {
     /// Absent: every row of the table.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub row_filter: Option<RowFilter>,
+    /// Absent: no code filter. A row is kept when it passes both filters.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub code_filter: Option<CodeFilter>,
     /// Requested columns in request order, then the row keys.
     pub columns: Vec<Column>,
 }
@@ -115,6 +118,80 @@ pub struct RowFilter {
     pub encoding: Encoding,
     /// Sorted and disjoint.
     pub ranges: Vec<Range>,
+}
+
+/// Keep a row whose `column` equals one of `codes` or starts with one of `prefixes`
+/// (crates/DESIGN.md, "Row filters by code"). Built by [`CodeFilter::new`]: both lists
+/// sorted and minimal, so an entry a kept prefix covers is gone.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
+#[serde(deny_unknown_fields)]
+pub struct CodeFilter {
+    pub column: String,
+    pub codes: Vec<String>,
+    pub prefixes: Vec<String>,
+}
+
+impl CodeFilter {
+    /// The filter on `column` keeping `codes` and `prefixes`, sorted, each once, with a
+    /// prefix or code that a shorter kept prefix starts dropped.
+    #[must_use]
+    pub fn new<'a>(
+        column: &str,
+        codes: impl IntoIterator<Item = &'a str>,
+        prefixes: impl IntoIterator<Item = &'a str>,
+    ) -> Self {
+        let mut kept: Vec<String> = Vec::new();
+        let mut all: Vec<&str> = prefixes.into_iter().collect();
+        // Shortest first, so a covering prefix is kept before the ones it covers.
+        all.sort_by_key(|p| (p.len(), *p));
+        for p in all {
+            if !kept.iter().any(|k| p.starts_with(k.as_str())) {
+                kept.push(p.to_owned());
+            }
+        }
+        kept.sort();
+        let mut codes: Vec<String> = codes
+            .into_iter()
+            .filter(|c| !kept.iter().any(|k| c.starts_with(k.as_str())))
+            .map(str::to_owned)
+            .collect();
+        codes.sort();
+        codes.dedup();
+        Self {
+            column: column.to_owned(),
+            codes,
+            prefixes: kept,
+        }
+    }
+
+    /// The filter a file shared by several sources keeps: the union of their entries when
+    /// every source filters, all on one column; none when one does not filter or two
+    /// filter different columns, since one column's list cannot keep another's rows.
+    #[must_use]
+    pub fn union<'a>(filters: impl IntoIterator<Item = Option<&'a Self>>) -> Option<Self> {
+        let filters: Vec<&Self> = filters.into_iter().collect::<Option<_>>()?;
+        let column = &filters.first()?.column;
+        if filters.iter().any(|f| f.column != *column) {
+            return None;
+        }
+        Some(Self::new(
+            column,
+            filters
+                .iter()
+                .flat_map(|f| f.codes.iter().map(String::as_str)),
+            filters
+                .iter()
+                .flat_map(|f| f.prefixes.iter().map(String::as_str)),
+        ))
+    }
+
+    /// Whether the filter keeps a row holding `value`.
+    #[must_use]
+    pub fn admits(&self, value: &str) -> bool {
+        self.codes.iter().any(|c| c == value)
+            || self.prefixes.iter().any(|p| value.starts_with(p.as_str()))
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

@@ -47,6 +47,20 @@ pub(super) struct Outcome {
     pub missing: Vec<super::absent::Missing>,
     /// The requested days the binding's clip reports.
     pub removed: Vec<Interval>,
+    /// What a code filter on the binding is checked against: one per served piece.
+    pub coding: Vec<Coding>,
+}
+
+/// A served piece's coding facts, for the binding's code filter (`super::filter`).
+#[derive(Clone)]
+pub(super) struct Coding {
+    pub dtype: Option<String>,
+    /// The value set's hash.
+    pub valueset: Option<String>,
+    /// The class version's public id.
+    pub class_version: Option<String>,
+    pub coded: String,
+    pub identifier: bool,
 }
 
 /// A resolved binding variable.
@@ -78,6 +92,8 @@ struct Piece {
     release: Option<String>,
     /// On a shared day, the release it is delivered in: an entry of its own.
     lane: Option<String>,
+    coded: String,
+    identifier: bool,
 }
 
 /// The segments a binding reads, keyed by the connection's own table and variable ids,
@@ -92,7 +108,7 @@ pub(super) fn segments(scope: &Scope) -> String {
             "SELECT {ids}, x.start AS start, x.end AS end, sp.exact AS exact, \
              x.dtype AS dtype, x.length AS length, vs.hash AS vs_hash, vs.n_items AS vs_n, \
              cv.pid AS cv_pid, COALESCE(x.sensitive, 0) AS sensitive, x.state AS state, \
-             rn.body AS release
+             rn.body AS release, x.coded AS coded, COALESCE(x.identifier, 0) AS identifier
              FROM {db}.segment x {joins} JOIN {db}.spelling sp ON sp.id = x.spelling_id
              LEFT JOIN {db}.release rl ON rl.id = x.release_id
              LEFT JOIN {db}.text rn ON rn.id = rl.name_text
@@ -456,6 +472,16 @@ fn materialize(
             ));
         }
     }
+    outcome.coding = pieces
+        .iter()
+        .map(|p| Coding {
+            dtype: p.dtype.clone(),
+            valueset: p.valueset.as_ref().map(|(h, _)| h.clone()),
+            class_version: p.class_version.clone(),
+            coded: p.coded.clone(),
+            identifier: p.identifier,
+        })
+        .collect();
     outcome.findings.extend(windows(&at, &pieces));
     outcome.findings.extend(editions(&at, &pieces)?);
     outcome.findings.extend(replaced(&at)?);
@@ -618,7 +644,7 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<Served, Error> {
         scope.conn,
         &format!(
             "SELECT start, end, exact, dtype, length, vs_hash, vs_n, cv_pid, sensitive, \
-             state, end = ?3, release
+             state, end = ?3, release, coded, identifier
              FROM ({}) WHERE variable_id = ?1 AND table_id = ?2
              ORDER BY start",
             segments(scope)
@@ -729,6 +755,8 @@ fn piece(serving: usize, row: &Row) -> rusqlite::Result<Piece> {
         open: row.get(10)?,
         release: row.get(11)?,
         lane: None,
+        coded: row.get(12)?,
+        identifier: row.get(13)?,
     })
 }
 

@@ -236,13 +236,13 @@ which keeps every row). The filter and the count read the same value. Another ty
 an encoding (a date column read as `year`) is refused before any query rather than
 guessed.
 
-**Proposed (#2604; design in [../crates/DESIGN.md](../crates/DESIGN.md), "Row filters by
-code", pending the maintainer's review).** The next manifest version adds
-`code_filter`, in the one `WHERE` the extract and the pre-count share:
+**Code filter** (#2604; [../crates/DESIGN.md](../crates/DESIGN.md), "Row filters by
+code"). Manifest version 6 adds `code_filter`, in the one `WHERE` the extract and the
+pre-count share:
 
 `code_filter = {column, codes[], prefixes[]}` is ANDed with the period filter. Each
-entry is a bound parameter: `col = @pN` for a code (`nvarchar` on text storage,
-`bigint` on integer storage), `col LIKE @pN` for a prefix, the bound value being the
+entry is a bound parameter: `col = @pN` for a code (`varchar` or `nvarchar` like the
+column, `bigint` on integer storage, each bound as text), `col LIKE @pN` for a prefix, the bound value being the
 prefix with `[`, `%`, `_` escaped as `[[]`, `[%]`, `[_]`, then `%`. Terms are ORed. It
 compares under the column's own collation, so an index on the column serves it.
 Entries outside printable ASCII are refused at the manifest check (the order never

@@ -25,7 +25,7 @@ Every subdirectory is a case. The directory name is the case ID, in lowercase sn
 
 ### `input.json`
 
-A `project_data.json` payload as authored by a researcher (8.0.0: `catalog` `global`
+A `project_data.json` payload as authored by a researcher (8.1.0: `catalog` `global`
 unless the case is about it, `extract_format` `parquet` unless the case is about it, `table` a 2- or 3-part public id or `manual` + `period`,
 `bindings` with 3-segment binding FQIDs or `manual`, 3-segment
 `class/<family>/<version>` classification pins). Both well-formed and deliberately
