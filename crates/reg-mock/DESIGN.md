@@ -139,8 +139,10 @@ project (its `project_hash`), and a value set whose saved pages do not hold each
 `stata_name` aliases and labels, and the period column, a row key placing no variable,
 as the year (`Attribute::Year`, in the row filter's encoding, a whole year without one).
 A spell table's end column (the row filter's `end_column`), when the file delivers it,
-is the last day of the row's year in that encoding (`Attribute::YearEnd`), so a mock
-spell ends on or after its start and passes the runner's overlap filter.
+is the later of the last day of the row's year and the `from` of the range the row is
+drawn against (`Attribute::YearEnd`), and the start is drawn no later than that range's
+`to` (the spec column's `spell`), so every mock spell, in any of the file's years, ends
+on or after its start and passes the runner's overlap filter.
 A column is drawn from its held placement's segment row. A file holds its columns'
 requested years; a column is missing in the years its placement does not hold (its
 segment rows), as the runner reads every column over the file's years, and takes the

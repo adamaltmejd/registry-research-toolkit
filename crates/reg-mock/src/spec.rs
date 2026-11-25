@@ -4,7 +4,7 @@
 
 use std::collections::BTreeMap;
 
-use reg_core::manifest::{Encoding, Storage};
+use reg_core::manifest::{Encoding, Range, Storage};
 use reg_core::project::{ColumnType, ExtractFormat};
 use serde::{Deserialize, Serialize};
 
@@ -118,10 +118,15 @@ pub struct SpecColumn {
     /// The attribute's values as this column codes them (`female` → `2`).
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub map: BTreeMap<String, String>,
-    /// How a [`Attribute::Year`] or [`Attribute::YearEnd`] column writes the year: the order file's row filter
-    /// encoding. Absent: the plain year.
+    /// How a [`Attribute::Year`] or [`Attribute::YearEnd`] column writes the year: the
+    /// order file's row filter encoding. Absent: the plain year.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub encoding: Option<Encoding>,
+    /// A spell table's row filter ranges, on its start and end columns: the start is
+    /// drawn on or before a range's `to` and the end on or after its `from`, so every
+    /// mock spell passes the runner's overlap filter (crates/reg-mock/DESIGN.md).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub spell: Vec<Range>,
     /// The years the column is held in, when fewer than its file's; it is missing in
     /// the file's other years.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -168,7 +173,7 @@ pub enum Attribute {
     DeathDate,
     /// The row's year, in the column's own encoding.
     Year,
-    /// The last day of the row's year, in the column's own encoding: a spell table's
-    /// end column, so a mock spell ends on or after its start and overlaps its year.
+    /// A spell table's end, in the column's own encoding: the later of the row's year's
+    /// last day and its spell range's `from`, so a mock spell ends on or after its start.
     YearEnd,
 }

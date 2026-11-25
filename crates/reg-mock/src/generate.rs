@@ -3,7 +3,7 @@
 //! drawn from the column's documented codes, else from its type. Writing is
 //! [`crate::write`].
 
-use reg_core::manifest::Encoding;
+use reg_core::manifest::{Encoding, Range};
 use reg_core::project::{ColumnType, ExtractFormat};
 
 use crate::Refusal;
@@ -684,21 +684,35 @@ fn attribute_cell(
             Some((day, Exit::Death)) if year_of(day) <= unit.year => date(day)?,
             _ => Cell::Null,
         },
-        Attribute::Year => year_cell(
-            column.encoding,
-            kind,
-            unit.year,
-            day_in(unit.year, rng),
-            &mapped,
-        )?,
-        Attribute::YearEnd => year_cell(
-            column.encoding,
-            kind,
-            unit.year,
-            last_day(unit.year),
-            &mapped,
-        )?,
+        Attribute::Year => {
+            let mut day = day_in(unit.year, rng);
+            if let Some(to) = spell_range(&column.spell, unit.year).and_then(|r| r.1) {
+                day = day.min(to);
+            }
+            year_cell(column.encoding, kind, year_of(day), day, &mapped)?
+        }
+        Attribute::YearEnd => {
+            let mut day = last_day(unit.year);
+            if let Some(from) = spell_range(&column.spell, unit.year).and_then(|r| r.0) {
+                day = day.max(from);
+            }
+            year_cell(column.encoding, kind, year_of(day), day, &mapped)?
+        }
     })
+}
+
+/// The spell range a row of `year` is drawn against, as (from, to) day numbers: the
+/// first that does not end before the year, else the last. A start on or before its
+/// `to` and an end on or after both its `from` and the year's last day overlap it, so the
+/// runner keeps the spell. `None` for a file that is not a spell table's.
+fn spell_range(ranges: &[Range], year: i32) -> Option<(Option<i64>, Option<i64>)> {
+    let day = |iso: &Option<String>| iso.as_deref().and_then(reg_core::iso_day_number);
+    let first = last_day(year - 1) + 1;
+    let range = ranges
+        .iter()
+        .find(|r| day(&r.to).is_none_or(|to| to >= first))
+        .or(ranges.last())?;
+    Some((day(&range.from), day(&range.to)))
 }
 
 /// The row's year in the row filter's encoding: a whole year, or `day` (a day of it)

@@ -613,6 +613,38 @@ fn packed(p: &Pair) -> Result<Section> {
     )
 }
 
+/// The spell tables' end columns (crates/DESIGN.md, "Spell overlap"), by table with the
+/// start and end column: a redirected end lists as one removed and one added. Holdings
+/// before schema 16 declare none.
+fn spell_ends(p: &Pair) -> Result<Section> {
+    let has = |conn: &rusqlite::Connection| -> Result<bool> {
+        Ok(conn.query_row(
+            "SELECT EXISTS(SELECT 1 FROM pragma_table_info('holding_table') \
+             WHERE name = 'period_end_column_id')",
+            [],
+            |r| r.get(0),
+        )?)
+    };
+    if !has(&p.old)? || !has(&p.new)? {
+        return Ok(Section::flat(
+            "spell_ends",
+            "spell end columns",
+            vec![shown(Item::new(
+                json!({"compared": false}),
+                "spell_ends: not compared, one side predates holdings schema 16".to_owned(),
+            ))],
+        ));
+    }
+    delta(
+        "spell_ends",
+        "spell end columns (by table, start, end)",
+        p,
+        "SELECT 'spell_end', json_array(t.schema_name, t.physical_name), s.name, e.name \
+         FROM holding_table t JOIN holding_column e ON e.id = t.period_end_column_id \
+         JOIN holding_column s ON s.id = t.period_column_id",
+    )
+}
+
 /// The columns marked as löpnummer (pseudonymised keys, written as int64), by table and column. Holdings
 /// before schema 14 mark none: the section says so and compares nothing.
 fn lopnr(p: &Pair) -> Result<Section> {
@@ -736,6 +768,7 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
     out.push(spaces(p)?);
     out.push(lopnr(p)?);
     out.push(packed(p)?);
+    out.push(spell_ends(p)?);
     out.push(dispositions(p)?);
     Ok(out)
 }

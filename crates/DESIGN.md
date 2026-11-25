@@ -3136,7 +3136,8 @@ the whole delivery for a spell table, as for a table without a period column.
 column, naming the start column or naming a column the table lacks is
 `holdings_period_column_invalid`. `holding_table.period_end_column_id` holds it, with
 `CHECK (period_end_column_id IS NULL OR period_column_id IS NOT NULL)`; `verify`
-re-derives it (`holdings_period_source_mismatch`) and refuses a foreign column. A row
+re-derives it (`holdings_period_source_mismatch`) and refuses a foreign column, and
+`reg-build diff --holdings` lists an end column added, removed or redirected (`spell_ends`). A row
 key with `period_key = "column"` keeps reading the start. Declaring the columns on a
 steward's tables waits for the release that ships this.
 
@@ -3163,9 +3164,12 @@ without `to` therefore tests `start IS NOT NULL` itself.
 **Runner and mock.** `extract.R` resolves the end column's type after the start's,
 checks it against the encoding, and binds each bound once (`to` against the start,
 `from` against the end), so the 2,100-parameter count with a code filter is unchanged.
-`reg-mock` writes the end column, when the file delivers it, as the last day of its
-row's year in the filter's encoding (`Attribute::YearEnd`), so a mock spell ends on or
-after its start, overlaps its year and passes the runner's filter.
+`reg-mock` draws a spell file's start and end against its ranges (the spec column's
+`spell`): for a row of year Y it takes the first range that does not end before Y (else
+the last), draws the start in Y no later than that range's `to`, and writes the end
+(`Attribute::YearEnd`) as the later of Y's last day and the range's `from`. Every mock
+spell then ends on or after its start and passes the runner's filter, including rows
+in the years outside the request that a whole-delivery key reference brings in.
 
 **Versions and tests.** Manifest version 8, `HOLDINGS_SCHEMA_VERSION` 16,
 `CATALOG_SCHEMA_VERSION` unchanged. One materialize case (`spell-overlap`: a spell table
