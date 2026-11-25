@@ -2255,7 +2255,7 @@ is unchanged.
 
 The catalog still cannot decide the mark, but it can contradict it. For every marked column
 the holdings build (and `reg-build verify`, re-deriving it from the pinned config) looks
-at the catalog segments its mappings cover. A segment whose identifier flag is explicitly
+at the catalog segments its mappings cover on the days the mapping's table reads them (the release rule that compiles the mapping, so a concurrent release's overlapping segment does not count). A segment whose identifier flag is explicitly
 false refuses: `config:lopnr=N: holdings_lopnr_not_identifier`, naming the entry by its
 position and the variable by public id, never a physical name. A flag the catalog does
 not state (NULL) prints a `holdings_lopnr_identifier_unknown` warning, once per entry and
