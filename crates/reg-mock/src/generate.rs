@@ -509,7 +509,14 @@ fn fits(column: &SpecColumn, value: &Cell) -> bool {
 pub(crate) fn holds(column: &SpecColumn, format: ExtractFormat, code: &str) -> bool {
     Kind::of(column, format)
         .ok()
-        .and_then(|kind| from_text(code, kind))
+        .and_then(|kind| {
+            let value = from_text(code, kind)?;
+            // An int32 output holds no wider integer, whatever the storage.
+            match (kind, &value) {
+                (Kind::Int32, Cell::Int(n)) if i32::try_from(*n).is_err() => None,
+                _ => Some(value),
+            }
+        })
         .is_some_and(|value| fits(column, &value))
 }
 

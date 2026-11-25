@@ -26,7 +26,7 @@ use std::collections::BTreeMap;
 use serde_json::{Map, Value};
 
 use crate::grammar::{Date, PeriodToken, iso};
-use crate::manifest::CODE_ENTRY_MAX;
+use crate::manifest::{CODE_ENTRY_MAX, CodeFilter};
 use crate::project::{ColumnType, ExtractFormat};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
@@ -1099,11 +1099,7 @@ fn check_filter(filter: &Value, fbase: &str, issues: &mut Issues) {
         entries += list.len();
         let mut seen: BTreeMap<&str, usize> = BTreeMap::new();
         for (k, entry) in list.iter().enumerate() {
-            let Some(entry) = entry.as_str().filter(|e| {
-                !e.trim().is_empty()
-                    && e.len() <= CODE_ENTRY_MAX
-                    && e.bytes().all(|b| (0x20..=0x7e).contains(&b))
-            }) else {
+            let Some(entry) = entry.as_str().filter(|e| CodeFilter::entry_ok(e)) else {
                 issues.error(
                     "invalid_field_type",
                     format!("{lbase}/{k}"),

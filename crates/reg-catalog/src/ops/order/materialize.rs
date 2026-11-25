@@ -297,6 +297,8 @@ fn build(
     );
     let format = project.extract_format;
     let base = server.catalog.connect()?;
+    // Each source's filtered binding, found once for every file.
+    let filtered: Vec<Option<usize>> = project.sources.iter().map(filtered_binding).collect();
     let mut files = Vec::new();
     let mut names: BTreeMap<String, String> = BTreeMap::new();
     for (holding_id, mut draft) in drafts {
@@ -355,10 +357,10 @@ fn build(
         let mut columns: Vec<(ColumnKey, Column)> = Vec::new();
         for (column_id, (key, role, mut refs)) in std::mem::take(&mut draft.columns) {
             let stored = stored(held, column_id)?;
-            if refs.iter().any(|r| {
-                r.binding.is_some()
-                    && r.binding == filtered_binding(&project.sources[index[r.source.as_str()]])
-            }) {
+            if refs
+                .iter()
+                .any(|r| r.binding.is_some() && r.binding == filtered[index[r.source.as_str()]])
+            {
                 owners.insert(stored.name.clone(), owners_of(held, column_id)?);
             }
             refs.sort_by(|a, b| {

@@ -1426,6 +1426,9 @@ fn check_files(files: &[SpecFile], null_rate: f64, refusals: &mut Vec<Refusal>) 
                 "age_min is above age_max",
             ));
         }
+        if let Some(filter) = &file.code_filter {
+            check_filter(file, filter, refusals);
+        }
         if let Some(filter) = &file.code_filter
             && !file.columns.iter().any(|c| c.name == filter.column)
         {
@@ -1454,6 +1457,34 @@ fn check_files(files: &[SpecFile], null_rate: f64, refusals: &mut Vec<Refusal>) 
                 ));
             }
         }
+    }
+}
+
+/// A spec's code filter has the shape the project validator requires of a binding's:
+/// at least one entry, each well formed ([`manifest::CodeFilter::entry_ok`]).
+fn check_filter(file: &SpecFile, filter: &manifest::CodeFilter, refusals: &mut Vec<Refusal>) {
+    if filter.codes.is_empty() && filter.prefixes.is_empty() {
+        refusals.push(Refusal::new(
+            "filter_empty",
+            file.name.clone(),
+            "the code filter needs at least one code or prefix",
+        ));
+    }
+    if let Some(entry) = filter
+        .codes
+        .iter()
+        .chain(&filter.prefixes)
+        .find(|e| !manifest::CodeFilter::entry_ok(e))
+    {
+        refusals.push(Refusal::new(
+            "filter_entry_invalid",
+            file.name.clone(),
+            format!(
+                "the code filter entry {entry:?} is not a non-blank string of at most \
+                 {} printable ASCII characters",
+                manifest::CODE_ENTRY_MAX
+            ),
+        ));
     }
 }
 

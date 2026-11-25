@@ -203,6 +203,16 @@ impl CodeFilter {
         }
     }
 
+    /// Whether `entry` is a well-formed code or prefix: non-blank, at most
+    /// [`CODE_ENTRY_MAX`] characters, printable ASCII only (crates/DESIGN.md, "Row
+    /// filters by code"). Twin: `check_code_filter` in `extract.R`.
+    #[must_use]
+    pub fn entry_ok(entry: &str) -> bool {
+        !entry.trim().is_empty()
+            && entry.len() <= CODE_ENTRY_MAX
+            && entry.bytes().all(|b| (0x20..=0x7e).contains(&b))
+    }
+
     /// Whether `code` is an exact code of an integer column: an optional `-` and 1 to
     /// 18 digits, the range `check_codes` in `extract.R` binds as `bigint`.
     #[must_use]
