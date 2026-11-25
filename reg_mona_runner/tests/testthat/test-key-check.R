@@ -74,7 +74,9 @@ test_that("a missing salt beside a previous report stops the run before either f
       file.path(R.home("bin"), "Rscript"),
       shQuote("key_check.R"),
       stdout = TRUE,
-      stderr = TRUE
+      stderr = TRUE,
+      # The fixture's config, whatever the caller's environment names.
+      env = paste0("REG_EXTRACT_CONFIG=", shQuote(file.path(dir, "extract-config.json")))
     )),
     finally = setwd(old)
   )

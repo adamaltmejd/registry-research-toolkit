@@ -482,7 +482,7 @@ the answer on the console, and exports its CSV, which is why it counts only.
   collation reads a full-width hyphen as a minus. Legacy `text` and `ntext` are read as
   `varchar(max)` and `nvarchar(max)`. Text is cast to bigint from at most 40 characters:
   for a signed digit string its sign and digits with leading zeros dropped (as
-  `lopnr_digits` reads it, so a zero-padded key counts under `leading_zeros`, not
+  `lopnr_digits` reads it, so a zero-padded key that converts counts under `leading_zeros` (a value `extract.R` refuses, as `01X`, only fails), not
   `not_bigint`), and any other value as it is, trimmed, so dropping zeros cannot make
   it convert (`0-1` is no `-1`); `TRY_CAST` of a (max) value over 8000 bytes would fail
   the query. The zeros are dropped with `PATINDEX` and `SUBSTRING`, without

@@ -126,6 +126,30 @@ CAST_DIGITS <- paste0(
 )
 CAST_SIGN <- paste0("(CASE WHEN ", DIGIT_STRING, " THEN ", SIGN, " ELSE N'' END)")
 
+# Whether a (non-null) text value, as CAST_DIGITS reads it, does not convert to bigint.
+NOT_BIGINT_TEXT <- paste0(
+  "(LEN(", CAST_DIGITS, ") > 40 OR TRY_CAST(CAST(", CAST_SIGN, " + LEFT(", CAST_DIGITS, ", 40)",
+  " AS nvarchar(41)) AS bigint) IS NULL)"
+)
+# A value that extract.R writes as a key: a digit string that converts, with no
+# leading space (and no trailing one, unless the type pads: `padded`).
+CONVERTS <- function(padded) {
+  paste0(
+    DIGIT_STRING, " AND NOT ", NOT_BIGINT_TEXT, " AND @col NOT LIKE N' %'",
+    if (!padded) " AND DATALENGTH(@col) = DATALENGTH(RTRIM(@col))"
+  )
+}
+# A value that converts but changes representation: extract.R reads a leading
+# zero or -0 away. A value it refuses (01X) is no change, only a failure.
+LEADING_ZEROS <- function(padded) {
+  paste0(
+    "COUNT_BIG(CASE WHEN (@col COLLATE Latin1_General_BIN2 LIKE N'0[0-9]%'",
+    " OR @col COLLATE Latin1_General_BIN2 LIKE N'-0[0-9]%'",
+    # -0 is written as 0, a change of representation like a leading zero.
+    " OR @col COLLATE Latin1_General_BIN2 = N'-0') AND ", CONVERTS(padded), " THEN 1 END)"
+  )
+}
+
 # The T-SQL per measure, @col standing for the quoted column. Each is an
 # aggregate over the one scan. A text value is checked as stored, with
 # Latin1_General_BIN2 so [0-9] is ASCII digits only, whatever the collation.
@@ -137,22 +161,15 @@ MEASURES <- list(
   # value (no bigint has more than 19 digits) counts as not converting. A
   # zero-padded key is a leading_zeros count, not this one.
   not_bigint_text = paste0(
-    "COUNT_BIG(CASE WHEN @col IS NOT NULL AND (LEN(", CAST_DIGITS, ") > 40",
-    " OR TRY_CAST(CAST(", CAST_SIGN, " + LEFT(", CAST_DIGITS, ", 40)",
-    " AS nvarchar(41)) AS bigint) IS NULL)",
-    " THEN 1 END)"
+    "COUNT_BIG(CASE WHEN @col IS NOT NULL AND ", NOT_BIGINT_TEXT, " THEN 1 END)"
   ),
   not_whole = "COUNT_BIG(CASE WHEN @col <> ROUND(@col, 0, 1) THEN 1 END)",
   beyond_float = "COUNT_BIG(CASE WHEN ABS(@col) >= 9007199254740992E0 THEN 1 END)",
   beyond_real = "COUNT_BIG(CASE WHEN ABS(@col) >= 16777216E0 THEN 1 END)",
   # extract.R reads text as an optional minus and digits (lopnr_digits), so the
   # minus is skipped before the leading-zero and digit checks.
-  leading_zeros = paste0(
-    "COUNT_BIG(CASE WHEN LTRIM(@col) COLLATE Latin1_General_BIN2 LIKE N'0[0-9]%'",
-    " OR LTRIM(@col) COLLATE Latin1_General_BIN2 LIKE N'-0[0-9]%'",
-    # -0 is written as 0, a change of representation like a leading zero.
-    " OR LTRIM(RTRIM(@col)) COLLATE Latin1_General_BIN2 = N'-0' THEN 1 END)"
-  ),
+  leading_zeros = LEADING_ZEROS(FALSE),
+  leading_zeros_fixed = LEADING_ZEROS(TRUE),
   # A char or nchar value is padded with trailing spaces by its type, which
   # extract.R trims: only leading spaces count there.
   spaces_fixed = "COUNT_BIG(CASE WHEN @col LIKE N' %' THEN 1 END)",
@@ -188,7 +205,7 @@ measures_for <- function(type) {
     text = c(
       nulls = "nulls",
       not_bigint = "not_bigint_text",
-      leading_zeros = "leading_zeros",
+      leading_zeros = if (type %in% c("char", "nchar")) "leading_zeros_fixed" else "leading_zeros",
       spaces = if (type %in% c("char", "nchar")) "spaces_fixed" else "spaces",
       not_digits = "not_digits",
       min_length = "min_text",
@@ -525,7 +542,8 @@ read_salt <- function(path, report) {
     return(paste0(
       "salt file ", path, " is missing but the report ", report, " exists: restore the",
       " salt from where it was kept (a new salt gives a re-export independent noise for",
-      " the same counts), or remove ", report, " deliberately to start over"
+      " the same counts). Remove ", report, " to start over only if it was never exported;",
+      " if it was, restore the original salt before any re-export"
     ))
   }
   if (!file.exists(path)) {
@@ -870,21 +888,28 @@ main <- function() {
     return(EXIT[["setup"]])
   }
   failed <- 0L
+  complete <- NULL
   for (i in seq_len(nrow(tables))) {
     mine <- cols[
       cols$table_schema == tables$table_schema[i] & cols$table_name == tables$table_name[i],
     ]
     rows <- scan_table(con, mine, disclosure)
-    failed <- failed + any(startsWith(rows$status, "failed"))
+    table_failed <- any(startsWith(rows$status, "failed"))
+    failed <- failed + table_failed
     # Written after every table, so a long run that stops keeps what it counted.
     problem <- append_lines(csv_lines(rows), OUTPUT)
     if (!is.null(problem)) {
       write_failure(problem)
-      say("  ", OUTPUT, " stops before ", tables$table_schema[i], ".", tables$table_name[i])
+      say(
+        "  ", OUTPUT, " may hold part of ", tables$table_schema[i], ".", tables$table_name[i],
+        "; the last table written whole is ",
+        if (is.null(complete)) "none" else complete
+      )
       status <- EXIT[["failed"]]
-      attr(status, "tables") <- c(nrow(tables), failed + 1L)
+      attr(status, "tables") <- c(i, failed + !table_failed)
       return(status)
     }
+    complete <- paste0(tables$table_schema[i], ".", tables$table_name[i])
   }
   status <- if (failed) EXIT[["failed"]] else EXIT[["ok"]]
   attr(status, "tables") <- c(nrow(tables), failed)

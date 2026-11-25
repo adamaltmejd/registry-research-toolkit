@@ -212,7 +212,7 @@ comment lines, then one row per column with `schema`, `table`, `column`, `group`
   | `not_bigint`    | numbers, text      | `TRY_CAST(… AS bigint)` cannot convert (text over 40 digits counts)          |
   | `not_whole`     | decimal, float     | have a fraction                                                              |
   | `beyond_exact`  | float, real        | are at or beyond 2^53 (real: 2^24), where distinct keys may have merged      |
-  | `leading_zeros` | text               | start with `0` or `-0` and another digit, or are `-0` (`012` becomes `12`)   |
+  | `leading_zeros` | text               | convert and start with `0` or `-0` and another digit, or are `-0` (`012` becomes `12`) |
   | `spaces`        | text               | have a leading space, or a trailing one in `varchar`/`nvarchar`              |
   | `not_digits`    | text               | are empty or not ASCII digits (after one leading `-`), spaces trimmed        |
 
