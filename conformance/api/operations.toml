@@ -463,10 +463,10 @@ successor_name = "string | null; the name of `successor_fqid`"
 note = "crates/DESIGN.md, \"The logical order\", has the fields and two examples (a clear and a blocked order)."
 
 [shape.Manifest]
-version = "integer; 6"
+version = "integer; 7"
 extract_format = "\"dta\" | \"parquet\" | \"csv\"; the project's"
 provenance = "{mode \"steward_holdings\", steward, catalog {release, schema, generation (the served pair, meta.generation)}, holdings {owner, generation}, base_generation (the reference catalog's generation_id), project {schema_version, project_hash, name}}"
-files = "[{name, schema, table, delivery (string | null), partition?, projection?, row_filter? {column, encoding (\"date\" | \"year\" | \"yyyymm\" | \"yyyymmdd\"), ranges [{from?, to?}] (inclusive ISO days)}, columns [{name, stata_name? (dta only), storage {type, length, precision, scale}, role (\"ordered\" | \"row_key\" | \"carried\"), refs [{source, binding (integer | null), table, variable, period Period, spelling}], slot? {family?, kind, index}, lopnr? (true: an SCB löpnummer, written as int64)}], code_filter? {column, codes [string], prefixes [string]} (sorted; a prefix another covers dropped; ANDed with row_filter)}]"
+files = "[{name, schema, table, delivery (string | null), partition?, projection?, row_filter? {column, encoding (\"date\" | \"year\" | \"yyyymm\" | \"yyyymmdd\"), ranges [{from?, to?}] (inclusive ISO days)}, columns [{name, stata_name? (dta only), storage {type, length, precision, scale}, role (\"ordered\" | \"row_key\" | \"carried\"), refs [{source, binding (integer | null), table, variable, period Period, spelling}], slot? {family?, kind, index}, lopnr? (true: an SCB löpnummer, written as int64), packed? (one character: the separator of a column holding several codes; a code filter on it matches any of them)}], code_filter? {column, codes [string], prefixes [string]} (sorted; a prefix another covers dropped; ANDed with row_filter)}]"
 clips = "[{source, binding, variable, requested [Period], ordered [Period]}]"
 findings = "[Issue]; the non-blocking ones"
 note = "crates/DESIGN.md, \"MONA order file\". Every object is closed; an absent optional field means none."

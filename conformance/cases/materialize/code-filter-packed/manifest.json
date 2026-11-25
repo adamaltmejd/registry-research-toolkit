@@ -1,0 +1,123 @@
+{
+  "clips": [],
+  "extract_format": "parquet",
+  "files": [
+    {
+      "code_filter": {
+        "codes": [
+          "12",
+          "7"
+        ],
+        "column": "Late",
+        "prefixes": []
+      },
+      "columns": [
+        {
+          "name": "Late",
+          "packed": " ",
+          "refs": [
+            {
+              "binding": 0,
+              "period": {
+                "end": "2021-01-01",
+                "start": "2020-01-01"
+              },
+              "source": "b",
+              "spelling": "Late",
+              "table": "demo/held",
+              "variable": "demo/held/late"
+            }
+          ],
+          "role": "ordered",
+          "slot": {
+            "index": "2010",
+            "kind": "year"
+          },
+          "storage": {
+            "length": 10,
+            "precision": null,
+            "scale": null,
+            "type": "nvarchar"
+          }
+        },
+        {
+          "lopnr": true,
+          "name": "Received_Id",
+          "refs": [
+            {
+              "binding": null,
+              "period": {
+                "end": "2021-01-01",
+                "start": "2020-01-01"
+              },
+              "source": "b",
+              "spelling": "Received_Id",
+              "table": "demo/held",
+              "variable": "demo/held/id"
+            }
+          ],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "Year",
+          "refs": [],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        }
+      ],
+      "delivery": "2017..2020",
+      "name": "pool",
+      "row_filter": {
+        "column": "Year",
+        "encoding": "year",
+        "ranges": [
+          {
+            "from": "2020-01-01"
+          }
+        ]
+      },
+      "schema": "dbo",
+      "table": "Pool"
+    }
+  ],
+  "findings": [
+    {
+      "code": "filter_codes_unchecked",
+      "level": "warning",
+      "message": "demo/held/late has no documented code list here, so the filter's codes are passed on unchecked.",
+      "path": "/sources/0/bindings/0/filter",
+      "period": null,
+      "source": "b",
+      "successor_fqid": null,
+      "table": null,
+      "variable": "demo/held/late"
+    }
+  ],
+  "provenance": {
+    "catalog": {
+      "release": "dev",
+      "schema": "18"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "mode": "steward_holdings",
+    "project": {
+      "name": "Packed code filter",
+      "schema_version": "8.1.0"
+    },
+    "steward": "fixture"
+  },
+  "version": 7
+}

@@ -129,7 +129,17 @@ fn column_bytes(column: &SpecColumn, format: ExtractFormat) -> u64 {
             .or(column.length)
             .and_then(|l| u64::try_from(l).ok())
             .map_or(8, |l| l.clamp(1, 8));
-        longest.map_or(width, |l| l as u64).max(1)
+        let one = longest.map_or(width, |l| l as u64).max(1);
+        // A packed value joins up to three codes (`generate::packed_value`), within its
+        // held width.
+        match (&column.packed, crate::generate::packed_width(column)) {
+            (Some(_), held) => {
+                let token = longest.map_or(crate::generate::PACKED_TOKEN as u64, |l| l as u64);
+                let joined = 3 * token.max(1) + 2;
+                held.map_or(joined, |w| joined.min(w as u64))
+            }
+            (None, _) => one,
+        }
     };
     match format {
         // Digits and a delimiter.

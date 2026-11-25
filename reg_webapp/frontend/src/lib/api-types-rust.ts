@@ -636,6 +636,13 @@ export interface components {
             lopnr?: true;
             /** @description The exact column name in the file. */
             name: string;
+            /**
+             * @description The separator of a packed column, which holds several codes of one variable in one
+             *     value (PAR's `DIAGNOS`), by the steward's holdings: a code filter on it matches any
+             *     of the codes. Absent: not packed. One printable ASCII character other than a letter
+             *     or digit ([`packed_separator`]); `null` is refused, as the runner refuses it.
+             */
+            packed?: string;
             refs: components["schemas"]["ColumnRef"][];
             role: components["schemas"]["ColumnRole"];
             slot?: components["schemas"]["Slot"] | null;

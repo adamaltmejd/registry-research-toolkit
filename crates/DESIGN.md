@@ -2239,11 +2239,14 @@ Which form fits depends on how SCB named the keys. Where it prefixed them with t
 project id, a prefix covers every key. Where they are bare names (`LopNr`), a prefix
 would also mark a holder's own serial spelled `LopNr…`, so the entry names the column
 exactly. A table and column entry marks that column of that table only, an exception to a
-prefix or name (a table name in several schemas is marked in each). A column is marked
+prefix or name. Where the reader config is `schema_keyed` and the table name is in
+several schemas, the entry also gives `schema`; without it, an entry that marks its table
+in a second schema is refused (`holdings_mark_ambiguous`), since it would mark two
+tables. A column is marked
 when any entry matches its physical name; the mark does not touch matching. The reader
 refuses, naming the entry by its 1-based position or the export row, never a name:
 `holdings_reader` for an entry with more than one form or none, a `table` without `column`
-(or the reverse), or an empty value or evidence; `holdings_lopnr_unused` for an entry (any
+(or the reverse), a `schema` outside that form, or an empty value or evidence; `holdings_lopnr_unused` for an entry (any
 form) that marks no held column (a typo or a stale entry); and `holdings_lopnr_storage`
 for a marked column stored otherwise than as an integer, a decimal, a double-precision
 `float` or text: a `real` (`float(1..24)`) has already merged distinct keys above 2^24,
@@ -2268,6 +2271,47 @@ writes it as a `bigint` ([runner design](../reg_mona_runner/DESIGN.md), "Types p
 format"); `reg-mock` writes it as one too, so mock and delivered types agree. The
 catalog's types and the storage drift check are unchanged: the catalog records the
 storage, the delivery need not repeat it.
+
+#### Packed code columns
+
+A packed column holds several codes of one variable in one text value, joined by a
+separator: PAR's `DIAGNOS` holds all of a contact's diagnoses as `I10 E119 U099`
+(#2604, maintainer ruling 2026-11-25). A code filter on it must match any of the codes,
+not the whole value ("Row filters by code", "Packed columns"). How the holder joins the
+codes is a fact of its delivery, so the steward declares it beside `[[lopnr]]`, in the
+same three forms through the same matcher (a name `prefix`, an exact `name`, or one
+`table` and `column`, with `schema` where needed), plus the separator:
+
+```toml
+[[packed]]
+table = "T_Par_Sv_2020"   # one column of one table, ASCII case ignored
+column = "DIAGNOS"
+separator = " "
+evidence = "Socialstyrelsen's PAR documentation: several diagnosis codes in one string."
+```
+
+The full path is the preferred form (maintainer ruling 2026-11-25): a name does not tell,
+since LMED's `ATC` holds one code and PAR's `ATC` several, and a packed filter cannot use
+an index on the column, so a false mark costs a scan and a missed one returns no rows.
+`separator` is one printable ASCII character that is not a letter or digit. The reader
+refuses, naming the entry by position or the export row: `holdings_reader` for an entry
+with more than one form or none, an empty value or evidence, or a bad separator;
+`holdings_packed_unused` for an entry that marks no held column;
+`holdings_packed_conflict` for a column two entries give different separators;
+`holdings_mark_ambiguous` as for `[[lopnr]]`; and
+`holdings_packed_storage` for a packed column stored otherwise than as `char`,
+`varchar`, `nchar` or `nvarchar`. A column may be both packed and a löpnummer; a code
+filter on it is refused as on any löpnummer (`filter_variable_not_coded`). Holdings
+schema 15 stores the separator as `holding_column.packed` (null: not packed); `verify`
+re-derives it (`holdings_packed_source_mismatch`) and `reg-build diff --holdings` lists
+the columns that gained, lost or changed it. The order file carries it on the column as
+`"packed": " "` (absent: not packed), manifest version 7.
+
+The global catalog does not mark packed columns. Its only use of the fact would be the
+order check, and that needs none: a filter's entries are single codes, checked against
+the variable's value set and classification as on any column (PAR's `DIAGNOS` has no
+value set there, so its codes pass unchecked with `filter_codes_unchecked`). Only the
+steward's runner reads the values, so the steward's holdings are the one home.
 
 #### Schema-keyed holdings
 
@@ -2465,6 +2509,7 @@ and renames the accounting meta keys to `held_tables` and `held_columns` (see "P
 possession"). A steward meets it at its bump to the release that ships it.
 
 Holdings schema 14 adds `holding_column.lopnr` (see "SCB löpnummer columns").
+Holdings schema 15 adds `holding_column.packed` (see "Packed code columns").
 
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
@@ -2474,7 +2519,7 @@ catalog's half-open day convention:
   | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, optional `release` (the catalog name of the primary release the file is), `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
   | `holding_route`   | `holding_id`, public `table_pid`: the table's default logical routes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
   | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                   |
-  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot family/kind/index as topology evidence, `disposition` (`candidate`, `hold`, `unmap`) with its reason and follow-up issue, and `lopnr` (an SCB löpnummer, written as int64). Includes every exported column, even when it maps to nothing.                                                                                                                                                                                                                                                                    |
+  | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot family/kind/index as topology evidence, `disposition` (`candidate`, `hold`, `unmap`) with its reason and follow-up issue, and `lopnr` (an SCB löpnummer, written as int64), and `packed` (a packed column's separator, else null). Includes every exported column, even when it maps to nothing.                                                                                                                                                                                                                                                                    |
   | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, `start`, `end`, `role`, `carried` and caveat/window. No spelling selector or concept-to-member identity shortcut. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                                                                                                                                                                                                                                                     |
 
 Required held keys are the received row's entity components and time components,
@@ -2734,7 +2779,8 @@ entry:
 - each column: exact physical `name`, optional `stata_name`, expected storage metadata,
   logical source/binding/table/variable/period/spelling references, row-key/carried role,
   optional steward slot topology metadata (maintainer 2026-10-29) and `lopnr` when the
-  column is an SCB löpnummer, which the runner writes as int64 ("SCB löpnummer columns"). Several logical
+  column is an SCB löpnummer, which the runner writes as int64 ("SCB löpnummer columns").
+  `packed` (its separator) when it holds several codes in one value ("Packed code columns"). Several logical
   references may share one physical column.
 
 For a 2019–2020 request on `SWECOV_SOS_SV`, the logical interval is
@@ -2803,9 +2849,9 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 `reg_core::issue` so the manifest owns its findings type. The cases are
 `conformance/cases/materialize/`.
 
-- `version` is the integer `6`; the runner refuses every other (v5 added the column's
-  `lopnr`, "SCB löpnummer columns"; v6 adds the file's `code_filter`, "Row filters by
-  code"). `extract_format` is the
+- `version` is the integer `7`; the runner refuses every other (v5 added the column's
+  `lopnr`, "SCB löpnummer columns"; v6 the file's `code_filter`, "Row filters by code";
+  v7 adds the column's `packed`, "Packed code columns"). `extract_format` is the
   project's. `stata_name` is
   the v3 rule byte for byte, emitted only on a `dta` order.
 - Provenance: `catalog.generation` is the served pair (`meta.generation`),
@@ -2992,6 +3038,37 @@ the code filter after the period filter (`ATC: 1 code, 2 prefixes`), and
 since rows the code filter drops would be gone in any case. No count of rows before the
 code filter: it would be one more scan of the largest tables.
 
+**Packed columns** (maintainer ruling 2026-11-25; "Packed code columns" under the
+holdings). On a column the order file marks `packed`, an entry matches any code of the
+value, not the whole value. "Any diagnosis U09" is the usual question; matching a code
+at a given position is out of scope. The order check is the same as on any column: each
+entry is one code, checked against the value set and classification. Materialization
+adds two refusals, both `filter_storage`: an entry that contains the column's separator
+(it would match across two codes), and, through the holdings reader, any storage but
+`char`, `varchar`, `nchar` and `nvarchar`. With the separator `s` bound once per file as
+`@s`, the runner's terms are:
+
+- exact code `c`: `CAST(@s AS max) + v + @s + N'.' LIKE @p`, bound as `%` `s` `c` `s` `%`;
+- prefix `p`: `CAST(@s AS max) + v LIKE @p`, bound as `%` `s` `p` `%`;
+
+where `v` is `RTRIM(col)` on `char` and `nchar` storage and `col` otherwise, and `max`
+is `varchar(max)` or `nvarchar(max)` like the parameters. Concatenating non-max strings
+truncates the result at 8,000 bytes, which would cut the last code of a full-width
+`nvarchar(4000)` value; the `CAST` keeps it whole. Each term is
+
+bound with `[`, `%` and `_` escaped in `s`, `c` and `p` as for any prefix. These are the
+four token-boundary cases (the whole value, first, last or inner code) in one pattern.
+`RTRIM` drops a `char` column's padding, which would otherwise end the last code with
+blanks before a separator that is not a space; a `varchar` value keeps its own trailing
+blank. A leading, trailing or repeated separator
+is an empty code and matches nothing. A NULL value makes the expression NULL and passes
+no term. The `N'.'` ends the expression with a non-blank,
+since `LIKE` ignores the trailing blanks of the expression it matches, which would drop
+the separator after the last code when the separator is a space. The separator is one
+more bound parameter, counted toward the 2,100. A packed term cannot use an index on the
+column (its pattern starts with `%`): a packed filter scans the table, which is still
+far less than extracting it.
+
 **Mock** (ruling 5, [reg-mock design](reg-mock/DESIGN.md), "Generate"). Every row a filtered
 file holds passes its filter: the spec carries the file's `code_filter`, and the
 generator drops a row whose value in the column the filter does not admit (a value from
@@ -3005,9 +3082,13 @@ layout, and in the standard layout the same union rule over the sources sharing 
 table-year file, refused as the materializer refuses it (`filter_column_missing`,
 `filter_column_split`, `filter_column_mixed`). The union rule is one function in `reg_core::manifest`, which both
 `materialize_order` and `reg-mock compile` call.
+A packed column (the order file's `packed`) draws one to three codes joined by its
+separator, as many as its held width holds, from its code list or, without one, as
+synthetic four-letter codes; in a filtered file a row passes when any of them is
+admitted, and the drawn codes are the admitted ones, so every row passes. A project type
+override on it must be text (`packed_type` otherwise) and keeps the held width.
 
-**Out of scope** (ruling 6): packed columns (several codes in one text column), cohort
-filters (a key list on MONA), a steward refusing a large unfiltered order, more than
+**Out of scope** (ruling 6): cohort filters (a key list on MONA), a steward refusing a large unfiltered order, more than
 one filtered variable per source, ranges and negation.
 
 #### Versions and checks
@@ -3015,7 +3096,9 @@ one filtered variable per source, ranges and negation.
 - Project document 8.1.0 (below) for `filter`; every `project_hash` changes.
 - The manifest version takes the step after #2656's (v5, the `lopnr` mark) for
   `code_filter`: 6; `extract.R` and `reg-mock` refuse every other.
-- `HOLDINGS_SCHEMA_VERSION` and `CATALOG_SCHEMA_VERSION` unchanged.
+- Packed columns (a separate PR by the maintainer's 2026-11-25 ruling): manifest version 7
+  for the column's `packed`, `HOLDINGS_SCHEMA_VERSION` 15 for `holding_column.packed`.
+  `CATALOG_SCHEMA_VERSION` unchanged.
 - The new codes are findings, not error codes, so `errors.toml` is unchanged; the SPA
   titles them (`validation.ts`). The generated OpenAPI and project schema follow from
   `bash scripts/gate.sh regen`.

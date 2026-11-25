@@ -1,0 +1,30 @@
+{
+  "note": "Fails if a code filter on a column the steward's holdings mark packed (Late, separated by a space) reaches the order file without the column's separator, so the runner would compare its codes with the whole value instead of with each code in it.",
+  "project": {
+    "schema_version": "8.1.0",
+    "reg_meta_version": "0.71.0",
+    "catalog": "fixture",
+    "name": "Packed code filter",
+    "extract_format": "parquet",
+    "sources": [
+      {
+        "name": "b",
+        "table": "demo/held",
+        "period": [
+          2020
+        ],
+        "bindings": [
+          {
+            "variable": "demo/held/late",
+            "filter": {
+              "codes": [
+                "7",
+                "12"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

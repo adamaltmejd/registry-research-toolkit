@@ -349,7 +349,7 @@ fn rows(
                     if let Some((filter, i, integer)) = filtered
                         && i == row.len()
                     {
-                        keep = admitted(filter, integer, code, &value);
+                        keep = admitted(filter, integer, column.packed.as_deref(), code, &value);
                     }
                     row.push(value);
                 }
@@ -416,14 +416,18 @@ impl<'a> Pool<'a> {
 
 /// Whether a code filter keeps a row holding `value`. The runner filters the held
 /// storage, before a project's type override converts the value, so a drawn `code` is
-/// compared as drawn; an attribute's value (no code) as written. A missing value is
-/// never kept.
+/// compared as drawn; an attribute's value (no code) as written; a packed column's
+/// value by any of its codes. A missing value is never kept.
 fn admitted(
     filter: &reg_core::manifest::CodeFilter,
     integer: bool,
+    packed: Option<&str>,
     code: Option<&str>,
     value: &Cell,
 ) -> bool {
+    if let (Some(separator), Cell::Text(text)) = (packed, value) {
+        return text.split(separator).any(|c| filter.admits(c, false));
+    }
     match (code, value) {
         (Some(code), _) => filter.admits(code, integer),
         (None, Cell::Int(n)) => filter.admits(&n.to_string(), true),
@@ -432,7 +436,49 @@ fn admitted(
     }
 }
 
-/// A cell and, when it was drawn from the column's codes, the code it was drawn as.
+/// The width of a synthetic code in a packed column without a code list.
+pub(crate) const PACKED_TOKEN: usize = 4;
+
+/// A packed column's held width: the storage's, else (under a text override) the
+/// width compile kept from it.
+pub(crate) fn packed_width(column: &SpecColumn) -> Option<usize> {
+    column
+        .storage
+        .as_ref()
+        .and_then(|s| s.length)
+        .or(column.length)
+        .filter(|w| *w > 0)
+        .and_then(|w| usize::try_from(w).ok())
+}
+
+/// A packed column's value: one to three codes joined by its separator, as many as its
+/// held width holds (one at least). The codes come from its list, or without one are
+/// synthetic letter codes no wider than [`PACKED_TOKEN`].
+fn packed_value(column: &SpecColumn, separator: &str, pool: &Pool<'_>, rng: &mut Rng) -> String {
+    let width = packed_width(column).unwrap_or(usize::MAX);
+    let code = |rng: &mut Rng| -> String {
+        if pool.codes.is_empty() {
+            (0..PACKED_TOKEN.min(width))
+                .map(|_| char::from(b'A' + u8::try_from(rng.below(26)).expect("below 26")))
+                .collect()
+        } else {
+            pool.codes[pick(rng, pool.codes.len())].to_owned()
+        }
+    };
+    let n = 1 + pick(rng, 3);
+    let mut value = code(rng);
+    for _ in 1..n {
+        let next = code(rng);
+        if value.len() + separator.len() + next.len() > width {
+            break;
+        }
+        value.push_str(separator);
+        value.push_str(&next);
+    }
+    value
+}
+
+/// A cell and, when it was drawn as one of the column's codes, that code.
 fn cell<'a>(
     file: &SpecFile,
     column: &SpecColumn,
@@ -465,6 +511,13 @@ fn cell<'a>(
         let value =
             attribute_cell(column, kind, attribute, unit, rng).ok_or_else(|| not_numeric(at()))?;
         return Ok((value, None));
+    }
+    if let Some(separator) = &column.packed {
+        let value = packed_value(column, separator, pool, rng);
+        return Ok((
+            from_text(&value, kind).ok_or_else(|| not_numeric(at()))?,
+            None,
+        ));
     }
     if !pool.codes.is_empty() {
         let code = pool.codes[pick(rng, pool.codes.len())];

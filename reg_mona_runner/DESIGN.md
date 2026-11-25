@@ -1,7 +1,7 @@
 # Design: the MONA extract runner (`reg_mona_runner`)
 
 `extract.R` turns order files into extract files inside MONA. It reads the MONA order
-file (version 6) that `materialize_order` writes, whose contract is
+file (version 7) that `materialize_order` writes, whose contract is
 [../crates/DESIGN.md](../crates/DESIGN.md) ("MONA order file") and
 `crates/reg-core/src/manifest.rs`. A steward's data manager runs it by hand; no agent
 and no network reach MONA, so the script is one self-contained file that gets uploaded
@@ -252,7 +252,18 @@ order never writes them). The column's storage is checked like the period column
 which takes exact codes of at most 18 digits only; anything else is refused before any
 query. A column marked `lopnr` is refused: a key is not a code. `rows_without_period` counts rows that pass the code filter and lack a period
 value. `filter` in `run_log.csv` names the code filter after the period filter
-(`ATC: 1 code, 2 prefixes`); `rows` is the rows kept.
+(`ATC: 1 code, 2 prefixes`); `rows` is the rows kept. On a column the order marks `packed`
+(its separator; manifest version 7), an entry matches any code of the value:
+`CAST(@s AS max) + v + @s + N'.' LIKE '%' s c s '%'` for a code,
+`CAST(@s AS max) + v LIKE '%' s p '%'` for a prefix, the separator `@s` bound once more
+and counted toward the 2,100 ([../crates/DESIGN.md](../crates/DESIGN.md), "Packed
+columns"). `v` is `RTRIM(col)` on `char` and `nchar` storage, which drops their padding,
+and the bare column otherwise. The `CAST` to `varchar(max)` or `nvarchar(max)` keeps a
+full-width value from being truncated at 8,000 bytes; the `N'.'` keeps the separator
+after the last code, since `LIKE` ignores the trailing blanks of its expression. No index serves such a
+term. A packed column must be `char`, `varchar`, `nchar` or `nvarchar`, and an entry
+holding the separator is refused at the manifest check.
+
 
 ## CSV
 

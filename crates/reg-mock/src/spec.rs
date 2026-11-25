@@ -131,6 +131,14 @@ pub struct SpecColumn {
     pub identifier: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub null_rate: Option<f64>,
+    /// The separator of a packed column (the order file's `packed`): each value is one to
+    /// three codes joined by it.
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "reg_core::manifest::packed"
+    )]
+    pub packed: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
