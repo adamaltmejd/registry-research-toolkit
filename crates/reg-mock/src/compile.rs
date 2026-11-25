@@ -635,8 +635,9 @@ impl Context<'_> {
             let mut built = Built::new(file.name.clone(), Vec::new());
             built.file.code_filter.clone_from(&file.code_filter);
             // simplify: the runner extracts a file without a row filter over its whole
-            // delivery; the mock holds only the requested years, upgrade if a pipeline
-            // reads years it did not order.
+            // delivery, and a spell table's spells reaching outside the request; the mock
+            // holds only the requested years, upgrade if a pipeline reads years it did not
+            // order.
             let mut years = BTreeSet::new();
             for r in file.columns.iter().flat_map(|c| &c.refs) {
                 match self::years(&r.period) {
@@ -655,7 +656,7 @@ impl Context<'_> {
                 // row filter when the order covers the whole delivery.
                 if column.refs.is_empty() {
                     if column.role == manifest::Role::RowKey {
-                        match year_column(column, row_filter.map(|f| f.encoding)) {
+                        match year_column(column, row_filter) {
                             Ok(year) => built.push_unsourced(year),
                             Err(code) => refusals.push(Refusal::new(
                                 code,
@@ -718,10 +719,7 @@ impl Context<'_> {
                     continue;
                 }
                 spec_column.label = column.stata_name.as_ref().map(|_| column.name.clone());
-                if let Some(filter) = row_filter {
-                    spec_column.attribute = Some(Attribute::Year);
-                    spec_column.encoding = Some(filter.encoding);
-                }
+                period_attribute(file, &mut spec_column);
                 // Missing only in the file's years its placement holds no segment.
                 let held = self.held_years(&file.table, &column.name);
                 if !held.is_empty() {
@@ -841,6 +839,7 @@ impl Context<'_> {
     }
 
     /// One physical column from all its references (DESIGN.md, "Invariants", 2).
+    #[allow(clippy::too_many_lines)]
     fn resolve(
         &self,
         file: &str,
@@ -948,6 +947,7 @@ impl Context<'_> {
             attribute: None,
             map: BTreeMap::new(),
             encoding: None,
+            spell: Vec::new(),
             years: Vec::new(),
             identifier: primary.identifier.unwrap_or(false),
             null_rate: None,
@@ -1102,6 +1102,7 @@ impl Context<'_> {
             attribute: None,
             map: BTreeMap::new(),
             encoding: None,
+            spell: Vec::new(),
             years: Vec::new(),
             // No segment states it: the stated type does.
             identifier: dtype == ColumnType::Identifier,
@@ -1247,12 +1248,39 @@ fn within(period: Period, bounds: &Period) -> Period {
     }
 }
 
+/// A delivered column the row filter reads: its start as the row's year, a spell table's
+/// end as the year's last day, both drawn against a spell table's ranges so a mock spell
+/// ends on or after its start and passes the runner's overlap filter.
+fn period_attribute(file: &manifest::File, spec_column: &mut SpecColumn) {
+    let Some(filter) = &file.row_filter else {
+        return;
+    };
+    spec_column.attribute = if filter.column == spec_column.name {
+        Some(Attribute::Year)
+    } else if filter.end_column.as_ref() == Some(&spec_column.name) {
+        Some(Attribute::YearEnd)
+    } else {
+        return;
+    };
+    spec_column.encoding = Some(filter.encoding);
+    spec_column.spell = spell_ranges(filter);
+}
+
+/// A spell table's row filter ranges, none for any other filter.
+fn spell_ranges(filter: &manifest::RowFilter) -> Vec<manifest::Range> {
+    if filter.end_column.is_some() {
+        filter.ranges.clone()
+    } else {
+        Vec::new()
+    }
+}
+
 /// The runner's period column, typed by its storage; without a row filter its
 /// encoding is unknown and the year is written whole. A storage type that is missing or
 /// one mocks do not write is refused, as for any column.
 fn year_column(
     column: &manifest::Column,
-    encoding: Option<manifest::Encoding>,
+    filter: Option<&manifest::RowFilter>,
 ) -> Result<SpecColumn, &'static str> {
     let (dtype, _) = resolve_type(None, Some(&column.storage), None)?;
     Ok(SpecColumn {
@@ -1265,7 +1293,8 @@ fn year_column(
         codes: Vec::new(),
         attribute: Some(Attribute::Year),
         map: BTreeMap::new(),
-        encoding,
+        encoding: filter.map(|f| f.encoding),
+        spell: filter.map_or_else(Vec::new, spell_ranges),
         years: Vec::new(),
         identifier: false,
         null_rate: Some(0.0),

@@ -2510,13 +2510,14 @@ possession"). A steward meets it at its bump to the release that ships it.
 
 Holdings schema 14 adds `holding_column.lopnr` (see "SCB löpnummer columns").
 Holdings schema 15 adds `holding_column.packed` (see "Packed code columns").
+Holdings schema 16 adds `holding_table.period_end_column_id` (see "Spell overlap").
 
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
 
   | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
   | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, optional `release` (the catalog name of the primary release the file is), `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
+  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, optional `release` (the catalog name of the primary release the file is), `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, optional `period_end_column_id` (a spell table's end, only beside a period column), pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
   | `holding_route`   | `holding_id`, public `table_pid`: the table's default logical routes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
   | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                   |
   | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot family/kind/index as topology evidence, `disposition` (`candidate`, `hold`, `unmap`) with its reason and follow-up issue, and `lopnr` (an SCB löpnummer, written as int64), and `packed` (a packed column's separator, else null). Includes every exported column, even when it maps to nothing.                                                                                                                                                                                                                                                                    |
@@ -2823,8 +2824,9 @@ values in logs"): named `orders/<project>.json` (the MONA project name, e.g. `P1
 file per physical table/delivery, all identifiers/types resolved before rows are read,
 parameterized filters, atomic per-order failure cleanup, success archive and
 metadata-only logs. Encodings remain `year`, `yyyymm`, `yyyymmdd`, `date`; finer bounds
-widen to the encoded grain and are reported. `row_filter = {column, encoding, ranges[]}`
-keeps sorted disjoint ranges joined with OR; each range has optional inclusive
+widen to the encoded grain and are reported. `row_filter = {column, end_column?, encoding,
+ranges[]}` keeps sorted disjoint ranges joined with OR (with `end_column`, by spell
+overlap: "Spell overlap"); each range has optional inclusive
 `from`/`to` bounds. Omit a bound when it cuts no held day. Preserve interrupted and
 open-ended ranges (`row-filter-disjoint`, `row-filter-open-ended` runner cases).
 NULL/unparseable period values do not pass a filter; `run_log.csv` counts the rows a
@@ -2849,9 +2851,10 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 `reg_core::issue` so the manifest owns its findings type. The cases are
 `conformance/cases/materialize/`.
 
-- `version` is the integer `7`; the runner refuses every other (v5 added the column's
+- `version` is the integer `8`; the runner refuses every other (v5 added the column's
   `lopnr`, "SCB löpnummer columns"; v6 the file's `code_filter`, "Row filters by code";
-  v7 adds the column's `packed`, "Packed code columns"). `extract_format` is the
+  v7 the column's `packed`, "Packed code columns"; v8 adds the row filter's
+  `end_column`, "Spell overlap"). `extract_format` is the
   project's. `stata_name` is
   the v3 rule byte for byte, emitted only on a `dta` order.
 - Provenance: `catalog.generation` is the served pair (`meta.generation`),
@@ -2878,7 +2881,7 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   file.
 - Keys are the holding's `key_requirements` (entity, then time, in declaration order)
   over the days the file extracts (the requested days widened to the encoding's grain,
-  or the whole delivery when unfiltered) on which the file's tables deliver (their
+  or the whole delivery when unfiltered or a spell table) on which the file's tables deliver (their
   `tbl_span`, read on each table's origin), scoped by a requirement's `period`: a
   calendar-year file of a table delivered each autumn needs no key for the spring. Each
   source sharing the file gets key references over those days. A key column a binding
@@ -2901,7 +2904,8 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 - Non-blocking infos: `rows_unfiltered` (no period column, and the file holds days the
   source did not request), `row_filter_widened` (the encoding's grain adds held days
   around the source's own request that no source asked for), both counting only days
-  the file's tables deliver, `row_filter_union` (a
+  the file's tables deliver, `rows_spell_overlap` (a spell table's file, filtered, holds
+  days the source did not request), `row_filter_union` (a
   source whose days are narrower than its shared file's union). Each is located at the
   source and names the extra days, or the union, in plain words at their grain
   (`July to December 2018`, `2017 to June 2018`, a school year as `2004/2005`, per the
@@ -3109,6 +3113,69 @@ one filtered variable per source, ranges and negation.
   `code_filter_dropped`). One order case for `filter_prefix_unknown` beside an
   admitted prefix. The runner's testthat suite gains the manifest refusals only; the SQL
   is checked by hand on MONA.
+
+### Spell overlap
+
+#2608. A spell table (sickness or disability benefit) has a start and an end per row.
+Filtered on its start, it loses spells that began before the request; on its end, spells
+that end after it or are open. Such tables were delivered whole (from 1994 in the
+long-COVID trial). The maintainer's 2026-11-25 ruling reverses the 2026-11-21 "spell tables stay
+unfiltered" ruling and builds the overlap filter.
+
+**The invariant.** A spell-filtered file is resolved exactly as an unfiltered file is,
+over its whole delivery: keys, column references, clips and the mock's years do not
+change. The filter only drops spells that end before the request or begin after it, so
+the delivered rows are a subset of a delivery the order already covers. This is why
+#2609 was closed: it resolved a spell-filtered file over the requested days, and every
+later step (keys, references, clips, release attribution, projection precedence, the
+mock) then met spells that began before them. In `materialize`, `extracted` returns
+the whole delivery for a spell table, as for a table without a period column.
+
+**Holdings.** A steward table may declare `period_end_column` beside `period_column`
+(then the spell start); both share `period_encoding`. An end column without a period
+column, naming the start column or naming a column the table lacks is
+`holdings_period_column_invalid`. `holding_table.period_end_column_id` holds it, with
+`CHECK (period_end_column_id IS NULL OR period_column_id IS NOT NULL)`; `verify`
+re-derives it (`holdings_period_source_mismatch`) and refuses a foreign column, and
+`reg-build diff --holdings` lists an end column added, removed or redirected (`spell_ends`). A row
+key with `period_key = "column"` keeps reading the start. Declaring the columns on a
+steward's tables waits for the release that ships this.
+
+**Order file.** `row_filter` gains optional `end_column`. Ranges are computed from the
+requested days as for any filtered file (union, widened to the encoding's grain, a
+bound omitted where it cuts no held day). With `end_column`, a range keeps a row when
+`start <= to` and (`end IS NULL` or `end >= from`); an absent bound drops its test.
+`row_filter_widened` and `row_filter_union` are reported as for any filtered file, and
+`rows_spell_overlap` in place of `rows_unfiltered`, to each source when the file holds
+held days it did not request: "Spells that overlap your period are included, with the
+days they cover outside it." It names no days, since a spell's reach is in its rows.
+
+**Open ends.** A NULL end is an open spell. The runner reads the end through the same
+`period_key` as the start, so blank text and an unreadable end (`20170230`) read as
+NULL: such a spell is kept, never silently dropped. A high sentinel (`9999-12-31`,
+`99991231`) already passes `end >= from`. simplify: no declared sentinel; add
+`period_end_open = [...]` to the holdings table when a steward table closes open spells
+with a low sentinel such as `0` or `19000101`.
+
+**NULL start.** As for any filtered file (#2620): a row whose start is NULL or
+unreadable is dropped and counted in `run_log.csv` (`rows_without_period`). A range
+without `to` therefore tests `start IS NOT NULL` itself.
+
+**Runner and mock.** `extract.R` resolves the end column's type after the start's,
+checks it against the encoding, and binds each bound once (`to` against the start,
+`from` against the end), so the 2,100-parameter count with a code filter is unchanged.
+`reg-mock` draws a spell file's start and end against its ranges (the spec column's
+`spell`): for a row of year Y it takes the first range that does not end before Y (else
+the last), draws the start in Y no later than that range's `to`, and writes the end
+(`Attribute::YearEnd`) as the later of Y's last day and the range's `from`. Every mock
+spell then ends on or after its start and passes the runner's filter, including rows
+in the years outside the request that a whole-delivery key reference brings in.
+
+**Versions and tests.** Manifest version 8, `HOLDINGS_SCHEMA_VERSION` 16,
+`CATALOG_SCHEMA_VERSION` unchanged. One materialize case (`spell-overlap`: a spell table
+asked for its last two years, whose earlier identifier column the file must still
+carry) and one holdings refusal (`spell-end-is-start`). The SQL is checked by hand on
+MONA.
 
 ### Integer-coded text
 

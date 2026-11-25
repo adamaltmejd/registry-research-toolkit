@@ -615,7 +615,7 @@ export interface components {
             provenance: components["schemas"]["Provenance"];
             /**
              * Format: int32
-             * @description Always 6.
+             * @description The order file format's version; the runner refuses every other.
              */
             version: number;
         };
@@ -1091,10 +1091,20 @@ export interface components {
             /** @description The register's fqid. */
             register: string;
         };
-        /** @description Keep a row whose period value lies in any range. */
+        /**
+         * @description Keep a row whose period value lies in any range; for a spell table, a row whose
+         *     spell overlaps any range (crates/DESIGN.md, "Spell overlap").
+         */
         RowFilter: {
+            /** @description The period column; for a spell table, the spell start. */
             column: string;
             encoding: components["schemas"]["Encoding"];
+            /**
+             * @description A spell table's end column, read in the same encoding: a row is kept for a range
+             *     when its start is on or before `to` and its end is NULL or on or after `from`.
+             *     Absent: the start alone is compared.
+             */
+            end_column?: string | null;
             /** @description Sorted and disjoint. */
             ranges: components["schemas"]["RowFilterRange"][];
         };

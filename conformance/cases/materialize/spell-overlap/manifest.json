@@ -1,0 +1,122 @@
+{
+  "clips": [],
+  "extract_format": "dta",
+  "files": [
+    {
+      "columns": [
+        {
+          "name": "Amount",
+          "refs": [
+            {
+              "binding": 0,
+              "period": {
+                "end": "2021-01-01",
+                "start": "2019-01-01"
+              },
+              "source": "s",
+              "spelling": "Amount",
+              "table": "demo/spells/benefit",
+              "variable": "demo/spells/amount"
+            }
+          ],
+          "role": "ordered",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "Id",
+          "refs": [
+            {
+              "binding": null,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "s",
+              "spelling": "Id",
+              "table": "demo/spells/benefit",
+              "variable": "demo/spells/id"
+            }
+          ],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "IdAlt",
+          "refs": [
+            {
+              "binding": null,
+              "period": {
+                "end": "2021-01-01",
+                "start": "2018-01-01"
+              },
+              "source": "s",
+              "spelling": "IdAlt",
+              "table": "demo/spells/benefit",
+              "variable": "demo/spells/id"
+            }
+          ],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        }
+      ],
+      "delivery": "2017..2020",
+      "name": "spells",
+      "row_filter": {
+        "column": "Start",
+        "encoding": "yyyymmdd",
+        "end_column": "Stop",
+        "ranges": [
+          {
+            "from": "2019-01-01"
+          }
+        ]
+      },
+      "schema": "dbo",
+      "table": "Spells"
+    }
+  ],
+  "findings": [
+    {
+      "code": "rows_spell_overlap",
+      "level": "info",
+      "message": "Spells that overlap your period are included, with the days they cover outside it.",
+      "path": "/sources/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": null,
+      "table": null,
+      "variable": null
+    }
+  ],
+  "provenance": {
+    "catalog": {
+      "release": "dev",
+      "schema": "18"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "mode": "steward_holdings",
+    "project": {
+      "name": "Spell overlap",
+      "schema_version": "8.1.0"
+    },
+    "steward": "fixture"
+  },
+  "version": 8
+}

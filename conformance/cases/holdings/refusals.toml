@@ -77,6 +77,13 @@ name = "missing-period-column"
 located = ["holdings:table=8: fixture:declared-entity-time-key: holdings_period_key_invalid: no period column"]
 edit = [{ file = "holdings.toml", from = "period_column = \"Year\"\nperiod_encoding = \"year\"\n", to = "" }]
 
+# A spell's end column (#2608) is a second column beside the start: naming the start
+# again would compare one column with itself and keep every row a range reaches.
+[[refusal]]
+name = "spell-end-is-start"
+located = ["holdings:table=8: holdings_period_column_invalid: an end column needs a distinct period column"]
+edit = [{ file = "holdings.toml", from = "period_column = \"Year\"\n", to = "period_column = \"Year\"\nperiod_end_column = \"Year\"\n" }]
+
 # Malformed or combined held key claims.
 [[refusal]]
 name = "held-key-without-followup"

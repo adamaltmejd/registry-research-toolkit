@@ -1,0 +1,25 @@
+{
+  "note": "Fails if a spell table's file stops filtering by overlap or is resolved over the requested years only (#2608; the #2609 failure): Spells (start Start, end Stop) is asked for 2019..2020, so the filter keeps spells that start on or before the end of the delivery and end in 2019 or later, NULL ends included, and a kept spell can start in 2017, whose identifier Spells holds in Id, not IdAlt. The file must carry `end_column` and Id over 2017 beside IdAlt, and tell the source with `rows_spell_overlap`.",
+  "project": {
+    "schema_version": "8.1.0",
+    "extract_format": "dta",
+    "reg_meta_version": "0.71.0",
+    "catalog": "fixture",
+    "name": "Spell overlap",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/spells/benefit",
+        "period": {
+          "from": 2019,
+          "to": 2020
+        },
+        "bindings": [
+          {
+            "variable": "demo/spells/amount"
+          }
+        ]
+      }
+    ]
+  }
+}

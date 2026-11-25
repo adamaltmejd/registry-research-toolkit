@@ -2339,7 +2339,7 @@
           "version": {
             "type": "integer",
             "format": "int32",
-            "description": "Always 6.",
+            "description": "The order file format's version; the runner refuses every other.",
             "minimum": 0
           }
         },
@@ -3869,7 +3869,7 @@
       },
       "RowFilter": {
         "type": "object",
-        "description": "Keep a row whose period value lies in any range.",
+        "description": "Keep a row whose period value lies in any range; for a spell table, a row whose\nspell overlaps any range (crates/DESIGN.md, \"Spell overlap\").",
         "required": [
           "column",
           "encoding",
@@ -3877,10 +3877,18 @@
         ],
         "properties": {
           "column": {
-            "type": "string"
+            "type": "string",
+            "description": "The period column; for a spell table, the spell start."
           },
           "encoding": {
             "$ref": "#/components/schemas/Encoding"
+          },
+          "end_column": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A spell table's end column, read in the same encoding: a row is kept for a range\nwhen its start is on or before `to` and its end is NULL or on or after `from`.\nAbsent: the start alone is compared."
           },
           "ranges": {
             "type": "array",

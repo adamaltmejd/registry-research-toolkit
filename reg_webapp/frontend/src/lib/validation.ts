@@ -86,6 +86,7 @@ const TITLES: Readonly<Record<string, string>> = {
   file_name_unsafe: "This table's file name cannot be used",
   physical_schema_missing: "This table has no single location",
   rows_unfiltered: "Some rows from other years are included",
+  rows_spell_overlap: "Spells reaching outside these years are included",
   row_filter_widened: "Some rows around these years are included",
   row_filter_union: "Tables sharing a file are delivered over all their years",
   // A binding's code filter (#2604).

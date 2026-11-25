@@ -119,6 +119,9 @@ struct Holding {
     projection: Option<String>,
     /// (column id, name, encoding).
     period_column: Option<(i64, String, String)>,
+    /// A spell table's end column (crates/DESIGN.md, "Spell overlap"): its file is
+    /// resolved over the whole delivery, as an unfiltered file is.
+    period_end_column: Option<String>,
     keys: String,
     held: Vec<Days>,
 }
@@ -778,8 +781,9 @@ fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
         &format!(
             "SELECT h.physical_name, h.schema_name, h.file_name, h.delivery, h.partition,
                 h.projection_token, p.id, p.name, h.period_encoding, h.key_requirements,
-                {}
+                {}, e.name
              FROM holding_table h LEFT JOIN holding_column p ON p.id = h.period_column_id
+             LEFT JOIN holding_column e ON e.id = h.period_end_column_id
              WHERE h.id = ?",
             crate::holdings::TABLE_LABEL
         ),
@@ -798,6 +802,7 @@ fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
                 },
                 keys: r.get(9)?,
                 label: r.get(10)?,
+                period_end_column: r.get(11)?,
                 held: vec![],
             })
         },
@@ -1350,11 +1355,13 @@ fn keys(
 type KeyMapping = (i64, String, Days, bool, String, Option<String>);
 
 /// The held days a file extracts: its requested days widened to the period column's
-/// grain, or the whole delivery when it has no period column (the row filter's rule).
+/// grain, or the whole delivery when it has no period column (the row filter's rule)
+/// or is a spell table, whose kept spells reach outside the requested days.
 fn extracted(holding: &Holding, draft: &Draft) -> Vec<Days> {
     let union = merge(draft.days.values().flatten().copied().collect());
     match &holding.period_column {
         _ if holding.held.is_empty() => union,
+        _ if holding.period_end_column.is_some() => holding.held.clone(),
         None => holding.held.clone(),
         Some((_, _, encoding)) => {
             let encoding = Encoding::parse(encoding).expect("an admitted encoding");
@@ -1518,10 +1525,26 @@ fn row_filter(
     if minus(&holding.held, &ranges).is_empty() {
         return None;
     }
+    // A kept spell can begin before the request or end after it: its rows reach every
+    // held day the source did not ask for, as an unfiltered file's do.
+    if holding.period_end_column.is_some() {
+        for s in draft.days.keys() {
+            if !on_delivered(&minus(&holding.held, &asked[s]), &draft.delivered).is_empty() {
+                info(
+                    *s,
+                    "rows_spell_overlap",
+                    "Spells that overlap your period are included, with the days they cover \
+                     outside it."
+                        .to_owned(),
+                );
+            }
+        }
+    }
     let first = holding.held.first().map_or(i64::MIN, |d| d.0);
     let last = holding.held.last().map_or(i64::MAX, |d| d.1);
     Some(RowFilter {
         column: column.clone(),
+        end_column: holding.period_end_column.clone(),
         encoding,
         ranges: ranges
             .iter()

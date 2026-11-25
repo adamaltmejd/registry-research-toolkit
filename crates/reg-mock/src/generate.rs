@@ -3,11 +3,11 @@
 //! drawn from the column's documented codes, else from its type. Writing is
 //! [`crate::write`].
 
-use reg_core::manifest::Encoding;
+use reg_core::manifest::{Encoding, Range};
 use reg_core::project::{ColumnType, ExtractFormat};
 
 use crate::Refusal;
-use crate::population::{Demography, Exit, Population, day_in, year_of};
+use crate::population::{Demography, Exit, Population, day_in, last_day, year_of};
 use crate::rng::Rng;
 use crate::size::{self, Estimate};
 use crate::spec::{Attribute, Spec, SpecColumn, SpecFile, Unit};
@@ -684,19 +684,46 @@ fn attribute_cell(
             Some((day, Exit::Death)) if year_of(day) <= unit.year => date(day)?,
             _ => Cell::Null,
         },
-        Attribute::Year => year_cell(column.encoding, kind, unit.year, &mapped, rng)?,
+        Attribute::Year => {
+            let mut day = day_in(unit.year, rng);
+            if let Some(to) = spell_range(&column.spell, unit.year).and_then(|r| r.1) {
+                day = day.min(to);
+            }
+            year_cell(column.encoding, kind, year_of(day), day, &mapped)?
+        }
+        Attribute::YearEnd => {
+            let mut day = last_day(unit.year);
+            if let Some(from) = spell_range(&column.spell, unit.year).and_then(|r| r.0) {
+                day = day.max(from);
+            }
+            year_cell(column.encoding, kind, year_of(day), day, &mapped)?
+        }
     })
 }
 
-/// The row's year in the row filter's encoding: a whole year, or a day or month in it.
+/// The spell range a row of `year` is drawn against, as (from, to) day numbers: the
+/// first that does not end before the year, else the last. A start on or before its
+/// `to` and an end on or after both its `from` and the year's last day overlap it, so the
+/// runner keeps the spell. `None` for a file that is not a spell table's.
+fn spell_range(ranges: &[Range], year: i32) -> Option<(Option<i64>, Option<i64>)> {
+    let day = |iso: &Option<String>| iso.as_deref().and_then(reg_core::iso_day_number);
+    let first = last_day(year - 1) + 1;
+    let range = ranges
+        .iter()
+        .find(|r| day(&r.to).is_none_or(|to| to >= first))
+        .or(ranges.last())?;
+    Some((day(&range.from), day(&range.to)))
+}
+
+/// The row's year in the row filter's encoding: a whole year, or `day` (a day of it)
+/// or its month.
 fn year_cell(
     encoding: Option<Encoding>,
     kind: Kind,
     year: i32,
+    day: i64,
     mapped: &dyn Fn(&str) -> String,
-    rng: &mut Rng,
 ) -> Option<Cell> {
-    let day = day_in(year, rng);
     let iso = reg_core::issue::iso_day(day);
     match (encoding, kind) {
         (_, Kind::Date) => Some(Cell::Date(day)),

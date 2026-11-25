@@ -4867,7 +4867,7 @@
               "$ref": "#/$defs/Provenance"
             },
             "version": {
-              "description": "Always 6.",
+              "description": "The order file format's version; the runner refuses every other.",
               "format": "int32",
               "minimum": 0,
               "type": "integer"
@@ -5591,13 +5591,21 @@
         },
         "RowFilter": {
           "additionalProperties": false,
-          "description": "Keep a row whose period value lies in any range.",
+          "description": "Keep a row whose period value lies in any range; for a spell table, a row whose\nspell overlaps any range (crates/DESIGN.md, \"Spell overlap\").",
           "properties": {
             "column": {
+              "description": "The period column; for a spell table, the spell start.",
               "type": "string"
             },
             "encoding": {
               "$ref": "#/$defs/Encoding"
+            },
+            "end_column": {
+              "description": "A spell table's end column, read in the same encoding: a row is kept for a range\nwhen its start is on or before `to` and its end is NULL or on or after `from`.\nAbsent: the start alone is compared.",
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "ranges": {
               "description": "Sorted and disjoint.",

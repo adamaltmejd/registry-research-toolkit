@@ -138,11 +138,17 @@ project (its `project_hash`), and a value set whose saved pages do not hold each
 **Layout.** With a manifest, files and columns are the runner's: the order file's names,
 `stata_name` aliases and labels, and the period column, a row key placing no variable,
 as the year (`Attribute::Year`, in the row filter's encoding, a whole year without one).
+A spell table's end column (the row filter's `end_column`), when the file delivers it,
+is the later of the last day of the row's year and the `from` of the range the row is
+drawn against (`Attribute::YearEnd`), and the start is drawn no later than that range's
+`to` (the spec column's `spell`), so every mock spell, in any of the file's years, ends
+on or after its start and passes the runner's overlap filter.
 A column is drawn from its held placement's segment row. A file holds its columns'
 requested years; a column is missing in the years its placement does not hold (its
 segment rows), as the runner reads every column over the file's years, and takes the
 codes of every variable it delivers. The runner extracts a file without a row filter
-over its whole delivery, so there the mock holds fewer years than the extract (a
+over its whole delivery, and a spell table's file with spells reaching outside the
+request, so there the mock holds fewer years than the extract (a
 `simplify:` in `delivery_files`). Without one, most researchers' case (they get data
 straight from the provider, with no delivery names yet), files follow a standard style:
 the table's public id with `_` for `/` and `-`, one file per year,

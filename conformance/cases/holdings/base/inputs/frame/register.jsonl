@@ -40,3 +40,9 @@
 {"kind":"register","provider":"demo","register":"vintages","name":"Cumulative register"}
 {"kind":"table","provider":"demo","register":"vintages","table":"people","name":"People"}
 {"kind":"occurrence","provider":"demo","register":"vintages","table":"people","column":"Id","source_key":"id","label":"Person identity","dtype":"int","identifier":true,"from":"2010-01-01","to":"2022-12-31"}
+{"kind":"register","provider":"demo","register":"spells","name":"Benefit spells"}
+{"kind":"table","provider":"demo","register":"spells","table":"benefit","name":"Benefit spells"}
+{"kind":"occurrence","provider":"demo","register":"spells","table":"benefit","column":"Id","source_key":"id","label":"Recipient identity","dtype":"int","identifier":true,"from":"2017-01-01","to":"2020-12-31"}
+{"kind":"occurrence","provider":"demo","register":"spells","table":"benefit","column":"Amount","source_key":"amount","label":"Benefit amount","dtype":"int","from":"2017-01-01","to":"2020-12-31"}
+{"kind":"occurrence","provider":"demo","register":"spells","table":"benefit","column":"Start","source_key":"start","label":"Spell start","dtype":"int","from":"2017-01-01","to":"2020-12-31"}
+{"kind":"occurrence","provider":"demo","register":"spells","table":"benefit","column":"Stop","source_key":"stop","label":"Spell end","dtype":"int","from":"2017-01-01","to":"2020-12-31"}
