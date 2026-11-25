@@ -77,8 +77,8 @@ interface LaneGeometryInput {
 
 interface PlacedSegment {
   name: string | null;
-  /** The name set inside this part, or "" for none: each column name of a
-   * span sits once, in its widest part. */
+  /** The name set inside this part, or "" where the part is too narrow for
+   * three letters and the ellipsis. */
   label: string;
   /** The label is wider than the part, so the pill cuts it. */
   cut: boolean;
@@ -259,24 +259,18 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
           width: Math.max(x(segment.to) - left - segLeft, MIN_SPAN),
         };
       });
-      // Each column name sits once, in its widest part, so a one-year first
-      // delivery does not cut it; the pill cuts a name too wide for that
-      // part with an ellipsis, and its tooltip gives the whole (maintainer
-      // finding, IFAU, 2026-11-17).
-      const widest = new Map<string, PlacedSegment>();
+      // Every part carries its column name: the parts of one name are the
+      // pills a gap, a state or a value-set change splits (maintainer,
+      // #2661, 2026-11-25). The pill cuts a name too wide for its part with
+      // an ellipsis, and its tooltip gives the whole (maintainer finding,
+      // IFAU, 2026-11-17).
       for (const segment of segments) {
         const name = segment.name ?? span.name;
-        const best = widest.get(name);
-        if (!best || segment.width > best.width) widest.set(name, segment);
-      }
-      for (const [name, segment] of widest) {
         segment.cut = !!name && labelWidth(name) > segment.width;
-        // Where not even three letters fit before the ellipsis, a bare bar,
-        // as the name's other parts are: a stub such as "a…" says nothing.
+        // Where not even three letters fit before the ellipsis, a bare bar: a
+        // stub such as "a…" says nothing.
         segment.label =
           segment.cut && segment.width < labelWidth("xxx…") ? "" : name;
-      }
-      for (const segment of segments) {
         segment.glyph =
           !!(segment.name ?? span.name) &&
           (segment.label !== "" || segment.width >= GLYPH_WIDTH);

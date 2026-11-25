@@ -19,7 +19,12 @@ import type {
 } from "./LaneGraph";
 import { periodCoverageUnion, periodWindowRelation } from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
-import { columnDateRuns, columnYearRuns, studyWindow } from "./study_window";
+import {
+  columnDateRuns,
+  columnYearRuns,
+  inDrawingGrain,
+  studyWindow,
+} from "./study_window";
 import type { ColumnState } from "./ui/Pill";
 
 const RANK: Record<ColumnState, number> = { out: 0, default: 1, in: 2 };
@@ -121,6 +126,8 @@ export function variableSpans({
       ]),
     );
     const every = [...parts.values()];
+    // The table's deliveries, in every database: what its grain is read from.
+    const deliveries = here.flatMap(({ all }) => all.segments);
     const absent = every.every((part) => part.absent);
     const inside = every.some((part) => part.inside);
     // Whether a committed binding can be ordered from the database turns on
@@ -187,14 +194,21 @@ export function variableSpans({
               : readOnly || part.inside
                 ? "default"
                 : "out";
-            return columnDateRuns(column.segments, catalogBounds, axis[0]).map(
-              (run) => ({
+            // A pill per value set: one that changes splits the column's
+            // run there (maintainer, #2661, 2026-11-25).
+            const byValueSet = Map.groupBy(
+              inDrawingGrain(column.segments, deliveries),
+              (segment) => segment.value_set?.hash ?? null,
+            );
+            return [...byValueSet].flatMap(([valueSet, segments]) =>
+              columnDateRuns(segments, catalogBounds, axis[0]).map((run) => ({
                 name: column.spelling,
                 ...run,
+                valueSet,
                 state,
                 // The columns the staged change takes in or out.
                 staged: staged === "add" ? part.inside : part.taken,
-              }),
+              })),
             );
           })
           .sort((a, b) => a.from - b.from);

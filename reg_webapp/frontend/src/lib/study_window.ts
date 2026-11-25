@@ -115,6 +115,93 @@ export function columnDateRuns(
   return runs;
 }
 
+// The grains a table can be delivered in, coarsest first: calendar years,
+// school years from 1 July, half years, quarters, months. A cell is a run of
+// `months` months starting `anchor` months into a calendar year.
+const GRAINS = [
+  { months: 12, anchor: 0 },
+  { months: 12, anchor: 6 },
+  { months: 6, anchor: 0 },
+  { months: 3, anchor: 0 },
+  { months: 1, anchor: 0 },
+] as const;
+type Grain = (typeof GRAINS)[number];
+
+/** The grain cell a day falls in. */
+function cellOf(day: string, grain: Grain): number {
+  const month = Number(day.slice(0, 4)) * 12 + Number(day.slice(5, 7)) - 1;
+  return Math.floor((month - grain.anchor) / grain.months);
+}
+
+/** A cell's first day. */
+function cellStart(cell: number, grain: Grain): string {
+  const month = cell * grain.months + grain.anchor;
+  const year = Math.floor(month / 12);
+  return `${String(year).padStart(4, "0")}-${String((month % 12) + 1).padStart(2, "0")}-01`;
+}
+
+/**
+ * Segments widened to their table's grain, for a lane to draw: a delivery
+ * covers the whole grain cells its days fall in, so a yearly test taken in
+ * the spring term is a whole year, not half of one with a gap after it
+ * (maintainer, #2661, 2026-11-25). A gap is drawn only where no delivery is.
+ *
+ * The grain is the coarsest of `GRAINS` at which every delivery starts on a
+ * cell's first day and no two deliveries share a cell, read from
+ * `deliveries`: a delivery is a file's days (a segment's where it names no
+ * file), so the segments one file splits at a metadata change are one
+ * delivery, and identical days in two releases one. A spring term starts a
+ * calendar year, an autumn term a school year. Where no grain fits
+ * (overlapping deliveries, a 31 December snapshot) the segments are drawn as
+ * they are. Open ends stay open. The text keeps the catalog's own periods.
+ * simplify: the grain is read from the deliveries the caller has, one
+ * variable's in a table; a table with a single delivery takes calendar years.
+ * Read the table's own deliveries if that draws a term table as years.
+ */
+export function inDrawingGrain<
+  T extends Pick<CatalogSegment, "period" | "file">,
+>(segments: readonly T[], deliveries: readonly T[] = segments): T[] {
+  // Inclusive days, an open end as far as it goes; ISO days compare as text.
+  const byFile = new Map<string, { start: string; last: string }>();
+  for (const { period, file } of deliveries) {
+    const start = period.start ?? "0001-01-01";
+    const last = catalogLastDate(period) ?? "9999-12-31";
+    const key = file ?? `${start} ${last}`;
+    const seen = byFile.get(key);
+    byFile.set(key, {
+      start: seen && seen.start < start ? seen.start : start,
+      last: seen && seen.last > last ? seen.last : last,
+    });
+  }
+  const days = [
+    ...new Map(
+      [...byFile.values()].map((d) => [`${d.start} ${d.last}`, d]),
+    ).values(),
+  ];
+  const grain = GRAINS.find((grain) => {
+    const cells = days
+      .map(({ start, last }) => [cellOf(start, grain), cellOf(last, grain)])
+      .sort((a, b) => a[0] - b[0]);
+    return (
+      days.every(
+        ({ start }) => cellStart(cellOf(start, grain), grain) === start,
+      ) && cells.every(([from], i) => i === 0 || from > cells[i - 1][1])
+    );
+  });
+  if (!grain || days.length === 0) return [...segments];
+  return segments.map((segment) => {
+    const { start, end } = segment.period;
+    const last = catalogLastDate(segment.period);
+    return {
+      ...segment,
+      period: {
+        start: start === null ? null : cellStart(cellOf(start, grain), grain),
+        end: last === null ? end : cellStart(cellOf(last, grain) + 1, grain),
+      },
+    };
+  });
+}
+
 /** A list row's delivered years (`VariableRow`): `columnYearRuns` less the
  * year-independent segments (both ends null, a timeless table's), which have
  * no dated years, so the row draws a bare track and they do not stretch the

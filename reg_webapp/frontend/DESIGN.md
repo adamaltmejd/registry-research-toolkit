@@ -970,19 +970,29 @@ Time is the axis every relation is drawn on.
   years with a gap where a year is not delivered (maintainer 2026-11-04). Spans are
   drawn at their real half-open dates, so school years abut instead of sharing a year
   cell; a one-day period (a 31 December snapshot) takes its calendar year, as its text
-  does (#2408, 2026-11-11). Abutting parts of one
-  name in one state join into one part before the name is placed, so a column
-  delivered in a file a year reads as one run. Where a row joins several spellings,
-  each name sits in its own widest part, its other parts bare bars (new rules, proposed
-  by the implementer). The spellings sharing the row say the rename; it has no mark and
+  does (#2408, 2026-11-11). A pill always spans its full period at the table's time
+  grain: a yearly test taken in the spring term covers its whole year, quarterly data
+  the quarters it exists for, and a gap shows only where there is no delivery
+  (maintainer, #2661, 2026-11-25). The grain is the coarsest of calendar year, school
+  year, half year, quarter and month at which each delivery (a file's days) starts on
+  a cell's first day and no two deliveries share a cell, so a spring term widens to
+  its calendar year and an autumn term to its school year; where none fits
+  (overlapping releases, a snapshot) the dates are drawn as they are. The text keeps
+  the catalog's own periods (the rule for finding the grain is proposed by the
+  implementer). A `/project` source card keeps the source's cut (#2416). Abutting
+  parts of one name in one state join into one part before the name is placed, so a
+  column delivered in a file a year reads as one run, except where the value set
+  changes: there the pills stay split until a design for joining them behind a
+  value-set-change marker has been tried (maintainer, #2661, 2026-11-25). Every part
+  carries its column name, cut as below where it is narrow (#2661: "Every chip shows
+  its column name"). The spellings sharing the row say the rename; it has no mark and
   no sentence: "No renames on the same row are just explained by them being on the same
   row. No need for dashed lines or additional explanations." (maintainer, 2026-11-17).
   A span's column name sits inside the box with its glyph, cut with an ellipsis: "A
   better design is probably to put the column icon and name inside the box with ...
   truncation and a tooltip on hover?" (maintainer, 2026-11-17), after "When the column
   name is outside the pill it is not showing the column icon?" This overturns the
-  "never cut" rule of 2026-11-04. That the name sits in its widest delivered part; that
-  a part too narrow for three letters and the ellipsis is a bare bar, since a stub such
+  "never cut" rule of 2026-11-04. That a part too narrow for three letters and the ellipsis is a bare bar, since a stub such
   as "a…" names nothing; and that a bare bar wide enough for the glyph (26 px) keeps
   it, so it still reads as a column, while a narrower one is empty, are proposed by the
   implementer. No list of the
