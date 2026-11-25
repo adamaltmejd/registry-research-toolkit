@@ -49,14 +49,33 @@ OUTPUT <- "key_check.csv"
 
 EXIT <- c(ok = 0L, setup = 2L, failed = 8L)
 
-# Counts below this are written as <5 (zero stays 0); a length is left out when
-# fewer values than this are non-null.
+# Counts below this are written as <5 (zero stays 0). A length is left out when
+# fewer values than this support it, or when a count it depends on is <5
+# (table_rows).
 DISCLOSURE_FLOOR <- 5L
 
 INTEGER_TYPES <- c("bit", "tinyint", "smallint", "int", "bigint")
 EXACT_TYPES <- c("decimal", "numeric", "money", "smallmoney")
 FLOAT_TYPES <- c("float", "real")
-TEXT_TYPES <- c("char", "varchar", "nchar", "nvarchar")
+TEXT_TYPES <- c("char", "varchar", "nchar", "nvarchar", "text", "ntext")
+# The storage extract.R writes an SCB lopnummer from (LOPNR_TYPES and
+# lopnr_storage_ok in extract.R, where float(1..24) is real here): a key stored
+# otherwise (bit, money, real, a date) is refused there. Kept in step by hand.
+LOPNR_TYPES <- c(
+  "tinyint",
+  "smallint",
+  "int",
+  "bigint",
+  "decimal",
+  "numeric",
+  "float",
+  "char",
+  "varchar",
+  "nchar",
+  "nvarchar",
+  "text",
+  "ntext"
+)
 
 # Every count the CSV can hold, in its column order. A count that does not
 # apply to a column's storage is empty.
@@ -77,6 +96,13 @@ COUNTS <- c(
 MEASURES <- list(
   nulls = "COUNT_BIG(CASE WHEN @col IS NULL THEN 1 END)",
   not_bigint = "COUNT_BIG(CASE WHEN @col IS NOT NULL AND TRY_CAST(@col AS bigint) IS NULL THEN 1 END)",
+  # TRY_CAST of a (max) text value over 8000 bytes fails the query rather than
+  # returning NULL: only the first 40 characters are cast, and a longer value
+  # (no bigint has more than 20) counts as not converting.
+  not_bigint_text = paste0(
+    "COUNT_BIG(CASE WHEN @col IS NOT NULL AND (LEN(@col) > 40",
+    " OR TRY_CAST(CAST(LEFT(@col, 40) AS nvarchar(40)) AS bigint) IS NULL) THEN 1 END)"
+  ),
   not_whole = "COUNT_BIG(CASE WHEN @col <> ROUND(@col, 0, 1) THEN 1 END)",
   beyond_float = "COUNT_BIG(CASE WHEN ABS(@col) >= 9007199254740992E0 THEN 1 END)",
   beyond_real = "COUNT_BIG(CASE WHEN ABS(@col) >= 16777216E0 THEN 1 END)",
@@ -114,7 +140,7 @@ measures_for <- function(type) {
     ),
     text = c(
       nulls = "nulls",
-      not_bigint = "not_bigint",
+      not_bigint = "not_bigint_text",
       leading_zeros = "leading_zeros",
       spaces = if (type %in% c("char", "nchar")) "spaces_fixed" else "spaces",
       not_digits = "not_digits",
@@ -281,6 +307,16 @@ sql_splice <- function(template, col) {
   paste(paste0("N'", parts, "'"), collapse = paste0(" + ", col, " + "))
 }
 
+# The column as T-SQL text; legacy text and ntext as varchar(max) and
+# nvarchar(max), which LEN, LTRIM and TRY_CAST take.
+column_expr <- function(name, type) {
+  wide <- c(text = "varchar(max)", ntext = "nvarchar(max)")[type]
+  if (is.na(wide)) {
+    return(sql_quoted(name))
+  }
+  paste0("N'CAST(' + ", sql_quoted(name), " + N' AS ", wide, ")'")
+}
+
 # The one SELECT for a table: COUNT_BIG(*) as m0, then each column's measures as
 # m1, m2, ... (positional aliases, so no name is spliced as an alias). Returns
 # the batch and, per measure, the column index and CSV field it fills.
@@ -297,7 +333,7 @@ table_batch <- function(schema, table, columns, types) {
           "N', ' + ",
           sql_splice(
             paste0(MEASURES[[wanted[[field]]]], " AS m", k),
-            sql_quoted(columns[j])
+            column_expr(columns[j], types[j])
           )
         )
       )
@@ -415,13 +451,18 @@ csv_header <- function(database) {
   c(
     "# key_check.csv: counts of the shape of key-like columns, made by key_check.R.",
     paste0("# Database ", database, ", ", format(Sys.time(), "%Y-%m-%d %H:%M"), "."),
-    "# Aggregates only: no value; a count from 1 to 4 is <5; a length over fewer than 5 values is empty.",
+    "# Aggregates only: no value; a count from 1 to 4 is <5; a length is empty unless at least 5 values support it and no count it depends on is <5.",
     "# Read: reg_mona_runner/README.md, \"Key check\". Skip lines starting with #.",
     paste(FIELDS, collapse = ",")
   )
 }
 
-# One table's CSV rows: counts as written, lengths only over enough values.
+# One table's CSV rows: counts as written. A length is shown only when the
+# values it is over number at least DISCLOSURE_FLOOR (a number's length is over
+# the values that convert to bigint, a text's over every non-null value) and no
+# count that support is derived from is <5: shown lengths imply a support of at
+# least 5, which would bound a masked nulls or not_bigint from the other side
+# (rows 6, nulls <5 and a length shown would give nulls = 1).
 table_rows <- function(cols, status, result = NULL, slots = NULL) {
   rows <- data.frame(
     schema = cols$table_schema,
@@ -442,8 +483,12 @@ table_rows <- function(cols, status, result = NULL, slots = NULL) {
     for (k in seq_len(nrow(slots))) {
       values[slots$column[k], slots$field[k]] <- as.numeric(result[[k + 1L]])
     }
-    few <- values[, "rows"] - values[, "nulls"] < DISCLOSURE_FLOOR
-    values[few, c("min_length", "max_length")] <- NA
+    number <- vapply(cols$data_type, type_class, "") %in% c("integer", "exact", "float")
+    unconverted <- ifelse(number, values[, "not_bigint"], 0)
+    masked <- function(n) !is.na(n) & n > 0 & n < DISCLOSURE_FLOOR
+    hidden <- values[, "rows"] - values[, "nulls"] - unconverted < DISCLOSURE_FLOOR |
+      masked(values[, "nulls"]) | (number & masked(values[, "not_bigint"]))
+    values[hidden, c("min_length", "max_length")] <- NA
   }
   for (field in COUNTS) {
     rows[[field]] <- count_text(values[, field])
@@ -455,12 +500,13 @@ table_rows <- function(cols, status, result = NULL, slots = NULL) {
 }
 
 # The SCB key columns that extract.R would not write as distinct int64 keys:
-# any value that does not convert, or a leading zero (two keys merge).
+# storage extract.R refuses, any value that does not convert, or a leading zero
+# (the key's digits change, so two keys may collide).
 needs_check <- function(rows) {
   scb <- rows[rows$group == "scb_key" & rows$status == "ok", ]
   shape <- c("not_bigint", "not_whole", "beyond_exact", "leading_zeros", "spaces", "not_digits")
   bad <- Reduce(`|`, lapply(shape, function(f) !scb[[f]] %in% c("", "0")), FALSE) |
-    scb$sql_type == "real" | !vapply(scb$sql_type, type_class, "") %in% c("integer", "exact", "float", "text")
+    !scb$sql_type %in% LOPNR_TYPES
   scb$column[bad]
 }
 

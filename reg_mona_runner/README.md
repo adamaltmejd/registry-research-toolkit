@@ -186,23 +186,27 @@ comment lines, then one row per column with `schema`, `table`, `column`, `group`
   | Count           | Storage            | Counts the non-null values that …                                     |
   | --------------- | ------------------ | ------------------------------------------------------------------------ |
   | `rows`, `nulls` | any                | (the table's rows; the column's NULLs)                                   |
-  | `not_bigint`    | numbers, text      | `TRY_CAST(… AS bigint)` cannot convert                                   |
+  | `not_bigint`    | numbers, text      | `TRY_CAST(… AS bigint)` cannot convert (text over 40 characters counts)  |
   | `not_whole`     | decimal, float     | have a fraction                                                          |
   | `beyond_exact`  | float, real        | are at or beyond 2^53 (real: 2^24), where distinct keys may have merged  |
-  | `leading_zeros` | text               | start with `0` and another digit (`012` and `12` would become one key)   |
+  | `leading_zeros` | text               | start with `0` and another digit (`012` is written as `12`)              |
   | `spaces`        | text               | have a leading space, or a trailing one in `varchar`/`nvarchar`          |
   | `not_digits`    | text               | are empty or hold anything but ASCII digits once spaces are trimmed      |
 
 and `min_length`, `max_length`: the characters of a text value (trailing spaces
-excluded) or the digits of a number. A count that does not apply to the storage is
-empty.
+excluded) or the digits of a number that converts to bigint. A count that does not
+apply to the storage is empty. Legacy `text` and `ntext` columns are checked as text.
 
 An SCB key converts under `extract.R` when `not_bigint`, `not_whole`, `beyond_exact`,
-`spaces` and `not_digits` are all 0 and the storage is not `real` (a negative key also
-counts as `not_digits`, though `extract.R` writes it); `leading_zeros` above 0 means
-two keys would merge.
+`spaces` and `not_digits` are all 0 and its storage is one `extract.R` takes for a key
+(an integer other than `bit`, `decimal`, `numeric`, `float` other than `real`, or text;
+`bit`, `money`, `smallmoney`, `real` and dates are refused). A negative key also counts
+as `not_digits`, though `extract.R` writes it. `leading_zeros` above 0 means some keys
+change representation (`012` becomes `12`), so a collision with another key is
+possible.
 
 **Safe to export.** The CSV holds names, SQL types and aggregate counts only: any count
-from 1 to 4 is written as `<5`, and a length is left out when fewer than 5 values are
-non-null. There is no value, and no minimum or maximum of values. The console's error
+from 1 to 4 is written as `<5`, and a length is left out when fewer than 5 values
+support it or when a count it depends on (`nulls`, and for a number `not_bigint`) is
+`<5`. There is no value, and no minimum or maximum of values. The console's error
 block, like `extract.R`'s, may quote a value and stays on MONA.
