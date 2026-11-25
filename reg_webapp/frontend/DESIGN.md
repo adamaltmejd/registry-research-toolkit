@@ -975,17 +975,18 @@ Time is the axis every relation is drawn on.
   the quarters it exists for, and a gap shows only where there is no delivery
   (maintainer, #2661, 2026-11-25). The grain is the table's cadence as the catalog
   states it (`year`, `half`, `quarter`, `month`), applied as the catalog measures
-  gaps: each delivery (a run of one variable's abutting days in one table) covers at
-  least one cadence step from its first day, so a spring term in a yearly table
-  covers its year and an autumn term the twelve months from 1 July. Only the end of
-  a delivery's last segment moves, so a split inside it (a changed wording, a
-  rename) keeps its boundary; a one-day snapshot, an open end and a table with no
-  step (`day`, `irregular`) are drawn at their dates. The drawn period is computed
+  gaps: each delivery (a run of one variable's abutting days in one table and one
+  file or release) covers at least one cadence step from its first day, so a spring
+  term in a yearly table covers its year and an autumn term the twelve months from 1
+  July. Only the end of a delivery's last segment moves, so a split inside it (a
+  changed wording, a rename) keeps its boundary, two files that touch stay two
+  deliveries, and an open end stays open; a one-day snapshot takes its calendar year,
+  and a table with no step (`day`, `irregular`) is drawn at its dates. The drawn period is computed
   once per page and read by every lane (the page's and its succession neighbours'),
   the rows they pack into and the axis; the years to add and the text keep the
   catalog's own periods (applying the catalog's cadence rule to the drawing is
-  proposed by the implementer). A `/project` source card keeps the source's cut (#2416). Abutting
-  parts of one name in one state join into one part before the name is placed, so a
+  proposed by the implementer). A `/project` source card keeps the source's cut
+  (#2416). Abutting parts of one name in one state join into one part before the name is placed, so a
   column delivered in a file a year reads as one run, across a value-set change too
   (a marker for the change awaits a design trial, maintainer, #2661, 2026-11-25).
   Every part carries its column name, cut as below where it is narrow (#2661: "Every chip shows

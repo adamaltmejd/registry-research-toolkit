@@ -381,7 +381,7 @@ pub fn next_iso_day(s: &str) -> String {
 #[must_use]
 pub fn add_iso_months(s: &str, months: u32) -> Option<String> {
     let (y, m, d) = iso_date(s)?;
-    let total = u32::from(y) * 12 + u32::from(m) - 1 + months;
+    let total = (u32::from(y) * 12 + u32::from(m) - 1).checked_add(months)?;
     let year = u16::try_from(total / 12).ok().filter(|&y| y <= 9999)?;
     let month = u8::try_from(total % 12 + 1).ok()?;
     let last = last_day(year, month);

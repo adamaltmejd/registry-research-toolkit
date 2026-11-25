@@ -75,6 +75,22 @@ function axisPosition(date: string): number {
 
 const DAY = 86_400_000;
 
+/** A one-day period (a 31 December snapshot) has no length to draw: it takes
+ * its calendar year, as its text does (DESIGN.md → Time). Any other period is
+ * returned as it is. */
+function snapshotYear(period: CatalogPeriod): CatalogPeriod {
+  const { start, end } = period;
+  if (
+    start === null ||
+    end === null ||
+    Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`) > DAY
+  )
+    return period;
+  const year = Number(start.slice(0, 4));
+  const day = (y: number) => `${String(y).padStart(4, "0")}-01-01`;
+  return { start: day(year), end: day(year + 1) };
+}
+
 /** Where a lane draws segments: half-open spans of axis positions at their
  * real dates, so a school year and the next one abut instead of sharing a
  * year cell (#2408). A one-day period (a 31 December snapshot) has no length
@@ -86,15 +102,8 @@ export function columnDateRuns(
   axisStart = bounds[0],
 ): { from: number; to: number }[] {
   const eras = segments
-    .map(({ period: { start, end } }) => {
-      if (
-        start !== null &&
-        end !== null &&
-        Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`) <= DAY
-      ) {
-        const year = Number(start.slice(0, 4));
-        return { from: year, to: year + 1 };
-      }
+    .map(({ period }) => {
+      const { start, end } = snapshotYear(period);
       return {
         from:
           start !== null
@@ -128,18 +137,19 @@ const CADENCE_MONTHS: Record<string, number> = {
 /**
  * The period a lane draws each segment over: the one place a drawing reads
  * a segment's extent (its rows, its spans, its axis), so every lane shows a
- * delivery alike. A delivery covers at least one step of its table's catalog
- * cadence from its first day, as the catalog measures gaps, so a yearly test
- * taken in the spring term draws its whole year, not half of one with a gap
- * after it (maintainer, #2661, 2026-11-25). A gap is drawn only where no
- * delivery is.
+ * delivery alike. A one-day period (a snapshot) takes its calendar year. A
+ * delivery covers at least one step of its table's catalog cadence from its
+ * first day, as the catalog measures gaps, so a yearly test taken in the
+ * spring term draws its whole year, not half of one with a gap after it
+ * (maintainer, #2661, 2026-11-25). A gap is drawn only where no delivery is.
  *
- * A delivery is a run of one variable's abutting days in one table: a split
- * the catalog makes inside it (a changed wording, a rename) is no boundary,
- * and only the segment that ends it is stretched. A one-day period (a
- * snapshot) is drawn as it is, for `columnDateRuns` to give its year, and so
- * are open ends and tables with no step (`day`, `irregular`). Text and the
- * years to add keep the catalog's own periods.
+ * A delivery is a run of one variable's abutting days in one table and one
+ * file (or release, where the segment names one): a split the catalog makes
+ * inside a file (a changed wording, a rename) is no boundary, while two files
+ * that touch stay two deliveries. Only the segment that ends a delivery is
+ * stretched; a segment with an open end takes part in the run and keeps its
+ * open end. Tables with no step (`day`, `irregular`) are drawn at their
+ * dates. Text and the years to add keep the catalog's own periods.
  */
 export function displayedPeriods(
   segments: readonly CatalogSegment[],
@@ -147,31 +157,38 @@ export function displayedPeriods(
 ): (segment: CatalogSegment) => CatalogPeriod {
   const shown = new Map<CatalogSegment, CatalogPeriod>();
   const groups = Map.groupBy(segments, (segment) =>
-    JSON.stringify([segment.table, segment.variable]),
+    JSON.stringify([
+      segment.table,
+      segment.variable,
+      segment.file ?? segment.release ?? null,
+    ]),
   );
   for (const group of groups.values()) {
     const step = CADENCE_MONTHS[cadenceOf(group[0].table) ?? ""];
-    if (!step) continue;
-    // Inclusive days of each dated segment; open ends are never stretched.
-    const dated = group.flatMap((segment) => {
-      const { start, end } = segment.period;
-      const last = catalogLastDate(segment.period);
-      return start !== null && end !== null && last !== null
-        ? [{ segment, start, end, last }]
-        : [];
+    // Inclusive days, an open end as far as it goes; ISO days compare as text.
+    const days = group.map((segment) => {
+      const period = snapshotYear(segment.period);
+      if (period !== segment.period) shown.set(segment, period);
+      return {
+        segment,
+        period,
+        first: period.start ?? "0001-01-01",
+        last: catalogLastDate(period) ?? "9999-12-31",
+      };
     });
+    if (!step) continue;
     const deliveries = mergeIntervals(
-      dated.map(({ start, last }): Interval => [start, last]),
+      days.map(({ first, last }): Interval => [first, last]),
     );
-    for (const { segment, start, end, last } of dated) {
-      if (last === start) continue;
+    for (const { segment, period, first, last } of days) {
+      if (period.start === null || period.end === null) continue;
       const delivery = deliveries.find(
-        ([first, final]) => first <= start && last <= final,
+        ([from, to]) => from <= first && last <= to,
       );
       if (delivery?.[1] !== last) continue;
       const stretched = addIsoMonths(delivery[0], step);
-      if (stretched && stretched > end)
-        shown.set(segment, { start, end: stretched });
+      if (stretched && stretched > period.end)
+        shown.set(segment, { start: period.start, end: stretched });
     }
   }
   return (segment) => shown.get(segment) ?? segment.period;

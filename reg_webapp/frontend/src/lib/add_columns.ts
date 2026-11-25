@@ -219,8 +219,7 @@ export function columnsInSource(
  * Overlap is read on the days a lane draws (`displayedPeriods`). */
 export function columnRows(
   columns: readonly VariableColumn[],
-  periodOf: (segment: CatalogSegment) => CatalogPeriod = (segment) =>
-    segment.period,
+  periodOf: (segment: CatalogSegment) => CatalogPeriod,
 ): VariableColumn[][] {
   const segmentDays = (segment: CatalogSegment): Interval => {
     const period = periodOf(segment);
