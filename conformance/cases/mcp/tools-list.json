@@ -4570,7 +4570,7 @@
         },
         "CodeFilter": {
           "additionalProperties": false,
-          "description": "Keep a row whose `column` equals one of `codes` or starts with one of `prefixes`\n(crates/DESIGN.md, \"Row filters by code\"). Built by [`CodeFilter::new`]: both lists\nsorted and minimal, so an entry a kept prefix covers is gone.",
+          "description": "Keep a row whose `column` equals one of `codes` or starts with one of `prefixes`\n(crates/DESIGN.md, \"Row filters by code\"). Built by [`CodeFilter::new`]: both lists\nsorted, each once, without a prefix another kept prefix covers.",
           "properties": {
             "codes": {
               "items": {

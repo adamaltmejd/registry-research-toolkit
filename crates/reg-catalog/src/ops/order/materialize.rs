@@ -351,11 +351,16 @@ fn build(
             &mut findings,
         );
         let scanned = extracted(&holding, &draft);
-        let mut mapped: BTreeMap<String, Vec<(String, Days)>> = BTreeMap::new();
+        let mut owners: BTreeMap<String, Owners> = BTreeMap::new();
         let mut columns: Vec<(ColumnKey, Column)> = Vec::new();
         for (column_id, (key, role, mut refs)) in std::mem::take(&mut draft.columns) {
             let stored = stored(held, column_id)?;
-            mapped.insert(stored.name.clone(), mappings(held, column_id)?);
+            if refs.iter().any(|r| {
+                r.binding.is_some()
+                    && r.binding == filtered_binding(&project.sources[index[r.source.as_str()]])
+            }) {
+                owners.insert(stored.name.clone(), owners_of(held, column_id)?);
+            }
             refs.sort_by(|a, b| {
                 (
                     index[a.source.as_str()],
@@ -392,7 +397,7 @@ fn build(
             &columns,
             row_filter.as_ref(),
             &Held {
-                mapped: &mapped,
+                owners: &owners,
                 scanned: &scanned,
                 open,
             },
@@ -803,14 +808,43 @@ fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
     Ok(holding)
 }
 
-/// A held column's mappings: each variable (FQID) it holds and the days it holds it.
-fn mappings(held: &Connection, column: i64) -> Result<Vec<(String, Days)>, Error> {
-    let mut query =
-        held.prepare("SELECT variable_pid, start, end FROM holding_mapping WHERE column_id = ?")?;
-    let rows = query
+/// Who owns a held column's rows: each variable (FQID) it is mapped to and the days,
+/// and the days a blocked placement left to rival owners (a notice with candidates;
+/// one without days covers the whole delivery).
+struct Owners {
+    mapped: Vec<(String, Days)>,
+    contested: Vec<Days>,
+}
+
+fn owners_of(held: &Connection, column: i64) -> Result<Owners, Error> {
+    let mapped = held
+        .prepare("SELECT variable_pid, start, end FROM holding_mapping WHERE column_id = ?")?
         .query_map([column], |r| Ok((r.get(0)?, (r.get(1)?, r.get(2)?))))?
         .collect::<Result<_, _>>()?;
-    Ok(rows)
+    let contested = held
+        .prepare(
+            "SELECT n.start, n.end FROM holding_notice n WHERE n.column_id = ?
+               AND EXISTS(SELECT 1 FROM holding_notice_candidate c WHERE c.notice_id = n.id)",
+        )?
+        .query_map([column], |r| {
+            Ok((
+                r.get::<_, Option<i64>>(0)?.unwrap_or(i64::MIN),
+                r.get::<_, Option<i64>>(1)?.unwrap_or(i64::MAX),
+            ))
+        })?
+        .collect::<Result<_, _>>()?;
+    Ok(Owners {
+        mapped,
+        contested: merge(contested),
+    })
+}
+
+/// The binding of `source` that carries a code filter (the project allows one).
+fn filtered_binding(source: &reg_core::project::Source) -> Option<usize> {
+    source.catalog().and_then(|c| {
+        c.catalog_bindings()
+            .find_map(|(b, binding)| binding.filter.as_ref().map(|_| b))
+    })
 }
 
 fn stored(held: &Connection, column: i64) -> Result<Stored, Error> {
@@ -1494,10 +1528,10 @@ fn row_filter(
     })
 }
 
-/// What the code filter's mixed-column check reads of a file's holdings: each column's
-/// mappings (variable FQID, days), the days the runner reads, and the open window.
+/// What the code filter's mixed-column check reads of a file's holdings: the owners of
+/// each column placing a filtered binding, the days the runner reads, and the open window.
 struct Held<'a> {
-    mapped: &'a BTreeMap<String, Vec<(String, Days)>>,
+    owners: &'a BTreeMap<String, Owners>,
     scanned: &'a [Days],
     open: (i64, i64),
 }
@@ -1541,6 +1575,19 @@ fn code_filter(
         return None;
     }
     let union = CodeFilter::union(own.values().map(Option::as_ref));
+    if let Some(union) = &union {
+        let entries = union.codes.len() + union.prefixes.len();
+        let bounds: usize = row_filter.map_or(0, |f| {
+            f.ranges
+                .iter()
+                .map(|r| usize::from(r.from.is_some()) + usize::from(r.to.is_some()))
+                .sum()
+        });
+        if entries > CODE_FILTER_MAX || entries + bounds > PARAMS_MAX {
+            too_large(sources, own.keys().copied(), entries, bounds, findings);
+            return None;
+        }
+    }
     let info = |s: usize, code: &str, message: String| Issue {
         source: Some(sources[s].name().to_owned()),
         ..Issue::new(IssueLevel::Info, code, format!("/sources/{s}"), message)
@@ -1577,34 +1624,33 @@ fn code_filter(
             }
         }
     }
-    let union = union?;
-    let entries = union.codes.len() + union.prefixes.len();
-    let bounds: usize = row_filter.map_or(0, |f| {
-        f.ranges
-            .iter()
-            .map(|r| usize::from(r.from.is_some()) + usize::from(r.to.is_some()))
-            .sum()
-    });
-    if entries > CODE_FILTER_MAX || entries + bounds > PARAMS_MAX {
-        for &s in own.keys() {
-            findings.push(Issue {
-                source: Some(sources[s].name().to_owned()),
-                ..Issue::new(
-                    IssueLevel::Error,
-                    "filter_too_large",
-                    format!("/sources/{s}"),
-                    format!(
-                        "A file of this table would be selected by {entries} codes and \
-                         prefixes and {bounds} period bounds; at most {CODE_FILTER_MAX} \
-                         codes and prefixes and {PARAMS_MAX} in all are supported. Use \
-                         shorter prefixes."
-                    ),
-                )
-            });
-        }
-        return None;
+    union
+}
+
+/// The blocking finding of each filtering source whose file's filter is past the limits.
+fn too_large(
+    sources: &[reg_core::project::Source],
+    filtering: impl Iterator<Item = usize>,
+    entries: usize,
+    bounds: usize,
+    findings: &mut Vec<Issue>,
+) {
+    for s in filtering {
+        findings.push(Issue {
+            source: Some(sources[s].name().to_owned()),
+            ..Issue::new(
+                IssueLevel::Error,
+                "filter_too_large",
+                format!("/sources/{s}"),
+                format!(
+                    "A file of this table would be selected by {entries} codes and \
+                     prefixes and {bounds} period bounds; at most {CODE_FILTER_MAX} \
+                     codes and prefixes and {PARAMS_MAX} in all are supported. Use \
+                     shorter prefixes."
+                ),
+            )
+        });
     }
-    Some(union)
 }
 
 /// The code filter of one source's filtered binding, on the one column of the file that
@@ -1689,7 +1735,8 @@ fn refusal(
         .filter(|r| r.source == name && r.binding == Some(b))
         .map(|r| r.period.days(held.open))
         .collect();
-    let mapped = held.mapped.get(&column.name).map_or(&[][..], Vec::as_slice);
+    let owners = held.owners.get(&column.name);
+    let mapped = owners.map_or(&[][..], |o| o.mapped.as_slice());
     let own: BTreeSet<&str> = column
         .refs
         .iter()
@@ -1721,6 +1768,18 @@ fn refusal(
                 "The held column {} holds another variable in other rows this file reads, \
                  so its rows cannot be selected by this variable's codes. Remove the \
                  filter.",
+                column.name
+            ),
+        ));
+    }
+    // Rows whose owner the holdings could not settle may hold another variable.
+    if owners.is_some_and(|o| !overlap(&o.contested, held.scanned).is_empty()) {
+        return Some((
+            "filter_column_mixed",
+            format!(
+                "The held column {} has rows this file reads whose variable the holdings \
+                 could not settle, so its rows cannot be selected by this variable's \
+                 codes. Remove the filter.",
                 column.name
             ),
         ));
@@ -1765,8 +1824,13 @@ fn refusal(
 
 /// A code filter's entries in words: `N05*, N06A*, R03AC02`.
 fn filter_words(filter: &CodeFilter) -> String {
+    // A long union is named by its first entries and its size, so each finding stays short.
+    const SHOWN: usize = 10;
     let mut all: Vec<String> = filter.prefixes.iter().map(|p| format!("{p}*")).collect();
     all.extend(filter.codes.iter().cloned());
     all.sort();
+    if all.len() > SHOWN {
+        return format!("{}, … ({} in all)", all[..SHOWN].join(", "), all.len());
+    }
     all.join(", ")
 }

@@ -4,6 +4,7 @@
 //! carry. The structural layer has already checked the filter's shape.
 
 use std::collections::BTreeSet;
+use std::ops::Bound;
 
 use reg_core::IssueLevel;
 use reg_core::manifest::CodeFilter;
@@ -110,7 +111,7 @@ pub(super) fn check(
         }
     }
     for (k, prefix) in filter.prefixes.iter().enumerate() {
-        if !codes.iter().any(|c| c.starts_with(prefix.as_str())) {
+        if !starts_some(&codes, prefix) {
             found.push(issue(
                 IssueLevel::Error,
                 "filter_prefix_unknown",
@@ -123,6 +124,14 @@ pub(super) fn check(
         }
     }
     Ok(found)
+}
+
+/// Whether a code starts with `prefix`: the first code at or after it does, if any does.
+fn starts_some(codes: &BTreeSet<String>, prefix: &str) -> bool {
+    codes
+        .range::<str, _>((Bound::Included(prefix), Bound::Unbounded))
+        .next()
+        .is_some_and(|c| c.starts_with(prefix))
 }
 
 /// Every code of the pieces' value sets and class versions, read by public identity

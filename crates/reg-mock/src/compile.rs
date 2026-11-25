@@ -414,7 +414,7 @@ pub fn compile(project: &Value, rules: &Rules, answers: &Answers) -> Result<Spec
     };
     let mut built = built;
     ctx.manual_files(&mut built, &mut refusals);
-    let mut files = apply_rules(built, rules, &mut refusals);
+    let mut files = apply_rules(built, rules, format, &mut refusals);
     // Each rename applies once, to a compiled name; check_files then refuses a final
     // name two files share.
     for from in rules.rename.keys() {
@@ -1295,7 +1295,12 @@ impl Built {
 /// agree when a file delivers several sources; each column its own source's column
 /// rules. A column rule that matches no column is refused: a misspelt name would
 /// otherwise silently do nothing.
-fn apply_rules(built: Vec<Built>, rules: &Rules, refusals: &mut Vec<Refusal>) -> Vec<SpecFile> {
+fn apply_rules(
+    built: Vec<Built>,
+    rules: &Rules,
+    format: ExtractFormat,
+    refusals: &mut Vec<Refusal>,
+) -> Vec<SpecFile> {
     let mut used = BTreeSet::new();
     let mut files = Vec::new();
     for Built {
@@ -1354,7 +1359,7 @@ fn apply_rules(built: Vec<Built>, rules: &Rules, refusals: &mut Vec<Refusal>) ->
         if let Some(filter) = &file.code_filter
             && let Some(column) = file.columns.iter_mut().find(|c| c.name == filter.column)
         {
-            admit(column, filter);
+            admit(column, filter, format);
         }
         files.push(file);
     }
@@ -1456,14 +1461,16 @@ fn check_files(files: &[SpecFile], null_rate: f64, refusals: &mut Vec<Refusal>) 
 /// missing, so that few generated rows fail the filter (the generator drops those). A
 /// documented list with no kept code stays as it is: none of its rows survive, as none
 /// of the runner's would. Without a list (no value set), it draws the filter's codes and
-/// prefixes as written. simplify: a prefix is drawn as itself, not completed to a
+/// prefixes as written that its storage holds (none of `999` in a `tinyint`), and with
+/// none left draws as without a filter, every row then dropped. simplify: a prefix is drawn as itself, not completed to a
 /// longer code; complete it from the classification if a pipeline checks code lengths.
-fn admit(column: &mut SpecColumn, filter: &manifest::CodeFilter) {
+fn admit(column: &mut SpecColumn, filter: &manifest::CodeFilter, format: ExtractFormat) {
     if column.codes.is_empty() {
         column.codes = filter
             .codes
             .iter()
             .chain(&filter.prefixes)
+            .filter(|code| crate::generate::holds(column, format, code))
             .map(|code| Code {
                 code: code.clone(),
                 label: None,

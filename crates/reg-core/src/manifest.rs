@@ -129,7 +129,7 @@ pub const PARAMS_MAX: usize = 2_100;
 
 /// Keep a row whose `column` equals one of `codes` or starts with one of `prefixes`
 /// (crates/DESIGN.md, "Row filters by code"). Built by [`CodeFilter::new`]: both lists
-/// sorted and minimal, so an entry a kept prefix covers is gone.
+/// sorted, each once, without a prefix another kept prefix covers.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
@@ -141,7 +141,7 @@ pub struct CodeFilter {
 
 impl CodeFilter {
     /// The filter on `column` keeping `codes` and `prefixes`, sorted, each once, with a
-    /// prefix or code that a shorter kept prefix starts dropped.
+    /// prefix that a shorter kept prefix starts dropped.
     #[must_use]
     pub fn new<'a>(
         column: &str,
@@ -158,17 +158,9 @@ impl CodeFilter {
                 kept.push(p.to_owned());
             }
         }
-        // For the same reason the only kept prefix that can cover a code is the
-        // greatest one not after it.
-        let covered = |c: &str| {
-            let at = kept.partition_point(|k| k.as_str() <= c);
-            at > 0 && c.starts_with(kept[at - 1].as_str())
-        };
-        let mut codes: Vec<String> = codes
-            .into_iter()
-            .filter(|c| !covered(c))
-            .map(str::to_owned)
-            .collect();
+        // A code a prefix covers stays: SQL Server's `=` ignores trailing spaces and
+        // `LIKE` does not, so `A ` as a code and as a prefix keep different rows.
+        let mut codes: Vec<String> = codes.into_iter().map(str::to_owned).collect();
         codes.sort_unstable();
         codes.dedup();
         Self {

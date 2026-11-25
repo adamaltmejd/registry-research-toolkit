@@ -361,7 +361,7 @@ export interface components {
         /**
          * @description Keep a row whose `column` equals one of `codes` or starts with one of `prefixes`
          *     (crates/DESIGN.md, "Row filters by code"). Built by [`CodeFilter::new`]: both lists
-         *     sorted and minimal, so an entry a kept prefix covers is gone.
+         *     sorted, each once, without a prefix another kept prefix covers.
          */
         CodeFilter: {
             codes: string[];

@@ -2902,8 +2902,9 @@ can hold.
 ```
 
 `column` is the physical column that places the filtered variable in this file.
-`codes` and `prefixes` are sorted and minimal: an entry a kept prefix already covers is
-dropped (`N06A` goes when `N06` is kept). A row passes the file when it passes
+`codes` and `prefixes` are sorted, each once, and a prefix another kept prefix covers is
+dropped (`N06A` goes when `N06` is kept). A code a prefix covers stays: SQL Server's `=`
+ignores trailing spaces and `LIKE` does not, so the two can keep different rows. A row passes the file when it passes
 `row_filter` (if any) and `code_filter` (if any).
 
 Materialization (ruling 3). Blocking findings are located at the filtered binding's
@@ -2928,7 +2929,9 @@ source, as `row_filter_union`:
   requested or not. A column of the `Owners` kind holds one variable in 2017 and another
   in 2019 with no period column, so a filter on the 2017 variable would also read, and
   wrongly keep or drop, the 2019 rows. The variable's own mappings are those that serve
-  its references, a successor hop's included. All three are rare; narrowing the period or
+  its references, a successor hop's included. Days a blocked placement left to rival owners
+  (a holdings notice with candidates, such as `ambiguous_delivered_owners`) refuse the
+  same way where the file reads them: their rows' variable is unsettled. All three are rare; narrowing the period or
   removing the filter is the remedy and the message says so. A source with only row keys in a file neither filters nor widens it
   (a `simplify:` in `code_filter`).
 - The held storage decides how the runner compares: `char`, `varchar`, `nchar` and

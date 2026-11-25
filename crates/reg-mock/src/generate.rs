@@ -343,24 +343,13 @@ fn rows(
                 {
                     let rate = column.null_rate.unwrap_or(spec.null_rate);
                     let (value, code) = cell(file, column, *kind, pool, unit, rate, crng)?;
+                    if !fits(column, &value) {
+                        return Err(not_numeric(format!("{}/{}", file.name, column.name)));
+                    }
                     if let Some((filter, i, integer)) = filtered
                         && i == row.len()
                     {
                         keep = admitted(filter, integer, code, &value);
-                    }
-                    // A supplied code or mapped value within the held storage: an
-                    // integer in its range, a text no wider.
-                    if let (Cell::Int(n), Some((min, max))) = (&value, int_range(column))
-                        && !(min..=max).contains(n)
-                    {
-                        return Err(not_numeric(format!("{}/{}", file.name, column.name)));
-                    }
-                    let width = column.storage.as_ref().and_then(|s| s.length);
-                    if let (Cell::Text(text), Some(width)) = (&value, width)
-                        && width > 0
-                        && text.chars().count() > usize::try_from(width).unwrap_or(usize::MAX)
-                    {
-                        return Err(not_numeric(format!("{}/{}", file.name, column.name)));
                     }
                     row.push(value);
                 }
@@ -499,6 +488,29 @@ fn cell<'a>(
     #[allow(clippy::cast_precision_loss)]
     let ceiling = int_range(column).map_or(2_000_000_000.0, |(_, max)| max as f64);
     Ok((drawn(kind, length, ceiling, unit.year, rng), None))
+}
+
+/// Whether a supplied code or mapped value is within the held storage: an integer in
+/// its range, a text no wider.
+fn fits(column: &SpecColumn, value: &Cell) -> bool {
+    if let (Cell::Int(n), Some((min, max))) = (value, int_range(column)) {
+        return (min..=max).contains(n);
+    }
+    let width = column.storage.as_ref().and_then(|s| s.length);
+    if let (Cell::Text(text), Some(width)) = (value, width)
+        && width > 0
+    {
+        return text.chars().count() <= usize::try_from(width).unwrap_or(usize::MAX);
+    }
+    true
+}
+
+/// Whether `code` can be written to `column`: a value of its kind that its storage holds.
+pub(crate) fn holds(column: &SpecColumn, format: ExtractFormat, code: &str) -> bool {
+    Kind::of(column, format)
+        .ok()
+        .and_then(|kind| from_text(code, kind))
+        .is_some_and(|value| fits(column, &value))
 }
 
 /// The held integer storage's range, which the runner writes as int32 or int64.
