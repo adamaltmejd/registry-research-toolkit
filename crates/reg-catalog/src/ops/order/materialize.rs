@@ -1595,7 +1595,12 @@ fn code_filter(
                 .any(|(_, c)| c.name == union.column && c.packed.is_some()),
         );
         if entries > CODE_FILTER_MAX || entries + bounds + separator > PARAMS_MAX {
-            too_large(sources, own.keys().copied(), entries, bounds, findings);
+            too_large(
+                sources,
+                own.keys().copied(),
+                (entries, bounds, separator),
+                findings,
+            );
             return None;
         }
     }
@@ -1642,10 +1647,14 @@ fn code_filter(
 fn too_large(
     sources: &[reg_core::project::Source],
     filtering: impl Iterator<Item = usize>,
-    entries: usize,
-    bounds: usize,
+    (entries, bounds, separator): (usize, usize, usize),
     findings: &mut Vec<Issue>,
 ) {
+    let separator = if separator > 0 {
+        " and the packed column's separator"
+    } else {
+        ""
+    };
     for s in filtering {
         findings.push(Issue {
             source: Some(sources[s].name().to_owned()),
@@ -1655,7 +1664,7 @@ fn too_large(
                 format!("/sources/{s}"),
                 format!(
                     "A file of this table would be selected by {entries} codes and \
-                     prefixes and {bounds} period bounds; at most {CODE_FILTER_MAX} \
+                     prefixes and {bounds} period bounds{separator}; at most {CODE_FILTER_MAX} \
                      codes and prefixes and {PARAMS_MAX} in all are supported. Use \
                      shorter prefixes."
                 ),

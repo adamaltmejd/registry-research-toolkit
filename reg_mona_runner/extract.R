@@ -1324,11 +1324,12 @@ filter_where <- function(file, types) {
   codes <- file$codes
   if (!is.null(codes)) {
     col <- sql_quoted(codes$column)
-    type <- code_param_type(types$type[match(codes$column, file$columns)])
+    stored <- types$type[match(codes$column, file$columns)]
+    type <- code_param_type(stored)
     terms <- if (is.null(codes$packed)) {
       code_terms(codes, col, type, bind)
     } else {
-      packed_terms(codes, col, type, bind)
+      packed_terms(codes, col, stored, type, bind)
     }
     clauses <- c(
       clauses,
@@ -1364,15 +1365,23 @@ code_terms <- function(codes, col, type, bind) {
 
 # The terms of a code filter on a packed column (crates/DESIGN.md, "Row filters by
 # code", "Packed columns"): each entry matches any code of the value. With the
-# separator s bound once, a code c is `@s + RTRIM(col) + @s + N'.' LIKE '%' s c s '%'`
-# and a prefix p `@s + RTRIM(col) LIKE '%' s p '%'`. RTRIM drops a char column's
-# padding, which would otherwise end the last code with blanks; the N'.' keeps the
-# separator after the last code, since LIKE ignores the trailing blanks of the
-# expression it matches. No index serves a pattern that starts with %.
-packed_terms <- function(codes, col, type, bind) {
+# separator s bound once, a code c is `CAST(@s AS max) + v + @s + N'.' LIKE
+# '%' s c s '%'` and a prefix p `CAST(@s AS max) + v LIKE '%' s p '%'`, where v is
+# the column, RTRIM()ed when it is char or nchar: their padding would otherwise end
+# the last code with blanks, while a varchar value keeps its own trailing blank. The
+# CAST to a max type keeps a full-width value whole: concatenating short strings
+# truncates the result at 8,000 bytes. The N'.' keeps the separator after the last
+# code, since LIKE ignores the trailing blanks of the expression it matches. No index
+# serves a pattern that starts with %.
+packed_terms <- function(codes, col, stored, type, bind) {
   sep <- codes$packed
   s <- bind(sep, type)
-  around <- paste0("N'", s, " + RTRIM(' + ", col, " + N')'")
+  long <- if (type == "varchar(8000)") "varchar(max)" else "nvarchar(max)"
+  around <- if (stored %in% c("char", "nchar")) {
+    paste0("N'CAST(", s, " AS ", long, ") + RTRIM(' + ", col, " + N')'")
+  } else {
+    paste0("N'CAST(", s, " AS ", long, ") + ' + ", col)
+  }
   terms <- character()
   for (code in codes$codes) {
     pattern <- paste0("%", like_escaped(sep), like_escaped(code), like_escaped(sep), "%")

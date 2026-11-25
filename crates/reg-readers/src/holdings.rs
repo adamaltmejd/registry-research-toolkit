@@ -34,6 +34,7 @@ struct Config {
 struct Lopnr {
     prefix: Option<String>,
     name: Option<String>,
+    schema: Option<String>,
     table: Option<String>,
     column: Option<String>,
     evidence: String,
@@ -56,6 +57,7 @@ impl Lopnr {
         Selector {
             prefix: self.prefix.as_deref(),
             name: self.name.as_deref(),
+            schema: self.schema.as_deref(),
             table: self.table.as_deref(),
             column: self.column.as_deref(),
         }
@@ -74,6 +76,7 @@ impl Lopnr {
 struct Packed {
     prefix: Option<String>,
     name: Option<String>,
+    schema: Option<String>,
     table: Option<String>,
     column: Option<String>,
     separator: String,
@@ -85,6 +88,7 @@ impl Packed {
         Selector {
             prefix: self.prefix.as_deref(),
             name: self.name.as_deref(),
+            schema: self.schema.as_deref(),
             table: self.table.as_deref(),
             column: self.column.as_deref(),
         }
@@ -101,36 +105,64 @@ impl Packed {
 
 /// The columns a `[[lopnr]]` or `[[packed]]` entry marks, in exactly one form: a column
 /// name `prefix`, an exact column `name`, or one column of one table (`table` and
-/// `column`, the full path, which neither misses a column nor marks another table's).
-/// ASCII case is ignored as SQL Server does.
+/// `column`, the full path, which neither misses a column nor marks another table's,
+/// with `schema` where the table name is in several schemas). ASCII case is ignored as
+/// SQL Server does.
 struct Selector<'a> {
     prefix: Option<&'a str>,
     name: Option<&'a str>,
+    schema: Option<&'a str>,
     table: Option<&'a str>,
     column: Option<&'a str>,
 }
 
 impl Selector<'_> {
-    /// Exactly one non-empty form.
+    /// Exactly one non-empty form; `schema` only in the full path.
     fn valid(&self) -> bool {
-        match (self.prefix, self.name, self.table, self.column) {
-            (Some(v), None, None, None) | (None, Some(v), None, None) => !v.is_empty(),
-            (None, None, Some(t), Some(c)) => !t.is_empty() && !c.is_empty(),
+        match (self.prefix, self.name, self.schema, self.table, self.column) {
+            (Some(v), None, None, None, None) | (None, Some(v), None, None, None) => !v.is_empty(),
+            (None, None, s, Some(t), Some(c)) => {
+                s.is_none_or(|s| !s.is_empty()) && !t.is_empty() && !c.is_empty()
+            }
             _ => false,
         }
     }
 
-    fn marks(&self, table: &str, column: &str) -> bool {
+    fn marks(&self, fact: &Fact) -> bool {
+        let column = fact.column.as_str();
         match (self.prefix, self.name, self.table, self.column) {
             (Some(prefix), ..) => column
                 .get(..prefix.len())
                 .is_some_and(|head| head.eq_ignore_ascii_case(prefix)),
             (_, Some(name), ..) => column.eq_ignore_ascii_case(name),
             (.., Some(t), Some(c)) => {
-                table.eq_ignore_ascii_case(t) && column.eq_ignore_ascii_case(c)
+                self.schema
+                    .is_none_or(|s| fact.schema.eq_ignore_ascii_case(s))
+                    && fact.table.eq_ignore_ascii_case(t)
+                    && column.eq_ignore_ascii_case(c)
             }
             _ => false,
         }
+    }
+
+    /// Whether the entry marks the export row's column, keeping in `seen` the schema of
+    /// its first mark. A full path without `schema` that marks its table in a second
+    /// schema is refused: it would mark two tables (`holdings_mark_ambiguous`).
+    fn mark(&self, seen: &mut Option<String>, fact: &Fact, row: usize) -> Result<bool, ReadError> {
+        if !self.marks(fact) {
+            return Ok(false);
+        }
+        if self.table.is_some()
+            && self.schema.is_none()
+            && seen.as_ref().is_some_and(|s| *s != fact.schema)
+        {
+            return Err(at(
+                row,
+                "holdings_mark_ambiguous: a [[lopnr]] or [[packed]] table and column is in several schemas; give its schema",
+            ));
+        }
+        seen.get_or_insert_with(|| fact.schema.clone());
+        Ok(true)
     }
 }
 
@@ -263,8 +295,8 @@ pub fn read(storage_export: &Path, config_path: &Path) -> Result<ReadOutput, Rea
         return Err(error("holdings_reader", "empty rewrite prefix or evidence"));
     }
     marks_valid(&config)?;
-    let mut lopnr_used = vec![false; config.lopnr.len()];
-    let mut packed_used = vec![false; config.packed.len()];
+    let mut lopnr_used: Vec<Option<String>> = vec![None; config.lopnr.len()];
+    let mut packed_used: Vec<Option<String>> = vec![None; config.packed.len()];
     let (renames, rename_targets) = renames(&config.rename)?;
     let mut csv =
         csv::Reader::from_path(storage_export).map_err(|_| error(ROLE, "cannot open CSV"))?;
@@ -306,8 +338,7 @@ pub fn read(storage_export: &Path, config_path: &Path) -> Result<ReadOutput, Rea
         }
         let mut lopnr = None;
         for (n, (used, l)) in (1..).zip(lopnr_used.iter_mut().zip(&config.lopnr)) {
-            if l.selector().marks(&fact.table, &fact.column) {
-                *used = true;
+            if l.selector().mark(used, &fact, row)? {
                 lopnr.get_or_insert(n);
             }
         }
@@ -327,7 +358,7 @@ pub fn read(storage_export: &Path, config_path: &Path) -> Result<ReadOutput, Rea
             packed,
         });
     }
-    if let Some(n) = packed_used.iter().position(|used| !used) {
+    if let Some(n) = packed_used.iter().position(Option::is_none) {
         return Err(error(
             "holdings_reader",
             format!(
@@ -336,7 +367,7 @@ pub fn read(storage_export: &Path, config_path: &Path) -> Result<ReadOutput, Rea
             ),
         ));
     }
-    if let Some(n) = lopnr_used.iter().position(|used| !used) {
+    if let Some(n) = lopnr_used.iter().position(Option::is_none) {
         return Err(error(
             "holdings_reader",
             format!(
@@ -362,7 +393,7 @@ fn marks_valid(config: &Config) -> Result<(), ReadError> {
         return Err(error(
             "holdings_reader",
             format!(
-                "lopnr {}: not exactly one of prefix, name, or table with column, or an empty value or evidence",
+                "lopnr {}: not exactly one of prefix, name, or table with column (and an optional schema), or an empty value or evidence",
                 n + 1
             ),
         ));
@@ -371,7 +402,7 @@ fn marks_valid(config: &Config) -> Result<(), ReadError> {
         return Err(error(
             "holdings_reader",
             format!(
-                "packed {}: not exactly one of prefix, name, or table with column, an empty value or evidence, or a separator that is not one printable ASCII character other than a letter or digit",
+                "packed {}: not exactly one of prefix, name, or table with column (and an optional schema), an empty value or evidence, or a separator that is not one printable ASCII character other than a letter or digit",
                 n + 1
             ),
         ));
@@ -383,14 +414,13 @@ fn marks_valid(config: &Config) -> Result<(), ReadError> {
 /// entry that selects it as used.
 fn packed(
     entries: &[Packed],
-    used: &mut [bool],
+    used: &mut [Option<String>],
     fact: &Fact,
     row: usize,
 ) -> Result<Option<String>, ReadError> {
     let mut packed: Option<&str> = None;
     for (used, p) in used.iter_mut().zip(entries) {
-        if p.selector().marks(&fact.table, &fact.column) {
-            *used = true;
+        if p.selector().mark(used, fact, row)? {
             if packed.is_some_and(|s| s != p.separator) {
                 return Err(at(
                     row,

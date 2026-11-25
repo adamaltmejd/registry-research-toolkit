@@ -436,25 +436,44 @@ fn admitted(
     }
 }
 
-/// A packed column's value: one to three codes drawn from its list, joined by its
-/// separator, as many as its held storage width holds (one at least).
-fn packed_value(column: &SpecColumn, separator: &str, pool: &Pool<'_>, rng: &mut Rng) -> String {
-    let width = column
+/// The width of a synthetic code in a packed column without a code list.
+pub(crate) const PACKED_TOKEN: usize = 4;
+
+/// A packed column's held width: the storage's, else (under a text override) the
+/// width compile kept from it.
+pub(crate) fn packed_width(column: &SpecColumn) -> Option<usize> {
+    column
         .storage
         .as_ref()
         .and_then(|s| s.length)
+        .or(column.length)
         .filter(|w| *w > 0)
         .and_then(|w| usize::try_from(w).ok())
-        .unwrap_or(usize::MAX);
+}
+
+/// A packed column's value: one to three codes joined by its separator, as many as its
+/// held width holds (one at least). The codes come from its list, or without one are
+/// synthetic letter codes no wider than [`PACKED_TOKEN`].
+fn packed_value(column: &SpecColumn, separator: &str, pool: &Pool<'_>, rng: &mut Rng) -> String {
+    let width = packed_width(column).unwrap_or(usize::MAX);
+    let code = |rng: &mut Rng| -> String {
+        if pool.codes.is_empty() {
+            (0..PACKED_TOKEN.min(width))
+                .map(|_| char::from(b'A' + u8::try_from(rng.below(26)).expect("below 26")))
+                .collect()
+        } else {
+            pool.codes[pick(rng, pool.codes.len())].to_owned()
+        }
+    };
     let n = 1 + pick(rng, 3);
-    let mut value = pool.codes[pick(rng, pool.codes.len())].to_owned();
+    let mut value = code(rng);
     for _ in 1..n {
-        let code = pool.codes[pick(rng, pool.codes.len())];
-        if value.len() + separator.len() + code.len() > width {
+        let next = code(rng);
+        if value.len() + separator.len() + next.len() > width {
             break;
         }
         value.push_str(separator);
-        value.push_str(code);
+        value.push_str(&next);
     }
     value
 }
@@ -493,7 +512,7 @@ fn cell<'a>(
             attribute_cell(column, kind, attribute, unit, rng).ok_or_else(|| not_numeric(at()))?;
         return Ok((value, None));
     }
-    if let (Some(separator), false) = (&column.packed, pool.codes.is_empty()) {
+    if let Some(separator) = &column.packed {
         let value = packed_value(column, separator, pool, rng);
         return Ok((
             from_text(&value, kind).ok_or_else(|| not_numeric(at()))?,

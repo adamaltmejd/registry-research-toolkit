@@ -272,6 +272,39 @@ fn decode_answer<T: DeserializeOwned>(
     Ok(envelope.data)
 }
 
+/// Carry a packed column's separator onto its spec column; false (refused,
+/// `packed_type`) when the project overrides it to a type other than text, which cannot
+/// be drawn as joined codes. A text override keeps the held width.
+fn packed(
+    column: &manifest::Column,
+    refs: &[Column<'_>],
+    spec_column: &mut SpecColumn,
+    refusals: &mut Vec<Refusal>,
+) -> bool {
+    if column.packed.is_none() {
+        return true;
+    }
+    if spec_column.dtype.storage_family() != Some(StorageFamily::Text) {
+        let r = refs
+            .iter()
+            .find(|r| r.binding.is_some())
+            .unwrap_or(&refs[0]);
+        refusals.push(Refusal::new(
+            "packed_type",
+            format!("{}/{}", r.source, r.variable),
+            format!(
+                "{} holds several codes in one text value, so its binding's `type` in \
+                 project_data.json must be text: remove the override",
+                column.name
+            ),
+        ));
+        return false;
+    }
+    spec_column.length = column.storage.length.or(spec_column.length);
+    spec_column.packed.clone_from(&column.packed);
+    true
+}
+
 /// The type a mock column is drawn and written in (#2071, G8/G10): the project's
 /// binding override, else the held storage's type, else the catalog's. The `bool` is
 /// whether the held storage still decides the written type (no override).
@@ -681,7 +714,9 @@ impl Context<'_> {
                     continue;
                 };
                 spec_column.stata_name.clone_from(&column.stata_name);
-                spec_column.packed.clone_from(&column.packed);
+                if !packed(column, &refs, &mut spec_column, refusals) {
+                    continue;
+                }
                 spec_column.label = column.stata_name.as_ref().map(|_| column.name.clone());
                 if let Some(filter) = row_filter {
                     spec_column.attribute = Some(Attribute::Year);

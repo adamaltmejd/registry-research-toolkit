@@ -2239,11 +2239,14 @@ Which form fits depends on how SCB named the keys. Where it prefixed them with t
 project id, a prefix covers every key. Where they are bare names (`LopNr`), a prefix
 would also mark a holder's own serial spelled `LopNr…`, so the entry names the column
 exactly. A table and column entry marks that column of that table only, an exception to a
-prefix or name (a table name in several schemas is marked in each). A column is marked
+prefix or name. Where the reader config is `schema_keyed` and the table name is in
+several schemas, the entry also gives `schema`; without it, an entry that marks its table
+in a second schema is refused (`holdings_mark_ambiguous`), since it would mark two
+tables. A column is marked
 when any entry matches its physical name; the mark does not touch matching. The reader
 refuses, naming the entry by its 1-based position or the export row, never a name:
 `holdings_reader` for an entry with more than one form or none, a `table` without `column`
-(or the reverse), or an empty value or evidence; `holdings_lopnr_unused` for an entry (any
+(or the reverse), a `schema` outside that form, or an empty value or evidence; `holdings_lopnr_unused` for an entry (any
 form) that marks no held column (a typo or a stale entry); and `holdings_lopnr_storage`
 for a marked column stored otherwise than as an integer, a decimal, a double-precision
 `float` or text: a `real` (`float(1..24)`) has already merged distinct keys above 2^24,
@@ -2277,7 +2280,7 @@ separator: PAR's `DIAGNOS` holds all of a contact's diagnoses as `I10 E119 U099`
 not the whole value ("Row filters by code", "Packed columns"). How the holder joins the
 codes is a fact of its delivery, so the steward declares it beside `[[lopnr]]`, in the
 same three forms through the same matcher (a name `prefix`, an exact `name`, or one
-`table` and `column`), plus the separator:
+`table` and `column`, with `schema` where needed), plus the separator:
 
 ```toml
 [[packed]]
@@ -2294,7 +2297,8 @@ an index on the column, so a false mark costs a scan and a missed one returns no
 refuses, naming the entry by position or the export row: `holdings_reader` for an entry
 with more than one form or none, an empty value or evidence, or a bad separator;
 `holdings_packed_unused` for an entry that marks no held column;
-`holdings_packed_conflict` for a column two entries give different separators; and
+`holdings_packed_conflict` for a column two entries give different separators;
+`holdings_mark_ambiguous` as for `[[lopnr]]`; and
 `holdings_packed_storage` for a packed column stored otherwise than as `char`,
 `varchar`, `nchar` or `nvarchar`. A column may be both packed and a löpnummer; a code
 filter on it is refused as on any löpnummer (`filter_variable_not_coded`). Holdings
@@ -3044,13 +3048,19 @@ adds two refusals, both `filter_storage`: an entry that contains the column's se
 `char`, `varchar`, `nchar` and `nvarchar`. With the separator `s` bound once per file as
 `@s`, the runner's terms are:
 
-- exact code `c`: `@s + RTRIM(col) + @s + N'.' LIKE @p`, bound as `%` `s` `c` `s` `%`;
-- prefix `p`: `@s + RTRIM(col) LIKE @p`, bound as `%` `s` `p` `%`;
+- exact code `c`: `CAST(@s AS max) + v + @s + N'.' LIKE @p`, bound as `%` `s` `c` `s` `%`;
+- prefix `p`: `CAST(@s AS max) + v LIKE @p`, bound as `%` `s` `p` `%`;
 
-each with `[`, `%` and `_` escaped in `s`, `c` and `p` as for any prefix. These are the
+where `v` is `RTRIM(col)` on `char` and `nchar` storage and `col` otherwise, and `max`
+is `varchar(max)` or `nvarchar(max)` like the parameters. Concatenating non-max strings
+truncates the result at 8,000 bytes, which would cut the last code of a full-width
+`nvarchar(4000)` value; the `CAST` keeps it whole. Each term is
+
+bound with `[`, `%` and `_` escaped in `s`, `c` and `p` as for any prefix. These are the
 four token-boundary cases (the whole value, first, last or inner code) in one pattern.
 `RTRIM` drops a `char` column's padding, which would otherwise end the last code with
-blanks before a separator that is not a space. A leading, trailing or repeated separator
+blanks before a separator that is not a space; a `varchar` value keeps its own trailing
+blank. A leading, trailing or repeated separator
 is an empty code and matches nothing. A NULL value makes the expression NULL and passes
 no term. The `N'.'` ends the expression with a non-blank,
 since `LIKE` ignores the trailing blanks of the expression it matches, which would drop
@@ -3073,8 +3083,10 @@ table-year file, refused as the materializer refuses it (`filter_column_missing`
 `filter_column_split`, `filter_column_mixed`). The union rule is one function in `reg_core::manifest`, which both
 `materialize_order` and `reg-mock compile` call.
 A packed column (the order file's `packed`) draws one to three codes joined by its
-separator, as many as its storage width holds; in a filtered file a row passes when any
-of them is admitted, and the drawn codes are the admitted ones, so every row passes.
+separator, as many as its held width holds, from its code list or, without one, as
+synthetic four-letter codes; in a filtered file a row passes when any of them is
+admitted, and the drawn codes are the admitted ones, so every row passes. A project type
+override on it must be text (`packed_type` otherwise) and keeps the held width.
 
 **Out of scope** (ruling 6): cohort filters (a key list on MONA), a steward refusing a large unfiltered order, more than
 one filtered variable per source, ranges and negation.

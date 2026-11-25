@@ -304,7 +304,7 @@ pub struct Column {
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
-        deserialize_with = "separator"
+        deserialize_with = "packed"
     )]
     #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub packed: Option<String>,
@@ -321,8 +321,13 @@ fn only_true<'de, D: serde::Deserializer<'de>>(d: D) -> Result<bool, D::Error> {
     }
 }
 
-/// A packed column's separator: present only when valid, never `null`.
-fn separator<'de, D: serde::Deserializer<'de>>(d: D) -> Result<Option<String>, D::Error> {
+/// A packed column's separator: present only when valid ([`packed_separator`]), never
+/// `null`. For `deserialize_with` on an optional field with `default`; reg-mock's spec
+/// reads its `packed` with it too.
+///
+/// # Errors
+/// A value that is not a string, or not a valid separator.
+pub fn packed<'de, D: serde::Deserializer<'de>>(d: D) -> Result<Option<String>, D::Error> {
     let s = String::deserialize(d)?;
     if packed_separator(&s) {
         Ok(Some(s))

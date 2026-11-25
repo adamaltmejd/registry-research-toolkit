@@ -246,8 +246,10 @@ text otherwise, and on the code as drawn, before a project's type override conve
 filtered column draws the filter's entries its storage holds; with none left, its rows are all dropped. The filtered column
 draws only the codes the filter admits and is never missing, so few rows are dropped. A
 packed column (the order file's `packed`) draws one to three codes joined by its
-separator, as many as its storage width holds; a filtered file keeps a row when any of
-them is admitted. A timeless file is drawn in the window's last year, and a
+separator, as many as its held width holds, from its code list or, without one, as
+synthetic four-letter codes; a filtered file keeps a row when any of them is admitted. A
+type override on it must be text (`packed_type`) and keeps the held width; the size
+estimate counts three joined codes. A timeless file is drawn in the window's last year, and a
 spec with only timeless files in 2024.
 
 **Writers** (`write.rs`) follow the runner's types (reg_mona_runner/DESIGN.md, "Types
