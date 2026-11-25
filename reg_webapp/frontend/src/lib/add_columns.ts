@@ -32,7 +32,7 @@ import { removeBinding } from "./source_edits";
 
 export type TablePeriodMetadata = Pick<
   RegisterShow["tables"][number],
-  "fqid" | "timeless"
+  "fqid" | "timeless" | "cadence"
 >;
 
 export interface VariableColumn {

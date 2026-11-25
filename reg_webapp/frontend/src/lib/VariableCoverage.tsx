@@ -56,7 +56,7 @@ import {
   type ProjectStudyWindow,
 } from "./project_data";
 import { projectStore } from "./project_store";
-import { columnYearRuns, studyWindow } from "./study_window";
+import { columnYearRuns, inTableCadence, studyWindow } from "./study_window";
 import { AddBar } from "./ui/AddBar";
 import { Button } from "./ui/Button";
 import { StatusRow } from "./ui/StatusRow";
@@ -258,6 +258,10 @@ export function useVariableCoverage({
     binding.columns.filter(
       (column) => columnWindowPeriod(offered(column), window) !== null,
     );
+  const cadences = new Map(
+    (tables ?? []).map((table) => [table.fqid, table.cadence]),
+  );
+  const cadenceOf = (table: string) => cadences.get(table);
   const runs = columnYearRuns(
     subjects.flatMap((subject) => subject.segments),
     catalogBounds,
@@ -279,10 +283,20 @@ export function useVariableCoverage({
     live && available
       ? clampYearWindow(period ?? seed, available.from, available.to)
       : seed;
+  // The drawing's years: a delivery drawn over its table's cadence can end
+  // past its last delivered day, so the axis reaches it; the years to add stay
+  // on the delivered ones.
+  const drawnRuns = columnYearRuns(
+    inTableCadence(
+      subjects.flatMap((subject) => subject.segments),
+      cadenceOf,
+    ),
+    catalogBounds,
+  );
   const differs = !sameYearWindow(active, seed);
   const axis = dataAxis(
     [
-      ...runs.flatMap((run) => [run.from, run.to]),
+      ...drawnRuns.flatMap((run) => [run.from, run.to]),
       ...[...neighbourColumns.values()].flatMap((entries) =>
         entries.flatMap((column) =>
           columnYearRuns(column.segments, catalogBounds).flatMap((run) => [
@@ -311,6 +325,7 @@ export function useVariableCoverage({
       subject.fqid,
       variableSpans({
         columns: columnsOf.get(subject.fqid) ?? [],
+        cadence: cadenceOf,
         variable: subject,
         names,
         project: draft,

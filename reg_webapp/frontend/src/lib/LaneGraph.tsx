@@ -1025,9 +1025,12 @@ function Span({
     [focusInput],
   );
   const [open, setOpen] = useState(false);
-  // The name of the part under the pointer, so hovering a part opens only
-  // its own name's tooltip; null under focus, which gives every cut name.
-  const [part, setPart] = useState<string | null>(null);
+  // The part under the pointer, by index, so hovering a part opens only its
+  // own name's tooltip, and only where that part cuts it; null under focus,
+  // which gives every cut name.
+  const [hovered, setHovered] = useState<number | null>(null);
+  const under = hovered === null ? undefined : at.segments[hovered];
+  const part = under ? (under.name ?? span.name) : null;
   // A span with no column name (a classification version) carries its years
   // where they fit, so the bar is not an empty box; a column span shows its
   // name only (#2399).
@@ -1070,8 +1073,8 @@ function Span({
           className={styles.segment}
           data-staged={marked[i] ? (span.staged ?? undefined) : undefined}
           style={{ left: segment.x, width: segment.width }}
-          onPointerEnter={() => setPart(segment.name ?? span.name)}
-          onPointerLeave={() => setPart(null)}
+          onPointerEnter={() => setHovered(i)}
+          onPointerLeave={() => setHovered(null)}
         >
           {faces[i]}
         </span>
@@ -1107,7 +1110,7 @@ function Span({
   const cuttable = span.name
     ? cutNames.size > 0
     : (!!span.label || !!span.years) && !showYears;
-  const tipped = span.name && part !== null ? cutNames.has(part) : cuttable;
+  const tipped = span.name && under ? under.cut : cuttable;
   const lines = (
     span.columns ?? [{ name: span.name, years: span.years }]
   ).filter((column) =>

@@ -973,12 +973,15 @@ Time is the axis every relation is drawn on.
   does (#2408, 2026-11-11). A pill always spans its full period at the table's time
   grain: a yearly test taken in the spring term covers its whole year, quarterly data
   the quarters it exists for, and a gap shows only where there is no delivery
-  (maintainer, #2661, 2026-11-25). The grain is the coarsest of calendar year, school
-  year, half year, quarter and month at which each delivery (a file's days) starts on
-  a cell's first day and no two deliveries share a cell, so a spring term widens to
-  its calendar year and an autumn term to its school year; where none fits
-  (overlapping releases, a snapshot) the dates are drawn as they are. The text keeps
-  the catalog's own periods (the rule for finding the grain is proposed by the
+  (maintainer, #2661, 2026-11-25). The grain is the table's cadence as the catalog
+  states it (`year`, `half`, `quarter`, `month`), applied as the catalog measures
+  gaps: each delivery (a file's days) covers at least one cadence step from its first
+  day, so a spring term in a yearly table covers its year and an autumn term the
+  twelve months from 1 July. Only the end of a delivery's last segment moves, so a
+  rename inside a file keeps its boundary; a one-day snapshot, an open end and a
+  table with no step (`day`, `irregular`) are drawn at their dates. The axis reaches
+  the drawn ends; the years to add and the text keep the catalog's own periods
+  (applying the catalog's cadence rule to the drawing is proposed by the
   implementer). A `/project` source card keeps the source's cut (#2416). Abutting
   parts of one name in one state join into one part before the name is placed, so a
   column delivered in a file a year reads as one run, across a value-set change too

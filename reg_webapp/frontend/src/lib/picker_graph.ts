@@ -22,7 +22,7 @@ import type { ProjectData, ProjectStudyWindow } from "./project_data";
 import {
   columnDateRuns,
   columnYearRuns,
-  inDrawingGrain,
+  inTableCadence,
   studyWindow,
 } from "./study_window";
 import type { ColumnState } from "./ui/Pill";
@@ -52,6 +52,7 @@ export function variableSpans({
   notInDatabase = new Set(),
   sharedDays = new Map(),
   tableName = (table) => names.get(table) ?? "Table name unavailable",
+  cadence = () => null,
 }: {
   columns: readonly VariableColumn[];
   variable: Pick<VariableShow, "fqid" | "name">;
@@ -76,6 +77,9 @@ export function variableSpans({
   sharedDays?: ReadonlyMap<string, SharedDays>;
   /** How the accessible name names a table. */
   tableName?: (table: string) => string;
+  /** A table's cadence (`ShowTable.cadence`): each delivery is drawn over at
+   * least one step of it. None draws the catalog's own dates. */
+  cadence?: (table: string) => string | null | undefined;
 }): LaneSpanModel[] {
   const study = studyWindow(project);
   const tables = [...new Set(columns.map((column) => column.table))];
@@ -126,7 +130,7 @@ export function variableSpans({
       ]),
     );
     const every = [...parts.values()];
-    // The table's deliveries, in every database: what its grain is read from.
+    // The table's deliveries, in every database: what a cadence step stretches.
     const deliveries = here.flatMap(({ all }) => all.segments);
     const absent = every.every((part) => part.absent);
     const inside = every.some((part) => part.inside);
@@ -195,7 +199,7 @@ export function variableSpans({
                 ? "default"
                 : "out";
             return columnDateRuns(
-              inDrawingGrain(column.segments, deliveries),
+              inTableCadence(column.segments, cadence, deliveries),
               catalogBounds,
               axis[0],
             ).map((run) => ({

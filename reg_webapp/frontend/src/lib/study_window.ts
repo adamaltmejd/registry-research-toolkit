@@ -115,90 +115,80 @@ export function columnDateRuns(
   return runs;
 }
 
-// The grains a table can be delivered in, coarsest first: calendar years,
-// school years from 1 July, half years, quarters, months. A cell is a run of
-// `months` months starting `anchor` months into a calendar year.
-const GRAINS = [
-  { months: 12, anchor: 0 },
-  { months: 12, anchor: 6 },
-  { months: 6, anchor: 0 },
-  { months: 3, anchor: 0 },
-  { months: 1, anchor: 0 },
-] as const;
-type Grain = (typeof GRAINS)[number];
+// A table cadence's step in months, as the catalog names it (`reg-resolve`
+// gaps); `day`, `irregular` and none have no step.
+const CADENCE_MONTHS: Record<string, number> = {
+  year: 12,
+  half: 6,
+  quarter: 3,
+  month: 1,
+};
 
-/** The grain cell a day falls in. */
-function cellOf(day: string, grain: Grain): number {
+/** `months` months after an ISO day, on the same day of the month or the
+ * month's last. */
+function addMonths(day: string, months: number): string {
   const month = Number(day.slice(0, 4)) * 12 + Number(day.slice(5, 7)) - 1;
-  return Math.floor((month - grain.anchor) / grain.months);
-}
-
-/** A cell's first day. */
-function cellStart(cell: number, grain: Grain): string {
-  const month = cell * grain.months + grain.anchor;
-  const year = Math.floor(month / 12);
-  return `${String(year).padStart(4, "0")}-${String((month % 12) + 1).padStart(2, "0")}-01`;
+  const next = month + months;
+  const year = Math.floor(next / 12);
+  const last = new Date(Date.UTC(year, (next % 12) + 1, 0)).getUTCDate();
+  const date = Math.min(Number(day.slice(8, 10)), last);
+  return `${String(year).padStart(4, "0")}-${String((next % 12) + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
 }
 
 /**
- * Segments widened to their table's grain, for a lane to draw: a delivery
- * covers the whole grain cells its days fall in, so a yearly test taken in
- * the spring term is a whole year, not half of one with a gap after it
- * (maintainer, #2661, 2026-11-25). A gap is drawn only where no delivery is.
+ * Segments drawn over their table's cadence, as the catalog measures gaps:
+ * a delivery covers at least one cadence step from its first day, so a yearly
+ * test taken in the spring term draws its whole year, not half of one with a
+ * gap after it (maintainer, #2661, 2026-11-25). A gap is drawn only where no
+ * delivery is.
  *
- * The grain is the coarsest of `GRAINS` at which every delivery starts on a
- * cell's first day and no two deliveries share a cell, read from
- * `deliveries`: a delivery is a file's days (a segment's where it names no
- * file), so the segments one file splits at a metadata change are one
- * delivery, and identical days in two releases one. A spring term starts a
- * calendar year, an autumn term a school year. Where no grain fits
- * (overlapping deliveries, a 31 December snapshot) the segments are drawn as
- * they are. Open ends stay open. The text keeps the catalog's own periods.
- * simplify: the grain is read from the deliveries the caller has, one
- * variable's in a table; a table with a single delivery takes calendar years.
- * Read the table's own deliveries if that draws a term table as years.
+ * A delivery is a file's days, read from `deliveries` (a segment's own where
+ * it names no file): only the segment that ends it is stretched, so a file's
+ * internal boundaries (a rename inside it) stay where they are. A one-day
+ * period (a snapshot) is left as it is, for `columnDateRuns` to draw as its
+ * year, and so are open ends and tables with no step (`day`, `irregular`).
+ * The text keeps the catalog's own periods.
  */
-export function inDrawingGrain<
-  T extends Pick<CatalogSegment, "period" | "file">,
->(segments: readonly T[], deliveries: readonly T[] = segments): T[] {
-  // Inclusive days, an open end as far as it goes; ISO days compare as text.
-  const byFile = new Map<string, { start: string; last: string }>();
-  for (const { period, file } of deliveries) {
-    const start = period.start ?? "0001-01-01";
-    const last = catalogLastDate(period) ?? "9999-12-31";
-    const key = file ?? `${start} ${last}`;
-    const seen = byFile.get(key);
-    byFile.set(key, {
+export function inTableCadence<
+  T extends Pick<CatalogSegment, "period" | "file" | "table">,
+>(
+  segments: readonly T[],
+  cadenceOf: (table: string) => string | null | undefined,
+  deliveries: readonly T[] = segments,
+): T[] {
+  const key = (segment: T) =>
+    JSON.stringify([
+      segment.table,
+      segment.file ?? [segment.period.start, segment.period.end],
+    ]);
+  // Each dated delivery's days, half-open; ISO days compare as text.
+  const days = new Map<string, { start: string; end: string }>();
+  for (const segment of deliveries) {
+    const { start, end } = segment.period;
+    if (start === null || end === null) continue;
+    const seen = days.get(key(segment));
+    days.set(key(segment), {
       start: seen && seen.start < start ? seen.start : start,
-      last: seen && seen.last > last ? seen.last : last,
+      end: seen && seen.end > end ? seen.end : end,
     });
   }
-  const days = [
-    ...new Map(
-      [...byFile.values()].map((d) => [`${d.start} ${d.last}`, d]),
-    ).values(),
-  ];
-  const grain = GRAINS.find((grain) => {
-    const cells = days
-      .map(({ start, last }) => [cellOf(start, grain), cellOf(last, grain)])
-      .sort((a, b) => a[0] - b[0]);
-    return (
-      days.every(
-        ({ start }) => cellStart(cellOf(start, grain), grain) === start,
-      ) && cells.every(([from], i) => i === 0 || from > cells[i - 1][1])
-    );
-  });
-  if (!grain || days.length === 0) return [...segments];
   return segments.map((segment) => {
+    const step = CADENCE_MONTHS[cadenceOf(segment.table) ?? ""];
     const { start, end } = segment.period;
-    const last = catalogLastDate(segment.period);
-    return {
-      ...segment,
-      period: {
-        start: start === null ? null : cellStart(cellOf(start, grain), grain),
-        end: last === null ? end : cellStart(cellOf(last, grain) + 1, grain),
-      },
-    };
+    const delivery = days.get(key(segment));
+    if (
+      !step ||
+      !delivery ||
+      start === null ||
+      end === null ||
+      end !== delivery.end ||
+      catalogLastDate(segment.period) === start
+    )
+      return segment;
+    const stretched = addMonths(delivery.start, step);
+    return stretched > end
+      ? { ...segment, period: { start, end: stretched } }
+      : segment;
   });
 }
 
