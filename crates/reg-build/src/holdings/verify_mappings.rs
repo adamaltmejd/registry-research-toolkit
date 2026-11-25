@@ -1,5 +1,5 @@
 //! Source-derived mapping equality, independent of compiler candidate/placement logic.
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::days::{self, Span};
 use rusqlite::Connection;
@@ -10,6 +10,9 @@ use crate::error::Result;
 type Mappings = BTreeMap<Attributes, Vec<Span>>;
 /// Blocked spans by (notice code, rival table, rival variable).
 type Contested = BTreeMap<(String, String, String), Vec<Span>>;
+/// The (variable, catalog identifier flag) of each claim `expected` selects for an accepted
+/// interval.
+pub(super) type Accepted = BTreeSet<(String, Option<bool>)>;
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 struct Attributes {
@@ -25,6 +28,8 @@ struct Claim {
     attributes: Attributes,
     spans: Vec<Span>,
     ambiguous: bool,
+    /// The segment's catalog identifier flag; `None` when it states none.
+    identifier: Option<bool>,
 }
 
 /// Projection key presence/uniqueness has already been checked by `keys::verify`.
@@ -175,6 +180,7 @@ fn claim(
         },
         spans,
         ambiguous: segment.state == "ambiguous",
+        identifier: segment.identifier,
     }
 }
 
@@ -183,7 +189,7 @@ fn expected(
     table: &input::Table,
     tables: &BTreeMap<compile::Identity, &input::Table>,
     keyed: bool,
-) -> Result<(Mappings, Contested)> {
+) -> Result<(Mappings, Contested, Accepted)> {
     let mut routes = BTreeMap::<&str, Vec<&Claim>>::new();
     for claim in claims {
         routes
@@ -193,6 +199,7 @@ fn expected(
     }
     let mut expected = Mappings::new();
     let mut contested = Contested::new();
+    let mut accepted = Accepted::new();
     for claims in routes.values() {
         for span in days::slices(claims.iter().flat_map(|c| c.spans.iter().copied())) {
             let active: Vec<_> = claims
@@ -235,13 +242,14 @@ fn expected(
                     "inventory_cell_conflict: incompatible admitted mapping attributes".into(),
                 );
             }
+            accepted.insert((first.attributes.variable.clone(), first.identifier));
             let mut attributes = first.attributes.clone();
             attributes.carried |=
                 projection_copy(table, tables, keyed, &attributes.variable, span)?;
             expected.entry(attributes).or_default().push(span);
         }
     }
-    Ok((expected, contested))
+    Ok((expected, contested, accepted))
 }
 
 pub(super) fn verify(
@@ -270,6 +278,7 @@ pub(super) fn verify(
          JOIN holding_column c ON c.id=n.column_id JOIN holding_table h ON h.id=c.holding_id
          WHERE h.physical_name=?1 AND c.name=?2 AND (?3 IS NULL OR h.schema_name=?3)",
     )?;
+    let mut unidentified = BTreeSet::new();
     for table in &held.tables {
         let authored = tables[&compile::physical_identity(table)];
         for column in &table.columns {
@@ -278,21 +287,18 @@ pub(super) fn verify(
                 table.source_row, column.ordinal
             );
             let mut compare = || -> Result<Option<&str>> {
-                let (mut expected, mut contested) = expected(
-                    &claims(
-                        authored,
-                        column,
-                        index,
-                        variables,
-                        &compile::Reach {
-                            release: compile::stated_release(primaries, authored)?,
-                            variables,
-                        },
-                    )?,
+                let claimed = claims(
                     authored,
-                    &tables,
-                    keyed,
+                    column,
+                    index,
+                    variables,
+                    &compile::Reach {
+                        release: compile::stated_release(primaries, authored)?,
+                        variables,
+                    },
                 )?;
+                let (mut expected, mut contested, accepted) =
+                    expected(&claimed, authored, &tables, keyed)?;
                 let mut stored = Mappings::new();
                 let rows = query.query_map(
                     rusqlite::params![table.name, column.name, table.schema],
@@ -324,6 +330,9 @@ pub(super) fn verify(
                         "holdings_mapping_source_mismatch: complete intervals or admitted attributes differ",
                     ));
                 }
+                if let Some(n) = column.lopnr {
+                    super::lopnr::check(n, &accepted, &mut unidentified)?;
+                }
                 let mut recorded = Contested::new();
                 let rows = rivals.query_map(
                     rusqlite::params![table.name, column.name, table.schema],
@@ -345,5 +354,6 @@ pub(super) fn verify(
             }
         }
     }
+    super::lopnr::warn(&unidentified);
     Ok(())
 }

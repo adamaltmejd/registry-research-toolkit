@@ -279,7 +279,7 @@ fn sources(
             {
                 return Err(format!("{location}: holdings_source_storage_mismatch").into());
             }
-            if stored.lopnr != column.lopnr {
+            if stored.lopnr != column.lopnr.is_some() {
                 return Err(format!("{location}: holdings_lopnr_source_mismatch").into());
             }
         }
