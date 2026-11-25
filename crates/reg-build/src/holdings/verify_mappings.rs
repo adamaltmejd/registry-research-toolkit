@@ -7,26 +7,29 @@ use rusqlite::Connection;
 use super::{compile, input};
 use crate::error::Result;
 
-pub(super) type Mappings = BTreeMap<Attributes, Vec<Span>>;
+type Mappings = BTreeMap<Attributes, Vec<Span>>;
 /// Blocked spans by (notice code, rival table, rival variable).
 type Contested = BTreeMap<(String, String, String), Vec<Span>>;
+/// The (variable, catalog identifier flag) of each claim `expected` selects for an accepted
+/// interval.
+pub(super) type Accepted = BTreeSet<(String, Option<bool>)>;
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub(super) struct Attributes {
-    pub(super) table: String,
-    pub(super) variable: String,
+struct Attributes {
+    table: String,
+    variable: String,
     role: String,
     carried: bool,
     caveat: Option<String>,
     window: Option<String>,
 }
 
-pub(super) struct Claim {
-    pub(super) attributes: Attributes,
-    pub(super) spans: Vec<Span>,
-    pub(super) ambiguous: bool,
+struct Claim {
+    attributes: Attributes,
+    spans: Vec<Span>,
+    ambiguous: bool,
     /// The segment's catalog identifier flag; `None` when it states none.
-    pub(super) identifier: Option<bool>,
+    identifier: Option<bool>,
 }
 
 /// Projection key presence/uniqueness has already been checked by `keys::verify`.
@@ -186,7 +189,7 @@ fn expected(
     table: &input::Table,
     tables: &BTreeMap<compile::Identity, &input::Table>,
     keyed: bool,
-) -> Result<(Mappings, Contested)> {
+) -> Result<(Mappings, Contested, Accepted)> {
     let mut routes = BTreeMap::<&str, Vec<&Claim>>::new();
     for claim in claims {
         routes
@@ -196,6 +199,7 @@ fn expected(
     }
     let mut expected = Mappings::new();
     let mut contested = Contested::new();
+    let mut accepted = Accepted::new();
     for claims in routes.values() {
         for span in days::slices(claims.iter().flat_map(|c| c.spans.iter().copied())) {
             let active: Vec<_> = claims
@@ -238,13 +242,14 @@ fn expected(
                     "inventory_cell_conflict: incompatible admitted mapping attributes".into(),
                 );
             }
+            accepted.insert((first.attributes.variable.clone(), first.identifier));
             let mut attributes = first.attributes.clone();
             attributes.carried |=
                 projection_copy(table, tables, keyed, &attributes.variable, span)?;
             expected.entry(attributes).or_default().push(span);
         }
     }
-    Ok((expected, contested))
+    Ok((expected, contested, accepted))
 }
 
 pub(super) fn verify(
@@ -292,7 +297,8 @@ pub(super) fn verify(
                         variables,
                     },
                 )?;
-                let (mut expected, mut contested) = expected(&claimed, authored, &tables, keyed)?;
+                let (mut expected, mut contested, accepted) =
+                    expected(&claimed, authored, &tables, keyed)?;
                 let mut stored = Mappings::new();
                 let rows = query.query_map(
                     rusqlite::params![table.name, column.name, table.schema],
@@ -325,7 +331,7 @@ pub(super) fn verify(
                     ));
                 }
                 if let Some(n) = column.lopnr {
-                    super::lopnr::check(n, &claimed, &expected, &mut unidentified)?;
+                    super::lopnr::check(n, &accepted, &mut unidentified)?;
                 }
                 let mut recorded = Contested::new();
                 let rows = rivals.query_map(
