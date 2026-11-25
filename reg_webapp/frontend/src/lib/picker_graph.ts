@@ -7,7 +7,7 @@ import {
   type SharedDays,
   type VariableColumn,
 } from "./add_columns";
-import type { CatalogSegment, Graph, VariableShow } from "./api";
+import type { Graph, VariableShow } from "./api";
 import { catalogHref } from "./catalog";
 import { segmentYears, sourcePeriodLabel } from "./catalog_period";
 import { inDatabase, type Space } from "./databases";
@@ -28,23 +28,6 @@ import {
 import type { ColumnState } from "./ui/Pill";
 
 const RANK: Record<ColumnState, number> = { out: 0, default: 1, in: 2 };
-
-/** A column's segments by value set, a pill each: a value set that changes
- * splits the column's run there (maintainer, #2661, 2026-11-25). A segment
- * with none (an undocumented delivery) goes with the value set before it, or
- * the first one after it: a missing value set is not a changed one. */
-function byValueSet<T extends Pick<CatalogSegment, "period" | "value_set">>(
-  segments: readonly T[],
-): Map<string | null, T[]> {
-  const sorted = [...segments].sort((a, b) =>
-    (a.period.start ?? "").localeCompare(b.period.start ?? ""),
-  );
-  let held = sorted.find((s) => s.value_set)?.value_set?.hash ?? null;
-  return Map.groupBy(sorted, (segment) => {
-    held = segment.value_set?.hash ?? held;
-    return held;
-  });
-}
 
 /**
  * A variable's spans, one lane per table and one row per run of its columns
@@ -211,18 +194,17 @@ export function variableSpans({
               : readOnly || part.inside
                 ? "default"
                 : "out";
-            return [
-              ...byValueSet(inDrawingGrain(column.segments, deliveries)),
-            ].flatMap(([valueSet, segments]) =>
-              columnDateRuns(segments, catalogBounds, axis[0]).map((run) => ({
-                name: column.spelling,
-                ...run,
-                valueSet,
-                state,
-                // The columns the staged change takes in or out.
-                staged: staged === "add" ? part.inside : part.taken,
-              })),
-            );
+            return columnDateRuns(
+              inDrawingGrain(column.segments, deliveries),
+              catalogBounds,
+              axis[0],
+            ).map((run) => ({
+              name: column.spelling,
+              ...run,
+              state,
+              // The columns the staged change takes in or out.
+              staged: staged === "add" ? part.inside : part.taken,
+            }));
           })
           .sort((a, b) => a.from - b.from);
         if (!segments.length) return [];

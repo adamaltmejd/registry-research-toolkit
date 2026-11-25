@@ -981,9 +981,8 @@ Time is the axis every relation is drawn on.
   the catalog's own periods (the rule for finding the grain is proposed by the
   implementer). A `/project` source card keeps the source's cut (#2416). Abutting
   parts of one name in one state join into one part before the name is placed, so a
-  column delivered in a file a year reads as one run, except where the value set
-  changes: there the pills stay split until a design for joining them behind a
-  value-set-change marker has been tried (maintainer, #2661, 2026-11-25). Every part
+  column delivered in a file a year reads as one run, across a value-set change too
+  (a marker for the change awaits a design trial, maintainer, #2661, 2026-11-25). Every part
   carries its column name, cut as below where it is narrow (#2661: "Every chip shows
   its column name"). The spellings sharing the row say the rename; it has no mark and
   no sentence: "No renames on the same row are just explained by them being on the same

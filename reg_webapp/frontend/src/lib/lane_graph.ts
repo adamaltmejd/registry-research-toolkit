@@ -260,7 +260,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         };
       });
       // Every part carries its column name: the parts of one name are the
-      // pills a gap, a state or a value-set change splits (maintainer,
+      // pills a gap or a state change splits (maintainer,
       // #2661, 2026-11-25). The pill cuts a name too wide for its part with
       // an ellipsis, and its tooltip gives the whole (maintainer finding,
       // IFAU, 2026-11-17).

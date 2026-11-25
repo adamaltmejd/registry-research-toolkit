@@ -78,9 +78,6 @@ export interface LaneModel {
 export interface LaneSpanSegment extends LaneSegment {
   state?: ColumnState;
   staged?: boolean;
-  /** The part's value set (its hash), where the caller splits a column's
-   * run at a value-set change: parts with different ones never join. */
-  valueSet?: string | null;
 }
 
 export interface LaneSpanModel extends LaneSpanGeometryInput {
@@ -172,9 +169,9 @@ export interface LaneBreak {
   label: string;
 }
 
-/** A span whose abutting parts share a name, value set, state and staging, as
- * one part: a column delivered in a file a year (SCB's yearly releases) is one
- * run, so its name sits once across the run, not cut in every year. */
+/** A span whose abutting parts share a name, state and staging, as one part:
+ * a column delivered in a file a year (SCB's yearly releases) is one run, so
+ * its name sits once across the run, not cut in every year. */
 function joinParts(span: LaneSpanModel): LaneSpanModel {
   if (!span.segments || span.segments.length < 2) return span;
   const parts: LaneSpanSegment[] = [];
@@ -185,8 +182,7 @@ function joinParts(span: LaneSpanModel): LaneSpanModel {
       Math.abs(last.to - segment.from) < 1e-6 &&
       (last.name ?? span.name) === (segment.name ?? span.name) &&
       last.state === segment.state &&
-      last.staged === segment.staged &&
-      last.valueSet === segment.valueSet
+      last.staged === segment.staged
     ) {
       parts[parts.length - 1] = { ...last, to: segment.to };
     } else {
