@@ -1,15 +1,10 @@
 # key_check.R's published counts (reg_mona_runner/DESIGN.md, "Key check"): no
-# SQL Server here, so the script's definitions are loaded without its run, with
-# the plugin's cell_key.R, and one table's CSV rows are built from given true
-# counts.
+# SQL Server here, so the script's definitions are loaded without its run (it
+# runs only in the global environment), with the plugin's cell_key.R, and one
+# table's CSV rows are built from given true counts.
 
-key_check <- local({
-  exprs <- parse(file.path(runner_dir, "key_check.R"), keep.source = FALSE)
-  run <- which(vapply(exprs, identical, TRUE, quote(status <- main())))
-  env <- new.env()
-  for (e in exprs[seq_len(run - 1L)]) eval(e, env)
-  env
-})
+key_check <- new.env()
+sys.source(file.path(runner_dir, "key_check.R"), key_check)
 
 cell_key_r <- file.path(
   repo_dir, "plugins", "regmeta", "skills", "project-setup", "scripts", "cell_key.R"

@@ -461,8 +461,9 @@ the answer on the console, and exports its CSV, which is why it counts only.
   through `QUOTENAME` and `sp_executesql`.
 - **Settings at the top**, edited by the coordinator per run: SCB key names, prefixes
   and single table columns, matched as the holdings reader matches the steward's
-  `[[lopnr]]` entries (`Lopnr::marks`: ASCII case ignored, a table by name in every
-  schema), patterns for other key-like names, and optional schema and table filters.
+  `[[lopnr]]` entries (`Lopnr::marks`: ASCII case ignored, physical names trimmed for
+  matching but kept as stored for SQL and the report, a table by name in every schema;
+  an empty name, prefix, table or column is a setup refusal, as there), patterns for other key-like names, and optional schema and table filters.
   Base tables only, never views: see "What it does not protect". Matching is done in R
   on the listing from `INFORMATION_SCHEMA.COLUMNS`, never spliced into SQL. A selector
   that matches no base-table column, judged before the optional filters, stops the run
@@ -529,6 +530,12 @@ the answer on the console, and exports its CSV, which is why it counts only.
   reads the microdata; the salt guards the published counts against CSV recipients
   outside MONA, not against project members. It stays in the project folder and is never
   exported.
+- **Known limit: bounded noise** (maintainer ruling 2026-11-25, as for the export
+  gate). The p-table's noise is bounded by D = 5, so related counts in one row (`rows`,
+  `nulls`, `not_bigint`) can bound each other: with 1000 rows, 999 NULLs and one failing
+  key, the published counts let a reader infer that the single non-NULL key fails. The
+  pipeline output the export gate checks has the same property. What can leak here is a
+  technical property of a pseudonymised key value, not an attribute of a person.
 - **What it does not protect.** Overlapping objects: five yearly tables beside their
   UNION ALL view give each year's count twice over, and their sum narrows each. So only
   base tables are scanned, with no option for views, and the coordinator does not set the
@@ -539,7 +546,9 @@ the answer on the console, and exports its CSV, which is why it counts only.
   column and the run goes on; the CSV is appended after every table, so an interrupted
   run keeps what it counted. Exit 8 when any table failed, 2 for setup.
 - **Unverified here.** No test reaches SQL Server; the SQL is checked by reading and by
-  the coordinator's first run on MONA. The suite has one case, for the published counts
+  the coordinator's first run on MONA. The script runs only when evaluated in the
+  global environment (`Rscript`, `R CMD BATCH`, `source()`), so the test loads its
+  definitions with `sys.source()` into another. The suite has one case, for the published counts
   (values computed by hand from the HMAC and the p-table rows, the same on a rerun),
   built from given true counts without a database.
 

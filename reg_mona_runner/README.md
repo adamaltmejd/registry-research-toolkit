@@ -170,7 +170,8 @@ value leaves the database.
 2. Edit the settings at the top of the script: `SCB_KEY_NAMES`, `SCB_KEY_PREFIXES` and
    `SCB_KEY_COLUMNS` as the steward's `[[lopnr]]` entries name them (exact names, name
    prefixes such as `P1234_LopNr_`, and one column of one table, the table by name in
-   every schema; ASCII case ignored, as the holdings reader matches them),
+   every schema; ASCII case ignored and physical names trimmed, as the holdings reader
+   matches them; an empty entry stops the run with exit 2),
    `OTHER_KEY_PATTERNS` for the other key-like names, and optionally `SCHEMAS` and
    `TABLE_PATTERN`. Only base tables are scanned, never views; don't widen the table
    filter to tables derived from other scanned tables either.
@@ -236,6 +237,13 @@ alone:
   `key_check.salt` and reuse it (the script refuses a malformed one; a new salt gives
   new noise, so do not export again under a new salt);
 - a count one higher gets an unrelated key, so two counts cannot be differenced.
+
+The noise is bounded (at most 5 either way, the p-table shared with the export gate),
+so related counts in one row can bound each other: with 1000 rows, 999 NULLs and one
+failing key, a reader can infer that the single non-NULL key fails. Pipeline output the
+export gate checks has the same property, and it is the method's accepted limit
+(maintainer ruling 2026-11-25). What can leak here is a technical property of a
+pseudonymised key value, not an attribute of a person.
 
 It does not protect counts of objects that overlap: a UNION ALL view's `nulls` beside
 its yearly tables' narrows each year's count. That is why views are not scanned and why

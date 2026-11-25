@@ -412,6 +412,27 @@ table_batch <- function(schema, table, columns, types) {
 # ASCII case folded, as SQL Server and the holdings reader's [[lopnr]] match.
 ascii_lower <- function(x) chartr(paste(LETTERS, collapse = ""), paste(letters, collapse = ""), x)
 
+# A physical name as the holdings reader matches it: trimmed. Matching only;
+# SQL and the report keep the name as stored.
+match_name <- function(x) trimws(x, whitespace = "[\\h\\v]")
+
+# Why the SCB key settings cannot be used (an empty name, prefix, table or
+# column, which the holdings reader refuses too), or NULL. An empty vector is
+# fine: it selects nothing.
+selector_problem <- function() {
+  values <- c(SCB_KEY_NAMES, SCB_KEY_PREFIXES, unlist(SCB_KEY_COLUMNS))
+  pairs <- vapply(SCB_KEY_COLUMNS, function(tc) {
+    is.character(tc) && setequal(names(tc), c("table", "column")) && length(tc) == 2L
+  }, TRUE)
+  if (!is.character(values) || anyNA(values) || any(!nzchar(values)) || !all(pairs)) {
+    return(paste(
+      "SCB_KEY_NAMES, SCB_KEY_PREFIXES and SCB_KEY_COLUMNS take non-empty names;",
+      "each SCB_KEY_COLUMNS entry is c(table = ..., column = ...)"
+    ))
+  }
+  NULL
+}
+
 # The SCB key selectors, matched as the holdings reader's [[lopnr]] entries
 # match (crates/reg-readers/src/holdings.rs, Lopnr::marks): a name prefix, an
 # exact name, or one column of one table (in every schema). A label per
@@ -451,7 +472,9 @@ list_columns <- function(con) {
   )
   cols$data_type <- tolower(cols$data_type)
   selectors <- scb_selectors()
-  hits <- lapply(selectors, function(s) s$marks(cols$table_name, cols$column_name))
+  hits <- lapply(selectors, function(s) {
+    s$marks(match_name(cols$table_name), match_name(cols$column_name))
+  })
   scb <- Reduce(`|`, hits, rep(FALSE, nrow(cols)))
   other <- Reduce(
     `|`,
@@ -722,6 +745,11 @@ main <- function() {
       return(EXIT[["setup"]])
     }
   }
+  problem <- selector_problem()
+  if (!is.null(problem)) {
+    say(problem)
+    return(EXIT[["setup"]])
+  }
   odbc <- read_odbc()
   if (is.character(odbc)) {
     say(odbc)
@@ -798,8 +826,11 @@ main <- function() {
   status
 }
 
-status <- main()
-local({
+# Runs when the script is run or sourced into the global environment
+# (Rscript, R CMD BATCH, source()); loading it into another environment, as the
+# tests do, only defines it.
+if (identical(environment(), globalenv())) {
+  status <- main()
   tables <- attr(status, "tables")
   say(
     "finished   ",
@@ -807,8 +838,8 @@ local({
     "exit ",
     status
   )
-})
-status <- as.integer(status)
-if (!interactive()) {
-  quit(save = "no", status = status)
+  # Under source() in an interactive session, quitting would end the session.
+  if (!interactive()) {
+    quit(save = "no", status = as.integer(status))
+  }
 }
