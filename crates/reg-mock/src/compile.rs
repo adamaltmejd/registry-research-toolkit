@@ -1381,7 +1381,8 @@ pub fn check_spec(spec: &Spec) -> Vec<Refusal> {
 }
 
 /// File names the runner would accept, unique ignoring case; rates in `[0, 1]`, rows
-/// per unit above 0, an age range not reversed, a value map only on an attribute.
+/// per unit above 0, an age range not reversed, a value map only on an attribute, a
+/// code filter on a column of its file.
 fn check_files(files: &[SpecFile], null_rate: f64, refusals: &mut Vec<Refusal>) {
     let rate_ok = |rate: f64| (0.0..=1.0).contains(&rate);
     if !rate_ok(null_rate) {
@@ -1418,6 +1419,18 @@ fn check_files(files: &[SpecFile], null_rate: f64, refusals: &mut Vec<Refusal>) 
                 "population_invalid",
                 file.name.clone(),
                 "age_min is above age_max",
+            ));
+        }
+        if let Some(filter) = &file.code_filter
+            && !file.columns.iter().any(|c| c.name == filter.column)
+        {
+            refusals.push(Refusal::new(
+                "filter_column_missing",
+                file.name.clone(),
+                format!(
+                    "the code filter's column {} is not a column of the file",
+                    filter.column
+                ),
             ));
         }
         for column in &file.columns {
@@ -1457,10 +1470,24 @@ fn admit(column: &mut SpecColumn, filter: &manifest::CodeFilter) {
                 sentinel: false,
             })
             .collect();
-    } else if column.codes.iter().any(|c| filter.admits(&c.code)) {
-        column.codes.retain(|c| filter.admits(&c.code));
+    } else {
+        let integer = integer_filtered(column);
+        if column.codes.iter().any(|c| filter.admits(&c.code, integer)) {
+            column.codes.retain(|c| filter.admits(&c.code, integer));
+        }
     }
     column.null_rate = Some(0.0);
+}
+
+/// Whether a code filter on `column` compares numbers: on integer held storage, or
+/// without one on an integer type. simplify: a project's type override hides the held
+/// storage, so a text variable overridden to integer compares as numbers; carry the
+/// held family into the spec if such a filter ever matters.
+pub(crate) fn integer_filtered(column: &SpecColumn) -> bool {
+    match column.storage.as_ref().and_then(|s| s.dtype.as_deref()) {
+        Some(sql) => manifest::CodeFilter::storage(sql) == Some(StorageFamily::Integer),
+        None => column.dtype == ColumnType::Integer,
+    }
 }
 
 #[cfg(test)]

@@ -350,9 +350,12 @@ fn build(
             &project.sources,
             &mut findings,
         );
+        let scanned = extracted(&holding, &draft);
+        let mut mapped: BTreeMap<String, Vec<(String, Days)>> = BTreeMap::new();
         let mut columns: Vec<(ColumnKey, Column)> = Vec::new();
         for (column_id, (key, role, mut refs)) in std::mem::take(&mut draft.columns) {
             let stored = stored(held, column_id)?;
+            mapped.insert(stored.name.clone(), mappings(held, column_id)?);
             refs.sort_by(|a, b| {
                 (
                     index[a.source.as_str()],
@@ -388,6 +391,11 @@ fn build(
             &index,
             &columns,
             row_filter.as_ref(),
+            &Held {
+                mapped: &mapped,
+                scanned: &scanned,
+                open,
+            },
             &mut findings,
         );
         files.push((
@@ -793,6 +801,16 @@ fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
     )?;
     holding.held = merge(std::mem::take(&mut holding.held));
     Ok(holding)
+}
+
+/// A held column's mappings: each variable (FQID) it holds and the days it holds it.
+fn mappings(held: &Connection, column: i64) -> Result<Vec<(String, Days)>, Error> {
+    let mut query =
+        held.prepare("SELECT variable_pid, start, end FROM holding_mapping WHERE column_id = ?")?;
+    let rows = query
+        .query_map([column], |r| Ok((r.get(0)?, (r.get(1)?, r.get(2)?))))?
+        .collect::<Result<_, _>>()?;
+    Ok(rows)
 }
 
 fn stored(held: &Connection, column: i64) -> Result<Stored, Error> {
@@ -1476,6 +1494,14 @@ fn row_filter(
     })
 }
 
+/// What the code filter's mixed-column check reads of a file's holdings: each column's
+/// mappings (variable FQID, days), the days the runner reads, and the open window.
+struct Held<'a> {
+    mapped: &'a BTreeMap<String, Vec<(String, Days)>>,
+    scanned: &'a [Days],
+    open: (i64, i64),
+}
+
 /// The file's code filter (crates/DESIGN.md, "Row filters by code"): each source with an
 /// ordered column in the file and a filtered binding filters on the column placing that
 /// binding here; the file keeps their union when every such source filters one column.
@@ -1489,6 +1515,7 @@ fn code_filter(
     index: &BTreeMap<&str, usize>,
     columns: &[(ColumnKey, Column)],
     row_filter: Option<&RowFilter>,
+    held: &Held<'_>,
     findings: &mut Vec<Issue>,
 ) -> Option<CodeFilter> {
     let mut own: BTreeMap<usize, Option<CodeFilter>> = BTreeMap::new();
@@ -1500,7 +1527,7 @@ fn code_filter(
         .map(|r| &index[r.source.as_str()])
         .collect::<BTreeSet<_>>()
     {
-        match source_filter(&sources[s], s, columns) {
+        match source_filter(&sources[s], s, columns, held) {
             Ok(filter) => {
                 own.insert(s, filter);
             }
@@ -1586,6 +1613,7 @@ fn source_filter(
     source: &reg_core::project::Source,
     s: usize,
     columns: &[(ColumnKey, Column)],
+    held: &Held<'_>,
 ) -> Result<Option<CodeFilter>, Box<Issue>> {
     let Some((b, filter)) = source.catalog().and_then(|c| {
         c.catalog_bindings()
@@ -1634,7 +1662,7 @@ fn source_filter(
             ));
         }
     };
-    if let Some((code, message)) = refusal(column, filter, name, b) {
+    if let Some((code, message)) = refusal(column, filter, (name, b), held) {
         return Err(error(code, message));
     }
     Ok(Some(CodeFilter::new(
@@ -1648,27 +1676,51 @@ fn source_filter(
 fn refusal(
     column: &Column,
     filter: &reg_core::project::CodeFilter,
-    name: &str,
-    b: usize,
+    (name, b): (&str, usize),
+    held: &Held<'_>,
 ) -> Option<(&'static str, String)> {
-    // The runner filters every row of the file, so a column that holds another
-    // variable in some rows would lose those rows to this variable's codes.
-    let variable = column
+    // The runner filters every row it reads, so a column that holds another variable
+    // in some of them (by the holdings' mappings over those days, requested or not)
+    // would lose those rows to this variable's codes. The variable's own are the
+    // mappings that serve its references (a successor hop's included).
+    let refs: Vec<(i64, i64)> = column
         .refs
         .iter()
-        .find(|r| r.source == name && r.binding == Some(b))
-        .map(|r| r.variable.as_str());
+        .filter(|r| r.source == name && r.binding == Some(b))
+        .map(|r| r.period.days(held.open))
+        .collect();
+    let mapped = held.mapped.get(&column.name).map_or(&[][..], Vec::as_slice);
+    let own: BTreeSet<&str> = column
+        .refs
+        .iter()
+        .filter(|r| r.source == name && r.binding == Some(b))
+        .map(|r| r.variable.as_str())
+        .chain(
+            mapped
+                .iter()
+                .filter(|(_, d)| refs.iter().any(|r| d.0 < r.1 && r.0 < d.1))
+                .map(|(v, _)| v.as_str()),
+        )
+        .collect();
     if column
         .refs
         .iter()
-        .any(|r| r.binding.is_some() && Some(r.variable.as_str()) != variable)
+        .filter(|r| r.binding.is_some())
+        .map(|r| r.variable.as_str())
+        .chain(
+            mapped
+                .iter()
+                .filter(|(_, d)| !overlap(&[*d], held.scanned).is_empty())
+                .map(|(v, _)| v.as_str()),
+        )
+        .any(|v| !own.contains(v))
     {
         return Some((
             "filter_column_mixed",
             format!(
-                "The held column {} holds another variable in some rows of the same \
-                 file, so its rows cannot be selected by this variable's codes. Remove \
-                 the filter or order the other variable separately.",
+                "The held column {} holds another variable in other rows this file reads, \
+                 so its rows cannot be selected by this variable's codes. Remove the \
+                 filter.",
                 column.name
             ),
         ));

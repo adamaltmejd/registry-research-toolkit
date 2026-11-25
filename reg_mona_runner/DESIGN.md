@@ -1,7 +1,7 @@
 # Design: the MONA extract runner (`reg_mona_runner`)
 
 `extract.R` turns order files into extract files inside MONA. It reads the MONA order
-file (version 5) that `materialize_order` writes, whose contract is
+file (version 6) that `materialize_order` writes, whose contract is
 [../crates/DESIGN.md](../crates/DESIGN.md) ("MONA order file") and
 `crates/reg-core/src/manifest.rs`. A steward's data manager runs it by hand; no agent
 and no network reach MONA, so the script is one self-contained file that gets uploaded
@@ -250,7 +250,7 @@ more than 2,100 parameters with the period bounds are refused at the manifest ch
 order never writes them). The column's storage is checked like the period column's:
 `char`, `varchar`, `nchar` or `nvarchar`, or `tinyint`, `smallint`, `int` or `bigint`,
 which takes exact codes of at most 18 digits only; anything else is refused before any
-query. `rows_without_period` counts rows that pass the code filter and lack a period
+query. A column marked `lopnr` is refused: a key is not a code. `rows_without_period` counts rows that pass the code filter and lack a period
 value. `filter` in `run_log.csv` names the code filter after the period filter
 (`ATC: 1 code, 2 prefixes`); `rows` is the rows kept.
 

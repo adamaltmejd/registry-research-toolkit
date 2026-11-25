@@ -514,6 +514,12 @@ check_file <- function(f, where, format) {
   if (!is.null(f$code_filter) && !f$code_filter$column %in% columns) {
     refuse("manifest", where, ".code_filter.column is not a column of the file")
   }
+  # A lopnummer is a key, not a code: the order refuses a filter on it
+  # (filter_variable_not_coded), so a manifest that carries one is malformed.
+  if (!is.null(f$code_filter) &&
+    isTRUE(f$columns[[match(f$code_filter$column, columns)]]$lopnr)) {
+    refuse("manifest", where, ".code_filter.column is a lopnummer (lopnr)")
+  }
   twice <- unique(columns[duplicated(columns)])
   if (length(twice)) {
     refuse(
@@ -1297,7 +1303,7 @@ filter_where <- function(file, types) {
     }
     # A prefix as a LIKE pattern with its own wildcards escaped.
     for (prefix in codes$prefixes) {
-      pattern <- paste0(gsub("([][%_])", "[\\1]", prefix), "%")
+      pattern <- paste0(gsub("([\\[%_])", "[\\1]", prefix, perl = TRUE), "%")
       terms <- c(terms, paste0(col, " + N' LIKE ", bind(pattern, type), "'"))
     }
     clauses <- c(

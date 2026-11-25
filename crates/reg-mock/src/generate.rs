@@ -293,7 +293,7 @@ fn rows(
         file.columns
             .iter()
             .position(|c| c.name == f.column)
-            .map(|i| (f, i))
+            .map(|i| (f, i, crate::compile::integer_filtered(&file.columns[i])))
     });
     let years = if file.years.is_empty() {
         vec![last]
@@ -337,11 +337,17 @@ fn rows(
             };
             for _ in 0..n {
                 let mut row = Vec::with_capacity(kinds.len());
+                let mut keep = true;
                 for (((column, kind), pool), crng) in
                     file.columns.iter().zip(kinds).zip(&pools).zip(&mut columns)
                 {
                     let rate = column.null_rate.unwrap_or(spec.null_rate);
-                    let value = cell(file, column, *kind, pool, unit, rate, crng)?;
+                    let (value, code) = cell(file, column, *kind, pool, unit, rate, crng)?;
+                    if let Some((filter, i, integer)) = filtered
+                        && i == row.len()
+                    {
+                        keep = admitted(filter, integer, code, &value);
+                    }
                     // A supplied code or mapped value within the held storage: an
                     // integer in its range, a text no wider.
                     if let (Cell::Int(n), Some((min, max))) = (&value, int_range(column))
@@ -358,12 +364,9 @@ fn rows(
                     }
                     row.push(value);
                 }
-                if let Some((filter, i)) = filtered
-                    && !admitted(filter, &row[i])
-                {
-                    continue;
+                if keep {
+                    rows.push(row);
                 }
-                rows.push(row);
             }
         }
     }
@@ -422,27 +425,37 @@ impl<'a> Pool<'a> {
     }
 }
 
-/// Whether a code filter keeps a row holding `value`; a missing value it never keeps.
-fn admitted(filter: &reg_core::manifest::CodeFilter, value: &Cell) -> bool {
-    match value {
-        Cell::Int(n) => filter.admits(&n.to_string()),
-        Cell::Text(text) => filter.admits(text),
+/// Whether a code filter keeps a row holding `value`. The runner filters the held
+/// storage, before a project's type override converts the value, so a drawn `code` is
+/// compared as drawn; an attribute's value (no code) as written. A missing value is
+/// never kept.
+fn admitted(
+    filter: &reg_core::manifest::CodeFilter,
+    integer: bool,
+    code: Option<&str>,
+    value: &Cell,
+) -> bool {
+    match (code, value) {
+        (Some(code), _) => filter.admits(code, integer),
+        (None, Cell::Int(n)) => filter.admits(&n.to_string(), true),
+        (None, Cell::Text(text)) => filter.admits(text, integer),
         _ => false,
     }
 }
 
-fn cell(
+/// A cell and, when it was drawn from the column's codes, the code it was drawn as.
+fn cell<'a>(
     file: &SpecFile,
     column: &SpecColumn,
     kind: Kind,
-    pool: &Pool<'_>,
+    pool: &Pool<'a>,
     unit: &Unit_<'_>,
     null_rate: f64,
     rng: &mut Rng,
-) -> Result<Cell, Refusal> {
+) -> Result<(Cell, Option<&'a str>), Refusal> {
     let at = || format!("{}/{}", file.name, column.name);
     if !column.years.is_empty() && !column.years.contains(&unit.year) {
-        return Ok(Cell::Null);
+        return Ok((Cell::Null, None));
     }
     let keyed = column.identifier
         || matches!(
@@ -451,22 +464,30 @@ fn cell(
         );
     if !keyed && rng.chance(null_rate) {
         if pool.sentinels.is_empty() {
-            return Ok(Cell::Null);
+            return Ok((Cell::Null, None));
         }
         let code = pool.sentinels[pick(rng, pool.sentinels.len())];
-        return from_text(code, kind).ok_or_else(|| not_numeric(at()));
+        return Ok((
+            from_text(code, kind).ok_or_else(|| not_numeric(at()))?,
+            Some(code),
+        ));
     }
     if let Some(attribute) = column.attribute {
-        return attribute_cell(column, kind, attribute, unit, rng).ok_or_else(|| not_numeric(at()));
+        let value =
+            attribute_cell(column, kind, attribute, unit, rng).ok_or_else(|| not_numeric(at()))?;
+        return Ok((value, None));
     }
     if !pool.codes.is_empty() {
         let code = pool.codes[pick(rng, pool.codes.len())];
-        return from_text(code, kind).ok_or_else(|| not_numeric(at()));
+        return Ok((
+            from_text(code, kind).ok_or_else(|| not_numeric(at()))?,
+            Some(code),
+        ));
     }
     if column.identifier {
         // A key of its own kind, not joinable to persons or firms.
         let key = 700_000_001 + i64::try_from(rng.below(10_000_000)).expect("fits");
-        return from_int(key, kind).ok_or_else(|| not_numeric(at()));
+        return Ok((from_int(key, kind).ok_or_else(|| not_numeric(at()))?, None));
     }
     // The held storage's width is the delivery's; the catalog's otherwise.
     let length = column
@@ -477,7 +498,7 @@ fn cell(
     // A narrow integer storage keeps the delivery's range, though it is written as int32.
     #[allow(clippy::cast_precision_loss)]
     let ceiling = int_range(column).map_or(2_000_000_000.0, |(_, max)| max as f64);
-    Ok(drawn(kind, length, ceiling, unit.year, rng))
+    Ok((drawn(kind, length, ceiling, unit.year, rng), None))
 }
 
 /// The held integer storage's range, which the runner writes as int32 or int64.

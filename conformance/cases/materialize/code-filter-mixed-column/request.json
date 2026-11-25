@@ -1,5 +1,5 @@
 {
-  "note": "Fails if a code filter on a column that holds another variable in other rows of the same file (Shared: first in 2017, second in 2019, no period column) reaches the runner, which would drop the other variable's rows: it blocks as filter_column_mixed.",
+  "note": "Fails if a code filter on a column that holds another variable in rows the runner reads is passed on because the project does not request that variable: Shared holds first in 2017 and second in 2019, the table has no period column, so the file reads 2019 too; it blocks as filter_column_mixed.",
   "project": {
     "schema_version": "8.1.0",
     "reg_meta_version": "0.71.0",
@@ -21,18 +21,6 @@
                 "1"
               ]
             }
-          }
-        ]
-      },
-      {
-        "name": "b",
-        "table": "demo/owners",
-        "period": [
-          2019
-        ],
-        "bindings": [
-          {
-            "variable": "demo/owners/second"
           }
         ]
       }

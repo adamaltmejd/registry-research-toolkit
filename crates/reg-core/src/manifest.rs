@@ -148,22 +148,28 @@ impl CodeFilter {
         codes: impl IntoIterator<Item = &'a str>,
         prefixes: impl IntoIterator<Item = &'a str>,
     ) -> Self {
-        let mut kept: Vec<String> = Vec::new();
+        // In sorted order every string between a prefix and one it covers also starts
+        // with it, so one pass against the last kept prefix drops the covered ones.
         let mut all: Vec<&str> = prefixes.into_iter().collect();
-        // Shortest first, so a covering prefix is kept before the ones it covers.
-        all.sort_by_key(|p| (p.len(), *p));
+        all.sort_unstable();
+        let mut kept: Vec<String> = Vec::new();
         for p in all {
-            if !kept.iter().any(|k| p.starts_with(k.as_str())) {
+            if kept.last().is_none_or(|k| !p.starts_with(k.as_str())) {
                 kept.push(p.to_owned());
             }
         }
-        kept.sort();
+        // For the same reason the only kept prefix that can cover a code is the
+        // greatest one not after it.
+        let covered = |c: &str| {
+            let at = kept.partition_point(|k| k.as_str() <= c);
+            at > 0 && c.starts_with(kept[at - 1].as_str())
+        };
         let mut codes: Vec<String> = codes
             .into_iter()
-            .filter(|c| !kept.iter().any(|k| c.starts_with(k.as_str())))
+            .filter(|c| !covered(c))
             .map(str::to_owned)
             .collect();
-        codes.sort();
+        codes.sort_unstable();
         codes.dedup();
         Self {
             column: column.to_owned(),
@@ -213,9 +219,17 @@ impl CodeFilter {
         (1..=18).contains(&digits.len()) && digits.bytes().all(|b| b.is_ascii_digit())
     }
 
-    /// Whether the filter keeps a row holding `value`.
+    /// Whether the filter keeps a row holding `value`, compared as the runner's SQL
+    /// compares it: as numbers in an `integer` column (`01` keeps 1, and a value that is
+    /// not a number is kept by nothing), else as text, exactly or by prefix.
     #[must_use]
-    pub fn admits(&self, value: &str) -> bool {
+    pub fn admits(&self, value: &str, integer: bool) -> bool {
+        if integer {
+            let Ok(n) = value.trim().parse::<i64>() else {
+                return false;
+            };
+            return self.codes.iter().any(|c| c.parse::<i64>() == Ok(n));
+        }
         self.codes.iter().any(|c| c == value)
             || self.prefixes.iter().any(|p| value.starts_with(p.as_str()))
     }

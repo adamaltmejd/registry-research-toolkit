@@ -19,16 +19,9 @@
     {
       "code": "filter_column_mixed",
       "level": "error",
-      "message": "The held column Shared holds another variable in some rows of the same file, so its rows cannot be selected by this variable's codes. Remove the filter or order the other variable separately.",
+      "message": "The held column Shared holds another variable in other rows this file reads, so its rows cannot be selected by this variable's codes. Remove the filter.",
       "path": "/sources/0/bindings/0/filter",
       "source": "a"
-    },
-    {
-      "code": "rows_unfiltered",
-      "level": "info",
-      "message": "Rows from 2017 to 2018 are included because this table has no year column.",
-      "path": "/sources/1",
-      "source": "b"
     }
   ]
 }

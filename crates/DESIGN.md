@@ -2777,8 +2777,9 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 `reg_core::issue` so the manifest owns its findings type. The cases are
 `conformance/cases/materialize/`.
 
-- `version` is the integer `5`; the runner refuses every other (v5 adds the column's
-  `lopnr`, "SCB löpnummer columns"). `extract_format` is the
+- `version` is the integer `6`; the runner refuses every other (v5 added the column's
+  `lopnr`, "SCB löpnummer columns"; v6 adds the file's `code_filter`, "Row filters by
+  code"). `extract_format` is the
   project's. `stata_name` is
   the v3 rule byte for byte, emitted only on a `dta` order.
 - Provenance: `catalog.generation` is the served pair (`meta.generation`),
@@ -2922,11 +2923,13 @@ source, as `row_filter_union`:
   without the column, a projection) cannot be filtered: blocking `filter_column_missing`.
   So is a file where the variable is placed in two physical columns over the file's days
   (`filter_column_split`), and so is one whose filtered column holds another variable in
-  some rows of the file (`filter_column_mixed`: a column of the `Owners` kind, which holds
-  one variable in 2017 and another in 2019 with no period column): the runner filters
-  every row of the file, so it cannot keep the other variable's rows. All three are rare;
-  narrowing the period, or ordering the other variable separately, is the remedy and the
-  message says so. A source with only row keys in a file neither filters nor widens it
+  rows the runner reads (`filter_column_mixed`): by the holdings' mappings of the column
+  over the days the file reads (the row filter's, or the whole delivery without one),
+  requested or not. A column of the `Owners` kind holds one variable in 2017 and another
+  in 2019 with no period column, so a filter on the 2017 variable would also read, and
+  wrongly keep or drop, the 2019 rows. The variable's own mappings are those that serve
+  its references, a successor hop's included. All three are rare; narrowing the period or
+  removing the filter is the remedy and the message says so. A source with only row keys in a file neither filters nor widens it
   (a `simplify:` in `code_filter`).
 - The held storage decides how the runner compares: `char`, `varchar`, `nchar` and
   `nvarchar` take codes and prefixes; `tinyint`, `smallint`, `int` and `bigint` exact
