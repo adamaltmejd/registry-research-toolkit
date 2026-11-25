@@ -10,7 +10,7 @@ use crate::issue::{Issue, Period};
 use crate::project::ExtractFormat;
 
 /// The manifest `version` this crate writes; the runner refuses every other.
-pub const MANIFEST_VERSION: u32 = 6;
+pub const MANIFEST_VERSION: u32 = 7;
 
 /// The order file: one file per table and delivery, with its columns.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -297,6 +297,17 @@ pub struct Column {
     )]
     #[cfg_attr(feature = "openapi", schema(schema_with = lopnr_schema))]
     pub lopnr: bool,
+    /// The separator of a packed column, which holds several codes of one variable in one
+    /// value (PAR's `DIAGNOS`), by the steward's holdings: a code filter on it matches any
+    /// of the codes. Absent: not packed. One printable ASCII character other than a letter
+    /// or digit ([`packed_separator`]); `null` is refused, as the runner refuses it.
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "separator"
+    )]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
+    pub packed: Option<String>,
 }
 
 /// A flag that is present only when set: `true`, never `false` or `null`.
@@ -308,6 +319,25 @@ fn only_true<'de, D: serde::Deserializer<'de>>(d: D) -> Result<bool, D::Error> {
             "a flag is true or absent, never false",
         ))
     }
+}
+
+/// A packed column's separator: present only when valid, never `null`.
+fn separator<'de, D: serde::Deserializer<'de>>(d: D) -> Result<Option<String>, D::Error> {
+    let s = String::deserialize(d)?;
+    if packed_separator(&s) {
+        Ok(Some(s))
+    } else {
+        Err(serde::de::Error::custom(
+            "a packed separator is one printable ASCII character other than a letter or digit",
+        ))
+    }
+}
+
+/// Whether `s` can separate a packed column's codes: one printable ASCII character that
+/// is not a letter or digit. Twin: `check_column` in `extract.R`.
+#[must_use]
+pub fn packed_separator(s: &str) -> bool {
+    matches!(s.as_bytes(), [b] if (0x20..=0x7e).contains(b) && !b.is_ascii_alphanumeric())
 }
 
 #[cfg(feature = "openapi")]

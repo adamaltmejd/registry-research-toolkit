@@ -403,12 +403,21 @@ check_column <- function(col, where, format) {
     col,
     where,
     c("name", "storage", "role", "refs"),
-    c("stata_name", "slot", "lopnr")
+    c("stata_name", "slot", "lopnr", "packed")
   )
   # Absent is false, so a present one is true (not false, not null), as
   # crates/reg-core/src/manifest.rs reads it.
   if ("lopnr" %in% names(col) && !isTRUE(col$lopnr)) {
     refuse("manifest", where, ".lopnr is not true")
+  }
+  # A packed column's separator (crates/reg-core/src/manifest.rs, packed_separator):
+  # one printable ASCII character other than a letter or digit; never null.
+  if ("packed" %in% names(col) && !(is_string(col$packed) &&
+    grepl("^[ -~]$", col$packed) && !grepl("[A-Za-z0-9]", col$packed))) {
+    refuse(
+      "manifest", where,
+      ".packed is not one printable ASCII character other than a letter or digit"
+    )
   }
   check_name(col$name, paste0(where, ".name"))
   if (!is.null(col$stata_name)) {
@@ -490,15 +499,6 @@ check_file <- function(f, where, format) {
   }
   if (!is.null(f$code_filter)) {
     check_code_filter(f$code_filter, paste0(where, ".code_filter"))
-    bounds <- vapply(
-      f$row_filter$ranges,
-      function(r) as.integer(!is.null(r$from)) + as.integer(!is.null(r$to)),
-      0L
-    )
-    n <- length(f$code_filter$codes) + length(f$code_filter$prefixes) + sum(bounds)
-    if (n > PARAMS_MAX) {
-      refuse("manifest", where, " binds ", n, " parameters; at most ", PARAMS_MAX)
-    }
   }
   if (!is_array(f$columns) || !length(f$columns)) {
     refuse("manifest", where, ".columns is not a non-empty array")
@@ -519,6 +519,26 @@ check_file <- function(f, where, format) {
   if (!is.null(f$code_filter) &&
     isTRUE(f$columns[[match(f$code_filter$column, columns)]]$lopnr)) {
     refuse("manifest", where, ".code_filter.column is a lopnummer (lopnr)")
+  }
+  if (!is.null(f$code_filter)) {
+    # Every entry and period bound is one bound parameter, and a packed column's
+    # separator one more.
+    bounds <- vapply(
+      f$row_filter$ranges,
+      function(r) as.integer(!is.null(r$from)) + as.integer(!is.null(r$to)),
+      0L
+    )
+    packed <- f$columns[[match(f$code_filter$column, columns)]]$packed
+    n <- length(f$code_filter$codes) + length(f$code_filter$prefixes) + sum(bounds) +
+      as.integer(!is.null(packed))
+    if (n > PARAMS_MAX) {
+      refuse("manifest", where, " binds ", n, " parameters; at most ", PARAMS_MAX)
+    }
+    # An entry holding the separator would match across two codes (filter_storage).
+    entries <- unlist(c(f$code_filter$codes, f$code_filter$prefixes))
+    if (!is.null(packed) && any(grepl(packed, entries, fixed = TRUE))) {
+      refuse("manifest", where, ".code_filter has an entry holding the column's separator")
+    }
   }
   twice <- unique(columns[duplicated(columns)])
   if (length(twice)) {
@@ -551,12 +571,12 @@ check_manifest <- function(doc) {
     refuse("manifest", "the order is not a JSON object")
   }
   v <- doc$version
-  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 6)) {
+  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 7)) {
     refuse(
       "version",
       "manifest version ",
       format(v),
-      " is not supported; this runner reads version 6"
+      " is not supported; this runner reads version 7"
     )
   }
   p <- doc$provenance
@@ -602,6 +622,17 @@ written_name <- function(col) {
   if (is.null(col$stata_name)) col$name else col$stata_name
 }
 
+# The file's code filter with its column's packed separator (`packed`, NULL when
+# the column is not packed).
+packed_codes <- function(f) {
+  codes <- f$code_filter
+  if (!is.null(codes)) {
+    names <- vapply(f$columns, `[[`, "", "name")
+    codes$packed <- f$columns[[match(codes$column, names)]]$packed
+  }
+  codes
+}
+
 # One output file per manifest file, named by its stem and the format's extension
 # (crates/DESIGN.md, "MONA order file"), its columns in manifest order, each
 # written under its .dta alias or its own name.
@@ -616,7 +647,7 @@ plan_files <- function(manifest_files, format) {
       storage = lapply(f$columns, `[[`, "storage"),
       lopnr = vapply(f$columns, function(c) isTRUE(c$lopnr), NA),
       filter = f$row_filter,
-      codes = f$code_filter
+      codes = packed_codes(f)
     )
   })
   # Case-insensitive: MONA's Windows file system would let one file overwrite
@@ -1294,17 +1325,10 @@ filter_where <- function(file, types) {
   if (!is.null(codes)) {
     col <- sql_quoted(codes$column)
     type <- code_param_type(types$type[match(codes$column, file$columns)])
-    terms <- character()
-    # Each code compared exactly, in a parameter of the column's own kind so an
-    # index on the column serves it; bound as text, which SQL Server converts
-    # exactly to bigint for an integer column.
-    for (code in codes$codes) {
-      terms <- c(terms, paste0(col, " + N' = ", bind(code, type), "'"))
-    }
-    # A prefix as a LIKE pattern with its own wildcards escaped.
-    for (prefix in codes$prefixes) {
-      pattern <- paste0(gsub("([\\[%_])", "[\\1]", prefix, perl = TRUE), "%")
-      terms <- c(terms, paste0(col, " + N' LIKE ", bind(pattern, type), "'"))
+    terms <- if (is.null(codes$packed)) {
+      code_terms(codes, col, type, bind)
+    } else {
+      packed_terms(codes, col, type, bind)
     }
     clauses <- c(
       clauses,
@@ -1317,6 +1341,51 @@ filter_where <- function(file, types) {
     ""
   }
   list(sql = where, declared = declared, params = params)
+}
+
+# A LIKE pattern's text with its own wildcards escaped.
+like_escaped <- function(x) gsub("([\\[%_])", "[\\1]", x, perl = TRUE)
+
+# The terms of a code filter on an ordinary column: each code compared exactly, in
+# a parameter of the column's own kind so an index on the column serves it (bound
+# as text, which SQL Server converts exactly to bigint for an integer column), each
+# prefix as a LIKE pattern.
+code_terms <- function(codes, col, type, bind) {
+  terms <- character()
+  for (code in codes$codes) {
+    terms <- c(terms, paste0(col, " + N' = ", bind(code, type), "'"))
+  }
+  for (prefix in codes$prefixes) {
+    pattern <- paste0(like_escaped(prefix), "%")
+    terms <- c(terms, paste0(col, " + N' LIKE ", bind(pattern, type), "'"))
+  }
+  terms
+}
+
+# The terms of a code filter on a packed column (crates/DESIGN.md, "Row filters by
+# code", "Packed columns"): each entry matches any code of the value. With the
+# separator s bound once, a code c is `@s + RTRIM(col) + @s + N'.' LIKE '%' s c s '%'`
+# and a prefix p `@s + RTRIM(col) LIKE '%' s p '%'`. RTRIM drops a char column's
+# padding, which would otherwise end the last code with blanks; the N'.' keeps the
+# separator after the last code, since LIKE ignores the trailing blanks of the
+# expression it matches. No index serves a pattern that starts with %.
+packed_terms <- function(codes, col, type, bind) {
+  sep <- codes$packed
+  s <- bind(sep, type)
+  around <- paste0("N'", s, " + RTRIM(' + ", col, " + N')'")
+  terms <- character()
+  for (code in codes$codes) {
+    pattern <- paste0("%", like_escaped(sep), like_escaped(code), like_escaped(sep), "%")
+    terms <- c(
+      terms,
+      paste0(around, " + N' + ", s, " + N''.'' LIKE ", bind(pattern, type), "'")
+    )
+  }
+  for (prefix in codes$prefixes) {
+    pattern <- paste0("%", like_escaped(sep), like_escaped(prefix), "%")
+    terms <- c(terms, paste0(around, " + N' LIKE ", bind(pattern, type), "'"))
+  }
+  terms
 }
 
 # The parameter type a code filter binds its entries in, for the column's SQL
@@ -1342,10 +1411,16 @@ check_codes <- function(file, types) {
     return(invisible())
   }
   type <- types$type[match(codes$column, file$columns)]
-  integer <- type %in% c(INT_TYPES, "bigint")
-  ok <- type %in% TEXT_TYPES ||
-    (integer && !length(codes$prefixes) &&
-      all(grepl("^-?[0-9]{1,18}$", unlist(codes$codes))))
+  integer <- type %in% c(INT_TYPES, "bigint") && is.null(codes$packed)
+  # A packed column is matched by concatenation and LIKE, which text and ntext
+  # do not take (holdings_packed_storage at the build).
+  ok <- if (!is.null(codes$packed)) {
+    type %in% c("char", "varchar", "nchar", "nvarchar")
+  } else {
+    type %in% TEXT_TYPES ||
+      (integer && !length(codes$prefixes) &&
+        all(grepl("^-?[0-9]{1,18}$", unlist(codes$codes))))
+  }
   if (!ok) {
     refuse(
       "resolve",

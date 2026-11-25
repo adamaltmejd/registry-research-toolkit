@@ -4934,6 +4934,10 @@
               "description": "The exact column name in the file.",
               "type": "string"
             },
+            "packed": {
+              "description": "The separator of a packed column, which holds several codes of one variable in one\nvalue (PAR's `DIAGNOS`), by the steward's holdings: a code filter on it matches any\nof the codes. Absent: not packed. One printable ASCII character other than a letter\nor digit ([`packed_separator`]); `null` is refused, as the runner refuses it.",
+              "type": "string"
+            },
             "refs": {
               "items": {
                 "$ref": "#/$defs/ColumnRef"

@@ -584,6 +584,35 @@ fn spaces(p: &Pair) -> Result<Section> {
     )
 }
 
+/// The packed columns, by table/column with their separator: a changed separator lists
+/// as one removed and one added. Holdings before schema 15 mark none.
+fn packed(p: &Pair) -> Result<Section> {
+    let has = |conn: &rusqlite::Connection| -> Result<bool> {
+        Ok(conn.query_row(
+            "SELECT EXISTS(SELECT 1 FROM pragma_table_info('holding_column') WHERE name = 'packed')",
+            [],
+            |r| r.get(0),
+        )?)
+    };
+    if !has(&p.old)? || !has(&p.new)? {
+        return Ok(Section::flat(
+            "packed",
+            "packed columns",
+            vec![shown(Item::new(
+                json!({"compared": false}),
+                "packed: not compared, one side predates holdings schema 15".to_owned(),
+            ))],
+        ));
+    }
+    delta(
+        "packed",
+        "packed columns (by table/column, separator)",
+        p,
+        "SELECT 'packed', json_array(t.schema_name, t.physical_name) || '/' || c.name, c.packed, '' \
+         FROM holding_column c JOIN holding_table t ON t.id = c.holding_id WHERE c.packed IS NOT NULL",
+    )
+}
+
 /// The columns marked as löpnummer (pseudonymised keys, written as int64), by table and column. Holdings
 /// before schema 14 mark none: the section says so and compares nothing.
 fn lopnr(p: &Pair) -> Result<Section> {
@@ -706,6 +735,7 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
     out.push(editions(p)?);
     out.push(spaces(p)?);
     out.push(lopnr(p)?);
+    out.push(packed(p)?);
     out.push(dispositions(p)?);
     Ok(out)
 }

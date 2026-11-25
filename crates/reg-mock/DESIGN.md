@@ -244,7 +244,10 @@ file's `code_filter` and the generator drops a row it does not admit. It compare
 runner's SQL does, on the held storage: as numbers on integer storage (`01` keeps 1), as
 text otherwise, and on the code as drawn, before a project's type override converts it. Without a value set the
 filtered column draws the filter's entries its storage holds; with none left, its rows are all dropped. The filtered column
-draws only the codes the filter admits and is never missing, so few rows are dropped. A timeless file is drawn in the window's last year, and a
+draws only the codes the filter admits and is never missing, so few rows are dropped. A
+packed column (the order file's `packed`) draws one to three codes joined by its
+separator, as many as its storage width holds; a filtered file keeps a row when any of
+them is admitted. A timeless file is drawn in the window's last year, and a
 spec with only timeless files in 2024.
 
 **Writers** (`write.rs`) follow the runner's types (reg_mona_runner/DESIGN.md, "Types

@@ -8,3 +8,9 @@ evidence = "Synthetic storage export explicitly prefixes the reference row key."
 [[lopnr]]
 prefix = "Received_"
 evidence = "Synthetic storage export: the received person key is the key SCB pseudonymised."
+
+[[packed]]
+table = "Pool"
+column = "Late"
+separator = " "
+evidence = "Synthetic storage export: the late code column holds several codes separated by spaces."

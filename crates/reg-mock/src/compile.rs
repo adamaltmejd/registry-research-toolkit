@@ -681,6 +681,7 @@ impl Context<'_> {
                     continue;
                 };
                 spec_column.stata_name.clone_from(&column.stata_name);
+                spec_column.packed.clone_from(&column.packed);
                 spec_column.label = column.stata_name.as_ref().map(|_| column.name.clone());
                 if let Some(filter) = row_filter {
                     spec_column.attribute = Some(Attribute::Year);
@@ -915,6 +916,7 @@ impl Context<'_> {
             years: Vec::new(),
             identifier: primary.identifier.unwrap_or(false),
             null_rate: None,
+            packed: None,
         })
     }
 
@@ -1069,6 +1071,7 @@ impl Context<'_> {
             // No segment states it: the stated type does.
             identifier: dtype == ColumnType::Identifier,
             null_rate: None,
+            packed: None,
         };
         // A delivery's column names are case-insensitive (SQL Server), so `lopnr` meets `LopNr`.
         let key = reg_core::fold_identity(&column.name);
@@ -1231,6 +1234,7 @@ fn year_column(
         years: Vec::new(),
         identifier: false,
         null_rate: Some(0.0),
+        packed: None,
     })
 }
 

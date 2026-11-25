@@ -130,6 +130,7 @@ struct Stored {
     storage: Storage,
     slot: Option<Slot>,
     lopnr: bool,
+    packed: Option<String>,
 }
 
 /// A file being assembled: its columns by id, with the ordering key of each.
@@ -389,6 +390,7 @@ fn build(
                     refs,
                     slot: stored.slot,
                     lopnr: stored.lopnr,
+                    packed: stored.packed,
                 },
             ));
         }
@@ -852,7 +854,7 @@ fn filtered_binding(source: &reg_core::project::Source) -> Option<usize> {
 fn stored(held: &Connection, column: i64) -> Result<Stored, Error> {
     Ok(held.query_row(
         "SELECT name, ordinal, storage_type, length, precision, scale, slot_family, slot_kind,
-                slot_index, lopnr
+                slot_index, lopnr, packed
          FROM holding_column WHERE id = ?",
         [column],
         |r| {
@@ -874,6 +876,7 @@ fn stored(held: &Connection, column: i64) -> Result<Stored, Error> {
                     _ => None,
                 },
                 lopnr: r.get(9)?,
+                packed: r.get(10)?,
             })
         },
     )?)
@@ -1585,7 +1588,13 @@ fn code_filter(
                 .map(|r| usize::from(r.from.is_some()) + usize::from(r.to.is_some()))
                 .sum()
         });
-        if entries > CODE_FILTER_MAX || entries + bounds > PARAMS_MAX {
+        // A packed column binds its separator once more.
+        let separator = usize::from(
+            columns
+                .iter()
+                .any(|(_, c)| c.name == union.column && c.packed.is_some()),
+        );
+        if entries > CODE_FILTER_MAX || entries + bounds + separator > PARAMS_MAX {
             too_large(sources, own.keys().copied(), entries, bounds, findings);
             return None;
         }
@@ -1786,12 +1795,39 @@ fn refusal(
             ),
         ));
     }
+    stored_refusal(column, filter)
+}
+
+/// Why the column's held kind cannot take the filter: a löpnummer is a key, not a code
+/// (packed or not); a packed column's entry holding its separator would match across two
+/// codes; and the storage must be one the runner filters.
+fn stored_refusal(
+    column: &Column,
+    filter: &reg_core::project::CodeFilter,
+) -> Option<(&'static str, String)> {
     if column.lopnr {
         return Some((
             "filter_variable_not_coded",
             format!(
                 "The held column {} is a person or unit number, so its rows cannot be \
                  selected by code. Remove the filter.",
+                column.name
+            ),
+        ));
+    }
+    if let Some(separator) = &column.packed
+        && let Some(entry) = filter
+            .codes
+            .iter()
+            .chain(&filter.prefixes)
+            .find(|e| e.contains(separator.as_str()))
+    {
+        return Some((
+            "filter_storage",
+            format!(
+                "The held column {} holds several codes separated by {separator:?}, so the \
+                 entry {entry:?}, which contains it, would match across two codes. Remove the \
+                 entry.",
                 column.name
             ),
         ));

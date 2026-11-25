@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "extract_format": "dta",
   "provenance": {
     "mode": "steward_holdings",
@@ -106,6 +106,7 @@
         },
         {
           "name": "Late",
+          "packed": " ",
           "storage": {
             "type": "nvarchar",
             "length": 10,

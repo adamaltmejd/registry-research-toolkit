@@ -349,7 +349,7 @@ fn rows(
                     if let Some((filter, i, integer)) = filtered
                         && i == row.len()
                     {
-                        keep = admitted(filter, integer, code, &value);
+                        keep = admitted(filter, integer, column.packed.as_deref(), code, &value);
                     }
                     row.push(value);
                 }
@@ -416,14 +416,18 @@ impl<'a> Pool<'a> {
 
 /// Whether a code filter keeps a row holding `value`. The runner filters the held
 /// storage, before a project's type override converts the value, so a drawn `code` is
-/// compared as drawn; an attribute's value (no code) as written. A missing value is
-/// never kept.
+/// compared as drawn; an attribute's value (no code) as written; a packed column's
+/// value by any of its codes. A missing value is never kept.
 fn admitted(
     filter: &reg_core::manifest::CodeFilter,
     integer: bool,
+    packed: Option<&str>,
     code: Option<&str>,
     value: &Cell,
 ) -> bool {
+    if let (Some(separator), Cell::Text(text)) = (packed, value) {
+        return text.split(separator).any(|c| filter.admits(c, false));
+    }
     match (code, value) {
         (Some(code), _) => filter.admits(code, integer),
         (None, Cell::Int(n)) => filter.admits(&n.to_string(), true),
@@ -432,7 +436,30 @@ fn admitted(
     }
 }
 
-/// A cell and, when it was drawn from the column's codes, the code it was drawn as.
+/// A packed column's value: one to three codes drawn from its list, joined by its
+/// separator, as many as its held storage width holds (one at least).
+fn packed_value(column: &SpecColumn, separator: &str, pool: &Pool<'_>, rng: &mut Rng) -> String {
+    let width = column
+        .storage
+        .as_ref()
+        .and_then(|s| s.length)
+        .filter(|w| *w > 0)
+        .and_then(|w| usize::try_from(w).ok())
+        .unwrap_or(usize::MAX);
+    let n = 1 + pick(rng, 3);
+    let mut value = pool.codes[pick(rng, pool.codes.len())].to_owned();
+    for _ in 1..n {
+        let code = pool.codes[pick(rng, pool.codes.len())];
+        if value.len() + separator.len() + code.len() > width {
+            break;
+        }
+        value.push_str(separator);
+        value.push_str(code);
+    }
+    value
+}
+
+/// A cell and, when it was drawn as one of the column's codes, that code.
 fn cell<'a>(
     file: &SpecFile,
     column: &SpecColumn,
@@ -465,6 +492,13 @@ fn cell<'a>(
         let value =
             attribute_cell(column, kind, attribute, unit, rng).ok_or_else(|| not_numeric(at()))?;
         return Ok((value, None));
+    }
+    if let (Some(separator), false) = (&column.packed, pool.codes.is_empty()) {
+        let value = packed_value(column, separator, pool, rng);
+        return Ok((
+            from_text(&value, kind).ok_or_else(|| not_numeric(at()))?,
+            None,
+        ));
     }
     if !pool.codes.is_empty() {
         let code = pool.codes[pick(rng, pool.codes.len())];
