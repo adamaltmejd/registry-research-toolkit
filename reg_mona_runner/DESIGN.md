@@ -1,7 +1,7 @@
 # Design: the MONA extract runner (`reg_mona_runner`)
 
 `extract.R` turns order files into extract files inside MONA. It reads the MONA order
-file (version 7) that `materialize_order` writes, whose contract is
+file (version 8) that `materialize_order` writes, whose contract is
 [../crates/DESIGN.md](../crates/DESIGN.md) ("MONA order file") and
 `crates/reg-core/src/manifest.rs`. A steward's data manager runs it by hand; no agent
 and no network reach MONA, so the script is one self-contained file that gets uploaded
@@ -235,6 +235,19 @@ for `run_log.csv` (`rows_without_period`, an aggregate, empty for an unfiltered 
 which keeps every row). The filter and the count read the same value. Another type for
 an encoding (a date column read as `year`) is refused before any query rather than
 guessed.
+
+**Spell overlap** (#2608; [../crates/DESIGN.md](../crates/DESIGN.md), "Spell overlap").
+Manifest version 8 adds `row_filter.end_column`, a spell table's end. A range then keeps
+a row when `start <= to` and (`end IS NULL OR end >= from`), the end read by the same
+`period_key` as the start, so blank or unreadable text is NULL, an open spell, and kept.
+An absent bound drops its test; a range without `to` tests `start IS NOT NULL`, so a
+NULL or unreadable start is left out and counted in `rows_without_period` as for any
+filtered file. The end column's type is resolved after the start's and checked against
+the encoding the same way. Each bound is still one parameter (`to` against the start,
+`from` against the end), so the 2,100 count with a code filter is unchanged; the
+code filter is ANDed as before. `filter` in `run_log.csv` names both columns
+(`Start-Stop (yyyymmdd): 2019-01-01..`). An `end_column` naming the period column is
+refused at the manifest check.
 
 **Code filter** (#2604; [../crates/DESIGN.md](../crates/DESIGN.md), "Row filters by
 code"). Manifest version 6 adds `code_filter`, in the one `WHERE` the extract and the

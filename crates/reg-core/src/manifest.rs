@@ -10,14 +10,14 @@ use crate::issue::{Issue, Period};
 use crate::project::ExtractFormat;
 
 /// The manifest `version` this crate writes; the runner refuses every other.
-pub const MANIFEST_VERSION: u32 = 7;
+pub const MANIFEST_VERSION: u32 = 8;
 
 /// The order file: one file per table and delivery, with its columns.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
 pub struct Manifest {
-    /// Always 6.
+    /// The order file format's version; the runner refuses every other.
     pub version: u32,
     /// The project's `extract_format`.
     pub extract_format: ExtractFormat,
@@ -109,12 +109,19 @@ pub struct File {
     pub columns: Vec<Column>,
 }
 
-/// Keep a row whose period value lies in any range.
+/// Keep a row whose period value lies in any range; for a spell table, a row whose
+/// spell overlaps any range (crates/DESIGN.md, "Spell overlap").
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
 #[serde(deny_unknown_fields)]
 pub struct RowFilter {
+    /// The period column; for a spell table, the spell start.
     pub column: String,
+    /// A spell table's end column, read in the same encoding: a row is kept for a range
+    /// when its start is on or before `to` and its end is NULL or on or after `from`.
+    /// Absent: the start alone is compared.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub end_column: Option<String>,
     pub encoding: Encoding,
     /// Sorted and disjoint.
     pub ranges: Vec<Range>,

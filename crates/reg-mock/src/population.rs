@@ -250,6 +250,12 @@ pub fn day_in(year: i32, rng: &mut Rng) -> i64 {
     start + i64::try_from(rng.below(u64::try_from(len).expect("positive"))).expect("fits")
 }
 
+/// The last day of `year`, in days from 1970-01-01.
+#[must_use]
+pub fn last_day(year: i32) -> i64 {
+    days_from_civil(year + 1, 1, 1) - 1
+}
+
 /// Days from 1970-01-01 of a civil date (Howard Hinnant's `days_from_civil`).
 #[must_use]
 fn days_from_civil(year: i32, month: u32, day: u32) -> i64 {

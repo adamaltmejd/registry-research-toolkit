@@ -1,0 +1,8 @@
+[tables]
+benefit = "benefit"
+
+[variables]
+id = ["benefit: Id"]
+amount = ["benefit: Amount"]
+start = ["benefit: Start"]
+stop = ["benefit: Stop"]

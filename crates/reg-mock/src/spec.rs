@@ -118,7 +118,7 @@ pub struct SpecColumn {
     /// The attribute's values as this column codes them (`female` → `2`).
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub map: BTreeMap<String, String>,
-    /// How a [`Attribute::Year`] column writes the year: the order file's row filter
+    /// How a [`Attribute::Year`] or [`Attribute::YearEnd`] column writes the year: the order file's row filter
     /// encoding. Absent: the plain year.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub encoding: Option<Encoding>,
@@ -168,4 +168,7 @@ pub enum Attribute {
     DeathDate,
     /// The row's year, in the column's own encoding.
     Year,
+    /// The last day of the row's year, in the column's own encoding: a spell table's
+    /// end column, so a mock spell ends on or after its start and overlaps its year.
+    YearEnd,
 }

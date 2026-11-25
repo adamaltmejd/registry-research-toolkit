@@ -635,8 +635,9 @@ impl Context<'_> {
             let mut built = Built::new(file.name.clone(), Vec::new());
             built.file.code_filter.clone_from(&file.code_filter);
             // simplify: the runner extracts a file without a row filter over its whole
-            // delivery; the mock holds only the requested years, upgrade if a pipeline
-            // reads years it did not order.
+            // delivery, and a spell table's spells reaching outside the request; the mock
+            // holds only the requested years, upgrade if a pipeline reads years it did not
+            // order.
             let mut years = BTreeSet::new();
             for r in file.columns.iter().flat_map(|c| &c.refs) {
                 match self::years(&r.period) {
@@ -718,9 +719,9 @@ impl Context<'_> {
                     continue;
                 }
                 spec_column.label = column.stata_name.as_ref().map(|_| column.name.clone());
-                if let Some(filter) = row_filter {
-                    spec_column.attribute = Some(Attribute::Year);
-                    spec_column.encoding = Some(filter.encoding);
+                if let Some((attribute, encoding)) = period_attribute(file, &column.name) {
+                    spec_column.attribute = Some(attribute);
+                    spec_column.encoding = Some(encoding);
                 }
                 // Missing only in the file's years its placement holds no segment.
                 let held = self.held_years(&file.table, &column.name);
@@ -1244,6 +1245,19 @@ fn within(period: Period, bounds: &Period) -> Period {
     Period {
         start: later(period.start, &bounds.start),
         end: earlier(period.end, &bounds.end),
+    }
+}
+
+/// A delivered column the row filter reads: its start as the row's year, a spell table's
+/// end as the year's last day, so a mock spell ends on or after its start.
+fn period_attribute(file: &manifest::File, name: &str) -> Option<(Attribute, manifest::Encoding)> {
+    let filter = file.row_filter.as_ref()?;
+    if filter.column == name {
+        Some((Attribute::Year, filter.encoding))
+    } else if filter.end_column.as_deref() == Some(name) {
+        Some((Attribute::YearEnd, filter.encoding))
+    } else {
+        None
     }
 }
 

@@ -1,0 +1,5 @@
+dbo,Spells,BASE TABLE,Id,int,,10,0,1
+dbo,Spells,BASE TABLE,IdAlt,int,,10,0,2
+dbo,Spells,BASE TABLE,Amount,int,,10,0,3
+dbo,Spells,BASE TABLE,Start,int,,10,0,4
+dbo,Spells,BASE TABLE,Stop,int,,10,0,5

@@ -162,8 +162,8 @@ pub fn splice_slot_family(root: &Path) -> Result<(), String> {
 
 /// The materialize cases' steward in `directory`: the slot family, a long header on
 /// Part B, a first-half Parent amount, a wholly contested Owners column, Visits,
-/// whose row identifier moves between columns, and one file per release of the
-/// concurrent `demo/waves/t`.
+/// whose row identifier moves between columns, Spells, a spell table whose identifier
+/// moves the same way, and one file per release of the concurrent `demo/waves/t`.
 fn prepare_materialize(directory: &Path) -> Result<(), String> {
     let root = &locked_copy(directory)?;
     splice_slot_family(root)?;
@@ -174,6 +174,7 @@ fn prepare_materialize(directory: &Path) -> Result<(), String> {
         "long-column-storage.csv",
         "contested-column-storage.csv",
         "keyed-storage.csv",
+        "spells-storage.csv",
         "waves-storage.csv",
     ] {
         text += &read(&extension.join(name))?;
@@ -197,6 +198,8 @@ fn prepare_materialize(directory: &Path) -> Result<(), String> {
     }
     text.push('\n');
     text += &read(&extension.join("keyed.toml"))?;
+    text.push('\n');
+    text += &read(&extension.join("spells.toml"))?;
     text.push('\n');
     text += &read(&extension.join("waves.toml"))?;
     write(&path, &text)?;

@@ -334,8 +334,15 @@ check_iso_day <- function(x, where) {
 }
 
 check_filter <- function(f, where) {
-  check_object(f, where, c("column", "encoding", "ranges"))
+  check_object(f, where, c("column", "encoding", "ranges"), "end_column")
   check_name(f$column, paste0(where, ".column"))
+  # A spell table's end column (crates/DESIGN.md, "Spell overlap").
+  if (!is.null(f$end_column)) {
+    check_name(f$end_column, paste0(where, ".end_column"))
+    if (identical(f$end_column, f$column)) {
+      refuse("manifest", where, ".end_column is the period column")
+    }
+  }
   check_enum(f$encoding, paste0(where, ".encoding"), ENCODINGS)
   if (!is_array(f$ranges) || !length(f$ranges)) {
     refuse("manifest", where, ".ranges is not a non-empty array")
@@ -571,12 +578,12 @@ check_manifest <- function(doc) {
     refuse("manifest", "the order is not a JSON object")
   }
   v <- doc$version
-  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 7)) {
+  if (!(is.numeric(v) && length(v) == 1L && !is.na(v) && v == 8)) {
     refuse(
       "version",
       "manifest version ",
       format(v),
-      " is not supported; this runner reads version 7"
+      " is not supported; this runner reads version 8"
     )
   }
   p <- doc$provenance
@@ -700,7 +707,8 @@ describe_ranges <- function(f) {
     },
     ""
   )
-  paste0(f$column, " (", f$encoding, "): ", paste(ranges, collapse = " OR "))
+  column <- if (is.null(f$end_column)) f$column else paste0(f$column, "-", f$end_column)
+  paste0(column, " (", f$encoding, "): ", paste(ranges, collapse = " OR "))
 }
 
 # ---- SQL --------------------------------------------------------------------------
@@ -1224,18 +1232,19 @@ sql_splice <- function(template, col) {
   paste(paste0("N'", parts, "'"), collapse = paste0(" + ", col, " + "))
 }
 
-# The filter's period value as T-SQL text and the type its bounds take. The
-# filter column follows the file's columns in `types` (extract_order resolves it
-# there).
-filter_key <- function(file, types) {
+# The filter's period value (or, with `end`, a spell's end) as T-SQL text and the
+# type its bounds take. The filter columns follow the file's columns in `types`,
+# the start then the end (extract_order resolves them there).
+filter_key <- function(file, types, end = FALSE) {
   f <- file$filter
+  column <- if (end) f$end_column else f$column
   key <- period_key(
     f$encoding,
-    types$type[length(file$columns) + 1L],
+    types$type[length(file$columns) + 1L + end],
     file$table,
-    f$column
+    column
   )
-  list(sql = sql_splice(key$expr, sql_quoted(f$column)), type = key$type)
+  list(sql = sql_splice(key$expr, sql_quoted(column)), type = key$type)
 }
 
 sql_from <- function(file) {
@@ -1288,6 +1297,11 @@ filter_where <- function(file, types) {
   f <- file$filter
   if (!is.null(f)) {
     key <- filter_key(file, types)
+    # A spell table (crates/DESIGN.md, "Spell overlap"): a range keeps a spell that
+    # starts on or before its `to` and ends on or after its `from`. A NULL or
+    # unreadable end reads as NULL, an open spell, and is kept; a NULL start is
+    # dropped as for any filtered file. Each bound is still bound once.
+    end <- if (!is.null(f$end_column)) filter_key(file, types, end = TRUE)
     terms <- character()
     for (r in f$ranges) {
       parts <- character()
@@ -1298,18 +1312,25 @@ filter_where <- function(file, types) {
         name <- bind(bound(r[[side]], f$encoding), key$type)
         parts <- c(
           parts,
-          paste0(
-            key$sql,
-            " + N' ",
-            if (side == "from") ">=" else "<=",
-            " ",
-            name,
-            "'"
-          )
+          if (side == "from" && !is.null(end)) {
+            paste0(
+              "N'(' + ", end$sql, " + N' IS NULL OR ' + ", end$sql,
+              " + N' >= ", name, ")'"
+            )
+          } else {
+            paste0(
+              key$sql,
+              " + N' ",
+              if (side == "from") ">=" else "<=",
+              " ",
+              name,
+              "'"
+            )
+          }
         )
       }
-      if (!length(parts)) {
-        parts <- paste0(key$sql, " + N' IS NOT NULL'")
+      if (!length(parts) || (!is.null(end) && is.null(r$to))) {
+        parts <- c(paste0(key$sql, " + N' IS NOT NULL'"), parts)
       }
       terms <- c(
         terms,
@@ -2453,18 +2474,22 @@ extract_order <- function(path, out, db, run) {
   # column fails fast.
   resolved <- lapply(files, function(f) {
     resolve_table(con, f$schema, f$table)
-    # The filter column after the file's, where filter_key finds its type.
+    # The filter columns after the file's (the start, then a spell's end), where
+    # filter_key finds their types.
     types <- resolve_columns(
       con,
       f$schema,
       f$table,
-      c(f$columns, f$filter$column)
+      c(f$columns, f$filter$column, f$filter$end_column)
     )
     check_storage(f, types)
     check_lopnr(f, types)
     check_codes(f, types)
     if (!is.null(f$filter)) {
       filter_key(f, types)
+    }
+    if (!is.null(f$filter$end_column)) {
+      filter_key(f, types, end = TRUE)
     }
     check_format(f, types, format)
     types

@@ -159,7 +159,7 @@ fn sources(
             String,
             Option<String>,
             String,
-            (Option<String>, Option<String>),
+            (Option<String>, Option<String>, Option<String>),
             bool,
             Option<String>,
             Option<compile::Identity>,
@@ -168,10 +168,11 @@ fn sources(
             "SELECT p.physical_name,h.projection_token,h.partition,h.disposition,h.delivery,
                 h.key_requirements,c.name,h.period_encoding,
                 p.id IS NULL OR NOT ?2 OR p.schema_name IS h.schema_name,h.release,
-                s.schema_name,s.physical_name
+                s.schema_name,s.physical_name,e.name
              FROM holding_table h LEFT JOIN holding_table p ON p.id=h.projection_of
              LEFT JOIN holding_table s ON s.id=h.superseded_by
-             LEFT JOIN holding_column c ON c.id=h.period_column_id WHERE h.id=?1",
+             LEFT JOIN holding_column c ON c.id=h.period_column_id
+             LEFT JOIN holding_column e ON e.id=h.period_end_column_id WHERE h.id=?1",
             rusqlite::params![id, keyed],
             |r| {
                 let schema: Option<String> = r.get(10)?;
@@ -180,7 +181,7 @@ fn sources(
                     r.get(3)?,
                     r.get(4)?,
                     r.get(5)?,
-                    (r.get(6)?, r.get(7)?),
+                    (r.get(6)?, r.get(12)?, r.get(7)?),
                     r.get(8)?,
                     r.get(9)?,
                     r.get::<_, Option<String>>(11)?
@@ -228,7 +229,12 @@ fn sources(
         if spec.key != recorded {
             return Err(format!("{location}: holdings_row_key_source_mismatch").into());
         }
-        if (&spec.period_column, &spec.period_encoding) != (&binding.0, &binding.1) {
+        if (
+            &spec.period_column,
+            &spec.period_end_column,
+            &spec.period_encoding,
+        ) != (&binding.0, &binding.1, &binding.2)
+        {
             return Err(format!("{location}: holdings_period_source_mismatch").into());
         }
         let mut query = db.prepare(
@@ -440,7 +446,8 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     }
     for (sql, code) in [
         (
-            "SELECT 1 FROM holding_table h JOIN holding_column c ON c.id=h.period_column_id WHERE c.holding_id!=h.id",
+            "SELECT 1 FROM holding_table h JOIN holding_column c
+             ON c.id=h.period_column_id OR c.id=h.period_end_column_id WHERE c.holding_id!=h.id",
             "holdings_period_column_invalid: foreign column",
         ),
         (
