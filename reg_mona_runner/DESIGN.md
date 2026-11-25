@@ -245,9 +245,11 @@ entry is a bound parameter: `col = @pN` for a code (`varchar` or `nvarchar` like
 column, `bigint` on integer storage, each bound as text), `col LIKE @pN` for a prefix, the bound value being the
 prefix with `[`, `%`, `_` escaped as `[[]`, `[%]`, `[_]`, then `%`. Terms are ORed. It
 compares under the column's own collation, so an index on the column serves it.
-Entries outside printable ASCII are refused at the manifest check (the order never
-writes one). The column's storage is checked like the period column's: text or
-integer, and integer takes exact codes only; anything else is refused before any
+Entries outside printable ASCII or longer than 64 characters, more than 1,000 entries, and
+more than 2,100 parameters with the period bounds are refused at the manifest check (the
+order never writes them). The column's storage is checked like the period column's:
+`char`, `varchar`, `nchar` or `nvarchar`, or `tinyint`, `smallint`, `int` or `bigint`,
+which takes exact codes of at most 18 digits only; anything else is refused before any
 query. `rows_without_period` counts rows that pass the code filter and lack a period
 value. `filter` in `run_log.csv` names the code filter after the period filter
 (`ATC: 1 code, 2 prefixes`); `rows` is the rows kept.

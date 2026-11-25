@@ -2870,7 +2870,7 @@ Structural refusals (reg-core, located at `/sources/{s}/bindings/{b}/filter...`)
 
 | Code | When |
 | --- | --- |
-| `invalid_field_type` | `filter` not an object; `codes` or `prefixes` not a list of strings; a blank entry; an entry outside printable ASCII (see "Runner") |
+| `invalid_field_type` | `filter` not an object; `codes` or `prefixes` not a list of strings; a blank entry; an entry outside printable ASCII (see "Runner") or longer than 64 characters (`CODE_ENTRY_MAX`, checked again by the runner) |
 | `unexpected_field` | a field other than `codes` and `prefixes`; `filter` on a manual binding |
 | `filter_empty` | neither list has an entry |
 | `filter_duplicate` | an entry repeating an earlier one in its list |
@@ -2885,7 +2885,7 @@ classification, whose codes are wider than the delivered value set.
 | Code | Level | When |
 | --- | --- | --- |
 | `filter_variable_not_coded` | error | a selected segment has `coded = no`, or is an identifier (a key list is the separate cohort filter, ruling 6) |
-| `filter_type` | error | a prefix on a variable whose catalog type is not `text`, or an exact code that does not read as an integer on an `integer` variable; other types (`decimal`, `date`, ...) refuse any filter |
+| `filter_type` | error | a prefix on a variable whose catalog type is not `text`, or an exact code that is not an optional `-` and 1 to 18 digits on an `integer` variable (the range the runner binds as `bigint`); other types (`decimal`, `date`, ...) refuse any filter |
 | `filter_code_unknown` | error | an exact code in no checked value set, at `.../filter/codes/{k}` |
 | `filter_prefix_unknown` | error | a prefix that starts no code of a checked value set, at `.../filter/prefixes/{k}` |
 | `filter_codes_unchecked` | warning | no selected segment has a value set or classification: the codes are passed on unchecked |
@@ -2921,16 +2921,25 @@ source, as `row_filter_union`:
 - A file of the source that does not place the filtered variable (a partition member
   without the column, a projection) cannot be filtered: blocking `filter_column_missing`.
   So is a file where the variable is placed in two physical columns over the file's days
-  (`filter_column_split`). Both are rare; narrowing the period is the remedy and the
+  (`filter_column_split`), and so is one whose filtered column holds another variable in
+  some rows of the file (`filter_column_mixed`: a column of the `Owners` kind, which holds
+  one variable in 2017 and another in 2019 with no period column): the runner filters
+  every row of the file, so it cannot keep the other variable's rows. All three are rare;
+  narrowing the period, or ordering the other variable separately, is the remedy and the
   message says so. A source with only row keys in a file neither filters nor widens it
   (a `simplify:` in `code_filter`).
-- The held storage decides how the runner compares: a text family takes codes and
-  prefixes, an integer family exact integer codes only. A prefix or a non-integer code
-  against integer storage, or any filter against real or date storage, blocks
-  (`filter_storage`). The catalog type was checked at the order check; this catches a
+- The held storage decides how the runner compares: `char`, `varchar`, `nchar` and
+  `nvarchar` take codes and prefixes; `tinyint`, `smallint`, `int` and `bigint` exact
+  integer codes only (`CodeFilter::storage` and `integer_code`, whose twin is the runner's
+  `check_codes`). A prefix or a non-integer code against integer storage, or any filter
+  against other storage (`text`, `ntext`, `bit`, real or date), blocks (`filter_storage`).
+  A column the order marks `lopnr` blocks as `filter_variable_not_coded`, whatever the
+  catalog's identifier flag says. The catalog type was checked at the order check; this catches a
   holdings storage that differs from it.
-- More than 1,000 entries in a file's union blocks (`filter_too_large`): every entry is
-  one bound parameter, and `sp_executesql` takes at most 2,100. simplify: parameters, not
+- More than 1,000 entries in a file's union, or more than 2,100 parameters with the row
+  filter's period bounds, blocks (`filter_too_large`): every entry and every bound is one
+  bound parameter, and `sp_executesql` takes at most 2,100. The runner refuses the same
+  (`CODE_FILTER_MAX`, `PARAMS_MAX`). simplify: parameters, not
   a temporary table; move to a table-valued load if a real order needs more codes.
 
 **Runner** ([runner design](../reg_mona_runner/DESIGN.md), "SQL", ruling 4). The terms
@@ -2951,14 +2960,18 @@ the code filter after the period filter (`ATC: 1 code, 2 prefixes`), and
 since rows the code filter drops would be gone in any case. No count of rows before the
 code filter: it would be one more scan of the largest tables.
 
-**Mock** (ruling 5, [reg-mock design](reg-mock/DESIGN.md), "Generate"). A filtered
-column draws only codes its filter admits and is never missing (a NULL row would not
-pass the runner's filter). With a value set, it draws from the codes the filter admits;
-without one (`filter_codes_unchecked`), from the exact codes and the prefixes as written
+**Mock** (ruling 5, [reg-mock design](reg-mock/DESIGN.md), "Generate"). Every row a filtered
+file holds passes its filter: the spec carries the file's `code_filter`, and the
+generator drops a row whose value in the column the filter does not admit (a value from
+a unit attribute, or a missing one in a year the column is not held), as the runner
+would. So that few rows are dropped, a filtered column is never missing and draws only
+codes its filter admits. With a value set, it draws from the codes the filter admits; a
+value set with no such code is left as it is, so the file has no rows; without one (`filter_codes_unchecked`), from the exact codes and the prefixes as written
 (simplify: a prefix is drawn as itself, not completed to a longer code). The filter is
 taken where the file's rows are decided: the manifest's `code_filter` in the delivery
 layout, and in the standard layout the same union rule over the sources sharing the
-table-year file. The union rule is one function in `reg_core::manifest`, which both
+table-year file, refused as the materializer refuses it (`filter_column_missing`,
+`filter_column_split`, `filter_column_mixed`). The union rule is one function in `reg_core::manifest`, which both
 `materialize_order` and `reg-mock compile` call.
 
 **Out of scope** (ruling 6): packed columns (several codes in one text column), cohort

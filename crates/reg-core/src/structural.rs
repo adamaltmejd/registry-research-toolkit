@@ -21,9 +21,12 @@
 //! `"_default"` is a period like any other here: whether it fits the table is a catalog
 //! rule (`period_default_on_dated_table`).
 
+use std::collections::BTreeMap;
+
 use serde_json::{Map, Value};
 
 use crate::grammar::{Date, PeriodToken, iso};
+use crate::manifest::CODE_ENTRY_MAX;
 use crate::project::{ColumnType, ExtractFormat};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
@@ -1094,28 +1097,32 @@ fn check_filter(filter: &Value, fbase: &str, issues: &mut Issues) {
             continue;
         };
         entries += list.len();
-        let mut seen: Vec<(&str, usize)> = Vec::new();
+        let mut seen: BTreeMap<&str, usize> = BTreeMap::new();
         for (k, entry) in list.iter().enumerate() {
-            let Some(entry) = entry
-                .as_str()
-                .filter(|e| !e.trim().is_empty() && e.bytes().all(|b| (0x20..=0x7e).contains(&b)))
-            else {
+            let Some(entry) = entry.as_str().filter(|e| {
+                !e.trim().is_empty()
+                    && e.len() <= CODE_ENTRY_MAX
+                    && e.bytes().all(|b| (0x20..=0x7e).contains(&b))
+            }) else {
                 issues.error(
                     "invalid_field_type",
                     format!("{lbase}/{k}"),
-                    "a filter entry must be a non-blank string of printable ASCII \
-                     characters"
-                        .into(),
+                    format!(
+                        "a filter entry must be a non-blank string of at most \
+                         {CODE_ENTRY_MAX} printable ASCII characters"
+                    ),
                 );
                 continue;
             };
-            match seen.iter().find(|(e, _)| *e == entry) {
-                Some((_, first)) => issues.error(
+            match seen.get(entry) {
+                Some(first) => issues.error(
                     "filter_duplicate",
                     format!("{lbase}/{k}"),
                     format!("filter entry {} duplicates {lbase}/{first}", q(entry)),
                 ),
-                None => seen.push((entry, k)),
+                None => {
+                    seen.insert(entry, k);
+                }
             }
         }
     }

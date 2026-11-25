@@ -120,6 +120,13 @@ pub struct RowFilter {
     pub ranges: Vec<Range>,
 }
 
+/// A code filter's limits, checked again by `extract.R` (its `CODE_FILTER_MAX`,
+/// `CODE_ENTRY_MAX` and `PARAMS_MAX`): entries per file, characters per entry, and the
+/// parameters `sp_executesql` binds per file (codes, prefixes and period bounds).
+pub const CODE_FILTER_MAX: usize = 1_000;
+pub const CODE_ENTRY_MAX: usize = 64;
+pub const PARAMS_MAX: usize = 2_100;
+
 /// Keep a row whose `column` equals one of `codes` or starts with one of `prefixes`
 /// (crates/DESIGN.md, "Row filters by code"). Built by [`CodeFilter::new`]: both lists
 /// sorted and minimal, so an entry a kept prefix covers is gone.
@@ -184,6 +191,26 @@ impl CodeFilter {
                 .iter()
                 .flat_map(|f| f.prefixes.iter().map(String::as_str)),
         ))
+    }
+
+    /// The family a code filter selects a column stored as `sql_type` in: text for
+    /// `char`, `varchar`, `nchar` and `nvarchar`, integer for `tinyint`, `smallint`,
+    /// `int` and `bigint`; none for any other type. Twin: `check_codes` in `extract.R`.
+    #[must_use]
+    pub fn storage(sql_type: &str) -> Option<StorageFamily> {
+        match sql_type.to_ascii_lowercase().as_str() {
+            "char" | "varchar" | "nchar" | "nvarchar" => Some(StorageFamily::Text),
+            "tinyint" | "smallint" | "int" | "bigint" => Some(StorageFamily::Integer),
+            _ => None,
+        }
+    }
+
+    /// Whether `code` is an exact code of an integer column: an optional `-` and 1 to
+    /// 18 digits, the range `check_codes` in `extract.R` binds as `bigint`.
+    #[must_use]
+    pub fn integer_code(code: &str) -> bool {
+        let digits = code.strip_prefix('-').unwrap_or(code);
+        (1..=18).contains(&digits.len()) && digits.bytes().all(|b| b.is_ascii_digit())
     }
 
     /// Whether the filter keeps a row holding `value`.

@@ -239,8 +239,9 @@ the county seat (`<county>80`). A value set of sentinels only is drawn as such, 
 no wider than its held storage, and decimals keep every digit. Values are missing at the
 column's rate (the spec's 2% by default), as a sentinel code where the value set has
 one; keys and the year never are. Under a code filter (#2604; [../DESIGN.md](../DESIGN.md),
-"Row filters by code"), a column under a code filter draws only the codes the filter admits
-and is never missing. A timeless file is drawn in the window's last year, and a
+"Row filters by code"), every row of a filtered file passes the filter: the spec carries the
+file's `code_filter` and the generator drops a row it does not admit. The filtered column
+draws only the codes the filter admits and is never missing, so few rows are dropped. A timeless file is drawn in the window's last year, and a
 spec with only timeless files in 2024.
 
 **Writers** (`write.rs`) follow the runner's types (reg_mona_runner/DESIGN.md, "Types

@@ -99,6 +99,7 @@ const TITLES: Readonly<Record<string, string>> = {
   filter_codes_unchecked: "Codes could not be checked",
   filter_column_missing: "A file of this table lacks the filtered column",
   filter_column_split: "The filtered column changes within a file",
+  filter_column_mixed: "The filtered column holds another variable",
   filter_storage: "The held column cannot be filtered by these codes",
   filter_too_large: "Too many codes for one file",
   code_filter_union: "Tables sharing a file keep each other's codes",

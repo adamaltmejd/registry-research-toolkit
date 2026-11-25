@@ -358,9 +358,12 @@ check_filter <- function(f, where) {
   f
 }
 
-# The most entries a code filter binds as parameters (sp_executesql takes 2,100);
-# the order never writes more.
+# A code filter's limits, the twins of crates/reg-core/src/manifest.rs: entries per
+# file, characters per entry, and the parameters sp_executesql binds per file
+# (codes, prefixes and period bounds). The order never writes more.
 CODE_FILTER_MAX <- 1000L
+CODE_ENTRY_MAX <- 64L
+PARAMS_MAX <- 2100L
 
 # A code filter (crates/DESIGN.md, "Row filters by code"): the column, and arrays of
 # non-blank printable-ASCII codes and prefixes, at least one entry in all. ASCII
@@ -377,11 +380,13 @@ check_code_filter <- function(f, where) {
     }
     for (i in seq_along(entries)) {
       e <- entries[[i]]
-      if (!is_string(e) || !grepl("^[ -~]+$", e) || !nzchar(trimws(e))) {
+      if (!is_string(e) || !grepl("^[ -~]+$", e) || !nzchar(trimws(e)) ||
+        nchar(e) > CODE_ENTRY_MAX) {
         refuse(
           "manifest",
           sprintf("%s.%s[%d]", where, k, i - 1L),
-          " is not a non-blank string of printable ASCII characters"
+          " is not a non-blank string of at most ", CODE_ENTRY_MAX,
+          " printable ASCII characters"
         )
       }
     }
@@ -485,6 +490,15 @@ check_file <- function(f, where, format) {
   }
   if (!is.null(f$code_filter)) {
     check_code_filter(f$code_filter, paste0(where, ".code_filter"))
+    bounds <- vapply(
+      f$row_filter$ranges,
+      function(r) as.integer(!is.null(r$from)) + as.integer(!is.null(r$to)),
+      0L
+    )
+    n <- length(f$code_filter$codes) + length(f$code_filter$prefixes) + sum(bounds)
+    if (n > PARAMS_MAX) {
+      refuse("manifest", where, " binds ", n, " parameters; at most ", PARAMS_MAX)
+    }
   }
   if (!is_array(f$columns) || !length(f$columns)) {
     refuse("manifest", where, ".columns is not a non-empty array")
@@ -1314,6 +1328,8 @@ code_param_type <- function(type) {
 
 # Refuse, before any row is read, a code filter its column's storage cannot
 # serve: text takes codes and prefixes, an integer exact whole-number codes only.
+# Twin: CodeFilter::storage and CodeFilter::integer_code in
+# crates/reg-core/src/manifest.rs.
 check_codes <- function(file, types) {
   codes <- file$codes
   if (is.null(codes)) {

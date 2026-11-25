@@ -15,9 +15,9 @@ use std::collections::{BTreeMap, BTreeSet};
 use reg_core::IssueLevel;
 use reg_core::days::{merge, minus, overlap};
 use reg_core::manifest::{
-    CatalogIdentity, Clip, CodeFilter, Column, Encoding, File, HoldingsIdentity, MANIFEST_VERSION,
-    Manifest, Mode, ProjectIdentity, Provenance, Range, Ref, Role, RowFilter, Slot, Storage,
-    StorageFamily, safe_file_name, stata_name,
+    CODE_FILTER_MAX, CatalogIdentity, Clip, CodeFilter, Column, Encoding, File, HoldingsIdentity,
+    MANIFEST_VERSION, Manifest, Mode, PARAMS_MAX, ProjectIdentity, Provenance, Range, Ref, Role,
+    RowFilter, Slot, Storage, StorageFamily, safe_file_name, stata_name,
 };
 use reg_core::placement::Placement;
 use reg_core::project::{ColumnType, ExtractFormat, ProjectData};
@@ -383,7 +383,13 @@ fn build(
             ));
         }
         columns.sort_by_key(|(key, _)| *key);
-        let code_filter = code_filter(&project.sources, &index, &columns, &mut findings);
+        let code_filter = code_filter(
+            &project.sources,
+            &index,
+            &columns,
+            row_filter.as_ref(),
+            &mut findings,
+        );
         files.push((
             draft.first,
             File {
@@ -1470,21 +1476,19 @@ fn row_filter(
     })
 }
 
-/// Code-filter entries one file may bind as parameters: `sp_executesql` takes at most
-/// 2,100. simplify: parameters, not a temporary table; load the codes into a table if a
-/// real order needs more.
-const CODE_FILTER_MAX: usize = 1_000;
-
 /// The file's code filter (crates/DESIGN.md, "Row filters by code"): each source with an
 /// ordered column in the file and a filtered binding filters on the column placing that
 /// binding here; the file keeps their union when every such source filters one column.
 /// A source with only row keys here neither filters nor widens the file. simplify: its
 /// key rows follow the others' filter; give such files a rule if a key-only file of a
 /// filtering source appears.
+/// simplify: entries are bound as parameters, not loaded into a temporary table
+/// ([`CODE_FILTER_MAX`], [`PARAMS_MAX`]); load them into a table if a real order needs more.
 fn code_filter(
     sources: &[reg_core::project::Source],
     index: &BTreeMap<&str, usize>,
     columns: &[(ColumnKey, Column)],
+    row_filter: Option<&RowFilter>,
     findings: &mut Vec<Issue>,
 ) -> Option<CodeFilter> {
     let mut own: BTreeMap<usize, Option<CodeFilter>> = BTreeMap::new();
@@ -1547,7 +1551,14 @@ fn code_filter(
         }
     }
     let union = union?;
-    if union.codes.len() + union.prefixes.len() > CODE_FILTER_MAX {
+    let entries = union.codes.len() + union.prefixes.len();
+    let bounds: usize = row_filter.map_or(0, |f| {
+        f.ranges
+            .iter()
+            .map(|r| usize::from(r.from.is_some()) + usize::from(r.to.is_some()))
+            .sum()
+    });
+    if entries > CODE_FILTER_MAX || entries + bounds > PARAMS_MAX {
         for &s in own.keys() {
             findings.push(Issue {
                 source: Some(sources[s].name().to_owned()),
@@ -1556,9 +1567,10 @@ fn code_filter(
                     "filter_too_large",
                     format!("/sources/{s}"),
                     format!(
-                        "A file of this table would be selected by {} codes and prefixes; \
-                         at most {CODE_FILTER_MAX} are supported. Use shorter prefixes.",
-                        union.codes.len() + union.prefixes.len()
+                        "A file of this table would be selected by {entries} codes and \
+                         prefixes and {bounds} period bounds; at most {CODE_FILTER_MAX} \
+                         codes and prefixes and {PARAMS_MAX} in all are supported. Use \
+                         shorter prefixes."
                     ),
                 )
             });
@@ -1622,31 +1634,81 @@ fn source_filter(
             ));
         }
     };
-    let family = column.storage.dtype.as_deref().and_then(StorageFamily::of);
-    let fits = match family {
-        Some(StorageFamily::Text) => true,
-        Some(StorageFamily::Integer) => {
-            filter.prefixes.is_empty() && filter.codes.iter().all(|c| c.parse::<i64>().is_ok())
-        }
-        _ => false,
-    };
-    if !fits {
-        return Err(error(
-            "filter_storage",
-            format!(
-                "The held column {} is stored as {}, which a code filter can select by \
-                 exact whole-number codes only if it is an integer, and not at all \
-                 otherwise. Remove the filter or the entries it cannot hold.",
-                column.name,
-                column.storage.dtype.as_deref().unwrap_or("an unknown type")
-            ),
-        ));
+    if let Some((code, message)) = refusal(column, filter, name, b) {
+        return Err(error(code, message));
     }
     Ok(Some(CodeFilter::new(
         &column.name,
         filter.codes.iter().map(String::as_str),
         filter.prefixes.iter().map(String::as_str),
     )))
+}
+
+/// Why the column placing a filtered binding cannot be filtered by its codes, if it cannot.
+fn refusal(
+    column: &Column,
+    filter: &reg_core::project::CodeFilter,
+    name: &str,
+    b: usize,
+) -> Option<(&'static str, String)> {
+    // The runner filters every row of the file, so a column that holds another
+    // variable in some rows would lose those rows to this variable's codes.
+    let variable = column
+        .refs
+        .iter()
+        .find(|r| r.source == name && r.binding == Some(b))
+        .map(|r| r.variable.as_str());
+    if column
+        .refs
+        .iter()
+        .any(|r| r.binding.is_some() && Some(r.variable.as_str()) != variable)
+    {
+        return Some((
+            "filter_column_mixed",
+            format!(
+                "The held column {} holds another variable in some rows of the same \
+                 file, so its rows cannot be selected by this variable's codes. Remove \
+                 the filter or order the other variable separately.",
+                column.name
+            ),
+        ));
+    }
+    if column.lopnr {
+        return Some((
+            "filter_variable_not_coded",
+            format!(
+                "The held column {} is a person or unit number, so its rows cannot be \
+                 selected by code. Remove the filter.",
+                column.name
+            ),
+        ));
+    }
+    let fits = match column
+        .storage
+        .dtype
+        .as_deref()
+        .and_then(CodeFilter::storage)
+    {
+        Some(StorageFamily::Text) => true,
+        Some(StorageFamily::Integer) => {
+            filter.prefixes.is_empty() && filter.codes.iter().all(|c| CodeFilter::integer_code(c))
+        }
+        _ => false,
+    };
+    if !fits {
+        return Some((
+            "filter_storage",
+            format!(
+                "The held column {} is stored as {}, which a code filter can select by \
+                 exact codes of at most 18 digits only if it is tinyint, smallint, int or \
+                 bigint, by any code only if it is char, varchar, nchar or nvarchar, and \
+                 not at all otherwise. Remove the filter or the entries it cannot hold.",
+                column.name,
+                column.storage.dtype.as_deref().unwrap_or("an unknown type")
+            ),
+        ));
+    }
+    None
 }
 
 /// A code filter's entries in words: `N05*, N06A*, R03AC02`.

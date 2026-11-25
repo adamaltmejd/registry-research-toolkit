@@ -6,6 +6,7 @@
 use std::collections::BTreeSet;
 
 use reg_core::IssueLevel;
+use reg_core::manifest::CodeFilter;
 use reg_core::project::CatalogBinding;
 use rusqlite::Connection;
 
@@ -72,12 +73,12 @@ pub(super) fn check(
             ));
         }
         for (k, code) in filter.codes.iter().enumerate() {
-            if code.parse::<i64>().is_err() {
+            if !CodeFilter::integer_code(code) {
                 found.push(issue(
                     IssueLevel::Error,
                     "filter_type",
                     format!("{base}/codes/{k}"),
-                    format!("{variable} is an integer, and {code:?} is not a whole number."),
+                    format!("{variable} is an integer, and {code:?} is not a whole number of at most 18 digits."),
                 ));
             }
         }

@@ -16,7 +16,7 @@
       "level": "error",
       "code": "invalid_field_type",
       "path": "/sources/1/bindings/0/filter/codes/1",
-      "message": "a filter entry must be a non-blank string of printable ASCII characters"
+      "message": "a filter entry must be a non-blank string of at most 64 printable ASCII characters"
     },
     {
       "level": "error",
@@ -28,7 +28,7 @@
       "level": "error",
       "code": "invalid_field_type",
       "path": "/sources/1/bindings/0/filter/prefixes/0",
-      "message": "a filter entry must be a non-blank string of printable ASCII characters"
+      "message": "a filter entry must be a non-blank string of at most 64 printable ASCII characters"
     },
     {
       "level": "error",

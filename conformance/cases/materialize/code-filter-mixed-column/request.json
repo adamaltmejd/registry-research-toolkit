@@ -1,0 +1,41 @@
+{
+  "note": "Fails if a code filter on a column that holds another variable in other rows of the same file (Shared: first in 2017, second in 2019, no period column) reaches the runner, which would drop the other variable's rows: it blocks as filter_column_mixed.",
+  "project": {
+    "schema_version": "8.1.0",
+    "reg_meta_version": "0.71.0",
+    "catalog": "fixture",
+    "name": "Mixed",
+    "extract_format": "parquet",
+    "sources": [
+      {
+        "name": "a",
+        "table": "demo/owners",
+        "period": [
+          2017
+        ],
+        "bindings": [
+          {
+            "variable": "demo/owners/first",
+            "filter": {
+              "codes": [
+                "1"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "b",
+        "table": "demo/owners",
+        "period": [
+          2019
+        ],
+        "bindings": [
+          {
+            "variable": "demo/owners/second"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -118,7 +118,7 @@ chapter) can be ordered by code: give one binding of the source a `filter` with 
 `{"variable": "sos/lmed/atc", "filter": {"prefixes": ["N06A", "R03"]}}`. Use it whenever
 the study needs a known subset of a coded variable: it is the main way to keep an
 extract small. One filtered binding per source, codes or prefixes only (no ranges, no
-exclusions), printable ASCII. Find the codes with `values`; `validate` refuses a code or
+exclusions), printable ASCII, at most 64 characters each. Find the codes with `values`; `validate` refuses a code or
 prefix the variable does not have (`filter_code_unknown`, `filter_prefix_unknown`), a
 prefix on an integer variable, and a filter on a variable that is not coded or is an
 identifier. `filter_codes_unchecked` means the variable has no code list in the catalog:

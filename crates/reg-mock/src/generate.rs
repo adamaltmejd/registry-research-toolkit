@@ -288,6 +288,13 @@ fn rows(
         .map(|c| Rng::new(seed, &format!("column/{}/{}", file.name, c.name)))
         .collect();
     let pools: Vec<Pool<'_>> = file.columns.iter().map(Pool::of).collect();
+    // The runner keeps only the rows its code filter admits; so does the mock.
+    let filtered = file.code_filter.as_ref().and_then(|f| {
+        file.columns
+            .iter()
+            .position(|c| c.name == f.column)
+            .map(|i| (f, i))
+    });
     let years = if file.years.is_empty() {
         vec![last]
     } else {
@@ -351,6 +358,11 @@ fn rows(
                     }
                     row.push(value);
                 }
+                if let Some((filter, i)) = filtered
+                    && !admitted(filter, &row[i])
+                {
+                    continue;
+                }
                 rows.push(row);
             }
         }
@@ -407,6 +419,15 @@ impl<'a> Pool<'a> {
             .map(|c| c.code.as_str())
             .collect();
         Self { codes, sentinels }
+    }
+}
+
+/// Whether a code filter keeps a row holding `value`; a missing value it never keeps.
+fn admitted(filter: &reg_core::manifest::CodeFilter, value: &Cell) -> bool {
+    match value {
+        Cell::Int(n) => filter.admits(&n.to_string()),
+        Cell::Text(text) => filter.admits(text),
+        _ => false,
     }
 }
 
