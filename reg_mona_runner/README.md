@@ -181,16 +181,20 @@ value leaves the database.
    odbc, jsonlite and openssl when missing, as `extract.R` does.
 4. A key selector that matches no column of any base table (before `SCHEMAS` and
    `TABLE_PATTERN` apply) stops the run with exit 2, naming the selector, as the
-   holdings reader refuses an unused `[[lopnr]]`.
+   holdings reader refuses an unused `[[lopnr]]`. If `SCHEMAS` and `TABLE_PATTERN` then
+   leave no table, it stops with exit 2 naming both filters, before `key_check.csv` is
+   opened, so a previous report is never replaced by an empty one.
 5. Each table is read once, in one `SELECT` for all its matched columns; on a large
    table that is a full scan. The console prints one line per table (rows, columns,
    time, and `int64 conversion check (true counts, console only):` then `all convert`
-   or `FAILS` naming the SCB key columns `extract.R` would not write as distinct int64
-   keys), then each column's value lengths. A table whose query fails prints
+   or `FAILS` naming the SCB key columns `extract.R` would refuse, and `CHANGES
+   REPRESENTATION, possible collision` naming those with leading zeros or `-0`, which it
+   writes without them), then each column's value lengths. A table whose query fails prints
    `FAILED (SQLSTATE …)` and the driver's message in an error block that stays on MONA;
    the run goes on with the next table. The last line is `finished … exit N`: 0, 8 when
-   any table failed, 2 for a setup failure (packages, configuration, `cell_key.R`, the
-   salt file, a selector that matches nothing, connection, the column listing).
+   any table failed or `key_check.csv` could not be written after the first table, 2 for
+   a setup failure (packages, configuration, `cell_key.R`, the salt file, a selector or
+   filters that match nothing, connection, the column listing, opening `key_check.csv`).
 
 The int64 conversion check is the answer: it uses the true counts, stays on MONA (the
 console or the batch run's `.Rout`) and is never written to the CSV. It is what
@@ -208,7 +212,7 @@ comment lines, then one row per column with `schema`, `table`, `column`, `group`
   | `not_bigint`    | numbers, text      | `TRY_CAST(… AS bigint)` cannot convert (text over 40 digits counts)          |
   | `not_whole`     | decimal, float     | have a fraction                                                              |
   | `beyond_exact`  | float, real        | are at or beyond 2^53 (real: 2^24), where distinct keys may have merged      |
-  | `leading_zeros` | text               | start with `0` or `-0` and another digit, or are `-0` (`012` becomes `12`)   |
+  | `leading_zeros` | text               | convert and start with `0` or `-0` and another digit, or are `-0` (`012` becomes `12`) |
   | `spaces`        | text               | have a leading space, or a trailing one in `varchar`/`nvarchar`              |
   | `not_digits`    | text               | are empty or not ASCII digits (after one leading `-`), spaces trimmed        |
 
@@ -221,7 +225,8 @@ An SCB key converts under `extract.R` when `not_bigint`, `not_whole`, `beyond_ex
 (an integer other than `bit`, `decimal`, `numeric`, `float` other than `real`, or text;
 `bit`, `money`, `smallmoney`, `real` and dates are refused). `leading_zeros` above 0
 means some keys change representation (`012` becomes `12`), so a collision with another
-key is possible.
+key is possible: the console reports it as `CHANGES REPRESENTATION`, apart from `FAILS`,
+which is a value `extract.R` refuses.
 
 **What the CSV protects.** It holds names, SQL types and counts only, with no value, no
 minimum or maximum of values and no lengths. Every count, `rows` included, is perturbed
@@ -234,8 +239,9 @@ alone:
 
 - the same true count gets the same noise wherever it appears, in any column or table
   and on every rerun, so no set of published counts can be averaged: keep
-  `key_check.salt` and reuse it (the script refuses a malformed one; a new salt gives
-  new noise, so do not export again under a new salt);
+  `key_check.salt` and reuse it (the script refuses a malformed one, and a missing one while
+  `key_check.csv` exists: restore the salt, or remove the old CSV deliberately; a new salt
+  gives new noise, so do not export again under a new salt);
 - a count one higher gets an unrelated key, so two counts cannot be differenced.
 
 The noise is bounded (at most 5 either way, the p-table shared with the export gate),
