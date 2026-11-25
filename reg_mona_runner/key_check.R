@@ -27,10 +27,13 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 # ---- Settings: the only part the coordinator edits ---------------------------------
 
 # SCB lopnummer columns, as the steward's [[lopnr]] entries name them: exact
-# column names and column-name prefixes, both case-insensitive. Example:
+# column names, column-name prefixes, and single columns of single tables (the
+# table by name, in every schema), ASCII case ignored. Example:
 # SCB_KEY_NAMES <- c("LopNr"); SCB_KEY_PREFIXES <- c("P1234_LopNr_")
+# SCB_KEY_COLUMNS <- list(c(table = "P1234_Extra", column = "PersonLopNr"))
 SCB_KEY_NAMES <- c("LopNr")
 SCB_KEY_PREFIXES <- character()
+SCB_KEY_COLUMNS <- list()
 
 # Other key-like columns, reported for information (holders' own serials):
 # regular expressions on the column name, case-insensitive. A column that is
@@ -106,15 +109,26 @@ UNSIGNED <- paste0(
   "(CASE WHEN ", NEGATIVE, " THEN STUFF(LTRIM(RTRIM(@col)), 1, 1, N'')",
   " ELSE LTRIM(RTRIM(@col)) END)"
 )
-# That value's sign and its digits without leading zeros, as extract.R's
-# lopnr_digits reads it (empty for all zeros, which is cast as 0). No
-# concatenation: on an (n)varchar(n) at its full length it would truncate.
+# Whether that value is a signed digit string, the only text extract.R reads as
+# a key (lopnr_digits).
+DIGIT_STRING <- paste0(
+  "(", UNSIGNED, " COLLATE Latin1_General_BIN2 NOT LIKE N'%[^0-9]%' AND ", UNSIGNED, " <> N'')"
+)
+# The text TRY_CAST is given: for a signed digit string, its sign and its digits
+# without leading zeros, as lopnr_digits reads it (all zeros as 0); any other
+# value as it is, trimmed, so stripping zeros cannot make one convert (0-1 is no
+# -1). No concatenation: on an (n)varchar(n) at its full length it would
+# truncate.
 SIGN <- paste0("(CASE WHEN ", NEGATIVE, " THEN N'-' ELSE N'' END)")
 FIRST_NONZERO <- paste0("PATINDEX(N'%[^0]%', ", UNSIGNED, " COLLATE Latin1_General_BIN2)")
 STRIPPED <- paste0(
-  "(CASE WHEN ", FIRST_NONZERO, " = 0 THEN N'' ELSE SUBSTRING(", UNSIGNED, ", ",
+  "(CASE WHEN ", FIRST_NONZERO, " = 0 THEN N'0' ELSE SUBSTRING(", UNSIGNED, ", ",
   FIRST_NONZERO, ", 2147483647) END)"
 )
+CAST_DIGITS <- paste0(
+  "(CASE WHEN ", DIGIT_STRING, " THEN ", STRIPPED, " ELSE LTRIM(RTRIM(@col)) END)"
+)
+CAST_SIGN <- paste0("(CASE WHEN ", DIGIT_STRING, " THEN ", SIGN, " ELSE N'' END)")
 
 # The T-SQL per measure, @col standing for the quoted column. Each is an
 # aggregate over the one scan. A text value is checked as stored, with
@@ -123,12 +137,12 @@ MEASURES <- list(
   nulls = "COUNT_BIG(CASE WHEN @col IS NULL THEN 1 END)",
   not_bigint = "COUNT_BIG(CASE WHEN @col IS NOT NULL AND TRY_CAST(@col AS bigint) IS NULL THEN 1 END)",
   # TRY_CAST of a (max) text value over 8000 bytes fails the query rather than
-  # returning NULL: the sign and at most 40 digits, leading zeros dropped, are
-  # cast, and a longer value (no bigint has more than 19 digits) counts as not
-  # converting. A zero-padded key is a leading_zeros count, not this one.
+  # returning NULL: at most 40 characters of CAST_DIGITS are cast, and a longer
+  # value (no bigint has more than 19 digits) counts as not converting. A
+  # zero-padded key is a leading_zeros count, not this one.
   not_bigint_text = paste0(
-    "COUNT_BIG(CASE WHEN @col IS NOT NULL AND (LEN(", STRIPPED, ") > 40",
-    " OR TRY_CAST(CAST(", SIGN, " + LEFT(COALESCE(NULLIF(", STRIPPED, ", N''), N'0'), 40)",
+    "COUNT_BIG(CASE WHEN @col IS NOT NULL AND (LEN(", CAST_DIGITS, ") > 40",
+    " OR TRY_CAST(CAST(", CAST_SIGN, " + LEFT(", CAST_DIGITS, ", 40)",
     " AS nvarchar(41)) AS bigint) IS NULL)",
     " THEN 1 END)"
   ),
@@ -399,11 +413,25 @@ table_batch <- function(schema, table, columns, types) {
 
 # ---- Selection ------------------------------------------------------------------------
 
-# "scb_key", "other_key" or NA per column name.
-key_group <- function(names) {
-  low <- tolower(names)
-  scb <- low %in% tolower(SCB_KEY_NAMES) |
-    Reduce(`|`, lapply(tolower(SCB_KEY_PREFIXES), startsWith, x = low), FALSE)
+# ASCII case folded, as SQL Server and the holdings reader's [[lopnr]] match.
+ascii_lower <- function(x) chartr(paste(LETTERS, collapse = ""), paste(letters, collapse = ""), x)
+
+# "scb_key", "other_key" or NA per column of a table, the SCB keys matched as
+# the holdings reader's [[lopnr]] entries match (crates/reg-readers/src/
+# holdings.rs, Lopnr::marks): a name prefix, an exact name, or one column of
+# one table (in every schema).
+key_group <- function(tables, names) {
+  low <- ascii_lower(names)
+  table_low <- ascii_lower(tables)
+  scb <- low %in% ascii_lower(SCB_KEY_NAMES) |
+    Reduce(`|`, lapply(ascii_lower(SCB_KEY_PREFIXES), startsWith, x = low), FALSE) |
+    Reduce(
+      `|`,
+      lapply(SCB_KEY_COLUMNS, function(tc) {
+        table_low == ascii_lower(tc[["table"]]) & low == ascii_lower(tc[["column"]])
+      }),
+      FALSE
+    )
   other <- Reduce(
     `|`,
     lapply(OTHER_KEY_PATTERNS, grepl, x = names, ignore.case = TRUE, perl = TRUE),
@@ -425,7 +453,7 @@ list_columns <- function(con) {
     )
   )
   cols$data_type <- tolower(cols$data_type)
-  cols$group <- key_group(cols$column_name)
+  cols$group <- key_group(cols$table_name, cols$column_name)
   keep <- !is.na(cols$group)
   if (length(SCHEMAS)) {
     keep <- keep & cols$table_schema %in% SCHEMAS
@@ -460,6 +488,8 @@ FIELDS <- c(
 # owner-only and read back; afterwards read, and refused if malformed rather
 # than replaced, since a new salt gives every count new noise. Returns the salt
 # or a message; never prints it.
+# simplify: no lock; one coordinator runs one batch job at a time, so two runs
+# never race to make the salt. Add a lock if runs are ever scheduled in parallel.
 read_salt <- function(path) {
   valid <- function(lines) length(lines) == 1L && grepl("^[0-9a-f]{64}$", lines)
   if (!file.exists(path)) {
@@ -484,20 +514,25 @@ read_salt <- function(path) {
 }
 
 # The cell-key method (reg_export_gate/DESIGN.md; cell_key.R) with a cell key
-# per published count: HMAC-SHA256 under the salt of the cell (schema, table,
-# column, measure) and its true count, its first 28 bits read mod 2^26, the
-# resolution of cell_key.R's record keys. The same cell and count give the same
-# key on every run, so reruns cannot be averaged; a count one higher gives an
-# unrelated key, so counts cannot be differenced. Each part is prefixed by its
-# byte length, so no two cells share a message. A table's rows count is one
-# cell (an empty column), however many of its columns repeat it.
-cell_keys <- function(salt, schema, table, column, measure, n, modulus) {
+# per published count: HMAC-SHA256 under the salt of its scope and true count,
+# its first 28 bits read mod 2^26, the resolution of cell_key.R's record keys.
+# The scope is the column (schema, table, "column:" and its name), or for the
+# table's rows count the table (schema, table, "rows"); not the measure. So
+# equal counts in one column share their noise: two measures counting the same
+# rows (one non-numeric marker is both not_bigint and not_digits) publish one
+# value, not two draws to average, as record keys would give identical rows
+# identical noise. The same scope and count give the same key on every run, so
+# reruns cannot be averaged; a count one higher gives an unrelated key, so
+# counts cannot be differenced. Each part is prefixed by its byte length, so no
+# two scopes share a message. `column` NA is the table's rows.
+cell_keys <- function(salt, schema, table, column, n, modulus) {
   part <- function(x) {
     x <- enc2utf8(as.character(x))
     paste0(nchar(x, "bytes"), ":", x)
   }
   message <- paste(
-    part(schema), part(table), part(column), part(measure),
+    part(schema), part(table),
+    part(ifelse(is.na(column), "rows", paste0("column:", column))),
     part(format(n, scientific = FALSE, trim = TRUE)),
     sep = "|"
   )
@@ -507,9 +542,8 @@ cell_keys <- function(salt, schema, table, column, measure, n, modulus) {
 
 # The published counts: each true count plus cell_key.R's ck_lookup() noise
 # (`disclosure`: salt, the sourced cell_key.R environment and its checked
-# p-table). Zero stays zero (the p-table's row 0); no count from 1 to 4 is
-# published (the p-table moves them to 0 or 5 and above). NA (does not apply)
-# stays NA.
+# p-table). A true 0 publishes 0 (the p-table's row 0), but so can a true 1 to
+# 5; no count from 1 to 4 is published. NA (does not apply) stays NA.
 perturb <- function(counts, cols, disclosure) {
   out <- counts
   at <- which(!is.na(counts), arr.ind = TRUE)
@@ -523,8 +557,7 @@ perturb <- function(counts, cols, disclosure) {
     disclosure$salt,
     cols$table_schema[j],
     cols$table_name[j],
-    ifelse(field == "rows", "", cols$column_name[j]),
-    field,
+    ifelse(field == "rows", NA_character_, cols$column_name[j]),
     n,
     disclosure$ck$CK_MODULUS
   )
@@ -589,8 +622,9 @@ csv_header <- function(database, version) {
     paste0("# Database ", database, ", ", format(Sys.time(), "%Y-%m-%d %H:%M"), "."),
     paste0(
       "# Aggregates only, no value. Every count is perturbed by the cell key method",
-      " (cell_key.R ", version, "): 0 is exact, and 1 to 4 are never published;",
-      " a length is empty unless at least 5 values support it."
+      " (cell_key.R ", version, "): a published 0 can stand for a true 0 to 5, and 1 to 4",
+      " are never published; a length is empty unless at least 5 values support it.",
+      " Whether each key column converts is on the run's console only, never here."
     ),
     "# Read: reg_mona_runner/README.md, \"Key check\". Skip lines starting with #.",
     paste(FIELDS, collapse = ",")
@@ -692,7 +726,13 @@ scan_table <- function(con, cols, disclosure) {
     nrow(cols),
     if (nrow(cols) == 1L) " column   " else " columns   ",
     elapsed,
-    if (length(check)) paste0("   check: ", paste(check, collapse = ", "))
+    if (any(cols$group == "scb_key")) {
+      # The exact verdict, on true counts: console only, never in the CSV.
+      paste0(
+        "   SCB keys (true counts, console only): ",
+        if (length(check)) paste0("check ", paste(check, collapse = ", ")) else "all convert"
+      )
+    }
   )
   rows
 }

@@ -15,11 +15,17 @@ cell_key_r <- file.path(
   repo_dir, "plugins", "regmeta", "skills", "project-setup", "scripts", "cell_key.R"
 )
 
-test_that("published counts are the p-table's, the same on a rerun, keyed by salt and count", {
-  # Fails if a count is published unperturbed or outside its p-table row, if a
-  # rerun with the same salt publishes other noise (reruns could be averaged),
-  # or if the key ignores the salt or the true count (a count one higher would
-  # share its noise, so two counts could be differenced).
+test_that("published counts follow the salted cell keys and the p-table, one draw per column and count", {
+  # Expected values computed outside the script: openssl HMAC-SHA256 under the
+  # salt of "3:dbo|1:T|4:rows|1:6", "3:dbo|1:T|8:column:A|1:1" and
+  # "3:dbo|1:T|8:column:A|1:5", first 7 hex digits mod 2^26 over 2^26, gives
+  # keys 0.31595092, 0.75716889 and 0.20261306; in cell_key.R's p-table, row 6
+  # [0, 0.38893783) is v = -1, row 1 [0, 0.81486748) is v = -1, row 5
+  # [0.17591612, 0.51907381) is v = 0. So rows 6 -> 5, nulls 1 -> 0, and both
+  # counts of 5 in column A -> 5; true zeros -> 0.
+  # Fails if the key's message, salt use or lookup changes, if a rerun draws
+  # other noise (reruns could be averaged), or if two measures with the same
+  # count in one column draw separately (they could be averaged).
   ck <- new.env()
   sys.source(cell_key_r, ck)
   salt <- strrep("ab", 32L)
@@ -31,31 +37,21 @@ test_that("published counts are the p-table's, the same on a rerun, keyed by sal
     data_type = c("varchar", "bigint"),
     group = "scb_key"
   )
-  # True counts: rows 6; A: nulls 1, not_bigint 5, the rest 0; B: all 0.
   values <- matrix(
     NA_real_, 2L, 10L,
     dimnames = list(NULL, c(key_check$COUNTS, "min_length", "max_length"))
   )
   values[, "rows"] <- 6
-  values[1L, c("nulls", "not_bigint", "leading_zeros", "spaces", "not_digits")] <- c(1, 5, 0, 0, 0)
+  values[1L, c("nulls", "not_bigint", "leading_zeros", "spaces", "not_digits")] <- c(1, 5, 0, 0, 5)
   values[1L, c("min_length", "max_length")] <- c(9, 12)
   values[2L, c("nulls", "not_bigint", "min_length", "max_length")] <- c(0, 0, 1, 7)
   rows <- key_check$publish_rows(cols, "ok", values, disclosure)
+  expect_identical(
+    key_check$csv_lines(rows),
+    c(
+      "dbo,T,A,scb_key,varchar,ok,5,0,5,,,0,0,5,9,12",
+      "dbo,T,B,scb_key,bigint,ok,5,0,0,,,,,,1,7"
+    )
+  )
   expect_identical(rows, key_check$publish_rows(cols, "ok", values, disclosure))
-
-  # The p-table's possible outputs (true count + v over the row's v), by hand:
-  # row 1: 0, 5, 6; row 5: 0, 5..10; row 6: 5..11; row 0: 0.
-  expect_true(rows$rows[[1]] %in% as.character(5:11))
-  expect_identical(rows$rows[[1]], rows$rows[[2]])
-  expect_true(rows$nulls[[1]] %in% c("0", "5", "6"))
-  expect_true(rows$not_bigint[[1]] %in% as.character(c(0, 5:10)))
-  expect_identical(c(rows$leading_zeros[[1]], rows$nulls[[2]], rows$not_bigint[[2]]), c("0", "0", "0"))
-  expect_identical(c(rows$not_whole[[2]], rows$min_length, rows$max_length), c("", "9", "1", "12", "7"))
-
-  key <- function(salt, n) {
-    key_check$cell_keys(salt, "dbo", "T", "A", "nulls", n, ck$CK_MODULUS)
-  }
-  expect_identical(key(salt, 1), key(salt, 1))
-  expect_false(key(salt, 1) == key(strrep("cd", 32L), 1))
-  expect_false(key(salt, 1) == key(salt, 2))
 })

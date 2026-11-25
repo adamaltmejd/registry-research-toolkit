@@ -459,8 +459,10 @@ the answer on the console, and exports its CSV, which is why it counts only.
   (`install_missing`, `sql_text`, `sqlstate`, `say`), since each script is uploaded
   alone. The same ASCII rule holds: names reach SQL Server as `NCHAR()` expressions
   through `QUOTENAME` and `sp_executesql`.
-- **Settings at the top**, edited by the coordinator per run: SCB key names and
-  prefixes (mirroring the steward's `[[lopnr]]` entries), patterns for other key-like
+- **Settings at the top**, edited by the coordinator per run: SCB key names,
+  prefixes and single table columns, matched as the holdings reader matches the
+  steward's `[[lopnr]]` entries (`Lopnr::marks`: ASCII case ignored, a table by name in
+  every schema), patterns for other key-like
   names, and optional schema and table filters. Base tables only, never views: see
   "Disclosure". Matching is done in R on the listing from `INFORMATION_SCHEMA.COLUMNS`,
   never spliced into SQL.
@@ -480,23 +482,30 @@ the answer on the console, and exports its CSV, which is why it counts only.
   `SUBSTRING`, without concatenation, which on a full-length `nvarchar(4000)` would
   truncate. `-0` counts with the leading zeros: it is written as `0`. A number's length
   counts digits, not the minus.
-- **The answer is on the console.** The `check:` line is judged on the true counts and
-  stays on MONA; the exported CSV holds perturbed counts, in which a published 0 can
-  stand for a true 1 to 4.
+- **The answer is on the console.** The per-table verdict (`SCB keys (true counts,
+  console only): all convert` or `check <columns>`) is judged on the true counts, stays
+  on MONA and is never written to the CSV; the exported CSV holds perturbed counts, in
+  which a published 0 can stand for a true 0 to 5.
 - **Disclosure: the toolkit's cell key method** (maintainer ruling 2026-11-25). The
   toolkit has one disclosure model (`reg_export_gate/DESIGN.md`: cell keys, no rounding,
   no secondary suppression), and the CSV is an export, so its counts are perturbed by
   it rather than rounded or masked (both were tried in review on #2658: `<5` masking
   leaked by difference, since `not_bigint` counts only non-null values, and rounding is
   not the toolkit's model). Each published count, `rows` included, gets a cell key:
-  HMAC-SHA256, under a salt, of the cell (schema, table, column, measure, each prefixed
-  by its byte length) and its true count, its first 28 bits read modulo 2^26 over 2^26,
+  HMAC-SHA256, under a salt, of its scope and true count, each part prefixed by its byte
+  length. The scope is the column (schema, table, `column:` and the name), or for the
+  table's `rows` the table (schema, table, `rows`), never the measure: two measures that
+  count the same rows (a non-numeric marker is both `not_bigint` and `not_digits`) would
+  otherwise draw independent noise that averaging removes (Codex review, #2658). This
+  approximates `cell_key.R`'s record keys, under which identical counts over identical
+  rows get identical noise; here identical counts in one column do, whether or not they
+  are the same rows. The key is the HMAC's first 28 bits modulo 2^26 over 2^26,
   `cell_key.R`'s resolution. The true count and the key select the noise from
   `cell_key.R`'s p-table through `ck_lookup()`, the lookup `ck_perturb()` uses, added
   for this caller (`CELL_KEY_VERSION` 0.2.0); the p-table is not copied and its SHA-256
-  is still checked. A table's rows count is one cell, with an empty column, so its
-  columns repeat one published value rather than several draws around it. A true 0
-  publishes 0 (the p-table's row 0), and 1 to 4 are never published.
+  is still checked. A table's rows count is one cell, so its columns repeat one
+  published value rather than several draws around it. A true 0 publishes 0 (the
+  p-table's row 0), so can a true 1 to 5, and 1 to 4 are never published.
 - **The salt.** 32 random bytes from openssl, made on the first run in a file beside
   the script (`SALT_FILE`), written owner-only and reused on every later run; a
   malformed file is refused, not replaced. It is never exported, printed or logged. The
@@ -504,6 +513,13 @@ the answer on the console, and exports its CSV, which is why it counts only.
   changes, and the salt file stays on MONA: the same cell gives the same output on every
   rerun (no averaging across runs), and a count one higher gets an unrelated key (no
   differencing).
+- **Declined: a run lock.** One coordinator runs one batch job, so two runs never race
+  to make the salt or write the CSV (a `simplify:` comment in `read_salt` names the
+  trigger).
+- **Declined: Windows ACLs on the salt.** Anyone who can read the project folder already
+  reads the microdata; the salt guards the published counts against CSV recipients
+  outside MONA, not against project members. It stays in the project folder and is never
+  exported.
 - **What it does not protect.** Overlapping objects: five yearly tables beside their
   UNION ALL view give each year's count twice over, under independent noise. So only
   base tables are scanned, with no option for views, and the coordinator does not set the
@@ -517,8 +533,8 @@ the answer on the console, and exports its CSV, which is why it counts only.
   run keeps what it counted. Exit 8 when any table failed, 2 for setup.
 - **Unverified here.** No test reaches SQL Server; the SQL is checked by reading and by
   the coordinator's first run on MONA. The suite has one case, for the published counts
-  (p-table outputs, the same on a rerun, keyed by salt and true count), built from given
-  true counts without a database.
+  (values computed by hand from the HMAC and the p-table rows, the same on a rerun, one
+  draw per column and count), built from given true counts without a database.
 
 ## Tests
 

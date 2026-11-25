@@ -167,9 +167,10 @@ value leaves the database.
    `project-setup` skill's `scripts/`) to one folder on MONA, once. Upload them again only
    when either changes. Keep that folder: the first run makes the salt file
    `key_check.salt` in it, and every later run reuses it (see "What the CSV protects").
-2. Edit the settings at the top of the script: `SCB_KEY_NAMES` and `SCB_KEY_PREFIXES`
-   as the steward's `[[lopnr]]` entries name them (exact names and name prefixes, both
-   case-insensitive, for example `P1234_LopNr_`), `OTHER_KEY_PATTERNS` for the other
+2. Edit the settings at the top of the script: `SCB_KEY_NAMES`, `SCB_KEY_PREFIXES` and
+   `SCB_KEY_COLUMNS` as the steward's `[[lopnr]]` entries name them (exact names, name
+   prefixes such as `P1234_LopNr_`, and one column of one table, the table by name in
+   every schema; ASCII case ignored, as the holdings reader matches them), `OTHER_KEY_PATTERNS` for the other
    key-like names, and optionally `SCHEMAS` and `TABLE_PATTERN`. Only base tables are
    scanned, never views; don't widen the table filter to tables derived from other
    scanned tables either.
@@ -179,15 +180,16 @@ value leaves the database.
    odbc, jsonlite and openssl when missing, as `extract.R` does.
 4. Each table is read once, in one `SELECT` for all its matched columns; on a large
    table that is a full scan. The console prints one line per table (rows, columns,
-   time, and `check:` naming the SCB key columns `extract.R` would not write as
-   distinct int64 keys, judged on the true counts). A table whose query fails prints
+   time, and `SCB keys (true counts, console only):` then `all convert` or `check`
+   naming the SCB key columns `extract.R` would not write as distinct int64 keys). A table whose query fails prints
    `FAILED (SQLSTATE …)` and the driver's message in an error block that stays on MONA;
    the run goes on with the next table. The last line is `finished … exit N`: 0, 8 when
    any table failed, 2 for a setup failure (packages, configuration, `cell_key.R`, the
    salt file, connection, the column listing).
 
-The console's `check:` line is the answer: it uses the true counts and stays on MONA.
-The CSV is the exported record, with perturbed counts.
+That console verdict is the answer: it uses the true counts, stays on MONA (the console
+or the batch run's `.Rout`) and is never written to the CSV. The CSV is the exported
+record, with perturbed counts, from which the verdict cannot be read.
 
 It writes `key_check.csv` (in R's working directory) after every table: a few `#`
 comment lines, then one row per column with `schema`, `table`, `column`, `group`
@@ -218,13 +220,13 @@ key is possible.
 **What the CSV protects.** It holds names, SQL types and counts only, with no value and
 no minimum or maximum of values; a length is left out when fewer than 5 values support
 it. Every count, `rows` included, is perturbed by the toolkit's one disclosure method,
-the cell key method with the p-table in `cell_key.R` (`reg_export_gate/DESIGN.md`). A
-true 0 is published as 0 and no count from 1 to 4 is published, but a published 0 can
-stand for a true 1 to 4: read the console's `check:` line, not the CSV, for whether a
-key converts. Each count's noise follows from the salt, the cell (schema, table,
-column, measure) and the true count:
+the cell key method with the p-table in `cell_key.R` (`reg_export_gate/DESIGN.md`). No
+count from 1 to 4 is published, and a published 0 can stand for a true 0 to 5: read the
+console's verdict, not the CSV, for whether a key converts. Each count's noise follows
+from the salt, its column (or, for `rows`, its table) and the true count, not the
+measure, so equal counts in one column publish one value:
 
-- the same cell gives the same output on every rerun, so reruns cannot be averaged:
+- the same count gives the same output on every rerun, so reruns cannot be averaged:
   keep `key_check.salt` and reuse it (the script refuses a malformed one; a new salt
   gives new noise, so do not export again under a new salt);
 - a count one higher gets an unrelated key, so two counts cannot be differenced.
