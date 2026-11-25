@@ -154,10 +154,20 @@ edit = [
   { file = "storage.csv", append_case = "slot-family/cross-table-storage.csv" },
 ]
 
-# A `[[lopnr]]` entry gives exactly one of `prefix` and `name`; both (as here) or neither
-# is refused, naming the entry by position. Fails if the reader accepts an entry that
-# says two things about which columns it marks.
+# A `[[lopnr]]` entry gives exactly one form (`prefix`, `name`, or `table` with `column`);
+# two forms (as here), none or a half-filled one is refused, naming the entry by
+# position. Fails if the reader accepts an entry that says two things about which
+# columns it marks.
 [[refusal]]
 name = "lopnr-prefix-and-name"
-located = ["holdings_reader: lopnr 1: not exactly one of prefix and name"]
+located = ["holdings_reader: lopnr 1: not exactly one of prefix, name, or table with column"]
 edit = [{ file = "curation/readers/holdings.toml", from = 'evidence = "Synthetic storage export: the received person key', to = "name = \"Received_Person\"\nevidence = \"Synthetic storage export: the received person key" }]
+
+# A column marked `lopnr` whose mapped variable the catalog says is not an identifier
+# (the steward's slot variable states `identifier = false`) is refused, naming the entry
+# by position and the variable. Fails if the mark and the catalog's flag stop being
+# checked against each other, or the `table` + `column` form stops marking its column.
+[[refusal]]
+name = "lopnr-not-identifier"
+located = ["config:lopnr=2: holdings_lopnr_not_identifier: steward/slots/slot2"]
+edit = [{ file = "curation/readers/holdings.toml", append = "\n[[lopnr]]\ntable = \"pool\"\ncolumn = \"slot2\"\nevidence = \"Synthetic: marks one column of one table.\"\n" }]

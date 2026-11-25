@@ -25,12 +25,14 @@ pub(super) struct Segment {
     pub timeless: bool,
     /// The primary release it belongs to in a table with concurrent releases, by name.
     pub release: Option<String>,
+    /// The catalog's identifier flag; `None` when it states none.
+    pub identifier: Option<bool>,
 }
 
 pub(super) fn segments(db: &Connection) -> Result<Vec<Segment>> {
     rows(
         db,
-        "SELECT t.pid,v.pid,s.start,s.end,sp.exact,s.role,s.state,s.dtype,s.length,t.timeless,n.body
+        "SELECT t.pid,v.pid,s.start,s.end,sp.exact,s.role,s.state,s.dtype,s.length,t.timeless,n.body,s.identifier
       FROM segment s JOIN tbl t ON t.id=s.table_id JOIN variable v ON v.id=s.variable_id
       JOIN spelling sp ON sp.id=s.spelling_id LEFT JOIN release r ON r.id=s.release_id
       LEFT JOIN text n ON n.id=r.name_text ORDER BY t.pid,v.pid,s.start,n.body",
@@ -48,6 +50,7 @@ pub(super) fn segments(db: &Connection) -> Result<Vec<Segment>> {
                 length: r.get(8)?,
                 timeless: r.get(9)?,
                 release: r.get(10)?,
+                identifier: r.get(11)?,
             })
         },
     )
@@ -945,7 +948,7 @@ pub(super) fn write(
                             disposition,
                             hold.or(unmap),
                             decision.and_then(|c| c.follow_up.as_deref()),
-                            column.lopnr,
+                            column.lopnr.is_some(),
                         ],
                     )
                     .map_err(|_| {

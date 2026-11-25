@@ -279,7 +279,7 @@ fn sources(
             {
                 return Err(format!("{location}: holdings_source_storage_mismatch").into());
             }
-            if stored.lopnr != column.lopnr {
+            if stored.lopnr != column.lopnr.is_some() {
                 return Err(format!("{location}: holdings_lopnr_source_mismatch").into());
             }
         }
@@ -364,6 +364,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     let primaries = compile::primaries(&base, &db)?;
     let shared = compile::shared_days(&primaries);
     let (topology, held, declarations) = sources(&db, &primaries, &starts, root)?;
+    super::lopnr::check(&db, &base, &held.tables)?;
     for key in ["steward", "scope"] {
         if !serde_json::from_str::<serde_json::Value>(&meta(&db, key)?)
             .map_err(|_| "holdings_presentation_invalid")?

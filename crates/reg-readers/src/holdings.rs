@@ -25,14 +25,17 @@ struct Config {
 }
 
 /// The physical columns that hold an SCB löpnummer (a key SCB pseudonymised: person,
-/// firm and the like), by name prefix or by exact name (one of the two), ASCII case ignored as
-/// SQL Server does. The order marks them and the runner writes them as int64 (#2648). A holder's own serial is
-/// not one, whatever its name.
+/// firm and the like). An entry gives exactly one form: a name `prefix`, an exact column
+/// `name`, or one column of one table (`table` and `column`). ASCII case is ignored as SQL
+/// Server does. The order marks them and the runner writes them as int64 (#2648). A
+/// holder's own serial is not one, whatever its name.
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Lopnr {
     prefix: Option<String>,
     name: Option<String>,
+    table: Option<String>,
+    column: Option<String>,
     evidence: String,
 }
 
@@ -49,21 +52,25 @@ fn lopnr_storage(storage: &Storage) -> bool {
 }
 
 impl Lopnr {
-    /// Exactly one of `prefix` and `name`, non-empty, and evidence.
+    /// Exactly one non-empty form, and evidence.
     fn valid(&self) -> bool {
-        let one = match (&self.prefix, &self.name) {
-            (Some(v), None) | (None, Some(v)) => !v.is_empty(),
+        let one = match (&self.prefix, &self.name, &self.table, &self.column) {
+            (Some(v), None, None, None) | (None, Some(v), None, None) => !v.is_empty(),
+            (None, None, Some(t), Some(c)) => !t.is_empty() && !c.is_empty(),
             _ => false,
         };
         one && !self.evidence.trim().is_empty()
     }
 
-    fn marks(&self, column: &str) -> bool {
-        match (&self.prefix, &self.name) {
-            (Some(prefix), None) => column
+    fn marks(&self, table: &str, column: &str) -> bool {
+        match (&self.prefix, &self.name, &self.table, &self.column) {
+            (Some(prefix), ..) => column
                 .get(..prefix.len())
                 .is_some_and(|head| head.eq_ignore_ascii_case(prefix)),
-            (None, Some(name)) => column.eq_ignore_ascii_case(name),
+            (_, Some(name), ..) => column.eq_ignore_ascii_case(name),
+            (.., Some(t), Some(c)) => {
+                table.eq_ignore_ascii_case(t) && column.eq_ignore_ascii_case(c)
+            }
             _ => false,
         }
     }
@@ -128,8 +135,9 @@ pub struct Column {
     pub ordinal: i64,
     pub match_name: Match,
     pub storage: Storage,
-    /// An SCB löpnummer by the config's `[[lopnr]]`.
-    pub lopnr: bool,
+    /// The 1-based position of the first `[[lopnr]]` entry that marks the column as an SCB
+    /// löpnummer.
+    pub lopnr: Option<usize>,
 }
 
 pub struct Storage {
@@ -190,7 +198,7 @@ pub fn read(storage_export: &Path, config_path: &Path) -> Result<ReadOutput, Rea
         return Err(error(
             "holdings_reader",
             format!(
-                "lopnr {}: not exactly one of prefix and name, or an empty value or evidence",
+                "lopnr {}: not exactly one of prefix, name, or table with column, or an empty value or evidence",
                 n + 1
             ),
         ));
@@ -235,13 +243,14 @@ pub fn read(storage_export: &Path, config_path: &Path) -> Result<ReadOutput, Rea
         if matches!(&match_name, Match::Spelling(name) if name.is_empty()) {
             return Err(at(row, "rewrite removed entire column identifier"));
         }
-        let mut lopnr = false;
-        for (used, l) in lopnr_used.iter_mut().zip(&config.lopnr) {
-            if l.marks(&fact.column) {
-                (*used, lopnr) = (true, true);
+        let mut lopnr = None;
+        for (n, (used, l)) in (1..).zip(lopnr_used.iter_mut().zip(&config.lopnr)) {
+            if l.marks(&fact.table, &fact.column) {
+                *used = true;
+                lopnr.get_or_insert(n);
             }
         }
-        if lopnr && !lopnr_storage(&fact.storage) {
+        if lopnr.is_some() && !lopnr_storage(&fact.storage) {
             return Err(at(
                 row,
                 "holdings_lopnr_storage: a [[lopnr]] column is stored neither as an integer, a decimal, a double-precision float nor as text",

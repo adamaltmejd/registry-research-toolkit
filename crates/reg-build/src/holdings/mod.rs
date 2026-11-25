@@ -4,6 +4,7 @@ mod compile;
 mod cumulative;
 mod input;
 mod keys;
+mod lopnr;
 pub(crate) mod orderable;
 mod references;
 mod scope;
@@ -385,6 +386,7 @@ fn compiler_digest() -> String {
         include_str!("../../../reg-core/src/project.rs"),
         include_str!("../schema.sql"),
         include_str!("../checks.sql"),
+        include_str!("lopnr.rs"),
     ];
     reg_core::sha256_hex(env!("CARGO_PKG_VERSION").to_owned() + &sources.concat())
 }
