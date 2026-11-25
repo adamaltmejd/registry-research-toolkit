@@ -166,7 +166,9 @@ value leaves the database.
 1. Edit the settings at the top of the script: `SCB_KEY_NAMES` and `SCB_KEY_PREFIXES`
    as the steward's `[[lopnr]]` entries name them (exact names and name prefixes, both
    case-insensitive, for example `P1234_LopNr_`), `OTHER_KEY_PATTERNS` for the other
-   key-like names, and optionally `SCHEMAS`, `TABLE_PATTERN` and `TABLE_TYPES`.
+   key-like names, and optionally `SCHEMAS` and `TABLE_PATTERN`. Only base tables are
+   scanned, never views (see "What the CSV protects" below); don't widen the table
+   filter to tables derived from other scanned tables either.
 2. Upload it to MONA and run it beside the steward's `extract-config.json` (only its
    `odbc` connection is used; the connection's database is the one checked):
    `Rscript key_check.R`, `R CMD BATCH key_check.R`, or `source("key_check.R")`. It
@@ -189,7 +191,7 @@ comment lines, then one row per column with `schema`, `table`, `column`, `group`
   | `not_bigint`    | numbers, text      | `TRY_CAST(… AS bigint)` cannot convert (text over 40 characters counts)  |
   | `not_whole`     | decimal, float     | have a fraction                                                          |
   | `beyond_exact`  | float, real        | are at or beyond 2^53 (real: 2^24), where distinct keys may have merged  |
-  | `leading_zeros` | text               | start with `0` or `-0` and another digit (`012` is written as `12`)      |
+  | `leading_zeros` | text               | start with `0` or `-0` and another digit, or are `-0` (`012` becomes `12`) |
   | `spaces`        | text               | have a leading space, or a trailing one in `varchar`/`nvarchar`          |
   | `not_digits`    | text               | are empty or not ASCII digits (after one leading `-`), spaces trimmed    |
 
@@ -204,7 +206,13 @@ An SCB key converts under `extract.R` when `not_bigint`, `not_whole`, `beyond_ex
 change representation (`012` becomes `12`), so a collision with another key is
 possible.
 
-**Safe to export.** The CSV holds names, SQL types and aggregate counts only: every
+**What the CSV protects.** It holds names, SQL types and aggregate counts only: every
 nonzero count, `rows` included, is rounded up to the next multiple of 5 (0 stays 0, so
-"no failures" is exact), and a length is left out when fewer than 5 values support it. There is no value, and no minimum or maximum of values. The console's error
-block, like `extract.R`'s, may quote a value and stays on MONA.
+"no failures" is exact), and a length is left out when fewer than 5 values support it.
+There is no value, and no minimum or maximum of values. Rounding keeps one object's
+counts, and their differences, from giving an exact small count. It does not protect
+counts of objects that overlap: a UNION ALL view's rounded `nulls` beside its yearly
+tables' can be differenced to an exact count per year. That is why views are not
+scanned and why the table filter must not take in derived copies of scanned tables.
+The CSV still goes through MONA's normal export review. The console's error block, like
+`extract.R`'s, may quote a value and stays on MONA.

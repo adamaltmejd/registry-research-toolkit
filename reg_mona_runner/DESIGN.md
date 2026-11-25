@@ -461,7 +461,8 @@ exports its CSV, which is why it counts only.
   through `QUOTENAME` and `sp_executesql`.
 - **Settings at the top**, edited by the coordinator per run: SCB key names and
   prefixes (mirroring the steward's `[[lopnr]]` entries), patterns for other key-like
-  names, and optional schema, table and table-type filters. Matching is done in R on the
+  names, and optional schema and table filters. Base tables only, never views: see
+  "Disclosure". Matching is done in R on the
   listing from `INFORMATION_SCHEMA.COLUMNS`, never spliced into SQL.
 - **One scan per table.** All of a table's matched columns are measured in one
   `SELECT` of `COUNT_BIG(CASE …)` aggregates, so an LMED-size table is read once. The
@@ -471,7 +472,10 @@ exports its CSV, which is why it counts only.
   leading zeros, spaces (a `char` column's padding excluded, as `extract.R` trims it) and
   non-digits, after `extract.R`'s optional leading minus, under `Latin1_General_BIN2`, so `[0-9]` is ASCII only. Legacy `text` and
   `ntext` are read as `varchar(max)` and `nvarchar(max)`; text is cast to bigint from its
-  first 40 characters, since `TRY_CAST` of a (max) value over 8000 bytes fails the query.
+  sign and at most 40 digits with leading zeros dropped (as `lopnr_digits` reads it, so a
+  zero-padded key counts under `leading_zeros`, not `not_bigint`), since `TRY_CAST` of a
+  (max) value over 8000 bytes fails the query. `-0` counts with the leading zeros: it is
+  written as `0`.
 - **Disclosure.** The CSV is an export, so it holds names, types and counts only: a
   nonzero count, `rows` included, is rounded up to the next multiple of 5 (the export
   gate's floor), and no value or min/max of values is computed. Rounding replaced `<5`
@@ -480,8 +484,13 @@ exports its CSV, which is why it counts only.
   column leaks the same way. Rounded counts give no exact small difference, and 0 stays
   exact, which is the answer the coordinator needs. A length is shown only when at
   least 5 values, counted exactly, support it (a number's: those that convert to bigint,
-  `rows - nulls - not_bigint`; a text's: every non-null value). The driver's message, which can quote a value, goes to the console's
-  error block only.
+  `rows - nulls - not_bigint`; a text's: every non-null value). Rounding protects one
+  object's counts, not those of objects that overlap: five yearly tables each with
+  `nulls` 5 beside their UNION ALL view with `nulls` 5 give exactly 1 per year (Codex
+  review, #2658). So only base tables are scanned, with no option for views, and the
+  coordinator does not set the table filter to take in tables derived from other
+  scanned ones. The CSV still goes through MONA's export review. The driver's message,
+  which can quote a value, goes to the console's error block only.
 - **Fail-safe per table.** A table whose query fails is a `failed: SQLSTATE …` row per
   column and the run goes on; the CSV is appended after every table, so an interrupted
   run keeps what it counted. Exit 8 when any table failed, 2 for setup.

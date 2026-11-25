@@ -37,9 +37,17 @@ test_that("counts round up to multiples of 5 and lengths need 5 supporting value
     })
   )
   rows <- key_check$table_rows(cols, "ok", result, batch$slots)
-  expect_identical(rows$rows, c("10", "10", "10"))
-  expect_identical(rows$nulls, c("0", "5", "0"))
-  expect_identical(rows$not_bigint, c("5", "5", "0"))
-  expect_identical(rows$min_length, c("", "9", "1"))
-  expect_identical(rows$max_length, c("", "12", "7"))
+  header <- key_check$csv_header("db")
+  expect_identical(
+    c(header[length(header)], key_check$csv_lines(rows)),
+    c(
+      paste0(
+        "schema,table,column,group,sql_type,status,rows,nulls,not_bigint,not_whole,",
+        "beyond_exact,leading_zeros,spaces,not_digits,min_length,max_length"
+      ),
+      "dbo,T,A,scb_key,decimal,ok,10,0,5,0,,,,,,",
+      "dbo,T,B,scb_key,varchar,ok,10,5,5,,,0,0,5,9,12",
+      "dbo,T,C,scb_key,bigint,ok,10,0,0,,,,,,1,7"
+    )
+  )
 })

@@ -34,13 +34,14 @@ SCB_KEY_PREFIXES <- character()
 # an SCB key is not listed again here.
 OTHER_KEY_PATTERNS <- c("lopnr", "id$")
 
-# Optional filters: exact schema names (empty: every schema), a regular
-# expression on the table name ("": every table), and which kinds of table to
-# scan ("VIEW" scans the view's query, so a view over a scanned table repeats
-# that scan).
+# Optional filters: exact schema names (empty: every schema) and a regular
+# expression on the table name ("": every table). Only base tables are
+# scanned, never views: rounded counts of overlapping objects (yearly tables
+# and their UNION ALL view) can be differenced to an exact small count. For the
+# same reason, do not widen the filter to tables derived from other scanned
+# tables.
 SCHEMAS <- character()
 TABLE_PATTERN <- ""
-TABLE_TYPES <- c("BASE TABLE", "VIEW")
 
 # The output file, written in R's working directory unless a path is given.
 OUTPUT <- "key_check.csv"
@@ -94,6 +95,12 @@ UNSIGNED <- paste0(
   "(CASE WHEN LTRIM(RTRIM(@col)) LIKE N'-%' THEN STUFF(LTRIM(RTRIM(@col)), 1, 1, N'')",
   " ELSE LTRIM(RTRIM(@col)) END)"
 )
+# That value's sign and its digits without leading zeros, as extract.R's
+# lopnr_digits reads it (empty for all zeros, which is cast as 0).
+SIGN <- "(CASE WHEN LTRIM(RTRIM(@col)) LIKE N'-%' THEN N'-' ELSE N'' END)"
+STRIPPED <- paste0(
+  "SUBSTRING(", UNSIGNED, ", PATINDEX(N'%[^0]%', ", UNSIGNED, " + N'x'), 2147483647)"
+)
 
 # The T-SQL per measure, @col standing for the quoted column. Each is an
 # aggregate over the one scan. A text value is checked as stored, with
@@ -102,11 +109,14 @@ MEASURES <- list(
   nulls = "COUNT_BIG(CASE WHEN @col IS NULL THEN 1 END)",
   not_bigint = "COUNT_BIG(CASE WHEN @col IS NOT NULL AND TRY_CAST(@col AS bigint) IS NULL THEN 1 END)",
   # TRY_CAST of a (max) text value over 8000 bytes fails the query rather than
-  # returning NULL: only the first 40 characters are cast, and a longer value
-  # (no bigint has more than 20) counts as not converting.
+  # returning NULL: the sign and at most 40 digits, leading zeros dropped, are
+  # cast, and a longer value (no bigint has more than 19 digits) counts as not
+  # converting. A zero-padded key is a leading_zeros count, not this one.
   not_bigint_text = paste0(
-    "COUNT_BIG(CASE WHEN @col IS NOT NULL AND (LEN(@col) > 40",
-    " OR TRY_CAST(CAST(LEFT(@col, 40) AS nvarchar(40)) AS bigint) IS NULL) THEN 1 END)"
+    "COUNT_BIG(CASE WHEN @col IS NOT NULL AND (LEN(", STRIPPED, ") > 40",
+    " OR TRY_CAST(CAST(", SIGN, " + LEFT(COALESCE(NULLIF(", STRIPPED, ", N''), N'0'), 40)",
+    " AS nvarchar(41)) AS bigint) IS NULL)",
+    " THEN 1 END)"
   ),
   not_whole = "COUNT_BIG(CASE WHEN @col <> ROUND(@col, 0, 1) THEN 1 END)",
   beyond_float = "COUNT_BIG(CASE WHEN ABS(@col) >= 9007199254740992E0 THEN 1 END)",
@@ -115,7 +125,9 @@ MEASURES <- list(
   # minus is skipped before the leading-zero and digit checks.
   leading_zeros = paste0(
     "COUNT_BIG(CASE WHEN LTRIM(@col) COLLATE Latin1_General_BIN2 LIKE N'0[0-9]%'",
-    " OR LTRIM(@col) COLLATE Latin1_General_BIN2 LIKE N'-0[0-9]%' THEN 1 END)"
+    " OR LTRIM(@col) COLLATE Latin1_General_BIN2 LIKE N'-0[0-9]%'",
+    # -0 is written as 0, a change of representation like a leading zero.
+    " OR LTRIM(RTRIM(@col)) = N'-0' THEN 1 END)"
   ),
   # A char or nchar value is padded with trailing spaces by its type, which
   # extract.R trims: only leading spaces count there.
@@ -391,15 +403,15 @@ list_columns <- function(con) {
     paste0(
       "SELECT c.TABLE_SCHEMA AS table_schema, c.TABLE_NAME AS table_name, ",
       "c.COLUMN_NAME AS column_name, c.DATA_TYPE AS data_type, ",
-      "CAST(c.ORDINAL_POSITION AS int) AS position, t.TABLE_TYPE AS table_type ",
+      "CAST(c.ORDINAL_POSITION AS int) AS position ",
       "FROM INFORMATION_SCHEMA.COLUMNS AS c JOIN INFORMATION_SCHEMA.TABLES AS t ",
       "ON t.TABLE_CATALOG = c.TABLE_CATALOG AND t.TABLE_SCHEMA = c.TABLE_SCHEMA ",
-      "AND t.TABLE_NAME = c.TABLE_NAME"
+      "AND t.TABLE_NAME = c.TABLE_NAME WHERE t.TABLE_TYPE = N'BASE TABLE'"
     )
   )
   cols$data_type <- tolower(cols$data_type)
   cols$group <- key_group(cols$column_name)
-  keep <- !is.na(cols$group) & cols$table_type %in% TABLE_TYPES
+  keep <- !is.na(cols$group)
   if (length(SCHEMAS)) {
     keep <- keep & cols$table_schema %in% SCHEMAS
   }
