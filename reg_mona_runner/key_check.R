@@ -231,7 +231,11 @@ error_block <- function(detail) {
   say("  ---- end of error detail ----")
 }
 
-with_commas <- function(n) formatC(n, format = "f", digits = 0, big.mark = ",")
+# decimal.mark is explicit, as in extract.R: under options(OutDec = ","),
+# formatC() warns, and a run with warn = 2 would abort the scan.
+with_commas <- function(n) {
+  formatC(n, format = "f", digits = 0, big.mark = ",", decimal.mark = ".")
+}
 
 clock_text <- function(seconds) {
   s <- round(seconds)
@@ -511,10 +515,19 @@ FIELDS <- c("schema", "table", "column", "group", "sql_type", "status", COUNTS)
 # owner-only and read back; afterwards read, and refused if malformed rather
 # than replaced, since a new salt gives every count new noise. Returns the salt
 # or a message, which main() prints on the setup path; never prints the salt.
+# A missing salt beside a surviving report `report` is refused too: a fresh salt
+# would give a re-export independent noise draws for the same counts.
 # simplify: no lock; one coordinator runs one batch job at a time, so two runs
 # never race to make the salt. Add a lock if runs are ever scheduled in parallel.
-read_salt <- function(path) {
+read_salt <- function(path, report) {
   valid <- function(lines) length(lines) == 1L && grepl("^[0-9a-f]{64}$", lines)
+  if (!file.exists(path) && file.exists(report)) {
+    return(paste0(
+      "salt file ", path, " is missing but the report ", report, " exists: restore the",
+      " salt from where it was kept (a new salt gives a re-export independent noise for",
+      " the same counts), or remove ", report, " deliberately to start over"
+    ))
+  }
   if (!file.exists(path)) {
     old_umask <- Sys.umask("077")
     on.exit(Sys.umask(old_umask), add = TRUE)
@@ -591,7 +604,7 @@ load_disclosure <- function() {
   if (inherits(loaded, "error")) {
     return(paste0("cannot use ", CELL_KEY_FILE, ": ", conditionMessage(loaded)))
   }
-  salt <- read_salt(SALT_FILE)
+  salt <- read_salt(SALT_FILE, OUTPUT)
   if (!grepl("^[0-9a-f]{64}$", salt)) {
     return(salt)
   }
@@ -616,10 +629,21 @@ csv_lines <- function(rows) {
   do.call(paste, c(lapply(rows[FIELDS], csv_field), sep = ","))
 }
 
+# Opens, writes and closes `path`: NULL, or the message of the first failure
+# (open, write or close), so main() can end through its exit path.
 append_lines <- function(lines, path, append = TRUE) {
-  con <- file(path, if (append) "ab" else "wb")
-  on.exit(close(con))
-  writeLines(enc2utf8(lines), con, useBytes = TRUE)
+  tryCatch(
+    {
+      con <- file(path, if (append) "ab" else "wb")
+      tryCatch(
+        writeLines(enc2utf8(lines), con, useBytes = TRUE),
+        finally = close(con)
+      )
+      NULL
+    },
+    error = conditionMessage,
+    warning = conditionMessage
+  )
 }
 
 csv_header <- function(database, version) {
@@ -672,14 +696,31 @@ publish_rows <- function(cols, status, values = NULL, disclosure = NULL) {
   rows
 }
 
-# The SCB key columns that fail the int64 conversion check, on the true counts
-# (console only): storage extract.R refuses, any value that does not convert,
-# or a leading zero (the key's digits change, so two keys may collide).
+# The SCB key columns that do not pass the int64 conversion check, on the true
+# counts (console only), in two lists: `fails`, storage extract.R refuses or a
+# value it refuses; `changes`, a leading zero or -0, which extract.R writes
+# without it (the key's digits change, so two keys may collide).
 conversion_failures <- function(cols, values) {
-  shape <- c("not_bigint", "not_whole", "beyond_exact", "leading_zeros", "spaces", "not_digits")
-  bad <- rowSums(values[, shape, drop = FALSE] > 0, na.rm = TRUE) > 0 |
+  refused <- c("not_bigint", "not_whole", "beyond_exact", "spaces", "not_digits")
+  scb <- cols$group == "scb_key"
+  fails <- rowSums(values[, refused, drop = FALSE] > 0, na.rm = TRUE) > 0 |
     !cols$data_type %in% LOPNR_TYPES
-  cols$column_name[cols$group == "scb_key" & bad]
+  changes <- !is.na(values[, "leading_zeros"]) & values[, "leading_zeros"] > 0
+  list(fails = cols$column_name[scb & fails], changes = cols$column_name[scb & changes])
+}
+
+# The console verdict for those lists.
+conversion_verdict <- function(failures) {
+  parts <- c(
+    if (length(failures$fails)) paste0("FAILS ", paste(failures$fails, collapse = ", ")),
+    if (length(failures$changes)) {
+      paste0(
+        "CHANGES REPRESENTATION, possible collision (leading zeros or -0) ",
+        paste(failures$changes, collapse = ", ")
+      )
+    }
+  )
+  if (length(parts)) paste(parts, collapse = "; ") else "all convert"
 }
 
 # ---- Main -----------------------------------------------------------------------------
@@ -722,7 +763,7 @@ scan_table <- function(con, cols, disclosure) {
       # The exact verdict, on true counts: console only, never in the CSV.
       paste0(
         "   int64 conversion check (true counts, console only): ",
-        if (length(failures)) paste0("FAILS ", paste(failures, collapse = ", ")) else "all convert"
+        conversion_verdict(failures)
       )
     }
   )
@@ -794,6 +835,16 @@ main <- function() {
   }
   cols <- setup$cols
   tables <- unique(cols[c("table_schema", "table_name")])
+  if (!nrow(tables)) {
+    # Before OUTPUT is opened, so a previous report is never replaced by an empty one.
+    say(
+      "no table selected: no base table has a matching key column under SCHEMAS = ",
+      if (length(SCHEMAS)) paste(SCHEMAS, collapse = ", ") else "(every schema)",
+      " and TABLE_PATTERN = ",
+      if (nzchar(TABLE_PATTERN)) paste0("\"", TABLE_PATTERN, "\"") else "(every table)"
+    )
+    return(EXIT[["setup"]])
+  }
   say(
     "key check   ",
     setup$database,
@@ -810,7 +861,14 @@ main <- function() {
     " order also refuses a key at or above 2^53 (9,007,199,254,740,992), which this check",
     " does not test"
   )
-  append_lines(csv_header(setup$database, disclosure$version), OUTPUT, append = FALSE)
+  write_failure <- function(message) {
+    say("cannot write ", OUTPUT, ": ", message)
+  }
+  problem <- append_lines(csv_header(setup$database, disclosure$version), OUTPUT, append = FALSE)
+  if (!is.null(problem)) {
+    write_failure(problem)
+    return(EXIT[["setup"]])
+  }
   failed <- 0L
   for (i in seq_len(nrow(tables))) {
     mine <- cols[
@@ -819,7 +877,14 @@ main <- function() {
     rows <- scan_table(con, mine, disclosure)
     failed <- failed + any(startsWith(rows$status, "failed"))
     # Written after every table, so a long run that stops keeps what it counted.
-    append_lines(csv_lines(rows), OUTPUT)
+    problem <- append_lines(csv_lines(rows), OUTPUT)
+    if (!is.null(problem)) {
+      write_failure(problem)
+      say("  ", OUTPUT, " stops before ", tables$table_schema[i], ".", tables$table_name[i])
+      status <- EXIT[["failed"]]
+      attr(status, "tables") <- c(nrow(tables), failed + 1L)
+      return(status)
+    }
   }
   status <- if (failed) EXIT[["failed"]] else EXIT[["ok"]]
   attr(status, "tables") <- c(nrow(tables), failed)

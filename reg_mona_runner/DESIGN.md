@@ -468,7 +468,9 @@ the answer on the console, and exports its CSV, which is why it counts only.
   on the listing from `INFORMATION_SCHEMA.COLUMNS`, never spliced into SQL. A selector
   that matches no base-table column, judged before the optional filters, stops the run
   with exit 2, as the holdings reader refuses an unused `[[lopnr]]`
-  (`holdings_lopnr_unused`).
+  (`holdings_lopnr_unused`). Zero tables left after the filters is exit 2 too, naming
+  them, before `OUTPUT` is opened. A failure to open, write or close `OUTPUT` ends
+  through the same exit line: 2 for the header, 8 for a later table.
 - **One scan per table.** All of a table's matched columns are measured in one `SELECT`
   of `COUNT_BIG(CASE …)` aggregates, so an LMED-size table is read once; it returns true
   counts. The measures follow `extract.R`'s int64 rule (`lopnr_digits`) and its key
@@ -486,6 +488,10 @@ the answer on the console, and exports its CSV, which is why it counts only.
   the query. The zeros are dropped with `PATINDEX` and `SUBSTRING`, without
   concatenation, which on a full-length `nvarchar(4000)` would truncate. `-0` counts
   with the leading zeros: it is written as `0`.
+- **Refused and rewritten are different verdicts.** `FAILS` names a key `extract.R`
+  refuses (storage, or a value that does not convert). A leading zero or `-0` is written
+  without it, so two keys may collide: the console says `CHANGES REPRESENTATION, possible
+  collision`, and a column of only `0012` and `0034` is not a failure.
 - **The answer is on the console.** The per-table int64 conversion check (`all
   convert` or `FAILS <columns>`) is judged on the true counts, stays on MONA and is never
   written to the CSV. It is `extract.R`'s int64 rule; a `.dta` order's further limit
@@ -520,7 +526,9 @@ the answer on the console, and exports its CSV, which is why it counts only.
 - **The salt.** 32 random bytes from openssl, made on the first run in a file beside
   the script (`SALT_FILE`), written owner-only and reused on every later run; a
   malformed file is refused, not replaced, and a failure to write it on the first run is
-  a setup failure (exit 2). It is never exported, printed or logged. The coordinator
+  a setup failure (exit 2). So is a missing salt beside an existing `OUTPUT`: a fresh salt
+  would give a re-export independent noise draws for the same counts, so the run asks the
+  coordinator to restore the salt, or to remove the old CSV deliberately. It is never exported, printed or logged. The coordinator
   uploads `key_check.R` and `cell_key.R` once and again only when either changes, and
   the salt file stays on MONA, so reruns publish the same noise.
 - **Declined: a run lock.** One coordinator runs one batch job, so two runs never race

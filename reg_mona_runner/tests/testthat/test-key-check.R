@@ -49,3 +49,37 @@ test_that("published counts follow the salted count-only cell keys and the p-tab
   )
   expect_identical(rows, key_check$publish_rows(cols, "ok", values, disclosure))
 })
+
+test_that("a missing salt beside a previous report stops the run before either file changes", {
+  # A fresh salt would give a re-export independent noise for the same counts.
+  # Fails if the guard is removed: the run would make key_check.salt and go on
+  # to the connection, and the report would be replaced if that succeeded.
+  skip_if_not_installed("openssl")
+  skip_if_not_installed("DBI")
+  skip_if_not_installed("odbc")
+  dir <- tempfile("key-check-")
+  dir.create(dir)
+  file.copy(file.path(repo_dir, "reg_mona_runner", "key_check.R"), dir)
+  file.copy(cell_key_r, dir)
+  jsonlite::write_json(
+    list(odbc = list(dsn = "unreachable")),
+    file.path(dir, "extract-config.json"),
+    auto_unbox = TRUE
+  )
+  writeLines("previous report", file.path(dir, "key_check.csv"))
+  # The script reads its files from the working directory.
+  old <- setwd(dir)
+  log <- tryCatch(
+    suppressWarnings(system2(
+      file.path(R.home("bin"), "Rscript"),
+      shQuote("key_check.R"),
+      stdout = TRUE,
+      stderr = TRUE
+    )),
+    finally = setwd(old)
+  )
+  expect_identical(attr(log, "status"), 2L)
+  expect_match(paste(log, collapse = "\n"), "salt file key_check.salt is missing")
+  expect_false(file.exists(file.path(dir, "key_check.salt")))
+  expect_identical(readLines(file.path(dir, "key_check.csv")), "previous report")
+})
