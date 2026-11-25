@@ -25,13 +25,14 @@ struct Config {
 }
 
 /// The physical columns that hold an SCB löpnummer (a key SCB pseudonymised: person,
-/// firm and the like), by name prefix, ASCII case ignored as SQL Server does. The order
-/// marks them and the runner writes them as int64 (#2648). A holder's own serial is
+/// firm and the like), by name prefix or by exact name (one of the two), ASCII case ignored as
+/// SQL Server does. The order marks them and the runner writes them as int64 (#2648). A holder's own serial is
 /// not one, whatever its name.
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Lopnr {
-    prefix: String,
+    prefix: Option<String>,
+    name: Option<String>,
     evidence: String,
 }
 
@@ -48,10 +49,23 @@ fn lopnr_storage(storage: &Storage) -> bool {
 }
 
 impl Lopnr {
+    /// Exactly one of `prefix` and `name`, non-empty, and evidence.
+    fn valid(&self) -> bool {
+        let one = match (&self.prefix, &self.name) {
+            (Some(v), None) | (None, Some(v)) => !v.is_empty(),
+            _ => false,
+        };
+        one && !self.evidence.trim().is_empty()
+    }
+
     fn marks(&self, column: &str) -> bool {
-        column
-            .get(..self.prefix.len())
-            .is_some_and(|head| head.eq_ignore_ascii_case(&self.prefix))
+        match (&self.prefix, &self.name) {
+            (Some(prefix), None) => column
+                .get(..prefix.len())
+                .is_some_and(|head| head.eq_ignore_ascii_case(prefix)),
+            (None, Some(name)) => column.eq_ignore_ascii_case(name),
+            _ => false,
+        }
     }
 }
 
@@ -172,12 +186,14 @@ pub fn read(storage_export: &Path, config_path: &Path) -> Result<ReadOutput, Rea
     {
         return Err(error("holdings_reader", "empty rewrite prefix or evidence"));
     }
-    if config
-        .lopnr
-        .iter()
-        .any(|l| l.prefix.is_empty() || l.evidence.trim().is_empty())
-    {
-        return Err(error("holdings_reader", "empty lopnr prefix or evidence"));
+    if let Some(n) = config.lopnr.iter().position(|l| !l.valid()) {
+        return Err(error(
+            "holdings_reader",
+            format!(
+                "lopnr {}: not exactly one of prefix and name, or an empty value or evidence",
+                n + 1
+            ),
+        ));
     }
     let mut lopnr_used = vec![false; config.lopnr.len()];
     let (renames, rename_targets) = renames(&config.rename)?;

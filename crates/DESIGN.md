@@ -2217,24 +2217,35 @@ a `lopnr` slug or spelling tells the two apart: both cover holder serials, surve
 and case ids, and SCB's own metadata names the identity column (`PersonNr`), not the
 pseudonym SCB put in its place ("Identifier slug canon" is a naming rule, not this fact).
 What marks an SCB löpnummer on MONA is SCB's physical naming of the pseudonymised
-columns, which the steward knows. The holdings reader config lists them by name prefix:
+columns, which the steward knows. The holdings reader config lists them, each entry by
+name prefix or by exact name:
 
 ```toml
 [[lopnr]]
 prefix = "P1234_LopNr_"   # ASCII case ignored, as SQL Server does
 evidence = "SCB names every pseudonymised key column P1234_LopNr_<original>."
+
+[[lopnr]]
+name = "LopNr"            # the whole physical name, ASCII case ignored
+evidence = "SCB names the pseudonymised person key LopNr in this project."
 ```
 
-A column is marked when any entry's prefix starts its exact physical name; the mark
-does not touch matching. The reader refuses, naming the entry or the export row, never
-a name: `holdings_reader` for an empty prefix or evidence, `holdings_lopnr_unused` for an
-entry that marks no held column (a typo or a stale entry), and `holdings_lopnr_storage`
+Which form fits depends on how SCB named the keys. Where it prefixed them with the
+project id, a prefix covers every key. Where they are bare names (`LopNr`), a prefix
+would also mark a holder's own serial spelled `LopNr…`, so the entry names the column
+exactly. A column is marked when any entry's prefix starts its physical name or any
+entry's name equals it; the mark does not touch matching. The reader refuses, naming the
+entry by its 1-based position or the export row, never a name: `holdings_reader` for
+an entry with both or neither of `prefix` and `name`, or an empty value or evidence;
+`holdings_lopnr_unused` for an entry (either form) that marks no held column (a typo or a
+stale entry); and `holdings_lopnr_storage`
 for a marked column stored otherwise than as an integer, a decimal, a double-precision
 `float` or text: a `real` (`float(1..24)`) has already merged distinct keys above 2^24,
 and `bit` or `money` is no key. The runner admits the same storage. Holdings schema 14 stores the
 mark as `holding_column.lopnr`; `verify` re-derives it from the pinned config and export
 (`holdings_lopnr_source_mismatch`), and `reg-build diff --holdings` lists the columns
-that gained or lost it.
+that gained or lost it. The mark is a column flag, so both forms share schema 14 and the
+diff is unchanged.
 
 The order file carries it on the column as `"lopnr": true` (absent: false), manifest
 version 5 ("MONA order file"). The runner reads the column in its storage type and
