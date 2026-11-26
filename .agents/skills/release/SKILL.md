@@ -384,9 +384,9 @@ breaks that bump. Name it in the notes and bump each steward by hand: push a bra
 whose `bump.yml` calls `steward-bump.yml` at the new tag, then
 `gh workflow run Bump --repo <steward repo> --ref <branch>`.
 
-**Steward holdings check.** Before the steward bumps, confirm each steward's holdings still
-compile against this release's base. Clone it to `~/stewards/<name>` if absent, update
-it to its `main`, and run, from the repository root:
+**Steward holdings check.** Gates each steward's bump PR (it consumes the published
+release's assets), before you merge it. Clone the steward to `~/stewards/<name>` if
+absent, check out the bump PR's head branch (not `main`), and run, from the repository root:
 
 ```sh
 bash scripts/holdings-check.sh "$evidence/catalog/reg_meta.db" <steward> ~/stewards/<name> \
@@ -394,9 +394,10 @@ bash scripts/holdings-check.sh "$evidence/catalog/reg_meta.db" <steward> ~/stewa
 ```
 
 It builds the holdings, verifies the pair and diffs them against the steward's latest
-published holdings (exit 0 same, 1 differences to review, 2 error). Put the diff summary
+published holdings (exit 0 same, 1 differences to review, 2 any failure). Put the diff summary
 in the release notes. The holdings report is private: don't paste its contents anywhere
 public.
+
 **Binaries.** The `binaries` job uploads `reg-meta-<target>` and
 `reg-export-gate-<gate version>-<target>` for `x86_64-unknown-linux-gnu`,
 `reg-build-<target>` for that and `aarch64-apple-darwin`, `reg-mock-<target>` for both

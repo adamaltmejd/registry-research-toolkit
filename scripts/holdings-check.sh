@@ -12,6 +12,8 @@
 # Exit status: 0 when all three steps pass and the holdings do not differ from the previous
 # release, 1 when they differ (review the diff), 2 on an error.
 set -euo pipefail
+# Exit 1 is reserved for "the diff found differences": any other failure exits 2.
+trap 'exit 2' ERR
 
 if [ "$#" -ne 4 ]; then
 	echo "usage: bash scripts/holdings-check.sh <base reg_meta.db> <steward> <steward clone> <out dir>" >&2
@@ -38,7 +40,7 @@ echo "== 2 verify"
 echo "== 3 diff against the previous steward release"
 # OWNER/REPO from an https or scp-style origin URL.
 repo=$(git -C "$clone" remote get-url origin | sed -E 's#(\.git)?/?$##; s#^.*[:/]([^/:]+/[^/]+)$#\1#')
-prev=$(gh release list --repo "$repo" --limit 1 --json tagName -q '.[0].tagName')
+prev=$(gh release list --repo "$repo" --exclude-drafts --exclude-pre-releases --limit 1 --json tagName -q '.[0].tagName')
 [ -n "$prev" ] || { echo "holdings-check: $repo has no published release" >&2; exit 2; }
 echo "previous release $prev"
 gh release download "$prev" --repo "$repo" --dir "$out/prev" --pattern "reg_meta_$steward.db.zst"
