@@ -17,12 +17,7 @@ advancing main at a time. A requested dependency upgrade goes through
 packaging or workflow fixes land as separate reviewed commits before the bump; if a
 draft or tag already exists, follow Error recovery first.
 
-The maintainer's go covers the whole release, from the bump to the steward deploys. The
-outward-facing steps (`gh release upload`, `gh release edit`, the publish PATCH, steward
-merges and `gh workflow run main.yml` dispatches) match allow rules in the maintainer's
-local settings, so they do not stop at the auto-mode check. Run each one as a single
-bare command: no `cd … &&`, no env-var prefix, no pipe. A compound command is checked
-part by part and can still be refused.
+The maintainer's go covers the whole release, from the bump to the steward deploys.
 
 ## Packages
 
@@ -188,8 +183,7 @@ The reader verifies the manifest's SHA-256. Keep the source revision, inputs com
 manifest, build report and subsequent check outputs in the release evidence directory.
 Use the full manifest: no register subset or diagnostic artifact. Build optimized
 (`target/release`): the real build is long and the verifiers and conformance run the
-same binaries. If you see `Operation not permitted` on `deps/*.d` or `build/*.d`,
-restart the session.
+same binaries. The evidence directory goes under `/project/.local/release-X.Y.Z/`.
 
 ```sh
 set -euo pipefail
@@ -332,7 +326,9 @@ gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[] | [.name, .digest]
 Admission: the draft must hold exactly that one DB asset, with a SHA-256 digest equal to
 the local compressed file (`assets.sha256`). Only then publish (step 9). Keep the
 checksums with the evidence; the binaries are uploaded by step 10.
-Remove disposable downloads after the release, keeping the evidence.
+Remove disposable downloads after the release. Keep this release's evidence; when it
+publishes, the COS deletes the evidence of older releases (chief-of-staff,
+"Housekeeping").
 
 **Publish ordering.** Publishing a release fires `publish_reg_meta.yml`, which
 dispatches `container-build.yml`. That workflow resolves the release's asset when it
@@ -387,6 +383,20 @@ release's assets, so a release that renames or drops an asset the old pin downlo
 breaks that bump. Name it in the notes and bump each steward by hand: push a branch
 whose `bump.yml` calls `steward-bump.yml` at the new tag, then
 `gh workflow run Bump --repo <steward repo> --ref <branch>`.
+
+**Steward holdings check.** Gates each steward's bump PR (it consumes the published
+release's assets), before you merge it. Clone the steward to `~/stewards/<name>` if
+absent, check out the bump PR's head branch (not `main`), and run, from the repository root:
+
+```sh
+bash scripts/holdings-check.sh "$evidence/catalog/reg_meta.db" <steward> ~/stewards/<name> \
+  "$evidence/holdings-<steward>"
+```
+
+It builds the holdings, verifies the pair and diffs them against the steward's latest
+published holdings (exit 0 same, 1 differences to review, 2 any failure). Put the diff summary
+in the release notes. The holdings report is private: don't paste its contents anywhere
+public.
 
 **Binaries.** The `binaries` job uploads `reg-meta-<target>` and
 `reg-export-gate-<gate version>-<target>` for `x86_64-unknown-linux-gnu`,

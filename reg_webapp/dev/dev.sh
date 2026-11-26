@@ -52,17 +52,12 @@
 #                          REG_META_DB; relative to the checkout root, as the
 #                          variable is); --catalog also serves its holdings partner
 #                          reg_meta_<NAME>.db there (a steward site, e.g. swecov; sets
-#                          REG_META_CATALOG). Humans and CI may export the two
-#                          variables instead; agents pass the flags, because the
-#                          Claude Code sandbox exclusion for this script
-#                          (.claude/settings.json) matches the command text, and an
-#                          env-var prefix would leave Chrome sandboxed.
+#                          REG_META_CATALOG). The two variables may be exported
+#                          instead.
 #
 # smoke/shot/flows run agent-browser, pinned in reg_webapp/frontend/package.json, in a
 # browser session private to this invocation (closed on exit). It drives an
-# installed Google Chrome; with none, run `agent-browser install` once. They refuse
-# (exit 3) inside the Codex sandbox, where Chrome aborts at launch and macOS shows a
-# crash dialog per attempt; rendered checks run outside it.
+# installed Google Chrome; with none, run `agent-browser install` once.
 #
 # Ports are automatic (two of these never collide); pin with RUST_PORT /
 # FRONTEND_PORT if you need to know them up front. smoke/shot screenshots land in
@@ -178,13 +173,6 @@ ab)
 	;;
 esac
 
-# Codex runs commands under seatbelt and sets CODEX_SANDBOX=seatbelt. Chrome cannot
-# register with the window server there, aborts, and leaves a crash dialog.
-if [ "${CODEX_SANDBOX:-}" = seatbelt ] && [ "$mode" != serve ] && [ "$mode" != preview ]; then
-	echo "dev: '$mode' drives Chrome, which cannot launch in the Codex sandbox; rendered checks run outside it (the rendered review and CI flows)" >&2
-	exit 3
-fi
-
 # The capture viewports: a named preset or a raw WxH, printed as "W H". The four
 # presets are the widths frontend/DESIGN.md designs for.
 viewport_size() {
@@ -270,8 +258,8 @@ fi
 
 # `ab`: the pinned agent-browser against a page an interactive run serves, in one
 # named session per checkout (the default session is one browser shared machine-wide).
-# Through dev.sh so the browser launch matches the script's sandbox exclusion. No
-# servers, no build; the idle timeout reaps a daemon nobody closed.
+# Through dev.sh so the session name matches the checkout. No servers, no build; the idle
+# timeout reaps a daemon nobody closed.
 if [ "$mode" = ab ]; then
 	exec bun "$root/reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js" \
 		--session "$(basename "$root")-ui" --idle-timeout 15m "$@"
@@ -328,10 +316,9 @@ ab_session=""
 ab_socket_dir=""
 if [ "$mode" = smoke ] || [ "$mode" = shot ] || [ "$mode" = flows ]; then
 	ab_session="reg-webapp-dev-$$"
-	# The daemon's sockets and pid/target files default to ~/.agent-browser, which a
-	# sandboxed agent shell cannot write (#1776). A private temp dir keeps the run off
-	# $HOME and leaves nothing behind. Short on purpose: it holds a unix socket, whose
-	# path caps at 103 bytes (/tmp, not a long sandbox $TMPDIR; TMPDIR as the fallback).
+	# The daemon's sockets and pid/target files default to ~/.agent-browser. A private temp
+	# dir keeps the run off $HOME and leaves nothing behind. Short on purpose: it holds a
+	# unix socket, whose path caps at 103 bytes (/tmp; TMPDIR as the fallback).
 	if [ -z "${AGENT_BROWSER_SOCKET_DIR:-}" ]; then
 		ab_socket_dir=$(mktemp -d /tmp/ab.XXXXXX 2>/dev/null || mktemp -d "${TMPDIR:-/tmp}/ab.XXXXXX") || exit 1
 		export AGENT_BROWSER_SOCKET_DIR="$ab_socket_dir"

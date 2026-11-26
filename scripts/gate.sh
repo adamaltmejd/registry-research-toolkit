@@ -19,8 +19,7 @@ set -uo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd) || exit 1
 cd "$ROOT" || exit 1
 # Every run also writes its output to its own log: callers need no redirect, and an agent
-# reads the file instead of the scrollback. The script re-runs itself through a pipe:
-# process substitution (`exec > >(tee …)`) is refused inside the agent sandbox.
+# reads the file instead of the scrollback. The script re-runs itself through a pipe.
 if [ -z "${GATE_LOG:-}" ]; then
 	GATE_LOG=$(mktemp "${TMPDIR:-/tmp}/gate.XXXXXX") || exit 1
 	export GATE_LOG
@@ -116,11 +115,6 @@ rust() {
 }
 
 flows() {
-	# Chrome cannot start inside the agent sandbox; say so instead of failing in it.
-	if [ -n "${SANDBOX_RUNTIME:-}" ]; then
-		fail "flows needs Chrome outside the sandbox: run \`bash scripts/gate.sh flows\` (or \`all\`) as its own command, with no env prefix and no \`cd … &&\`"
-		return 1
-	fi
 	# The production bootstrap smoke and the user journeys share the browser-only job.
 	run_in "$FRONTEND" bun install --frozen-lockfile &&
 		run_in "$FRONTEND" bun run gen:wasm &&
