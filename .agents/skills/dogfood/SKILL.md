@@ -34,8 +34,8 @@ grouping is the maintainer's call, made from the filed issues.
 ## Start
 
 1. Create the log `.local/dogfood/<YYYY-MM-DD>-<slug>.md` in the **main checkout**
-   (gitignored; it survives worktree removal and session loss). From a worktree, the
-   main checkout is the first path `git worktree list` prints. `<slug>` names the
+   (`/project/.local/dogfood/`; gitignored, it survives worktree removal and session
+   loss). `<slug>` names the
    surface if one was given (`mcp`, `builder`), else `session`. If a log for today's
    surface already exists with open entries, ask whether to resume it.
 2. Record the header: date, surface, `git rev-parse --short HEAD` of the checkout under

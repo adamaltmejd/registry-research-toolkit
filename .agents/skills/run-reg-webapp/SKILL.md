@@ -15,11 +15,9 @@ ports. `smoke`, `shot` and `flows` drive the page with
 exactly in `reg_webapp/frontend/package.json`); `flows` runs the user journeys in
 `journeys.sh`. `dev.sh` serves the checkout it lives in.
 
-**Run it exactly as `bash reg_webapp/dev/dev.sh <flags> [mode]` from the repo or
-worktree root: no env-var prefix, no `cd X &&`.** The Claude Code sandbox exclusion
-(`.claude/settings.json`) matches the command text, and a command that does not match
-stays sandboxed, where Chrome dies. Pass only the flags below: ports, the cargo target
-and the shots directory are automatic and per-run, so concurrent runs never collide.
+Run it as `bash reg_webapp/dev/dev.sh <flags> [mode]` from the repo or worktree root.
+Pass only the flags below: ports, the cargo target and the shots directory are automatic
+and per-run, so concurrent runs never collide.
 `bash reg_webapp/dev/dev.sh --help` prints the usage.
 
 ## Prerequisites
@@ -108,20 +106,13 @@ bash reg_webapp/dev/dev.sh --db "$db_dir" shot <route>
 
 ## Parallel instances (concurrent worktrees)
 
-- **`preview_start`**: `.claude/launch.json`'s `reg-webapp` config (`autoPort: true`)
-  runs `dev.sh --fixture-db preview`; its `reg-webapp-paired` config runs
-  `dev.sh --paired-fixture preview`. Both bind the frontend to the MCP-assigned `$PORT`
-  and the Rust server to a private free port wired through `REG_META_SERVER_URL`.
-  Sessions never collide.
-
 - **`dev.sh smoke` / `shot`**: free ports, per-run shots directory, guaranteed teardown.
   The path to reach for.
 
 - **Driving a state `shot` cannot reach** (a dialog, a filled form): start
   `bash reg_webapp/dev/dev.sh --fixture-db` in the background and drive the printed
   frontend URL with `dev.sh ab`, the pinned agent-browser in this checkout's own
-  session. One command per call, no `$ab` variable, so each one matches the sandbox
-  exclusion:
+  session. One command per call, no `$ab` variable:
 
   ```sh
   bash reg_webapp/dev/dev.sh ab open http://localhost:<port>/catalog/demo/bas
@@ -169,7 +160,5 @@ vitest): `(cd reg_webapp/frontend && bun run test)`.
   placeholder that never clears and lacks `aria-busy="true"` is the defect.
 - The Rust server exits at boot about the DB/schema → an inadmissible schema. Use
   `--fixture-db` or a current release asset.
-- Chrome aborts at launch (`smoke` / `shot` / `flows`) → the command ran sandboxed:
-  re-run it in the exact form above. Do not work around it with Chrome flags. Exit 3
-  is the Codex sandbox, where rendered checks cannot run. `dev.sh ab doctor` names the
-  browser agent-browser resolved.
+- Chrome aborts at launch (`smoke` / `shot` / `flows`) → `dev.sh ab doctor` names the
+  browser agent-browser resolved. Do not work around it with Chrome flags.
