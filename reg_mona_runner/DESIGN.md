@@ -710,8 +710,8 @@ storage query ("Replaces").
 sections and its test, and with them #2667 and #2668's key-check items (#2668's
 schema-qualified selectors have no counterpart: the census takes no selectors). The
 census measures every column of every selected object with `key_check.R`'s measures,
-so a `[[lopnr]]` question needs no selectors and no rescan. It also writes the storage export,
-which until then is one SQL query a coordinator runs by hand.
+so a `[[lopnr]]` question needs no selectors and no rescan. It also writes the storage
+export, which until then is one SQL query a coordinator runs by hand.
 
 **Workflow per delivery.**
 
