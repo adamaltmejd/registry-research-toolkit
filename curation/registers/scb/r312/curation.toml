@@ -198,3 +198,15 @@ kind = "set"
 subject = "tjansteforetagens-forbrukning: var:verksamhetsenhetens-identitetsnummer"
 fields.row_key = true
 evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the kind-of-activity unit id identifies the reporting unit, as in the other business surveys; enterprise, organisation and SCB ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson"
+fields.identifier = true
+evidence = "Identifier: Kontaktperson is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på kontaktperson\""
+
+[[statement]]
+kind = "set"
+subject = "var:namn-juridiska-enheten"
+fields.identifier = true
+evidence = "Identifier: Namn, juridiska enheten names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den juridiska enhetens officiella namn.\""

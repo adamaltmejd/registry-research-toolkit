@@ -634,3 +634,9 @@ kind = "set"
 subject = "set:upplevd-nytta-av-sfi-for-arbete-och-studier"
 fields = { "label" = "Upplevd nytta av SFI för arbete och studier" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (consistency: abbreviation casing)."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-individ"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för individ is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnumren används internt vid enkätutskick och avbockning etc.\""

@@ -14640,3 +14640,9 @@ kind = "set"
 subject = "set:uttag-fran-skogskonto-och-upphovsmannakonto"
 fields = { "description" = "Uttag från skogskonto, skogsskadekonto eller upphovsmannakonto. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:51227:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:v0999"
+fields.identifier = true
+evidence = "Identifier: Periodiseringsfond har övertagits från annan; ange överlåtarens person/organisationsnummer holds the transferor's person or organisation number; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Periodiseringsfond har övertagits från annan; ange överlåtarens person/organisationsnummer\""

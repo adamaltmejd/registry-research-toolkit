@@ -510,3 +510,15 @@ kind = "set"
 subject = "utforarregistret: var:cfar-nummer"
 fields.row_key = true
 evidence = "Row key: cfar-nummer identify a row: the CFAR number identifies the service provider workplace; organisation numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:firma"
+fields.identifier = true
+evidence = "Identifier: Firmans namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namnet på firman som den fysiska personen har registrerat.\""
+
+[[statement]]
+kind = "set"
+subject = "var:namn-juridiska-enheten"
+fields.identifier = true
+evidence = "Identifier: Namn, juridiska enheten names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den juridiska enhetens officiella namn.\""

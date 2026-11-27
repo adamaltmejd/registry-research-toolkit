@@ -1208,3 +1208,21 @@ kind = "set"
 subject = "set:bransleslagets-gransvarden"
 fields = { "description" = "Bränsleslagets absoluta högsta respektive lägsta värde i den kvartalsvisa bränslestatistiken." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTexterna ger bara att det är högsta och lägsta värde i Kvartalsvis bränslestatistik; mer går inte att säga.\ncatalog:variable_text:14049:13149:13514\ncatalog:variable_text:14051:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:arbstallnamn"
+fields.identifier = true
+evidence = "Identifier: Arbetsställenamn names the workplace; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Arbetsställets namn i klartext\""
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsnamn"
+fields.identifier = true
+evidence = "Identifier: Företagsnamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn\""
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsnamn-leverantorer-mottagare"
+fields.identifier = true
+evidence = "Identifier: Företagsnamn leverantörer/mottagare names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Anger företagsnamn i klartext för leverantör eller mottagare som levererat respektive mottagit värme till / från arbetsstället\""

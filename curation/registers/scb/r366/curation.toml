@@ -20352,3 +20352,9 @@ kind = "set"
 subject = "set:studiedeltagande"
 fields = { "description" = "Den högst prioriterade utbildning som personen har deltagit i under höstterminen." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description. Set rewritten after the #2513 set-fault fixes (Operator 2026-11-17).\n\nAlla variabler har samma definition; åren framgår av variablernas etiketter.\ncatalog:variable_text:61718:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-individ"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för individ is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnumren används internt vid enkätutskick och avbockning etc.\""

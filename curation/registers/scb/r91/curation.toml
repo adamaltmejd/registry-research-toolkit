@@ -691,3 +691,15 @@ kind = "set"
 subject = "set:sjuklon"
 fields = { "description" = "Utbetald sjuklön för redovisningsperioden, avseende arbetsgivarperioden, för arbetare respektive tjänstemän. Arbetsgivarperioden omfattar dag 2 till 14, men dag 2 till 21 under 2003 och 2004." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är utbetald sjuklön under arbetsgivarperioden; periodens längd skiljer över tid och kategorin skiljer per medlem.\ncatalog:variable_text:41328:12784:20454\ncatalog:variable_text:41330:12053:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-arbetsstalle-inom-foretag"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för arbetsställe inom företag is the löpnummer of a workplace; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer för arbetsställe inom företag\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-foretaget"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för företaget is the löpnummer of a firm or authority; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer för företaget\""

@@ -1435,3 +1435,15 @@ kind = "set"
 subject = "hyror-i-bostadslagenheter: var:idnr"
 fields.row_key = true
 evidence = "Row key: idnr identify a row: dwelling table keys on the dwelling löpnummer; the apartment number and designation, property designation, owner and manager org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:agarens-forvaltarens-namn-anamn"
+fields.identifier = true
+evidence = "Identifier: Ägarens/förvaltarens namn (ägare) names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Fastighetsägarens/fastighetsförvaltarens namn\""
+
+[[statement]]
+kind = "set"
+subject = "var:agarens-forvaltarens-namn-fnamn"
+fields.identifier = true
+evidence = "Identifier: Ägarens/förvaltarens namn (FNamn) names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Fastighetsägarens/fastighetsförvaltarens namn\""

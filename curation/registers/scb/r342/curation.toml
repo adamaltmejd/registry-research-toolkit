@@ -1357,3 +1357,27 @@ kind = "set"
 subject = "gymnasieskola-nationella-prov: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:klassbeteckning"
+fields.identifier = true
+evidence = "Identifier: Klassbeteckning names the pupil's school class, a unit SCB replaces with a project löpnummer in deliveries; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Anger beteckning för den klass eleven går i.\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnr"
+fields.identifier = true
+evidence = "Identifier: Löpnummer is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer.\""
+
+[[statement]]
+kind = "set"
+subject = "var:skolans-namn"
+fields.identifier = true
+evidence = "Identifier: Skolans namn names the school, school unit or preschool; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på skolan.\""
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetens-namn"
+fields.identifier = true
+evidence = "Identifier: Skolenhetens namn names the school, school unit or preschool; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på skolenheten.\""

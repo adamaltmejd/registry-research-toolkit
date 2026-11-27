@@ -2724,3 +2724,9 @@ kind = "set"
 subject = "set:yrke"
 fields = { "description" = "Yrke eller sysselsättning hos intervjupersonen och dennes make, maka eller sambo. Variablerna skiljer sig åt i vilket yrke som avses: yrket för anställda, yrket i den huvudsakliga sysselsättningen, yrket personen räknar sig till med tanke på yrkeserfarenhet och utbildning, samt partnerns yrke." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller yrke, med olika grund och person.\ncatalog:variable_text:48263:11078:11109\ncatalog:variable_text:48264:11078:11109\ncatalog:variable_text:48265:18748:18779\ncatalog:variable_text:48266:11078:11109"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-individ"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för individ is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnumren används internt vid enkätutskick och avbockning etc.\""

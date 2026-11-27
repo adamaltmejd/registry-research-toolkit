@@ -4144,3 +4144,9 @@ kind = "set"
 subject = "set:verksamhetspoang-utover-grundskolan"
 fields = { "description" = "Extra poäng vid ansökan för arbetslivserfarenhet, avslutad utbildning utöver grundskolan eller till exempel korta yrkesinriktade kurser, kurser för invandrarungdom och ungdomsplatser, för sökt program, linje eller studieväg. Poäng ges för verksamhet om minst en månads heltid utöver behörighetsgivande praktik eller utbildning, och deltid räknas om till heltid. Varje variabel avser utbildning sökt i 1:a till 6:e hand." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har identisk definition och poängregel; de skiljer sig bara i vilket val de avser.\ncatalog:variable_text:30794:5844:8766"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnr-elev"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för elev is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer för elev.\""

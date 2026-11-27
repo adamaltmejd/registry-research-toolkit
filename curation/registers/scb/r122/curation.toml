@@ -18636,3 +18636,123 @@ kind = "set"
 subject = "var:hfran28"
 fields = { "facets" = { "franvaro" = { "value" = "helt-franvarande", "label" = "Helt frånvarande" } } }
 evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Övrig frånvaroorsak 8, helt frånvarande, Hade du även någon annan typ av ledighet eller frånvaro under veckan?\ncatalog:variable_text:10125:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:bi3"
+fields.identifier = true
+evidence = "Identifier: Bisyssla, Arbetsplatsens namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på arbetsgivaren eller företaget för det huvudsakliga extraarbetet.\""
+
+[[statement]]
+kind = "set"
+subject = "var:biforetag"
+fields.identifier = true
+evidence = "Identifier: Namn på up:s arbetsplats i bisysslan names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Hos vem arbetar du (i  bisysslan)?\""
+
+[[statement]]
+kind = "set"
+subject = "var:biforetagku"
+fields.identifier = true
+evidence = "Identifier: Namn på up:s arbetsplats i bisysslan, KU-uppgift names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på up:s arbetsplats i bisysslan, KU-uppgift\""
+
+[[statement]]
+kind = "set"
+subject = "var:huforetag"
+fields.identifier = true
+evidence = "Identifier: Namn på up:s arbetsplats i huvudsysslan names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Hos vem arbetar du (i huvudsysslan)?\""
+
+[[statement]]
+kind = "set"
+subject = "var:huforetagku"
+fields.identifier = true
+evidence = "Identifier: Namn på up:s arbetsplats i huvudsysslan, KU-uppgift names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på up:s arbetsplats i huvudsysslan, KU-uppgift\""
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsyssla-arbetsplats-arbetsgivarens-eller-foretagets-namn"
+fields.identifier = true
+evidence = "Identifier: Huvudsyssla, arbetsplats, Arbetsgivarens eller företagets namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Vad arbetsgivaren eller företaget heter där det huvudsakliga arbetet utförs.\""
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsyssla-kontrollfraga-arbetsgivarens-nya-namn"
+fields.identifier = true
+evidence = "Identifier: Huvudsyssla, kontrollfråga, Arbetsgivarens nya namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Vad heter arbetsgivaren?\""
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3a"
+fields.identifier = true
+evidence = "Identifier: Personnummer tillkommet barn 1 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3b"
+fields.identifier = true
+evidence = "Identifier: Personnummer tillkommet barn 2 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3c"
+fields.identifier = true
+evidence = "Identifier: Personnummer tillkommet barn 3 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3d"
+fields.identifier = true
+evidence = "Identifier: Personnummer tillkommet barn 4 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3e"
+fields.identifier = true
+evidence = "Identifier: Personnummer tillkommet barn 5 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3f"
+fields.identifier = true
+evidence = "Identifier: Personnummer tillkommet barn 6 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3g"
+fields.identifier = true
+evidence = "Identifier: Personnummer tillkommet barn 7 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3h"
+fields.identifier = true
+evidence = "Identifier: Personnummer tillkommet barn 8 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3i"
+fields.identifier = true
+evidence = "Identifier: Personnummer tillkommet barn 9 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
+
+[[statement]]
+kind = "set"
+subject = "var:kfam3j"
+fields.identifier = true
+evidence = "Identifier: Personnummer tillkommet barn 10 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
+
+[[statement]]
+kind = "set"
+subject = "var:namn-pa-person-vid-indirekt-intervju"
+fields.identifier = true
+evidence = "Identifier: Namn på person vid indirekt intervju is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på person vid indirekt intervju\""
+
+[[statement]]
+kind = "set"
+subject = "var:namn-pa-up-s-senaste-arbetsplats-personer-utan-arbete"
+fields.identifier = true
+evidence = "Identifier: Namn på up:s senaste arbetsplats, personer utan arbete names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Hos vem arbetade du senast?\""
+
+[[statement]]
+kind = "set"
+subject = "var:namn-pa-up-s-senaste-arbetsplats-personer-utan-uarbforetagku"
+fields.identifier = true
+evidence = "Identifier: Namn på up:s senaste arbetsplats, personer utan arbete, KU-uppgift (UARBFORETAGKU) names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på up:s senaste arbetsplats, personer utan arbete, KU-uppgift\""

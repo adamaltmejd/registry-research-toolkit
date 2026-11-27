@@ -13649,3 +13649,15 @@ kind = "set"
 subject = "set:utgift-reparation-hyra-och-tillbehor"
 fields = { "description" = "Hushållets utgift för reparation, hyra och tillbehör." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna har identisk text.\ncatalog:variable_text:34831:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-hushall"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, hushåll (avidentifierat UB-nummer) identifies a household; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer.\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-kosthushall"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, kosthushåll identifies a household; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Identitetsnummer för kosthushållet.\""

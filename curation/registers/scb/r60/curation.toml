@@ -792,3 +792,15 @@ kind = "set"
 subject = "konjunkturstatistik-loner-for-statlig-sektor: var:matmanad"
 fields.row_key = true
 evidence = "Row key: matmanad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-myndighet"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för myndighet is the löpnummer of a firm or authority; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Informationslöst löpnummer för myndighet.\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-myndighet-redovisningsenhet"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för myndighet (redovisningsenhet) is the löpnummer of a firm or authority; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Informationslöst löpnummer för myndighet.\""

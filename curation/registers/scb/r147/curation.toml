@@ -870,3 +870,9 @@ kind = "set"
 subject = "set:produktionsomrade"
 fields = { "description" = "Det produktionsområde som uppgiften avser, i en indelning av Sverige i antingen 8 eller 18 produktionsområden." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma grunddefinition; antalet områden skiljer mellan medlemmarna.\ncatalog:variable_text:29071:16617:16983\ncatalog:variable_text:29072:14061:14426"
+
+[[statement]]
+kind = "set"
+subject = "var:jordbruksforetag-lantbrukare-namn"
+fields.identifier = true
+evidence = "Identifier: Jordbruksföretagets eller lantbrukarens namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på jordbruksföretaget eller lantbrukaren.\""

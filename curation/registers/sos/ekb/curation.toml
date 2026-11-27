@@ -6984,3 +6984,33 @@ kind = "set"
 subject = "set:personnummerkvalitet"
 fields = { "description" = "Kvaliteten på ett personnummer, bedömd enligt vissa förutbestämda regler, för personen respektive för äldste och yngste sökande. Variablerna är skapade med standardmacrot checkpnr." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma kontrollmått på personnummer; medlemmarna skiljer sig åt i vems personnummer.\ncatalog:variable_text:63655:7305:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:id"
+fields.identifier = true
+evidence = "Identifier: HushållsID (SoS) identifies a household; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Hushålls-id. Sammanslagna personnr för den/de vuxna i hushåll\""
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-aldsta-sokande"
+fields.identifier = true
+evidence = "Identifier: Personnummer äldsta sökande (PERSONNR_ALDST) holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personnummer äldsta sökande\""
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-aldsta-sokande-2"
+fields.identifier = true
+evidence = "Identifier: Personnummer äldsta sökande (SOKALDSTPNR) holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personnummer äldsta sökande\""
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-yngsta-sokande"
+fields.identifier = true
+evidence = "Identifier: Personnummer yngsta sökande (PERSONNR_YNGST) holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personnummer yngsta sökande\""
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-yngsta-sokande-2"
+fields.identifier = true
+evidence = "Identifier: Personnummer yngsta sökande (SOKYNGSTPNR) holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personnummer yngsta sökande\""

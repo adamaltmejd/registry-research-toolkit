@@ -748,3 +748,9 @@ kind = "set"
 subject = "skolor: var:skolkod"
 fields.row_key = true
 evidence = "Row key: skolkod and skolenhetskod identify a row: the school code, and the school unit code in the one year that delivers it, identifies the school a row describes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-individ"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för individ is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnumren används internt vid enkätutskick och avbockning etc.\""

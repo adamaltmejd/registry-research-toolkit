@@ -32491,3 +32491,15 @@ kind = "set"
 subject = "var:hushall-som-har-insatser-och-ersattningar-relaterade-bfunkh"
 fields = { "facets" = { "enhet" = { "value" = "familjehushall", "label" = "Familjehushåll" }, "statlig-assistans" = { "value" = "exkluderad", "label" = "Exkluderad" } } }
 evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Hushåll som har insatser och ersättningar relaterade till funktionsnedsättning exkl. statlig assistans (familjehushåll)\ncatalog:variable_text:16495:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bidnrh"
+fields.identifier = true
+evidence = "Identifier: Urvalsnummer för HEK-hushåll enligt RTB identifies a household; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Urvalsnummer för HEK-hushåll enligt RTB.\""
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsnummer-for-rtb-hushall"
+fields.identifier = true
+evidence = "Identifier: Urvalsnummer för RTB-hushåll identifies a household; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Urvalsnummer för RTB-hushåll.\""

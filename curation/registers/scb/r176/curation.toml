@@ -1650,3 +1650,27 @@ kind = "set"
 subject = "set:upprakningsfaktor"
 fields = { "description" = "Uppräkningsfaktor (uppräkningstal), med vilken totaler skattas genom att summera uppräknade observationer (observerat värde gånger uppräkningstal). Synonymer är vägningstal och (uppräknings)vikt. Variablerna finns som en gemensam faktor och som separata uppräkningstal för butikskedjor och butikstyper, till exempel Hemköp, ICA butiker, Coop stormarknad och Willys." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition av uppräkningstal; skillnaden är butikskedja eller butikstyp.\ncatalog:variable_text:45534:12418:12784\ncatalog:variable_text:45542:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:firma"
+fields.identifier = true
+evidence = "Identifier: Firmans namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namnet på firman som den fysiska personen har registrerat.\""
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson2"
+fields.identifier = true
+evidence = "Identifier: Kontaktperson 2 is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Kontaktperson hos arbetsstället, anges av uppgiftslämnaren\""
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktpersonens-namn-1"
+fields.identifier = true
+evidence = "Identifier: Kontaktpersonens namn 1 is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Kontatperson hos företaget\""
+
+[[statement]]
+kind = "set"
+subject = "var:leverantorsnamn"
+fields.identifier = true
+evidence = "Identifier: Leverantörsnamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på leverantör av varor/tjänster.\""

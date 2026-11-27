@@ -17828,3 +17828,21 @@ kind = "set"
 subject = "release:uoh-personal/r19506"
 fields = { "table" = "uoh-personal-mobilitet" }
 evidence = "SCB documents the UKÄ mobility supplement beside the main UoH personal file of the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-namn"
+fields.identifier = true
+evidence = "Identifier: Företagets namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn enl FDB\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-individ"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för individ is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnumren används internt vid enkätutskick och avbockning etc.\""
+
+[[statement]]
+kind = "set"
+subject = "var:namn-juridiska-enheten"
+fields.identifier = true
+evidence = "Identifier: Namn, juridiska enheten names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den juridiska enhetens officiella namn.\""

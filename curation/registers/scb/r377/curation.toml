@@ -3203,3 +3203,15 @@ kind = "set"
 subject = "set:yh-utbildningens-niva"
 fields = { "description" = "Beräknad utbildningsnivå för utbildningsomgången enligt SUN 2020. Variablerna finns som kod och i klartext." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre anger utbildningsomgångens beräknade nivå enligt SUN 2020; hur nivån beräknats är dokumenterat bara för vissa och lämnas därför utanför.\ncatalog:variable_text:62707:18262:20089\ncatalog:variable_text:62708:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:anordnareorgnr-utb"
+fields.identifier = true
+evidence = "Identifier: Utbildningsanordnare organisationsnummer holds an organisation number; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Juridisk ansvarig anordnares organisationsnummer\""
+
+[[statement]]
+kind = "set"
+subject = "var:namn-utbildningsanordnare"
+fields.identifier = true
+evidence = "Identifier: Namn på utbildningsanordnare names the school's principal organiser or the education provider, a municipality, region or firm; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Utbildningsanordnarens namn.\""

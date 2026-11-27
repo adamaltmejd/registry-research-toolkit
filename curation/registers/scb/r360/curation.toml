@@ -100,3 +100,9 @@ kind = "set"
 subject = "var:foregaendears-stracka"
 fields = { "label" = "Körsträcka (föregående år)" }
 evidence = "#2102 same-label cluster 'Körsträcka' (2 variables): judged different meaning, high confidence; Opdefs: KORSTRACKA is the calculated distance during the year, foregaendears_stracka during the preceding year."
+
+[[statement]]
+kind = "set"
+subject = "var:regnr"
+fields.identifier = true
+evidence = "Identifier: Fordon, registreringsnummer is the vehicle's registration number; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Fordonets registreringsnummer\""

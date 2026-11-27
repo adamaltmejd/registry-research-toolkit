@@ -3501,3 +3501,15 @@ kind = "set"
 subject = "set:kurstyp"
 fields = { "description" = "Anger vilken kurs personen var registrerad på i folkhögskolan, och vilken kurstyp kursen tillhör." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKurs och kurstyp hänger ihop; kurstyp finns i två kodningar med samma text.\ncatalog:variable_text:19266:17532:20089\ncatalog:variable_text:19275:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:klassbeteckning"
+fields.identifier = true
+evidence = "Identifier: Klassbeteckning names the pupil's school class, a unit SCB replaces with a project löpnummer in deliveries; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Anger beteckning för den klass eleven går i.\""
+
+[[statement]]
+kind = "set"
+subject = "var:personens-namn"
+fields.identifier = true
+evidence = "Identifier: Personens namn is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på personen\""

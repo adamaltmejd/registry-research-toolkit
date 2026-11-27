@@ -29447,3 +29447,9 @@ kind = "set"
 subject = "set:underlag-skogsvardsavgift"
 fields = { "description" = "Underlag för skogsvårdsavgift, det taxerade jordbruksvärdet, jämkat om beskattningsåret är kortare eller längre än 12 månader eller fastigheten har förvärvats eller avyttrats under året. Avgiften var 8 promille för tid som belöper på 1991 och 4 promille för januari till juni 1992, och lagen om skogsvårdsavgift upphörde att gälla vid utgången av juni 1992." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma underlag; avgiftssatsen (8 respektive 4 promille) och lagens upphörande gäller hela avgiften.\ncatalog:variable_text:39264:7670:8035\ncatalog:variable_text:39265:8035:8401\ncatalog:variable_text:39266:8035:8401"
+
+[[statement]]
+kind = "set"
+subject = "var:samtaxerad-make-maka"
+fields.identifier = true
+evidence = "Identifier: Samtaxerad personnummer make/maka holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Fysiska personer som är kyrkoboförda registreras inom folkbokföringen med personnummer med identitetsbeteckningen.\""

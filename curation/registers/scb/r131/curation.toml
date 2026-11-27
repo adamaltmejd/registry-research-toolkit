@@ -953,3 +953,21 @@ kind = "set"
 subject = "set:momsbelopp"
 fields = { "description" = "Momsvärde enligt momsuppgifter från Skatteverket." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla sju medlemmar har samma text; skillnaden mellan dem (Period_1 m.fl.) förklaras inte i texterna.\ncatalog:variable_text:39399:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:firmanamn"
+fields.identifier = true
+evidence = "Identifier: Firmanamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets firmabeteckning eller namn\""
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson"
+fields.identifier = true
+evidence = "Identifier: Kontaktperson is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på kontaktperson\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-urvalsenheter"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, urvalsenheter is the löpnummer of a firm or authority; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer är identifikationen för företagen i urvalet.\""

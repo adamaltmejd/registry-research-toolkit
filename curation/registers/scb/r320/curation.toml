@@ -1860,3 +1860,15 @@ kind = "set"
 subject = "set:foraldrarnas-utbildningsniva"
 fields = { "description" = "Föräldrarnas utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN): den högsta utbildningsnivån av biologisk far och mor, hämtad från befolkningsregistret och utbildningsregistret. Variablerna finns enligt SUN 2000 och SUN 2020, i detaljerad och i grupperad form." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra har samma definition och härledning (högsta nivån av far och mor); SUN-version och detaljerad/grupperad form skiljer dem åt.\ncatalog:variable_text:29637:16436:16617\ncatalog:variable_text:29638:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:skolans-namn"
+fields.identifier = true
+evidence = "Identifier: Skolans namn names the school, school unit or preschool; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på skolan.\""
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetens-namn"
+fields.identifier = true
+evidence = "Identifier: Skolenhetens namn names the school, school unit or preschool; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på skolenheten.\""

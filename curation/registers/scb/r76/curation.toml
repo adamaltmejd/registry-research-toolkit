@@ -912,3 +912,9 @@ kind = "set"
 subject = "set:upplatelseform"
 fields = { "description" = "Det sätt på vilket en boende förfogar över sin bostad." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre medlemmar har identisk definition; namnvarianterna avser olika perioder.\ncatalog:variable_text:14527:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson"
+fields.identifier = true
+evidence = "Identifier: Kontaktperson is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på kontaktperson\""

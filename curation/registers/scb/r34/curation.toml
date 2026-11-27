@@ -28215,3 +28215,69 @@ kind = "set"
 subject = "set:summerad-lone-eller-foretagarinkomst"
 fields = { "description" = "Summerad kontant bruttolön för anställning och nettoinkomst av näringsverksamhet för egenföretagare under året, för ett företag respektive ett arbetsställe." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description. Set rewritten after the #2513 set-fault fixes (Operator 2026-11-17).\n\nBåda variablerna summerar samma inkomstslag, på företags- respektive arbetsställsnivå; K10-ändringen från 2024 gäller båda.\ncatalog:variable_text:45019:7305:18993\ncatalog:variable_text:45352:7305:18993\ncatalog:variable_text:45352:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agi1astnr"
+fields.identifier = true
+evidence = "Identifier: Arbetsställenummer, största förvärvskällan (arbetsgivardeklaration) holds the workplace number (arbetsställenummer); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Identitetsbegrepp för arbetsställe avseende den största förvärvskällan under året. Arbetsställenumret ger tillsammans med organisationsnummer en identitet för arbetsställe.\""
+
+[[statement]]
+kind = "set"
+subject = "var:agi2astnr"
+fields.identifier = true
+evidence = "Identifier: Arbetsställenummer, näst största förvärvskällan (arbetsgivardeklaration) holds the workplace number (arbetsställenummer); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Identitetsbegrepp för arbetsställe avseende näst största förvärvskälla under året. Arbetsställenumret ger tillsammans med organisationsnummer en identitet för arbetsställe.\""
+
+[[statement]]
+kind = "set"
+subject = "var:agi3astnr"
+fields.identifier = true
+evidence = "Identifier: Arbetsställenummer, tredje största förvärvskällan (arbetsgivardeklaration) holds the workplace number (arbetsställenummer); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Identitetsbegrepp för arbetsställe avseende tredje största förvärvskällan under året. Arbetsställenumret ger tillsammans med organisationsnummer en identitet för arbetsställe.\""
+
+[[statement]]
+kind = "set"
+subject = "individer: AstNr_LISA @2024 where key = 'v17' and release = '2024'"
+fields.identifier = true
+evidence = "Identifier: Arbetsställenummer holds the workplace number (arbetsställenummer); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Identitetsbegrepp för arbetsställe. Arbetsställenumret ger tillsammans med organisationsnummer en identitet för arbetsställe.\""
+
+[[statement]]
+kind = "set"
+subject = "var:arbstidlopnr"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, arbetsställe-id is the löpnummer of a workplace; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer.\""
+
+[[statement]]
+kind = "set"
+subject = "var:cfarlopnr"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, CFAR-nummer is the löpnummer of a workplace; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer.\""
+
+[[statement]]
+kind = "set"
+subject = "individer: HushallsID @2020..2023 where key = 'v29832'"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, bostadshushåll identifies a household; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Identitetsnummer för bostadshushåll. Ett bostadshushåll består av alla personer som är folkbokförda i samma lägenhet. Även småhus räknas som lägenheter.  Uppgifterna kommer från Skatteverket.\""
+
+[[statement]]
+kind = "set"
+subject = "foretag: PersonNr_OpV @2023 where key = 'v49430'"
+fields.identifier = true
+evidence = "Identifier: Operativ verksamhetsledare (person-id i företagstabell) holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den person som utifrån administrativa data bedöms vara operativ verksamhetsledare för respektive företag, myndighet och organisation.\""
+
+[[statement]]
+kind = "set"
+subject = "var:peorglopnr"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, företagets organisationsnummer is the löpnummer of a firm or authority; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer.\""
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-opf"
+fields.identifier = true
+evidence = "Identifier: Operativ företagsledare (person-id i företagstabell) holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den person som sköter bolagets löpande förvaltning. Personen har enligt styrelsen (om bolaget har en styrelse) rätten att utföra den löpande förvaltningen i den omfattningen att personen inte behöver\""
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-opfj"
+fields.identifier = true
+evidence = "Identifier: Operativ företagsledare (person-id i företagstabell, justerad metod) holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den person som sköter bolagets löpande förvaltning. Personen har enligt styrelsen (om bolaget har en styrelse) rätten att utföra den löpande förvaltningen i den omfattningen att personen inte behöver\""

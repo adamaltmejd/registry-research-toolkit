@@ -5652,3 +5652,15 @@ kind = "set"
 subject = "set:verksamhetens-lan"
 fields = { "description" = "Kod för regional indelning i län för den verksamhet företaget bedriver. Variablerna avser länet utan uppdelning, länet för en viss verksamhetsgren (matfisk, rom och yngel, sättfisk) eller län 1–5, eftersom ett företag kan ha produktion i flera län." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam text ”kod för regional indelning i län”; uppdelning framgår av texter och etiketter.\ncatalog:variable_text:62212:17167:17897\ncatalog:variable_text:62213:16436:17167\ncatalog:variable_text:62216:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsnamn"
+fields.identifier = true
+evidence = "Identifier: Företagsnamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn\""
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson"
+fields.identifier = true
+evidence = "Identifier: Kontaktperson is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på kontaktperson\""

@@ -1115,3 +1115,27 @@ kind = "set"
 subject = "set:utlandsk-svensk-bakgrund"
 fields = { "description" = "Anger om en person har utländsk eller svensk bakgrund, skapad utifrån personens eget samt moderns och faderns födelseland enligt Befolkningsregistret. Variablerna skiljer sig i hur saknad uppgift hanteras: i den ena är saknad uppgift en egen kod." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna delar definition och härledning; skillnaden bygger på etiketten, eftersom texterna inte beskriver den.\ncatalog:variable_text:28604:14532:14533\ncatalog:variable_text:28604:17454:17455\ncatalog:variable_text:28605:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "var:hmannamnfth"
+fields.identifier = true
+evidence = "Identifier: Huvudman, namn (fritidshem) names the school's principal organiser or the education provider, a municipality, region or firm; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Huvudman för skolan/skolenheten.\""
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-namn"
+fields.identifier = true
+evidence = "Identifier: Huvudman, namn (skolenhet) names the school's principal organiser or the education provider, a municipality, region or firm; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Huvudman för skolan/skolenheten.\""
+
+[[statement]]
+kind = "set"
+subject = "var:skolans-namn"
+fields.identifier = true
+evidence = "Identifier: Skolans namn names the school, school unit or preschool; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på skolan.\""
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetens-namn"
+fields.identifier = true
+evidence = "Identifier: Skolenhetens namn names the school, school unit or preschool; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på skolenheten.\""
