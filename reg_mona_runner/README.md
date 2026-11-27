@@ -228,10 +228,12 @@ which is a value `extract.R` refuses.
 **What the CSV protects.** It holds names, SQL types and counts only, with no value, no
 minimum or maximum of values and no lengths. Every count, `rows` included, is rounded up
 to the next multiple of 10, and a true 0 is published as 0 (maintainer ruling
-2026-11-27, #2680): 0 means none, 10 means 1 to 10. So a published 0 in `not_bigint`,
-`not_whole`, `beyond_exact`, `spaces` and `not_digits`, on a storage `extract.R` takes,
-establishes that no key fails: the console's answer. There is no cell key and no salt. The counts
-describe the shape of key values, not people. The research output that the export gate
-checks keeps the cell key (`reg_export_gate/DESIGN.md`). The CSV still goes through
-MONA's normal export review. The console's error block, like `extract.R`'s, may quote a
-value and stays on MONA.
+2026-11-27, #2680): 0 means none, 10 means 1 to 10. A count that does not apply to
+the storage is blank. So an `scb_key` row converts, the console's answer, when its
+`status` is `ok`, its `sql_type` is one `extract.R` takes for a key (above), and every
+failure field that applies to it (`not_bigint`, `not_whole`, `beyond_exact`, `spaces`,
+`not_digits`) is 0; a blank field does not apply. There is no cell key and no salt. The
+counts describe the shape of key values, not people. The research output that the
+export gate checks keeps the cell key (`reg_export_gate/DESIGN.md`). The CSV still goes
+through MONA's normal export review. The console's error block, like `extract.R`'s, may
+quote a value and stays on MONA.
