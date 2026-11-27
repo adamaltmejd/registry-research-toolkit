@@ -6,8 +6,8 @@
 #
 #     bash scripts/holdings-check.sh <base reg_meta.db> <steward> <steward clone> <out dir>
 #
-# The steward clone (`~/stewards/<name>`) must be clean, on the commit to check, with an
-# `origin` remote that names the steward repository: the pin and the previous release come
+# The steward clone (`~/stewards/<name>`, or a worktree of it) must be clean, on the commit
+# to check, with an `origin` remote that names the steward repository: the pin and the previous release come
 # from it. It holds `steward.toml`. Set REG_BUILD to use another `reg-build` binary.
 # Exit status: 0 when all three steps pass and the holdings do not differ from the previous
 # release, 1 when they differ (review the diff), 2 on an error.
@@ -23,7 +23,12 @@ base=$1 steward=$2 clone=$3 out=$4
 rb=${REG_BUILD:-target/release/reg-build}
 [ -x "$rb" ] || { echo "holdings-check: $rb is not built" >&2; exit 2; }
 [ -f "$base" ] || { echo "holdings-check: base $base not found" >&2; exit 2; }
-[ -d "$clone/.git" ] || { echo "holdings-check: $clone is not a git clone" >&2; exit 2; }
+# A worktree has a `.git` file, not a directory: ask git for the checkout root.
+top=$(git -C "$clone" rev-parse --show-toplevel 2>/dev/null) || top=
+if [ -z "$top" ] || [ "$top" != "$(cd "$clone" && pwd -P)" ]; then
+	echo "holdings-check: $clone is not a git clone" >&2
+	exit 2
+fi
 # A new directory per run: an old report never stands in for this one.
 mkdir "$out"
 
