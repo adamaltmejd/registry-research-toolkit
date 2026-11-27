@@ -1541,7 +1541,36 @@ fn stage(mut catalog: Catalog, scratch: &Path, staged: &Path) -> Result<()> {
     tx.execute("INSERT INTO doc_fts(doc_fts) VALUES ('optimize')", [])?;
     tx.commit()?;
     db.execute_batch("ANALYZE;")?;
+    sort_stat_tables(&db)?;
     db.execute("VACUUM INTO ?1", [staged.to_string_lossy().as_ref()])?;
+    Ok(())
+}
+
+/// `ANALYZE` writes `sqlite_stat1` and `sqlite_stat4` in the order it walks the schema's
+/// table hash, which depends on the platform's allocator (macOS rounds allocation sizes
+/// up, Linux does not), so the same pins gave different bytes. Rewriting both ordered by
+/// `tbl, idx` makes the file platform-independent. stat4 keeps ANALYZE's rowid order
+/// within an index: its samples are written in index-key order and SQLite binary-searches
+/// them in load order, so they must not be re-sorted by value.
+fn sort_stat_tables(db: &Connection) -> Result<()> {
+    for (table, key) in [
+        ("sqlite_stat1", "tbl, idx"),
+        ("sqlite_stat4", "tbl, idx, rowid"),
+    ] {
+        let present: bool = db.query_row(
+            "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE name = ?1)",
+            [table],
+            |r| r.get(0),
+        )?;
+        if present {
+            db.execute_batch(&format!(
+                "CREATE TEMP TABLE stat_sorted AS SELECT * FROM {table} ORDER BY {key};
+                 DELETE FROM {table};
+                 INSERT INTO {table} SELECT * FROM stat_sorted ORDER BY rowid;
+                 DROP TABLE stat_sorted;"
+            ))?;
+        }
+    }
     Ok(())
 }
 
