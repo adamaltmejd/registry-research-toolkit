@@ -1751,9 +1751,18 @@ fn run_selected(
                 if resolved.redundant {
                     findings.push(format!("{at}: redundant-set: set equals the source"));
                 }
-                // A build applies field-stage statements from `field_applications`, so
-                // later readers need only each subject's coordinates (#2196).
-                let premise = if fields_stage && !record {
+                // Only `lock` writes reviewed premises; a build keeps none (#2196). Recorded
+                // here, before the whole premise waits for its application: any later
+                // refusal reruns the pass and drops what it recorded.
+                if record {
+                    premises.entry((provider, register)).or_default().insert(
+                        statement.identity.clone(),
+                        LockedPremise::new(statement, &resolved.premise),
+                    );
+                }
+                // Field-stage statements apply from `field_applications`, so later readers
+                // need only each subject's coordinates (#2196).
+                let premise = if fields_stage {
                     coordinate_premise(resolved.premise, &mut interned)
                 } else {
                     resolved.premise
@@ -1929,16 +1938,9 @@ fn run_selected(
                         inventory: None,
                     }),
             );
-            // Only `lock` writes reviewed premises; a build keeps none (#2196).
-            if record {
-                premises.entry((provider, register)).or_default().insert(
-                    statement.identity.clone(),
-                    LockedPremise::new(statement, &premise),
-                );
-            }
             // Past this point curation reads only each subject's coordinates (the conflict,
-            // collision and assignment checks), as for a build's field stages above.
-            let premise = if fields_stage && !record {
+            // collision and assignment checks), as for the field stages above.
+            let premise = if fields_stage {
                 premise
             } else {
                 coordinate_premise(premise, &mut interned)
