@@ -3300,8 +3300,9 @@ There are three sources:
 
 - **census**: the database, read on the platform by `census.R` and exported as rounded
   counts, names and types. A census fact is stale when its object's fingerprint changes
-  (columns, types or row count), when the object is new, or when the census version of
-  that measure changes.
+  (columns, types, row count or a view's definition), when the object is new, or when
+  the census version of that measure changes; a key check also when the declared key
+  changes.
 - **documents**: the holder's delivery documents and metadata, pinned as evidence in the
   steward repository. Stale when a new delivery or a new document arrives.
 - **ruling**: a reviewed decision by the steward or the maintainer, with its reason in
@@ -3319,14 +3320,14 @@ Configuration that describes no data (`owner`, `scope`, `curation_root`, present
 | Which schemas share one person key | `[[space]]` in `steward.toml` | documents and ruling | the export gains a schema (refused as `holdings_space_unmapped`) | spaces, orders |
 | What a table is: dated, timeless, lookup, excluded, unknown, and why | `[[table]]` `disposition`, `reason` | documents and ruling | a new table | possession, orderability |
 | Which provider tables it delivers, and which primary release | `table_pids`, `release` | documents | a new table or delivery document | routing |
-| The days a dated table holds | `delivery` | documents; **gap** for the database side (below) | a new or changed table | periods, clipping, cumulative dating |
+| The days a dated table holds | `delivery` | documents; census (rows per year of a period column), which wins where they disagree | a new or changed table | periods, clipping, cumulative dating |
 | Partition label, projection parent and token | `partition`, `projection_of`, `projection_token` | documents and ruling | a new table | placement, duplicate rule |
 | Which column carries the row's period, and how it is encoded | `period_column`, `period_end_column`, `period_encoding` | documents name the column; census confirms the encoding reads every non-null value | a changed table | row filters, row keys with `period_key = "column"`, spell overlap |
-| What a received row is (entity and time components) | `[[table.key]]` | documents and ruling; **gap** for uniqueness (below) | a new table or document | row keys, orderability |
+| What a received row is (entity and time components) | `[[table.key]]` | documents and ruling; census (duplicate keys among the declared components) | a new or changed table or document | row keys, orderability |
 | Which variable a column holds, over which window, with which caveat; holds and unmaps; slot topology | `[[table.column]]`, its `mapping`, `slot_*` | documents and ruling | a new column or document | routing, matching |
 | Whether a column is empty in a table | the reason of an `unmap` or `hold` | census (`values` published as 0) | a changed table | column decisions |
 | Physical spellings that differ from the documented ones | reader `[[rename]]`, `[[rewrite]]` | census (the names) and documents (what they mean) | a new physical name | matching |
-| Which columns are SCB löpnummer, and that every value converts to int64 | reader `[[lopnr]]` | ruling (which columns SCB pseudonymised); census (every value converts: none failing, none rewritten) | a changed table, or a new table with such a column | `holding_column.lopnr`, int64 delivery |
+| Which columns are SCB löpnummer, and that every value converts to int64 | reader `[[lopnr]]` | ruling (which columns SCB pseudonymised); census (every value converts; a leading zero warns) | a changed table, or a new table with such a column | `holding_column.lopnr`, int64 delivery |
 | Which columns hold several codes, and the separator | reader `[[packed]]` | documents (several codes per value); census (the separator profile) | a changed table | `holding_column.packed`, code filters |
 | Years a steward holds that the catalog does not document | `inputs.reference_occurrences` | documents and the export's storage facts (the five conditions, "Physical possession") | a new table or a changed column type | reference occurrences |
 | Whether a table is cumulative | global curation `cumulative` | documents | a new delivery document | cumulative dating |
@@ -3337,43 +3338,58 @@ date column is for #2674's catalog field, by steward curation. Integer keys of 1
 or more are what a `.dta` order refuses at 2^53, which `extract.R` finds only at extract
 time.
 
-**From census files to entries.** The build reads the pinned census file as one more
-steward input (`inputs.census`, optional, so a steward that maps another metadata
-source onto this list goes without). It never authors an entry from it. It proposes
-entries as a worklist in the build report, and a reviewed steward PR commits them
-(maintainer ruling 2026-11-27, point 5):
+**From census files to entries** (maintainer and COS rulings 2026-11-27). The build reads
+the pinned census file as one more steward input (`inputs.census`). A steward whose
+holder gives metadata another way (IFAU's documentation API) writes the same census file
+format from that source, so the build has one reader. With no census input the build
+checks nothing below. It never authors an entry from the census. The checks:
 
-- `[[lopnr]]`: a column placed on a catalog identifier variable whose census shows every
-  value converts, proposed in the one-column form. Whether SCB pseudonymised it stays
-  the steward's ruling; the worklist only says which candidates convert. An existing
-  entry whose column the census shows failing, or rewritten by a leading zero, is listed
-  as a contradiction.
-- `[[packed]]`: a text column placed on a coded variable whose values, for one candidate
-  separator, split into clean codes, proposed in the one-column form with that separator.
-- `period_encoding`: a declared period column whose census does not read every non-null
-  value under the declared encoding, with the encoding that does, if one does.
-- Coverage: a held object the census file does not list, or lists as failed or not
-  reached.
+- **Contradictions refuse.** An existing `[[lopnr]]` entry whose column the census shows
+  failing (a storage `extract.R` refuses, or a published `not_bigint`, `not_whole`,
+  `beyond_exact`, `spaces` or `not_digits` above 0) refuses the build with
+  `config:lopnr=N: holdings_lopnr_census`. A positive `leading_zeros` is a warning
+  instead: the key converts, but is written without its zeros, so two keys may collide.
+  An existing `[[packed]]` entry whose column has values that do not split cleanly on its
+  separator (`not_split` above 0) refuses with `config:packed=N:
+  holdings_packed_census`; so does a separator the census does not profile, since it has
+  no evidence (the census adds a candidate in a new measure version). Each names the
+  entry by position, never a physical name, and `reg-build verify` re-derives both from
+  the pinned census file. Failing at the build, not at extract time, is the fail-fast
+  rule: a refused key otherwise surfaces as exit 8 in a researcher's order.
+- **Proposals are a worklist** in the build report, committed by a reviewed steward PR,
+  never applied (ruling 5):
+  - `[[lopnr]]`: a column placed on a catalog identifier variable whose census shows
+    every value converts, in the one-column form. Whether SCB pseudonymised it stays the
+    steward's ruling; the worklist only says which candidates convert.
+  - `[[packed]]`: a text column placed on a coded variable whose values contain one
+    candidate separator and all split cleanly on it, in the one-column form with that
+    separator.
+  - `period_encoding`: a declared period column whose census does not read every
+    non-null value under the declared encoding, with the encoding that does, if one does.
+  - `delivery`: a dated table whose period column's years (the census's rows per year)
+    disagree with its authored `delivery`. Delivered data wins over documents (ruling
+    2026-11-14), so the worklist proposes the data's years.
+  - Row keys: a declared `[[table.key]]` whose census shows duplicate or null key rows.
+  - Coverage: a held object the census file does not list, or lists as failed or not
+    reached, and a declared key the census file has not checked, or checked on other
+    columns (a key declared since the last run is checked on the next).
+- **Keys for the census.** The census checks each table's declared row key, so it must
+  know the key's physical columns, which only the build resolves (a key names
+  variables). The build report lists them per table (`census_keys`: schema, table,
+  columns, the period column where `period_key = "column"`; a constant period supplies
+  no column), and the steward copies that list into the census settings
+  ([`reg_mona_runner/DESIGN.md`](../reg_mona_runner/DESIGN.md), "Census"). The census
+  file records the columns it checked, which is how the build finds a stale list.
 
 `reg-build diff --holdings` then shows what changed between two builds: new tables to
-place, and new keys, packed columns or encodings to declare.
+place, new keys, packed columns or encodings to declare, and years that disagree with
+`delivery`.
 
-**Gaps.** Facts the build needs that no source supplies today:
-
-- **The days a table holds**, as the database shows them. `delivery` is authored from
-  documents. SWECOV queried the years of its Socialstyrelsen views once (2026-11-18); no
-  other table's years are recorded. The census measures the encoding of a period
-  column, not the years in it.
-- **Row-key uniqueness.** A `[[table.key]]` declares the received row, and nothing checks
-  that the declared components are unique in the data. The census profiles single
-  columns before the build has read the keys, so it cannot check a composite key.
-- **Facts across columns.** Conclusions such as "a label column is one to one with its
-  code" or "the dispensing year is the year of the dispensing date" support column
-  decisions and owner choices. They rest on one-off aggregate checks recorded as a line
-  of ruling text, with no counts kept, so they cannot be rerun or compared. The census
-  profiles one column at a time and does not cover them.
-
-All three are open questions on #2680.
+**Facts across columns** stay ruling text with no counts kept (COS, 2026-11-27).
+Conclusions such as "a label column is one to one with its code" or "the dispensing year
+is the year of the dispensing date" support column decisions and owner choices. They
+rest on one-off aggregate checks; the census profiles one column at a time, apart from
+the declared key, and does not cover them.
 
 ## Project semantic validation
 

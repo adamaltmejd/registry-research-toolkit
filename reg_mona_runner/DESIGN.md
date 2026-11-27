@@ -478,12 +478,8 @@ columns are stored. Agents cannot run anything on MONA, so the coordinator runs 
 the answer on the console, and exports its CSV, which is why it counts only.
 
 **Superseded, planned.** `census.R` ("Census") replaces this script and is deleted with
-it when it ships. Two rulings of 2026-11-27 already overturn parts of this section: census
-and key-check counts round up to 10 with a true 0 published as 0, not the cell key
-("Disclosure" below), and the census profiles views, so "Base tables only" and "What it
-does not protect" no longer hold for it. The script is not changed in the meantime: its
-CSV is still perturbed by the cell key, so a published 0 there still does not establish
-that no key failed, and its console stays the answer.
+it when it ships. Its disclosure follows the census rule (2026-11-27; switched in its own
+PR). The census profiles views, so this section's "Base tables only" does not carry over.
 
 - **A separate script, not an `extract.R` mode.** It reads no order and writes no
   extract; folding it in would add a second entry point to the runner. It shares only the
@@ -567,8 +563,10 @@ storage query ("Replaces").
 
 - **A separate script beside `extract.R` and `key_check.R`**, uploaded alone and sharing
   only the steward's `extract-config.json`: its `odbc` connection and a `census` object
-  with the selection below. `extract.R`'s closed config check learns to accept that
-  object and ignore it. The same ASCII rule holds: names reach SQL Server as `NCHAR()`
+  (COS ruling 2026-11-27) with the selection below and `keys`, the declared row keys as
+  physical columns per table, which the holdings build report lists (`census_keys`,
+  "Steward facts" in the crates design) and the steward copies in. `extract.R`'s closed
+  config check learns to accept that object and ignore it. The same ASCII rule holds: names reach SQL Server as `NCHAR()`
   expressions through `QUOTENAME` and `sp_executesql`, never spliced into SQL. Rules
   `extract.R` owns (its int64 rule, its period reading) are mirrored by hand and named
   where they are copied, as `key_check.R` does now.
@@ -599,13 +597,27 @@ storage query ("Replaces").
     under it ("SQL": digit count first, a calendar month or day, a fraction reads as
     nothing). `extract.R` reads any whole number as a `year`, so for `year` the census
     also counts whole values of four digits, the shape a worklist can propose from. Plus
-    `zero_month` and `zero_day`, eight-digit values with a `00` month or day (#2674). Date and date-time storage needs no shape: it is its type;
+    `zero_month` and `zero_day`, eight-digit values with a `00` month or day (#2674).
+    Date and date-time storage needs no shape: it is its type;
+  - years present (maintainer ruling 2026-11-27): for a column that reads cleanly, every
+    non-null value under one encoding (date and date-time storage always; numeric or text
+    storage under the finest of `yyyymmdd`, `yyyymm`, four-digit `year` and `date` that
+    reads every value, judged on the exact counts), the rows per year, one measure per
+    year present. A year absent is not listed;
   - separators, for text storage: per candidate separator (space, comma, semicolon,
     `|`, `/`, `+`), `contains`, the values holding it after `char` padding is trimmed,
-    and `clean_split`, those that split on it into nonempty tokens of ASCII letters and
-    digits only (no leading, trailing or doubled separator). The issue proposed counting
-    tokens that match the variable's code grammar; the census reads no catalog, so it
-    counts this shape, and the holdings build judges the variable.
+    and `not_split`, the non-null values that do not split on it into nonempty tokens of
+    ASCII letters and digits only (a leading, trailing or doubled separator, or another
+    character; a single token splits cleanly). The issue proposed counting tokens that
+    match the variable's code grammar; the census reads no catalog, so it counts this
+    shape, and the holdings build judges the variable.
+
+  Per declared row key, one more measure on its table (maintainer ruling 2026-11-27):
+  `duplicate_rows`, the rows whose key tuple occurs more than once, and `key_nulls`, the
+  rows with a NULL key component. The keys come from the `census` settings (below), so a
+  key declared after a run is checked on the next one, with no extra round trip. It is a
+  `GROUP BY` of the key columns, a second scan of that table, and the only measure that
+  reads several columns together.
 
   A count that does not apply to the storage is absent. Observed values, minimums,
   maximums and value sets are never collected (ruling 2026-11-14: they go to project
@@ -619,8 +631,10 @@ storage query ("Replaces").
   column, not only the ones a steward asked about, are what answer a later question (the
   2026-11-26 prefix verdict) without a rescan.
 - **Fingerprint and reuse: `extract.R`'s resume rule** (ruling 3). An object's
-  fingerprint is its columns with their storage types, in order, plus its `COUNT_BIG(*)`.
-  On a rerun every selected object is fingerprinted; an object whose fingerprint and
+  fingerprint is its columns with their storage types, in order, its `COUNT_BIG(*)`, and
+  for a view the SHA-256 of `OBJECT_DEFINITION` (`HASHBYTES`, metadata only; COS ruling
+  2026-11-27), so a view redefined with the same columns and rows is rescanned. A key
+  measure is also keyed by its declared columns. On a rerun every selected object is fingerprinted; an object whose fingerprint and
   measure versions match the state is reused, a new or changed one is scanned, and an
   object in the state that the selection no longer lists is reported as dropped and
   removed from it. A census release that changes one measure bumps that measure's
@@ -634,7 +648,8 @@ storage query ("Replaces").
   selected object. The coordinator sets it once per new delivery, which covers in-place
   rewrites.
 - **The console says what ran and why.** One line per object: `scanned` with its reason
-  (`new`, `columns changed`, `rows changed`, `measure version`, `forced`) or `reused`,
+  (`new`, `columns changed`, `rows changed`, `definition changed`, `measure version`,
+  `key changed`, `forced`) or `reused`,
   with its time, then the dropped objects, then totals and the `finished … exit N` line.
   It prints no count and no length: the exact values are in the state file. A query
   that fails prints its SQLSTATE and the driver's message in the error block that stays
@@ -646,8 +661,9 @@ storage query ("Replaces").
   - the storage export, the nine `INFORMATION_SCHEMA.COLUMNS` fields the holdings reader
     reads now, in the same layout, so `inputs.storage_export` is unchanged;
   - the census file: one row per column and measure, with schema, object, column,
-    measure and published count, and one status row per object (`ok`, or `failed` with
-    its SQLSTATE), headed by the census version.
+    measure and published count (a year present is a measure, `year:2019`); one row per
+    checked key, its columns joined in the column field; and one status row per object
+    (`ok`, or `failed` with its SQLSTATE), headed by the census version.
 
   They hold names, storage types and counts, no values and no lengths. A selected object
   with no current profile (failed, or the run stopped) is listed as such, so a partial
@@ -658,7 +674,10 @@ storage query ("Replaces").
   count rounds up to the next multiple of 10, and a true 0 publishes as 0: 0 means none,
   10 means 1 to 10. No cell key, no p-table, no salt. The counts describe values and
   columns (key shape, date shapes, separators), not people, and row and null counts are
-  coarsened by the rounding. So a published 0 is exact, which is what a verdict needs:
+  coarsened by the rounding. Rows per year describe a delivery's coverage; on a
+  person-level date (a birth or death date) they are a yearly row count of the
+  population, rounded, the kind of aggregate the platform's export review passes. So a
+  published 0 is exact, which is what a verdict needs:
   under the cell key a true 1 to 5 could publish as 0, and a 0 did not establish that no
   key failed. For the same reason overlapping objects (a view and the base table it
   reads, or a UNION ALL view and its yearly tables) are no longer a reason to avoid
@@ -670,13 +689,14 @@ storage query ("Replaces").
   `key_check.R` and `extract.R` already do.
 - **Generic.** Nothing in the script names a steward, a register or a column pattern. A
   steward whose holder gives metadata another way (IFAU's documentation API,
-  `ifau-steward/DISCOVERY.md`) maps that source onto the same fact list instead.
+  `ifau-steward/DISCOVERY.md`) maps that source onto the same fact list and writes the
+  same census file format (COS ruling 2026-11-27), so the holdings build has one reader.
 
 **Replaces.** The PR that ships `census.R` deletes `key_check.R`, its README and design
 sections and its test, and with them #2667 and #2668's key-check items (#2668's
 schema-qualified selectors have no counterpart: the census takes no selectors). The
 census measures every column of every selected object with `key_check.R`'s measures,
-so a `[[lopnr]]` question needs no settings and no rescan, and the int64 verdict is read
+so a `[[lopnr]]` question needs no selectors and no rescan, and the int64 verdict is read
 from published zeros rather than from the console. It also writes the storage export,
 which until then is one SQL query a coordinator runs by hand.
 
@@ -687,26 +707,29 @@ which until then is one SQL query a coordinator runs by hand.
    restarted without it and resumes.
 3. The storage export and the census file pass the platform's export review and are
    committed to the steward repository, pinned (`reg-build pin`).
-4. The holdings build reads them and writes its worklist: proposed `[[lopnr]]` and
-   `[[packed]]` entries, period encodings that do not read, objects without a current
-   profile ("Steward facts" in the crates design). A reviewed steward PR commits the
-   entries it accepts; nothing is applied automatically (ruling 5).
+4. The holdings build reads them. An existing `[[lopnr]]` or `[[packed]]` entry the census
+   contradicts refuses the build. Everything else is a worklist: proposed `[[lopnr]]` and
+   `[[packed]]` entries, period encodings that do not read, years that disagree with
+   `delivery`, duplicate keys, objects without a current profile and keys not yet
+   checked, with the `census_keys` list to copy into the settings ("Steward facts" in the
+   crates design). A reviewed steward PR commits the entries it accepts; nothing is
+   applied automatically (ruling 5).
 5. `reg-build diff --holdings` against the previous build shows what changed.
 
 **SWECOV's one-off evidence** (ruling 4). Of swecov-steward's files, only
 `mona/key_check-2026-11-26.csv` is a stored database result. Its other database facts are
 conclusions written into ruling text (`series/*.toml`, `scope.toml`,
 `SOS_2026_REFRESH.md`): empty columns, period columns and their encodings, row counts
-that show one extract contains another. Its root `*-evidence` files rest on the storage
+that show one extract contains another, the years of the Socialstyrelsen views, one
+household key's uniqueness. Its root `*-evidence` files rest on the storage
 export, documents or rulings, not on queries. The first census run re-derives what it
 can measure: the key check (`[[lopnr]]` evidence then cites the census file), the empty
-columns, and the encodings of the 179 declared period columns, which record no evidence
+columns, the years present, the declared keys' uniqueness, and the encodings of the 179 declared period columns, which record no evidence
 today (three of them, an `int` and a `float` holding dates and a `char(4)` year, need
 the values' shape, not the storage type). A diff compares them with the old evidence;
 once they agree, the key check CSV is deleted and the conclusions cite the census file.
 A disagreement is a finding about the data, decided in review, never smoothed over.
-Conclusions across columns, and years present, stay as rulings ("Steward facts" in the
-crates design, "Gaps").
+Conclusions across columns stay as rulings ("Steward facts" in the crates design).
 
 **Tests.** As for `key_check.R`: the testthat suite covers the refusals before the
 database and the rounding of given true counts; the SQL is checked by hand on MONA.
