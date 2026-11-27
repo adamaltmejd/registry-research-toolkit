@@ -488,7 +488,7 @@ the answer on the console, and exports its CSV, which is why it counts only.
   `[[lopnr]]` entries (`Lopnr::marks`: ASCII case ignored, physical names trimmed for
   matching but kept as stored for SQL and the report, a table by name in every schema;
   an empty name, prefix, table or column is a setup refusal, as there), patterns for other key-like names, and optional schema and table filters.
-  Base tables only, never views: see "What it does not protect". Matching is done in R
+  Base tables only, never views (below). Matching is done in R
   on the listing from `INFORMATION_SCHEMA.COLUMNS`, never spliced into SQL. A selector
   that matches no base-table column, judged before the optional filters, stops the run
   with exit 2, as the holdings reader refuses an unused `[[lopnr]]`
@@ -516,64 +516,29 @@ the answer on the console, and exports its CSV, which is why it counts only.
   refuses (storage, or a value that does not convert). A leading zero or `-0` is written
   without it, so two keys may collide: the console says `CHANGES REPRESENTATION, possible
   collision`, and a column of only `0012` and `0034` is not a failure.
-- **The answer is on the console.** The per-table int64 conversion check (`all
+- **The verdict is on the console.** The per-table int64 conversion check (`all
   convert` or `FAILS <columns>`) is judged on the true counts, stays on MONA and is never
-  written to the CSV. It is `extract.R`'s int64 rule; a `.dta` order's further limit
+  written to the CSV; the CSV's published zeros give the same answer ("Disclosure"). It is `extract.R`'s int64 rule; a `.dta` order's further limit
   (refused at or above 2^53) is stated on the console but not tested. Each column's value
   lengths (characters of text, digits of a number without its minus) are printed there
   too, never exported: a length left out for lack of support beside a published `rows`
   could pin a small true count (Codex review, #2658).
-- **Disclosure: the toolkit's cell key method** (maintainer ruling 2026-11-25). The
-  toolkit has one disclosure model (`reg_export_gate/DESIGN.md`: cell keys, no rounding,
-  no secondary suppression), and the CSV is an export, so its counts are perturbed by
-  it rather than rounded or masked (both were tried in review on #2658: `<5` masking
-  leaked by difference, since `not_bigint` counts only non-null values, and rounding is
-  not the toolkit's model). Each published count, `rows` included, gets a cell key:
-  HMAC-SHA256 under a salt of the true count alone, its first 28 bits modulo 2^26 over
-  2^26, `cell_key.R`'s resolution. The true count and the key select the noise from
-  `cell_key.R`'s p-table through `ck_lookup()`, the lookup `ck_perturb()` uses, added
-  for this caller (`CELL_KEY_VERSION` 0.2.0); the p-table is not copied and its SHA-256
-  is still checked. A true 0 publishes 0 (the p-table's row 0), so can a true 1 to 5,
-  and 1 to 4 are never published.
-- **Why the key is the count alone.** `cell_key.R` keys a cell by the sum of its
-  persons' record keys, so identical rows get identical noise. Here there are no record
-  keys, and any label in the key (schema, table, column, measure) gives independent
-  draws to cells that count the same rows: several columns missing on the same records,
-  or one non-numeric marker counted as both `not_bigint` and `not_digits`, would average
-  back to the true count (Codex review, #2658: 2 jointly missing rows over 8 columns
-  averaged to exactly 2). Keying on the count alone is the only choice without record
-  keys that rules out averaging: every cell with the same true count gets the same
-  noise, in a run and across runs, and a count one higher still gets an unrelated key.
-  The cost: whoever learns one cell's true count learns the noise for that count
-  everywhere in the CSV. That is acceptable for a coordinator's diagnostic of key
-  shape.
-- **The salt.** 32 random bytes from openssl, made on the first run in a file beside
-  the script (`SALT_FILE`), written owner-only and reused on every later run; a
-  malformed file is refused, not replaced, and a failure to write it on the first run is
-  a setup failure (exit 2). So is a missing salt beside an existing `OUTPUT`: a fresh salt
-  would give a re-export independent noise draws for the same counts, so the run asks the
-  coordinator to restore the salt, or to remove the old CSV deliberately. It is never exported, printed or logged. The coordinator
-  uploads `key_check.R` and `cell_key.R` once and again only when either changes, and
-  the salt file stays on MONA, so reruns publish the same noise.
-- **Declined: a run lock.** One coordinator runs one batch job, so two runs never race
-  to make the salt or write the CSV (a `simplify:` comment in `read_salt` names the
-  trigger).
-- **Declined: Windows ACLs on the salt.** Anyone who can read the project folder already
-  reads the microdata; the salt guards the published counts against CSV recipients
-  outside MONA, not against project members. It stays in the project folder and is never
-  exported.
-- **Known limit: bounded noise** (maintainer ruling 2026-11-25, as for the export
-  gate). The p-table's noise is bounded by D = 5, so related counts in one row (`rows`,
-  `nulls`, `not_bigint`) can bound each other: with 1000 rows, 999 NULLs and one failing
-  key, the published counts let a reader infer that the single non-NULL key fails. The
-  pipeline output the export gate checks has the same property. What can leak here is a
-  technical property of a pseudonymised key value, not an attribute of a person.
-- **What it does not protect.** Overlapping objects: five yearly tables beside their
-  UNION ALL view give each year's count twice over, and their sum narrows each. So only
-  base tables are scanned, with no option for views, and the coordinator does not set the
-  table filter to take in tables derived from other scanned ones. The CSV still goes
-  through MONA's export review. The driver's message, which can quote a value, goes to
-  the console's error block only.
+- **Disclosure: counts round up to 10** (maintainer ruling 2026-11-27, #2680, which
+  amends the 2026-11-25 one-model ruling for this script and the planned census only).
+  Each published count, `rows` included, rounds up to the next multiple of 10, and a
+  true 0 publishes 0: 0 means none, 10 means 1 to 10. No cell key, no p-table, no salt.
+  Under the cell key this script used until then, a true 1 to 5 could publish as 0, so a
+  published 0 did not establish that no key failed (the 2026-11-26 key check). Now it
+  does, and the CSV's zeros agree with the console's verdict. The counts describe the
+  shape of key values, not people; rounding up is deterministic, so related counts and
+  reruns can be compared, which this diagnostic accepts. Research output through the
+  export gate keeps the cell key (`reg_export_gate/DESIGN.md`): its noise has mean 0 and
+  blocks differencing between overlapping outputs.
+- **Base tables only**, never views: the scope it was built with, kept unchanged. The
+  rule's original reason, perturbed counts narrowing each other across overlapping
+  objects, went with the cell key; the planned `census.R` profiles views (#2680). The
+  CSV still goes through MONA's export review. The driver's message, which can quote a
+  value, goes to the console's error block only.
 - **Fail-safe per table.** A table whose query fails is a `failed: SQLSTATE …` row per
   column and the run goes on; the CSV is appended after every table, so an interrupted
   run keeps what it counted. Exit 8 when any table failed, 2 for setup.
@@ -581,8 +546,7 @@ the answer on the console, and exports its CSV, which is why it counts only.
   the coordinator's first run on MONA. The script runs only when evaluated in the
   global environment (`Rscript`, `R CMD BATCH`, `source()`), so the test loads its
   definitions with `sys.source()` into another. The suite has one case, for the published counts
-  (values computed by hand from the HMAC and the p-table rows, the same on a rerun),
-  built from given true counts without a database.
+  (rounded up to 10, a true 0 kept), built from given true counts without a database.
 
 ## Tests
 
