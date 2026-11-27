@@ -777,6 +777,9 @@ release assets are left unchanged.
 - No DuckDB, no dataframe engine, no Python bridge.
 - Iteration is sorted, row ids follow natural-key order, and nothing reads the clock or
   the host.
+- `ANALYZE`'s `sqlite_stat1`/`sqlite_stat4` rows are rewritten in key order before
+  `VACUUM INTO`: their walk order follows the platform allocator, so Mac and Linux
+  builds from the same pins would otherwise differ in bytes.
 - CI builds twice and compares bytes.
 - The period grammar, interval algebra and text folds come from `reg-core`, as
   everything else does ("One implementation per contract").
