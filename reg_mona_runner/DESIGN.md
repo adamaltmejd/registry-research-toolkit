@@ -612,11 +612,14 @@ storage query ("Replaces").
     year present. A year absent is not listed;
   - separators, for text storage: per candidate separator (space, comma, semicolon,
     `|`, `/`, `+`), `contains`, the values holding it after `char` padding is trimmed,
-    and `not_split`, the non-null values that do not split on it into nonempty tokens of
-    ASCII letters and digits only (a leading, trailing or doubled separator, or another
-    character; a single token splits cleanly). The issue proposed counting tokens that
-    match the variable's code grammar; the census reads no catalog, so it counts this
-    shape, and the holdings build judges the variable.
+    `empty_token`, the values holding it at the start or end or twice in a row (an empty
+    code, which breaks the separator contract whatever the codes are), and `not_split`,
+    the non-null values that do not split on it into nonempty tokens of ASCII letters and
+    digits only (an empty token, or another character; a single token splits cleanly).
+    `not_split` is a heuristic for proposals only: catalog codes may hold punctuation
+    (`A.1`), which it counts as a failure. The issue proposed counting tokens that match
+    the variable's code grammar; the census reads no catalog, so it counts this shape,
+    and the holdings build judges the variable.
 
   Per declared row key, one more measure on its table (maintainer ruling 2026-11-27):
   `duplicate_rows`, the rows whose key tuple occurs more than once, and `key_nulls`, the

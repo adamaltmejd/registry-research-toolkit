@@ -3350,10 +3350,12 @@ checks nothing below. It never authors an entry from the census. The checks:
   storage) refuses the build with
   `config:lopnr=N: holdings_lopnr_census`. A positive `leading_zeros` is a warning
   instead: the key converts, but is written without its zeros, so two keys may collide.
-  An existing `[[packed]]` entry whose column has values that do not split cleanly on its
-  separator (`not_split` above 0) refuses with `config:packed=N:
-  holdings_packed_census`; so does a separator the census does not profile, since it has
-  no evidence (the census adds a candidate in a new measure version). Each names the
+  An existing `[[packed]]` entry refuses with `config:packed=N: holdings_packed_census`
+  only on evidence that its separator contract is broken: `empty_token` above 0 for its
+  separator (an empty code). `not_split` never refuses, since a catalog code may hold
+  punctuation (`A.1`) that the runner matches exactly. A separator the census does not
+  profile has no evidence either way and is listed under coverage (the census adds a
+  candidate in a new measure version). Each names the
   entry by position, never a physical name, and `reg-build verify` re-derives both from
   the pinned census file. Failing at the build, not at extract time, is the fail-fast
   rule: a refused key otherwise surfaces as exit 8 in a researcher's order.
@@ -3366,14 +3368,20 @@ checks nothing below. It never authors an entry from the census. The checks:
     candidate separator and all split cleanly on it, in the one-column form with that
     separator.
   - `period_encoding`: a declared period column whose census `not_read` under the
-    declared encoding is above 0, with an encoding whose `not_read` is 0, if one is.
+    declared encoding is above 0, with an encoding whose `not_read` is 0, if one is. A
+    `year` proposal also needs `not_year4` 0, since `extract.R` reads any whole number as
+    a year (a numeric `yyyymm` column holding `202013` fails `yyyymm` but reads as a
+    year).
   - `delivery`: a dated table whose period column's years (the census's rows per year)
     disagree with its authored `delivery`. Delivered data wins over documents (ruling
-    2026-11-14), so the worklist proposes the data's years.
+    2026-11-14), so the worklist proposes the data's years. Not for a spell table (one
+    with `period_end_column`): its period column is the spell start, so start years miss
+    the years a spell runs through (a 2019 to 2021 spell shows 2019 only). Its `delivery`
+    stays with the documents, and no correction is proposed from the census.
   - Row keys: a declared `[[table.key]]` whose census shows duplicate or null key rows.
-  - Coverage: a held object the census file does not list, or lists as failed or not
-    reached, and a declared key the census file has not checked, or checked on other
-    columns (a key declared since the last run is checked on the next).
+  - Coverage: a `[[packed]]` separator the census does not profile; a held object the
+    census file does not list, or lists as failed or not reached; and a declared key the
+    census file has not checked, or checked on other columns (a key declared since the last run is checked on the next).
 - **Keys for the census.** The census checks each table's declared row key, so it must
   know the key's physical columns, which only the build resolves (a key names
   variables). The build report lists them per table (`census_keys`: schema, table,
