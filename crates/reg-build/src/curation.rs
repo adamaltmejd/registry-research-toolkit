@@ -1448,27 +1448,57 @@ fn checked_premise(
     }
 }
 
+/// One curation pass: the curated result, or the statements a refusal drops before the
+/// next pass.
+enum Pass {
+    Done(Box<Applied>),
+    Rerun {
+        refused: BTreeSet<String>,
+        refusals: Vec<Refusal>,
+    },
+}
+
+/// Curate the records `read` returns. Refused statements contribute neither facts nor
+/// provenance: the stages run again without them, on records read again, carrying the
+/// refusals and their skipped-statement findings. Each pass is dropped before the next
+/// read, so a rerun holds one corpus, and curation keeps no untouched copy of the records
+/// (crates/DESIGN.md, "Builder memory").
 #[allow(clippy::too_many_arguments)]
 pub(super) fn run(
     root: &Path,
     retired: &[crate::retired::Retired],
     statements: &[LocatedStatement],
-    records: Vec<Record>,
-    read: &dyn Fn() -> Result<Vec<Record>>,
+    read: &mut dyn FnMut() -> Result<Vec<Record>>,
     record: bool,
     registers: &[String],
     base: Option<&crate::external::Context>,
 ) -> Result<Applied> {
-    let mut applied = run_selected(
-        root,
-        retired,
-        &statements.iter().collect::<Vec<_>>(),
-        records,
-        read,
-        record,
-        registers,
-        base,
-    )?;
+    let mut statements = statements.iter().collect::<Vec<_>>();
+    // Each rerun's skipped-statement findings and refusals, in pass order. An error in a
+    // later pass reports the earlier refusals first.
+    let mut reruns: Vec<(Vec<String>, Vec<Refusal>)> = Vec::new();
+    let after = |reruns: &[(Vec<String>, Vec<Refusal>)], error| {
+        reruns.iter().rev().fold(error, |error, (_, refusals)| {
+            after_refusals(refusals, error)
+        })
+    };
+    let mut applied = loop {
+        let pass = read().and_then(|records| {
+            run_selected(root, retired, &statements, records, record, registers, base)
+        });
+        match pass.map_err(|e| after(&reruns, e))? {
+            Pass::Done(applied) => break *applied,
+            Pass::Rerun { refused, refusals } => {
+                let skipped = refusal_findings(&refusals, record).map_err(|e| after(&reruns, e))?;
+                statements.retain(|s| !refused.contains(&publication_identity(s)));
+                reruns.push((skipped, refusals));
+            }
+        }
+    };
+    for (skipped, refusals) in reruns.into_iter().rev() {
+        applied.findings.extend(skipped);
+        applied.refusals.extend(refusals);
+    }
     applied.refusals.sort();
     applied.refusals.dedup();
     Ok(applied)
@@ -1477,42 +1507,18 @@ pub(super) fn run(
 /// Apply parent, bound, period, move, fact, identity and field stages in order. Each phase
 /// evaluates an immutable snapshot before applying accepted statements. Other kinds
 /// see only that resulting source view. `record` is explicit review acceptance.
-#[allow(clippy::too_many_lines, clippy::too_many_arguments)]
+#[allow(clippy::too_many_lines)]
 fn run_selected(
     root: &Path,
     retired: &[crate::retired::Retired],
     statements: &[&LocatedStatement],
     mut records: Vec<Record>,
-    read: &dyn Fn() -> Result<Vec<Record>>,
     record: bool,
     registers: &[String],
     base: Option<&crate::external::Context>,
-) -> Result<Applied> {
-    // Refused statements contribute neither facts nor provenance: the stages run again
-    // without them, carrying the refusals and their skipped-statement findings.
-    let rerun_without = |refused: &dyn Fn(&LocatedStatement) -> bool, refusals: Vec<Refusal>| {
-        let skipped = refusal_findings(&refusals, record)?;
-        let retained = statements
-            .iter()
-            .copied()
-            .filter(|s| !refused(s))
-            .collect::<Vec<_>>();
-        // The source records again: curation keeps no untouched copy of them.
-        let mut rerun = run_selected(
-            root,
-            retired,
-            &retained,
-            read().map_err(|e| after_refusals(&refusals, e))?,
-            read,
-            record,
-            registers,
-            base,
-        )
-        .map_err(|e| after_refusals(&refusals, e))?;
-        rerun.findings.extend(skipped);
-        rerun.refusals.extend(refusals);
-        Ok::<_, crate::error::Error>(rerun)
-    };
+) -> Result<Pass> {
+    let rerun_without =
+        |refused: BTreeSet<String>, refusals: Vec<Refusal>| Ok(Pass::Rerun { refused, refusals });
     let t = std::time::Instant::now();
     let mut result = inventory(root, &records)?;
     crate::timing::done("curation inventory", t);
@@ -1886,7 +1892,7 @@ fn run_selected(
                         Refusal::scoped(statement, format!("{}: {e}", location(statement)));
                     refusals.push(refusal);
                     let refused = publication_identity(statement);
-                    return rerun_without(&|s| publication_identity(s) == refused, refusals);
+                    return rerun_without(BTreeSet::from([refused]), refusals);
                 }
             };
             result.sets.extend(applied.sets);
@@ -2090,10 +2096,10 @@ fn run_selected(
             let refused = linked
                 .refusals
                 .iter()
-                .map(|(hash, _)| hash)
+                .map(|(hash, _)| hash.clone())
                 .collect::<BTreeSet<_>>();
             refusals.extend(messages);
-            return rerun_without(&|s| refused.contains(&publication_identity(s)), refusals);
+            return rerun_without(refused, refusals);
         }
         result.linked = Some(linked);
         result.resolved = Some(resolved);
@@ -2189,7 +2195,7 @@ fn run_selected(
             "reg-build: timing curation rerun after {} conflicts",
             conflicts.len()
         );
-        return rerun_without(&|s| conflicts.contains(&publication_identity(s)), refusals);
+        return rerun_without(conflicts, refusals);
     }
 
     if !result.sets.is_empty()
@@ -2239,7 +2245,7 @@ fn run_selected(
                 "reg-build: timing curation rerun after {} presentation refusals",
                 refused.len()
             );
-            return rerun_without(&|s| refused.contains(&publication_identity(s)), refusals);
+            return rerun_without(refused, refusals);
         }
     }
     // The set minimum, on the final memberships. It runs here so that `lock` refuses
@@ -2354,7 +2360,7 @@ fn run_selected(
     }
     result.findings = findings;
     result.records = records;
-    Ok(result)
+    Ok(Pass::Done(Box::new(result)))
 }
 
 /// The complete review surface for publication.

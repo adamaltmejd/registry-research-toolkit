@@ -382,9 +382,6 @@ fn build_with_provenance(
     }
     timing::done("load curation", t);
     let t = std::time::Instant::now();
-    let outputs = read_all(args, &manifest)?;
-    timing::done("read inputs", t);
-    let t = std::time::Instant::now();
     // Input ids follow name order; frames keep manifest order.
     let mut order: Vec<usize> = (0..manifest.input.len()).collect();
     order.sort_by(|&a, &b| manifest.input[a].name.cmp(&manifest.input[b].name));
@@ -392,31 +389,41 @@ fn build_with_provenance(
     for (r, &i) in order.iter().enumerate() {
         rank[i] = r;
     }
-    // Preserve each reader's attribution even when two manifest inputs read the
-    // same file. Curation adds no synthetic manifest inputs.
-    let mut valueset_names = BTreeMap::<String, BTreeSet<(usize, String)>>::new();
-    for (i, output) in outputs.iter().enumerate() {
-        for record in &output.frame.records {
-            if let Record::ValueSet(v) = record {
-                valueset_names
-                    .entry(v.hash.clone())
-                    .or_default()
-                    .extend(v.names.iter().map(|name| (rank[i], name.clone())));
+    // Curation reads the inputs once per pass. What the build reports beside the curated
+    // records (files, warnings, value-set names) comes from the same read as they do.
+    let mut used = None;
+    let mut read = || {
+        let t = std::time::Instant::now();
+        let outputs = read_all(args, &manifest)?;
+        timing::done("read inputs", t);
+        // Preserve each reader's attribution even when two manifest inputs read the
+        // same file. Curation adds no synthetic manifest inputs.
+        let mut valueset_names = BTreeMap::<String, BTreeSet<(usize, String)>>::new();
+        for (i, output) in outputs.iter().enumerate() {
+            for record in &output.frame.records {
+                if let Record::ValueSet(v) = record {
+                    valueset_names
+                        .entry(v.hash.clone())
+                        .or_default()
+                        .extend(v.names.iter().map(|name| (rank[i], name.clone())));
+                }
             }
         }
-    }
-    let (outputs, records) = split_frames(outputs);
+        let (outputs, records) = split_frames(outputs);
+        used = Some((outputs, valueset_names));
+        Ok(records)
+    };
     let mut applied = curation::run(
         &args.curation,
         &retired,
         &statements,
-        records,
-        &|| Ok(split_frames(read_all(args, &manifest)?).1),
+        &mut read,
         false,
         &[],
         base,
     )?;
-    timing::done("apply curation", t);
+    timing::done("read inputs and apply curation", t);
+    let (outputs, valueset_names) = used.expect("curation read the inputs");
     let t = std::time::Instant::now();
     if !args.release {
         for finding in &applied.findings {
@@ -762,13 +769,11 @@ fn lock(args: &Args) -> Result<()> {
     let tags = sets::vocabulary(&args.curation)?;
     sets::statements(&tags, &statements)?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
-    let (_, records) = split_frames(read_all(args, &manifest)?);
     let applied = curation::run(
         &args.curation,
         &retired,
         &statements,
-        records,
-        &|| Ok(split_frames(read_all(args, &manifest)?).1),
+        &mut || Ok(split_frames(read_all(args, &manifest)?).1),
         true,
         &args.registers,
         base.as_ref(),
