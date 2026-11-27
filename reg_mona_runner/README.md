@@ -163,6 +163,10 @@ entries) for int64 delivery, that every such key converts, and shows what the ot
 key-like columns (holders' own serials, `…id` columns) look like. It counts only; no
 value leaves the database.
 
+A planned `census.R` will replace this script and the hand-run storage query
+([DESIGN.md](DESIGN.md), "Census"; #2680), which also profiles views. Until it ships,
+`key_check.R` runs as described below.
+
 1. Upload `key_check.R` to a folder on MONA.
 2. Edit the settings at the top of the script: `SCB_KEY_NAMES`, `SCB_KEY_PREFIXES` and
    `SCB_KEY_COLUMNS` as the steward's `[[lopnr]]` entries name them (exact names, name
