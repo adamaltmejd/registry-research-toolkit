@@ -10,10 +10,12 @@ use reg_readers::curation::LocatedStatement;
 use reg_resolve::curation::{Premise, SourcePremise, variable_level_setter};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Lock {
-    version: u32,
+    /// Checked before parsing (`previous`).
+    #[serde(rename = "version")]
+    _version: u32,
     objects: BTreeMap<String, SourcePremise>,
     statements: BTreeMap<String, StoredPremise>,
 }
@@ -25,33 +27,54 @@ struct StoredPremise {
     objects: Vec<String>,
 }
 
-impl Lock {
-    fn new(premises: BTreeMap<String, LockedPremise>) -> Self {
-        let mut objects = BTreeMap::new();
-        let statements = premises
-            .into_iter()
-            .map(|(identity, premise)| {
-                let mut keys = Vec::new();
-                for object in premise.objects {
-                    let key = object_key(&object);
-                    objects.entry(key.clone()).or_insert(object);
-                    keys.push(key);
-                }
-                keys.sort();
-                (
-                    identity,
-                    StoredPremise {
-                        subjects: premise.subjects,
-                        objects: keys,
-                    },
-                )
-            })
-            .collect();
-        Self {
-            version: 4,
-            objects,
-            statements,
+/// A lock being recorded, held as canonical JSON text and filled as each statement is
+/// evaluated. Kept as premises until the end, the real seed's locks outgrew the box:
+/// every statement held its own copy of each value set it read (crates/DESIGN.md,
+/// "Builder memory").
+#[derive(Default)]
+struct Recorded {
+    /// Each object's canonical line by its digest.
+    objects: BTreeMap<String, String>,
+    /// Each statement's `StoredPremise` canonical line by identity.
+    statements: BTreeMap<String, String>,
+}
+
+impl Recorded {
+    fn insert(&mut self, identity: String, premise: LockedPremise) {
+        let mut keys = Vec::new();
+        for object in &premise.objects {
+            let line = reg_frame::canonical_line(object);
+            let key = reg_core::sha256_hex(&line);
+            self.objects.entry(key.clone()).or_insert(line);
+            keys.push(key);
         }
+        keys.sort();
+        let stored = StoredPremise {
+            subjects: premise.subjects,
+            objects: keys,
+        };
+        self.statements
+            .insert(identity, reg_frame::canonical_line(&stored));
+    }
+
+    /// The lock file's text: `canonical_line` of the version 4 lock, assembled from the
+    /// canonical lines already held (sorted keys, compact). Statement identities are
+    /// unique within a register, so every held object is referenced.
+    fn into_line(self) -> String {
+        fn object(entries: BTreeMap<String, String>) -> String {
+            let entries = entries
+                .into_iter()
+                .map(|(key, line)| {
+                    serde_json::to_string(&key).expect("a string serializes") + ":" + &line
+                })
+                .collect::<Vec<_>>();
+            format!("{{{}}}", entries.join(","))
+        }
+        format!(
+            r#"{{"objects":{},"statements":{},"version":4}}"#,
+            object(self.objects),
+            object(self.statements)
+        )
     }
 }
 
@@ -115,10 +138,6 @@ impl Reviewed {
 
 fn parse_line<T: serde::de::DeserializeOwned>(line: &str) -> T {
     serde_json::from_str(line).expect("a canonical lock line")
-}
-
-fn object_key(object: &SourcePremise) -> String {
-    reg_core::sha256_hex(reg_frame::canonical_line(object))
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
@@ -1536,7 +1555,7 @@ fn run_selected(
     let mut refusals = Vec::new();
     let mut conflicts = BTreeSet::new();
     let mut locks = BTreeMap::new();
-    let mut premises = BTreeMap::<_, BTreeMap<_, _>>::new();
+    let mut premises = BTreeMap::<_, Recorded>::new();
     let t = std::time::Instant::now();
     for (provider, register) in groups.keys() {
         let name = format!("{provider}/{register}");
@@ -1732,9 +1751,18 @@ fn run_selected(
                 if resolved.redundant {
                     findings.push(format!("{at}: redundant-set: set equals the source"));
                 }
-                // A build applies field-stage statements from `field_applications`, so
-                // later readers need only each subject's coordinates (#2196).
-                let premise = if fields_stage && !record {
+                // Only `lock` writes reviewed premises; a build keeps none (#2196). Recorded
+                // here, before the whole premise waits for its application: any later
+                // refusal reruns the pass and drops what it recorded.
+                if record {
+                    premises.entry((provider, register)).or_default().insert(
+                        statement.identity.clone(),
+                        LockedPremise::new(statement, &resolved.premise),
+                    );
+                }
+                // Field-stage statements apply from `field_applications`, so later readers
+                // need only each subject's coordinates (#2196).
+                let premise = if fields_stage {
                     coordinate_premise(resolved.premise, &mut interned)
                 } else {
                     resolved.premise
@@ -1910,16 +1938,9 @@ fn run_selected(
                         inventory: None,
                     }),
             );
-            // Only `lock` writes reviewed premises; a build keeps none (#2196).
-            if record {
-                premises.entry((provider, register)).or_default().insert(
-                    statement.identity.clone(),
-                    LockedPremise::new(statement, &premise),
-                );
-            }
-            // Past this point a build reads only each subject's coordinates (the conflict,
+            // Past this point curation reads only each subject's coordinates (the conflict,
             // collision and assignment checks), as for the field stages above.
-            let premise = if record || fields_stage {
+            let premise = if fields_stage {
                 premise
             } else {
                 coordinate_premise(premise, &mut interned)
@@ -2298,11 +2319,10 @@ fn run_selected(
         {
             continue;
         }
-        let reviewed = premises.remove(&(provider, register)).unwrap_or_default();
-        if reviewed.is_empty() {
+        let Some(reviewed) = premises.remove(&(provider, register)) else {
             continue;
-        }
-        pending.push((path, Lock::new(reviewed)));
+        };
+        pending.push((path, reviewed.into_line()));
     }
     if record {
         for register in registers {
@@ -2330,12 +2350,8 @@ fn run_selected(
     findings.extend(refusal_findings(&refusals, record)?);
     result.refusals = refusals;
     if record {
-        // Prepare all serializations before writing; a refused register never causes
-        // a partial review update in another register.
-        let files = pending
-            .into_iter()
-            .map(|(path, lock)| (path, reg_frame::canonical_line(&lock)))
-            .collect::<Vec<_>>();
+        // `pending` holds every serialization before any is written; a refused register
+        // never causes a partial review update in another register.
         let mut existing = BTreeSet::new();
         if root.join("registers").is_dir() {
             super::tree(&root.join("registers"), "", &mut existing)?;
@@ -2349,12 +2365,12 @@ fn run_selected(
                 || registers
                     .iter()
                     .any(|r| r == name || name.rsplit('/').next() == Some(r)))
-                && !files.iter().any(|(p, _)| p == &path)
+                && !pending.iter().any(|(p, _)| p == &path)
             {
                 std::fs::remove_file(&path).map_err(|e| format!("{}: {e}", path.display()))?;
             }
         }
-        for (path, bytes) in files {
+        for (path, bytes) in pending {
             std::fs::write(&path, bytes).map_err(|e| format!("{}: {e}", path.display()))?;
         }
     }
