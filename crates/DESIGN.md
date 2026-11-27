@@ -807,6 +807,9 @@ anything derived from all of them lives no longer than its phase.**
 - **The emitter is the peak.** Its rows (~4 GiB on the real seed, each cell an owned
   copy) sit beside the catalog until all are built, since text ids need every row
   first; cells borrowed from the catalog are the next cut if the seed outgrows the box.
+- **`lock` does not fit yet.** Lock mode keeps every accepted premise whole, since it
+  writes them; on the real seed it passes 13 GiB in the Fields stage. Locking runs
+  where memory allows (the maintainer's machine) until its premises are bounded too.
 
 **Frames and readers.**
 
