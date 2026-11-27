@@ -135,7 +135,7 @@ verified against GitHub's per-asset SHA-256 digest (no checksum files):
   with it) and macOS arm64 (local holdings checks);
 - the export gate's `reg-export-gate` for Linux x86_64, named by the gate crate's own
   version (`reg-export-gate-<version>-<target>`), for the data servers;
-- `reg-mock` for macOS arm64, Linux x86_64 and Windows x86_64 (`.exe`), local mock data
+- `reg-mock` for macOS arm64, Linux x86_64, Linux arm64 and Windows x86_64 (`.exe`), local mock data
   on the researcher's machine;
 - the SPA bundle `reg-webapp-spa-<version>.tar.zst` (the built
   `reg_webapp/frontend/dist`), which a steward deploy serves.
