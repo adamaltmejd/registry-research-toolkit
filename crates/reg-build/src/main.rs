@@ -61,6 +61,11 @@ use reg_frame::Record;
 use reg_readers::curation::Lines;
 use serde::{Deserialize, Serialize};
 
+// glibc malloc keeps the readers' freed memory resident in their per-thread arenas, which
+// later phases on the main thread cannot reuse (crates/DESIGN.md, "Builder memory").
+#[global_allocator]
+static ALLOCATOR: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 /// `curation/inputs.toml`: the pinned inputs and the providers they belong to.
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -267,6 +272,40 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
         .collect()
 }
 
+/// An input's SHA-256 and size for the input table. A release asset is its pin (the reader
+/// verified it); its locators name archive members, not files under the inputs root.
+fn input_digest(
+    args: &Args,
+    input: &reg_readers::Input,
+    output: &reg_readers::ReadOutput,
+) -> Result<(String, i64)> {
+    match (&input.release, &input.sha256) {
+        (Some(_), Some(pin)) => {
+            let path = input.locate(&args.inputs, args.assets.as_deref())?;
+            let len = std::fs::metadata(&path)
+                .map_err(|e| format!("{}: {e}", path.display()))?
+                .len();
+            Ok((pin.clone(), i64::try_from(len)?))
+        }
+        _ => digest(&args.inputs, &output.files.iter().cloned().collect()),
+    }
+}
+
+/// The inputs' records in manifest order, apart from what else each reader returned.
+/// Curation owns the records and reads the inputs again for a rerun after a refusal, so
+/// no second copy stays alive. The records are copied, not moved: a copy made on this
+/// thread is dense, while a reader's own allocations sit among its freed scratch in its
+/// thread's heap and pin gigabytes of it (crates/DESIGN.md, "Builder memory").
+fn split_frames(
+    mut outputs: Vec<reg_readers::ReadOutput>,
+) -> (Vec<reg_readers::ReadOutput>, Vec<Record>) {
+    let mut records = Vec::with_capacity(outputs.iter().map(|o| o.frame.records.len()).sum());
+    for output in &mut outputs {
+        records.extend(std::mem::take(&mut output.frame.records).iter().cloned());
+    }
+    (outputs, records)
+}
+
 fn read(args: &Args) -> Result<()> {
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
     std::fs::create_dir_all(&args.out)?;
@@ -362,19 +401,70 @@ fn build_with_provenance(
     }
     timing::done("load curation", t);
     let t = std::time::Instant::now();
-    let outputs = read_all(args, &manifest)?;
-    timing::done("read inputs", t);
-    let t = std::time::Instant::now();
+    // Input ids follow name order; frames keep manifest order.
+    let mut order: Vec<usize> = (0..manifest.input.len()).collect();
+    order.sort_by(|&a, &b| manifest.input[a].name.cmp(&manifest.input[b].name));
+    let mut rank = vec![0; order.len()];
+    for (r, &i) in order.iter().enumerate() {
+        rank[i] = r;
+    }
+    // Curation reads the inputs once per pass. What the build reports beside the curated
+    // records (digests, files, warnings, value-set names) comes from the same read as
+    // they do. A rerun keeps the statements refused against the first read, so an input
+    // that changed in between fails the build rather than mixing two states.
+    let mut used = None;
+    let mut first: Option<Vec<(String, i64)>> = None;
+    let mut read = || {
+        let t = std::time::Instant::now();
+        let outputs = read_all(args, &manifest)?;
+        timing::done("read inputs", t);
+        let digests = manifest
+            .input
+            .iter()
+            .zip(&outputs)
+            .map(|(input, output)| input_digest(args, input, output))
+            .collect::<Result<Vec<_>>>()?;
+        let first = first.get_or_insert_with(|| digests.clone());
+        if let Some(input) = manifest
+            .input
+            .iter()
+            .zip(first.iter().zip(&digests))
+            .find_map(|(input, (a, b))| (a != b).then_some(input))
+        {
+            return Err(format!(
+                "{}: input-changed: the input changed between curation passes; rebuild",
+                input.name
+            )
+            .into());
+        }
+        // Preserve each reader's attribution even when two manifest inputs read the
+        // same file. Curation adds no synthetic manifest inputs.
+        let mut valueset_names = BTreeMap::<String, BTreeSet<(usize, String)>>::new();
+        for (i, output) in outputs.iter().enumerate() {
+            for record in &output.frame.records {
+                if let Record::ValueSet(v) = record {
+                    valueset_names
+                        .entry(v.hash.clone())
+                        .or_default()
+                        .extend(v.names.iter().map(|name| (rank[i], name.clone())));
+                }
+            }
+        }
+        let (outputs, records) = split_frames(outputs);
+        used = Some((outputs, valueset_names, digests));
+        Ok(records)
+    };
     let mut applied = curation::run(
         &args.curation,
         &retired,
         &statements,
-        &outputs,
+        &mut read,
         false,
         &[],
         base,
     )?;
-    timing::done("apply curation", t);
+    timing::done("read inputs and apply curation", t);
+    let (outputs, valueset_names, digests) = used.expect("curation read the inputs");
     let t = std::time::Instant::now();
     if !args.release {
         for finding in &applied.findings {
@@ -385,19 +475,7 @@ fn build_with_provenance(
     let mut inputs = Vec::new();
     let mut warnings = Vec::new();
     warnings.extend(applied.findings.iter().cloned());
-    for (input, output) in manifest.input.iter().zip(&outputs) {
-        // A release asset is its pin (the reader verified it); its locators name
-        // archive members, not files under the inputs root.
-        let (sha256, bytes) = match (&input.release, &input.sha256) {
-            (Some(_), Some(pin)) => {
-                let path = input.locate(&args.inputs, args.assets.as_deref())?;
-                let len = std::fs::metadata(&path)
-                    .map_err(|e| format!("{}: {e}", path.display()))?
-                    .len();
-                (pin.clone(), i64::try_from(len)?)
-            }
-            _ => digest(&args.inputs, &output.files.iter().cloned().collect())?,
-        };
+    for ((input, output), (sha256, bytes)) in manifest.input.iter().zip(&outputs).zip(digests) {
         inputs.push(emit::InputRow {
             name: input.name.clone(),
             repo: manifest.repo.clone(),
@@ -411,13 +489,6 @@ fn build_with_provenance(
         });
         warnings.extend(output.warnings.iter().cloned());
     }
-    // Input ids follow name order; frames keep manifest order.
-    let mut order: Vec<usize> = (0..inputs.len()).collect();
-    order.sort_by(|&a, &b| inputs[a].name.cmp(&inputs[b].name));
-    let mut rank = vec![0; inputs.len()];
-    for (r, &i) in order.iter().enumerate() {
-        rank[i] = r;
-    }
     let mut file_input = BTreeMap::new();
     for (i, output) in outputs.iter().enumerate() {
         for file in &output.files {
@@ -425,56 +496,7 @@ fn build_with_provenance(
         }
     }
 
-    // Preserve each reader's attribution even when two manifest inputs read the
-    // same file. Curation adds no synthetic manifest inputs.
-    let mut valueset_names = BTreeMap::<String, BTreeSet<(usize, String)>>::new();
-    for (i, output) in outputs.iter().enumerate() {
-        for record in &output.frame.records {
-            if let Record::ValueSet(v) = record {
-                valueset_names
-                    .entry(v.hash.clone())
-                    .or_default()
-                    .extend(v.names.iter().map(|name| (rank[i], name.clone())));
-            }
-        }
-    }
-
-    // Register handles only: a name collision check reads them (#2196 dropped the
-    // per-register record copies nothing read).
-    let mut registers: BTreeSet<(String, String)> = BTreeSet::new();
-    let mut valuesets = BTreeMap::new();
-    // Links and notices cross registers: the link stage reads them, not resolve. So do
-    // documents, which are merged by hash first.
-    let mut links = Vec::new();
-    let mut docs = Vec::new();
-    for record in &applied.records {
-        let key = match record {
-            Record::Link(_) | Record::Notice(_) => {
-                links.push(record.clone());
-                continue;
-            }
-            Record::Doc(d) => {
-                docs.push(d.clone());
-                continue;
-            }
-            Record::Register(r) => (r.provider.clone(), r.register.clone()),
-            Record::Table(t) => (t.provider.clone(), t.register.clone()),
-            Record::Release(r) => (r.provider.clone(), r.register.clone()),
-            Record::Occurrence(o) => (o.provider.clone(), o.register.clone()),
-            Record::ValueSet(v) => {
-                let entry = valuesets
-                    .entry(v.hash.clone())
-                    .or_insert_with(|| (v.clone(), BTreeSet::new()));
-                if let Some(names) = valueset_names.get(&v.hash) {
-                    entry.1.extend(names.iter().cloned());
-                }
-                continue;
-            }
-        };
-        registers.insert(key);
-    }
-
-    timing::done("digest and group", t);
+    timing::done("digest", t);
     let t = std::time::Instant::now();
     let precomputed = applied.resolved.take();
     let mut resolved = curation::complete_findings(
@@ -487,6 +509,44 @@ fn build_with_provenance(
     )
     .map_err(|e| curation::after_refusals(&applied.refusals, e))?;
     timing::done("resolve", t);
+    // Register handles only: a name collision check reads them (#2196 dropped the
+    // per-register record copies nothing read). The curated records' last reader was
+    // resolve, so they move into these groups rather than being copied.
+    let t = std::time::Instant::now();
+    let mut registers: BTreeSet<(String, String)> = BTreeSet::new();
+    let mut valuesets = BTreeMap::new();
+    // Links and notices cross registers: the link stage reads them, not resolve. So do
+    // documents, which are merged by hash first.
+    let mut links = Vec::new();
+    let mut docs = Vec::new();
+    for record in std::mem::take(&mut applied.records) {
+        let key = match record {
+            Record::Link(_) | Record::Notice(_) => {
+                links.push(record);
+                continue;
+            }
+            Record::Doc(d) => {
+                docs.push(d);
+                continue;
+            }
+            Record::Register(r) => (r.provider, r.register),
+            Record::Table(t) => (t.provider, t.register),
+            Record::Release(r) => (r.provider, r.register),
+            Record::Occurrence(o) => (o.provider, o.register),
+            Record::ValueSet(v) => {
+                let names = valueset_names.get(&v.hash);
+                let entry = valuesets
+                    .entry(v.hash.clone())
+                    .or_insert_with(|| (v, BTreeSet::new()));
+                if let Some(names) = names {
+                    entry.1.extend(names.iter().cloned());
+                }
+                continue;
+            }
+        };
+        registers.insert(key);
+    }
+    timing::done("group", t);
     if base.is_none() {
         steward_names::ids(&args.curation, &resolved)?;
     }
@@ -724,7 +784,7 @@ fn build_with_provenance(
         findings::refuse_alias(path, &others)?;
         findings::write(&catalog, path)?;
     }
-    emit::write(&catalog, &args.out)
+    emit::write(catalog, &args.out)
 }
 
 fn lock(args: &Args) -> Result<()> {
@@ -738,12 +798,11 @@ fn lock(args: &Args) -> Result<()> {
     let tags = sets::vocabulary(&args.curation)?;
     sets::statements(&tags, &statements)?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
-    let outputs = read_all(args, &manifest)?;
     let applied = curation::run(
         &args.curation,
         &retired,
         &statements,
-        &outputs,
+        &mut || Ok(split_frames(read_all(args, &manifest)?).1),
         true,
         &args.registers,
         base.as_ref(),

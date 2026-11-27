@@ -276,9 +276,13 @@ fn application_record(record: &Record, provider: &str, register: &str, hash: Opt
 /// A structural stage's records, indexed by `application_record`'s keys: a statement's
 /// register coordinates and its code list. Replacing a statement's records leaves
 /// tombstones and appends, so `into_records` keeps the order of a `retain` then `extend`
-/// over the whole record list, without scanning it per statement (#2196).
+/// over the whole record list, without scanning it per statement (#2196). A tombstone
+/// costs a whole `Record` slot, so `replace` compacts once tombstones outnumber live
+/// records: a large register with many statements otherwise grows the list by gigabytes.
+#[derive(Default)]
 struct Slots {
     records: Vec<Option<Record>>,
+    live: usize,
     coordinates: BTreeMap<(String, String), Vec<usize>>,
     value_sets: BTreeMap<String, Vec<usize>>,
 }
@@ -287,6 +291,7 @@ impl Slots {
     fn new(records: Vec<Record>) -> Self {
         let mut slots = Self {
             records: Vec::with_capacity(records.len()),
+            live: 0,
             coordinates: BTreeMap::new(),
             value_sets: BTreeMap::new(),
         };
@@ -303,6 +308,7 @@ impl Slots {
                 self.value_sets.entry(v.hash.clone()).or_default().push(at);
             }
             self.records.push(Some(record));
+            self.live += 1;
         }
     }
 
@@ -335,6 +341,7 @@ impl Slots {
     fn replace(&mut self, provider: &str, register: &str, hash: Option<&str>, by: Vec<Record>) {
         for at in self.positions(provider, register, hash) {
             self.records[at] = None;
+            self.live -= 1;
         }
         self.coordinates
             .remove(&(provider.to_owned(), register.to_owned()));
@@ -342,6 +349,9 @@ impl Slots {
             self.value_sets.remove(hash);
         }
         self.extend(by);
+        if self.records.len() - self.live > self.live {
+            *self = Self::new(std::mem::take(self).into_records());
+        }
     }
 
     fn into_records(self) -> Vec<Record> {
@@ -371,12 +381,61 @@ fn ledger(
 }
 
 /// One curation stage's reference lookups: each provider's source registers with their
-/// ledgers, in record order, and each source register's view. Valid while the stage's
-/// records, shared sources and variable assignments stay unchanged (#2196).
+/// ledgers, in record order, and the premises resolved from them. Valid while the
+/// stage's records, shared sources and variable assignments stay unchanged (#2196).
 #[derive(Default)]
 struct ReferenceCache {
     ledgers: BTreeMap<String, Vec<(String, reg_resolve::Ledger)>>,
-    views: BTreeMap<(String, String), reg_resolve::curation::ReferenceView>,
+    premises: ReferencePremises,
+}
+
+type ReferencePremise = Result<Vec<reg_resolve::curation::SourcePremise>, String>;
+
+/// Each resolved reference premise by source register and variable. Only the last source
+/// register's view is kept: a view serializes the whole register, and the relations
+/// stage references most registers, so keeping every view held gigabytes
+/// (crates/DESIGN.md, "Builder memory").
+#[derive(Default)]
+struct ReferencePremises {
+    view: Option<((String, String), reg_resolve::curation::ReferenceView)>,
+    resolved: BTreeMap<(String, String, Option<String>), ReferencePremise>,
+}
+
+impl ReferencePremises {
+    /// `own` is the source register's records.
+    fn premise(
+        &mut self,
+        (provider, source): (&str, &str),
+        variable: Option<&str>,
+        own: impl Fn() -> Vec<Record>,
+        ledger: &reg_resolve::Ledger,
+        shared: &reg_resolve::curation::SharedSources,
+        variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
+    ) -> ReferencePremise {
+        let key = (
+            provider.to_owned(),
+            source.to_owned(),
+            variable.map(str::to_owned),
+        );
+        if let Some(premise) = self.resolved.get(&key) {
+            return premise.clone();
+        }
+        let register = (key.0.clone(), key.1.clone());
+        if self.view.as_ref().is_none_or(|(at, _)| *at != register) {
+            self.view = None;
+            let view = reg_resolve::curation::ReferenceView::new(&own(), ledger, shared);
+            self.view = Some((register, view));
+        }
+        let (_, view) = self.view.as_mut().expect("the view just built");
+        let premise = match variable {
+            Some(_) if !view.has_variables() => view
+                .with_variables(&own(), ledger, variables)
+                .and_then(|()| view.premise(variable)),
+            variable => view.premise(variable),
+        };
+        self.resolved.insert(key, premise.clone());
+        premise
+    }
 }
 
 /// Catalog references resolve through each register's ledger, then snapshot source
@@ -472,19 +531,14 @@ fn references(
                     .cloned()
                     .collect::<Vec<_>>()
             };
-            let view = cache
-                .views
-                .entry((provider.clone(), source.clone()))
-                .or_insert_with(|| {
-                    reg_resolve::curation::ReferenceView::new(&own(), ledger, shared)
-                });
-            let premise = match variable.as_deref() {
-                Some(_) if !view.has_variables() => view
-                    .with_variables(&own(), ledger, variables)
-                    .and_then(|()| view.premise(variable.as_deref())),
-                variable => view.premise(variable),
-            };
-            matches.push(premise);
+            matches.push(cache.premises.premise(
+                (&provider, source),
+                variable.as_deref(),
+                own,
+                ledger,
+                shared,
+                variables,
+            ));
         }
         if let [Ok(premise)] = &matches[..] {
             references.insert(object.clone(), premise.clone());
@@ -1256,9 +1310,14 @@ const COORDINATE_FIELDS: [&str; 8] = [
     "kind", "provider", "register", "table", "release", "spelling", "key", "period",
 ];
 
+/// One shared map per distinct coordinate projection, by its canonical line.
+type Coordinates = BTreeMap<String, std::sync::Arc<BTreeMap<String, serde_json::Value>>>;
+
 /// A premise reduced to its subjects' locators and coordinate fields. Absent fields stay
-/// absent, and subjects that shared one field map still share one.
-fn coordinate_premise(premise: Premise) -> Premise {
+/// absent, and equal projections share one map across statements (`interned`): field
+/// stages accept ~150k statements over ~2M subjects on the real seed, mostly the same
+/// occurrences (crates/DESIGN.md, "Builder memory").
+fn coordinate_premise(premise: Premise, interned: &mut Coordinates) -> Premise {
     type Fields = std::sync::Arc<BTreeMap<String, serde_json::Value>>;
     // Keyed by the source map's address; the entry holds the source `Arc`, so that
     // address cannot be freed and reused while projecting.
@@ -1277,7 +1336,10 @@ fn coordinate_premise(premise: Premise) -> Premise {
                             subject.fields.get(key).map(|v| (key.to_owned(), v.clone()))
                         })
                         .collect::<BTreeMap<_, _>>();
-                    (subject.fields.clone(), std::sync::Arc::new(fields))
+                    let shared = interned
+                        .entry(reg_frame::canonical_line(&fields))
+                        .or_insert_with(|| std::sync::Arc::new(fields));
+                    (subject.fields.clone(), shared.clone())
                 });
             reg_resolve::curation::SourcePremise {
                 locator: subject.locator,
@@ -1386,24 +1448,57 @@ fn checked_premise(
     }
 }
 
+/// One curation pass: the curated result, or the statements a refusal drops before the
+/// next pass.
+enum Pass {
+    Done(Box<Applied>),
+    Rerun {
+        refused: BTreeSet<String>,
+        refusals: Vec<Refusal>,
+    },
+}
+
+/// Curate the records `read` returns. Refused statements contribute neither facts nor
+/// provenance: the stages run again without them, on records read again, carrying the
+/// refusals and their skipped-statement findings. Each pass is dropped before the next
+/// read, so a rerun holds one corpus, and curation keeps no untouched copy of the records
+/// (crates/DESIGN.md, "Builder memory").
+#[allow(clippy::too_many_arguments)]
 pub(super) fn run(
     root: &Path,
     retired: &[crate::retired::Retired],
     statements: &[LocatedStatement],
-    outputs: &[reg_readers::ReadOutput],
+    read: &mut dyn FnMut() -> Result<Vec<Record>>,
     record: bool,
     registers: &[String],
     base: Option<&crate::external::Context>,
 ) -> Result<Applied> {
-    let mut applied = run_selected(
-        root,
-        retired,
-        &statements.iter().collect::<Vec<_>>(),
-        outputs,
-        record,
-        registers,
-        base,
-    )?;
+    let mut statements = statements.iter().collect::<Vec<_>>();
+    // Each rerun's skipped-statement findings and refusals, in pass order. An error in a
+    // later pass reports the earlier refusals first.
+    let mut reruns: Vec<(Vec<String>, Vec<Refusal>)> = Vec::new();
+    let after = |reruns: &[(Vec<String>, Vec<Refusal>)], error| {
+        reruns.iter().rev().fold(error, |error, (_, refusals)| {
+            after_refusals(refusals, error)
+        })
+    };
+    let mut applied = loop {
+        let pass = read().and_then(|records| {
+            run_selected(root, retired, &statements, records, record, registers, base)
+        });
+        match pass.map_err(|e| after(&reruns, e))? {
+            Pass::Done(applied) => break *applied,
+            Pass::Rerun { refused, refusals } => {
+                let skipped = refusal_findings(&refusals, record).map_err(|e| after(&reruns, e))?;
+                statements.retain(|s| !refused.contains(&publication_identity(s)));
+                reruns.push((skipped, refusals));
+            }
+        }
+    };
+    for (skipped, refusals) in reruns.into_iter().rev() {
+        applied.findings.extend(skipped);
+        applied.refusals.extend(refusals);
+    }
     applied.refusals.sort();
     applied.refusals.dedup();
     Ok(applied)
@@ -1417,31 +1512,14 @@ fn run_selected(
     root: &Path,
     retired: &[crate::retired::Retired],
     statements: &[&LocatedStatement],
-    outputs: &[reg_readers::ReadOutput],
+    mut records: Vec<Record>,
     record: bool,
     registers: &[String],
     base: Option<&crate::external::Context>,
-) -> Result<Applied> {
-    // Refused statements contribute neither facts nor provenance: the stages run again
-    // without them, carrying the refusals and their skipped-statement findings.
-    let rerun_without = |refused: &dyn Fn(&LocatedStatement) -> bool, refusals: Vec<Refusal>| {
-        let skipped = refusal_findings(&refusals, record)?;
-        let retained = statements
-            .iter()
-            .copied()
-            .filter(|s| !refused(s))
-            .collect::<Vec<_>>();
-        let mut rerun = run_selected(root, retired, &retained, outputs, record, registers, base)
-            .map_err(|e| after_refusals(&refusals, e))?;
-        rerun.findings.extend(skipped);
-        rerun.refusals.extend(refusals);
-        Ok::<_, crate::error::Error>(rerun)
-    };
+) -> Result<Pass> {
+    let rerun_without =
+        |refused: BTreeSet<String>, refusals: Vec<Refusal>| Ok(Pass::Rerun { refused, refusals });
     let t = std::time::Instant::now();
-    let mut records = outputs
-        .iter()
-        .flat_map(|o| o.frame.records.iter().cloned())
-        .collect::<Vec<_>>();
     let mut result = inventory(root, &records)?;
     crate::timing::done("curation inventory", t);
     let mut evaluated: Vec<(&LocatedStatement, Premise)> = Vec::new();
@@ -1459,6 +1537,7 @@ fn run_selected(
     let mut conflicts = BTreeSet::new();
     let mut locks = BTreeMap::new();
     let mut premises = BTreeMap::<_, BTreeMap<_, _>>::new();
+    let t = std::time::Instant::now();
     for (provider, register) in groups.keys() {
         let name = format!("{provider}/{register}");
         selected.insert(name.clone());
@@ -1469,7 +1548,9 @@ fn run_selected(
         let old = previous(&path, record)?;
         locks.insert((provider, register), (path, ledger, old));
     }
+    crate::timing::done("curation ledgers and locks", t);
     let mut conflict_overrides = None;
+    let mut interned = Coordinates::new();
     for stage in [
         Phase::Parents,
         Phase::Coverage,
@@ -1572,7 +1653,7 @@ fn run_selected(
                 }
                 // Views resolved variables under the old assignments.
                 if result.variables.len() != assigned {
-                    reference_cache.views.clear();
+                    reference_cache.premises = ReferencePremises::default();
                 }
             }
             let content = group.iter().map(|s| &s.statement).collect::<Vec<_>>();
@@ -1654,7 +1735,7 @@ fn run_selected(
                 // A build applies field-stage statements from `field_applications`, so
                 // later readers need only each subject's coordinates (#2196).
                 let premise = if fields_stage && !record {
-                    coordinate_premise(resolved.premise)
+                    coordinate_premise(resolved.premise, &mut interned)
                 } else {
                     resolved.premise
                 };
@@ -1679,6 +1760,8 @@ fn run_selected(
                 )?;
             }
         }
+        // The evaluation indexes end with the group loop; the applications below can peak.
+        drop((locators, shared, reference_cache));
         accepted.sort_by_cached_key(|(s, ..)| {
             use reg_frame::statement::{AssertFact, Statement};
             let dependency = match &s.statement {
@@ -1809,7 +1892,7 @@ fn run_selected(
                         Refusal::scoped(statement, format!("{}: {e}", location(statement)));
                     refusals.push(refusal);
                     let refused = publication_identity(statement);
-                    return rerun_without(&|s| publication_identity(s) == refused, refusals);
+                    return rerun_without(BTreeSet::from([refused]), refusals);
                 }
             };
             result.sets.extend(applied.sets);
@@ -1834,6 +1917,13 @@ fn run_selected(
                     LockedPremise::new(statement, &premise),
                 );
             }
+            // Past this point a build reads only each subject's coordinates (the conflict,
+            // collision and assignment checks), as for the field stages above.
+            let premise = if record || fields_stage {
+                premise
+            } else {
+                coordinate_premise(premise, &mut interned)
+            };
             evaluated.push((statement, premise));
             if !applied.changes.is_empty() {
                 result.statements.push(statement_row(root, statement)?);
@@ -2006,10 +2096,10 @@ fn run_selected(
             let refused = linked
                 .refusals
                 .iter()
-                .map(|(hash, _)| hash)
+                .map(|(hash, _)| hash.clone())
                 .collect::<BTreeSet<_>>();
             refusals.extend(messages);
-            return rerun_without(&|s| refused.contains(&publication_identity(s)), refusals);
+            return rerun_without(refused, refusals);
         }
         result.linked = Some(linked);
         result.resolved = Some(resolved);
@@ -2105,7 +2195,7 @@ fn run_selected(
             "reg-build: timing curation rerun after {} conflicts",
             conflicts.len()
         );
-        return rerun_without(&|s| conflicts.contains(&publication_identity(s)), refusals);
+        return rerun_without(conflicts, refusals);
     }
 
     if !result.sets.is_empty()
@@ -2155,7 +2245,7 @@ fn run_selected(
                 "reg-build: timing curation rerun after {} presentation refusals",
                 refused.len()
             );
-            return rerun_without(&|s| refused.contains(&publication_identity(s)), refusals);
+            return rerun_without(refused, refusals);
         }
     }
     // The set minimum, on the final memberships. It runs here so that `lock` refuses
@@ -2270,7 +2360,7 @@ fn run_selected(
     }
     result.findings = findings;
     result.records = records;
-    Ok(result)
+    Ok(Pass::Done(Box::new(result)))
 }
 
 /// The complete review surface for publication.
@@ -2340,14 +2430,13 @@ pub(super) fn resolve_catalog(
         let Some((provider, register, _)) = coordinates(record) else {
             continue;
         };
-        groups
-            .entry((provider, register))
-            .or_default()
-            .push(record.clone());
+        groups.entry((provider, register)).or_default().push(record);
     }
+    // One register's copy at a time, not a second copy of every record.
     groups
         .into_iter()
         .map(|((provider, register), source)| {
+            let source = source.into_iter().cloned().collect::<Vec<_>>();
             let ledger = ledger(root, provider, register, retired)?;
             let mut resolved =
                 reg_resolve::resolve(&source, &ledger, &sets, variables, classifications)?;

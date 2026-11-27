@@ -259,7 +259,7 @@ fn write_provenance(
 ///
 /// # Errors
 /// A SQLite failure, or a post-write check that returns rows.
-pub fn write(catalog: &Catalog, out: &Path) -> Result<()> {
+pub fn write(catalog: Catalog, out: &Path) -> Result<()> {
     let name = out
         .file_name()
         .map_or_else(String::new, |n| n.to_string_lossy().into_owned());
@@ -295,7 +295,7 @@ pub(crate) fn staged_into(
 }
 
 #[allow(clippy::too_many_lines)]
-fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
+fn stage(mut catalog: Catalog, scratch: &Path, staged: &Path) -> Result<()> {
     let mut rows = Rows::default();
     let statement_id = sorted_ids(catalog.statements.iter().map(|s| s.hash.as_str()));
     let mut external = catalog.external_relations.clone();
@@ -1268,7 +1268,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
         );
         for (ord, section) in doc.sections.iter().enumerate() {
             let section_id = id(sections.len());
-            sections.push(section);
+            sections.push(section.clone());
             rows.push(
                 "doc_section",
                 vec![
@@ -1315,7 +1315,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
     }
 
     let search = crate::search::items(
-        catalog,
+        &catalog,
         &crate::search::Ids {
             register: &register_id,
             table: &table_id,
@@ -1396,6 +1396,11 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
         );
     }
 
+    // The rows and search items now hold everything written below but the retired ids;
+    // the catalog's last reader is done, and the SQLite phase peaks (crates/DESIGN.md,
+    // "Builder memory").
+    let retired = std::mem::take(&mut catalog.retired);
+    drop(catalog);
     // Write.
     for path in [scratch, staged] {
         if path.exists() {
@@ -1437,12 +1442,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 })
         })
         .collect();
-    for retired in &catalog.retired {
+    for retired in &retired {
         if live.contains(retired.pid.as_str()) {
             return Err(retired.live_error().into());
         }
     }
-    for retired in &catalog.retired {
+    for retired in &retired {
         rows.push(
             "ident_retired",
             vec![

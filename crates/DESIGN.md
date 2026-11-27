@@ -781,6 +781,36 @@ release assets are left unchanged.
 - The period grammar, interval algebra and text folds come from `reg-core`, as
   everything else does ("One implementation per contract").
 
+**Builder memory.** A release build must fit a 14 GiB machine with headroom; the real
+seed peaks near 10 GiB, against a catalog of ~670 MB. The source records are about
+1 GiB and are not the problem: what pushed past 14 GiB were copies and serializations of
+them that outlived their reader. The rule: **one copy of the records is alive, and
+anything derived from all of them lives no longer than its phase.**
+
+- **One copy of the source records.** Curation owns the records it rewrites; it keeps no
+  untouched copy for a rerun after a refusal and reads the inputs again instead
+  (`split_frames`). The reader output is copied once on the main thread, so it sits
+  densely and the readers' scratch is returned. Curated records move into the emit
+  groups after their last reader, and the catalog is dropped before the SQLite phase.
+- **No whole-catalog JSON.** Statement evaluation sees sources as JSON field maps. A
+  value set's items stay typed beside them (`Source::items`, presented through
+  `field`/`field_names`); a reference view of a register lives only while its
+  references resolve, and resolved premises are cached instead. An accepted premise
+  keeps only its subjects' coordinate fields in a build, shared across statements.
+- **Bounded scratch.** A structural stage's tombstones are compacted once they
+  outnumber live records; `resolve_catalog` copies one register at a time; a stage's
+  evaluation indexes are dropped before its applications run.
+- **mimalloc.** glibc malloc kept the parallel readers' freed memory resident in
+  per-thread arenas, about 5 GiB the main thread could not reuse; mimalloc returns it.
+- **Measure, don't guess.** `reg-build: timing` lines carry the resident set and its peak
+  (Linux), so a real-seed build shows which phase grew.
+- **The emitter is the peak.** Its rows (~4 GiB on the real seed, each cell an owned
+  copy) sit beside the catalog until all are built, since text ids need every row
+  first; cells borrowed from the catalog are the next cut if the seed outgrows the box.
+- **`lock` does not fit yet.** Lock mode keeps every accepted premise whole, since it
+  writes them; on the real seed it passes 13 GiB in the Fields stage. Locking runs
+  where memory allows (the maintainer's machine) until its premises are bounded too.
+
 **Frames and readers.**
 
 - **Days.** Readers, frames and resolve work in inclusive ISO days through `reg-core`'s
