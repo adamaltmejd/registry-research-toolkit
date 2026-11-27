@@ -3381,7 +3381,8 @@ checks nothing below. It never authors an entry from the census. The checks:
   - Row keys: a declared `[[table.key]]` whose census shows duplicate or null key rows.
   - Coverage: a `[[packed]]` separator the census does not profile; a held object the
     census file does not list, or lists as failed or not reached; and a declared key the
-    census file has not checked, or checked on other columns (a key declared since the last run is checked on the next).
+    census file has not checked, or checked on other columns (a key declared since the
+    last run is checked on the next).
 - **Keys for the census.** The census checks each table's declared row key, so it must
   know the key's physical columns, which only the build resolves (a key names
   variables). The build report lists them per table (`census_keys`: schema, table,

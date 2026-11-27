@@ -478,8 +478,8 @@ columns are stored. Agents cannot run anything on MONA, so the coordinator runs 
 the answer on the console, and exports its CSV, which is why it counts only.
 
 **Superseded, planned.** `census.R` ("Census") replaces this script and is deleted with
-it when it ships. Its disclosure follows the census rule (2026-11-27; switched in its own
-PR). The census profiles views, so this section's "Base tables only" does not carry over.
+it when it ships. Its disclosure already follows the census rule ("Disclosure" below).
+The census profiles views, so this section's "Base tables only" does not carry over.
 
 - **A separate script, not an `extract.R` mode.** It reads no order and writes no
   extract; folding it in would add a second entry point to the runner. It shares only the
@@ -710,8 +710,7 @@ storage query ("Replaces").
 sections and its test, and with them #2667 and #2668's key-check items (#2668's
 schema-qualified selectors have no counterpart: the census takes no selectors). The
 census measures every column of every selected object with `key_check.R`'s measures,
-so a `[[lopnr]]` question needs no selectors and no rescan, and the int64 verdict is read
-from published zeros rather than from the console. It also writes the storage export,
+so a `[[lopnr]]` question needs no selectors and no rescan. It also writes the storage export,
 which until then is one SQL query a coordinator runs by hand.
 
 **Workflow per delivery.**
