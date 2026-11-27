@@ -18681,66 +18681,6 @@ evidence = "Identifier: Huvudsyssla, kontrollfråga, Arbetsgivarens nya namn nam
 
 [[statement]]
 kind = "set"
-subject = "var:kfam3a"
-fields.identifier = true
-evidence = "Identifier: Personnummer tillkommet barn 1 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
-
-[[statement]]
-kind = "set"
-subject = "var:kfam3b"
-fields.identifier = true
-evidence = "Identifier: Personnummer tillkommet barn 2 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
-
-[[statement]]
-kind = "set"
-subject = "var:kfam3c"
-fields.identifier = true
-evidence = "Identifier: Personnummer tillkommet barn 3 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
-
-[[statement]]
-kind = "set"
-subject = "var:kfam3d"
-fields.identifier = true
-evidence = "Identifier: Personnummer tillkommet barn 4 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
-
-[[statement]]
-kind = "set"
-subject = "var:kfam3e"
-fields.identifier = true
-evidence = "Identifier: Personnummer tillkommet barn 5 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
-
-[[statement]]
-kind = "set"
-subject = "var:kfam3f"
-fields.identifier = true
-evidence = "Identifier: Personnummer tillkommet barn 6 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
-
-[[statement]]
-kind = "set"
-subject = "var:kfam3g"
-fields.identifier = true
-evidence = "Identifier: Personnummer tillkommet barn 7 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
-
-[[statement]]
-kind = "set"
-subject = "var:kfam3h"
-fields.identifier = true
-evidence = "Identifier: Personnummer tillkommet barn 8 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
-
-[[statement]]
-kind = "set"
-subject = "var:kfam3i"
-fields.identifier = true
-evidence = "Identifier: Personnummer tillkommet barn 9 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
-
-[[statement]]
-kind = "set"
-subject = "var:kfam3j"
-fields.identifier = true
-evidence = "Identifier: Personnummer tillkommet barn 10 holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"När är barnen födda?\""
-
-[[statement]]
-kind = "set"
 subject = "var:namn-pa-person-vid-indirekt-intervju"
 fields.identifier = true
 evidence = "Identifier: Namn på person vid indirekt intervju is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på person vid indirekt intervju\""
