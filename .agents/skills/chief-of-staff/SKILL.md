@@ -103,7 +103,7 @@ question to the maintainer for regenerable output.
   worktree to confirm. A merged PR's worktree goes with its `target/` (Clean up). For a
   live worktree, delete `target/` only when its worker is idle and has been told. Never
   delete one written in the last hour (`find <dir> -type f -newermt <time>`).
-- `$TMPDIR` (`/home/pinfold/tmp`): remove your own scratch and stray copies of holdings
+- `/tmp`: remove your own scratch and stray copies of holdings
   files left by Codex reviews, once the review they served is done.
 - Steward clones live in `~/stewards/<name>`. Keep them clean and at the steward's
   `main`; a clone no release or review needs is removable.

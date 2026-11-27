@@ -86,10 +86,10 @@ job.
   `<rust>/openapi.json`.
 
 **Look at the pictures.** The first line `dev.sh` prints names the checkout, the full
-HEAD and the per-invocation shots directory under `$TMPDIR`, kept after teardown:
+HEAD and the per-invocation shots directory under `/tmp`, kept after teardown:
 
 ```
-dev: repo /path/to/checkout HEAD 0123456789abcdef… shots $TMPDIR/reg-webapp-shots.C8VNZN
+dev: repo /path/to/checkout HEAD 0123456789abcdef… shots /tmp/reg-webapp-shots.C8VNZN
 ```
 
 **`--fixture-db`** serves a deterministic synthetic catalog as `REG_META_DB`: current
@@ -118,7 +118,7 @@ bash reg_webapp/dev/dev.sh --db "$db_dir" shot <route>
   bash reg_webapp/dev/dev.sh ab open http://localhost:<port>/catalog/demo/bas
   bash reg_webapp/dev/dev.sh ab snapshot -i      # interactive elements with @refs
   bash reg_webapp/dev/dev.sh ab set viewport 375 812
-  bash reg_webapp/dev/dev.sh ab screenshot "$TMPDIR/bas-mobile.png"
+  bash reg_webapp/dev/dev.sh ab screenshot "/tmp/bas-mobile.png"
   bash reg_webapp/dev/dev.sh ab a11y             # axe audit of the current page
   bash reg_webapp/dev/dev.sh ab close
   ```

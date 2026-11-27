@@ -182,7 +182,7 @@ Skill bodies live in `.agents/skills/<name>/`; `.claude/skills/<name>` is a syml
 the body.
 
 The private inputs repository is checked out at `~/inputs`, steward repositories in
-`~/stewards/<name>`, and scratch goes in `$TMPDIR` (`/home/pinfold/tmp`).
+`~/stewards/<name>`, and scratch goes in `/tmp`.
 
 # Lint and test
 
