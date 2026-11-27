@@ -4,6 +4,7 @@
 
 pub mod apply;
 
+use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Arc;
 
@@ -72,6 +73,10 @@ pub struct ResolvedStatement {
 #[derive(Clone)]
 struct Source {
     fields: Arc<BTreeMap<String, Value>>,
+    /// A value set's `items` field, kept typed rather than in `fields`: as JSON objects
+    /// the real seed's items take ~5 GiB per phase (crates/DESIGN.md, "Builder memory").
+    /// Read through `field` and `field_names`, which present it as part of `fields`.
+    items: Option<Arc<[reg_frame::Item]>>,
     locators: Vec<Locator>,
     period: Option<Interval>,
 }
@@ -79,6 +84,22 @@ struct Source {
 impl Source {
     fn text(&self, name: &str) -> Option<&str> {
         self.fields.get(name).and_then(Value::as_str)
+    }
+
+    fn field(&self, name: &str) -> Option<Cow<'_, Value>> {
+        match &self.items {
+            Some(items) if name == "items" => Some(Cow::Owned(
+                serde_json::to_value(&**items).expect("items serialize"),
+            )),
+            _ => self.fields.get(name).map(Cow::Borrowed),
+        }
+    }
+
+    fn field_names(&self) -> impl Iterator<Item = &str> {
+        self.fields
+            .keys()
+            .map(String::as_str)
+            .chain(self.items.as_ref().map(|_| "items"))
     }
 }
 
@@ -144,6 +165,13 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                 unreachable!("record is an object")
             };
             let mut fields: BTreeMap<_, _> = value.into_iter().collect();
+            let items = match record {
+                Record::ValueSet(v) => {
+                    fields.remove("items");
+                    Some(Arc::from(v.items.as_slice()))
+                }
+                _ => None,
+            };
             for (target, source) in reg_frame::statement::RENAMED_FIELDS
                 .into_iter()
                 .chain([("key", "source_key")])
@@ -185,6 +213,7 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
             );
             Some(Source {
                 fields: Arc::new(fields),
+                items,
                 locators,
                 period,
             })
@@ -211,6 +240,7 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
             );
             sources.push(Source {
                 fields: Arc::new(fields),
+                items: None,
                 locators: source.locators.clone(),
                 period: source.period.clone(),
             });
@@ -596,7 +626,7 @@ fn field_equal(source: &Source, field: &str, expected: &Value) -> bool {
                     .is_some_and(|span| reg_core::merge(p.intervals()) == vec![span.clone()])
             })
     } else {
-        source.fields.get(field).unwrap_or(&Value::Null) == expected
+        source.field(field).as_deref().unwrap_or(&Value::Null) == expected
     }
 }
 
@@ -632,7 +662,7 @@ impl PremiseSnapshots {
                         .map(|f| {
                             (
                                 f.clone(),
-                                source.fields.get(f).cloned().unwrap_or(Value::Null),
+                                source.field(f).map_or(Value::Null, Cow::into_owned),
                             )
                         })
                         .collect(),
@@ -717,10 +747,7 @@ fn states_value_set(
             matches!(record, Record::ValueSet(set) if set.hash == hash && states(&set.items))
         }) || shared.sources.iter().any(|source| {
             source.text("hash") == Some(hash)
-                && states(
-                    &Vec::<reg_frame::Item>::deserialize(&source.fields["items"])
-                        .expect("a shared source is a serialized value set"),
-                )
+                && states(source.items.as_deref().expect("a shared source is a value set"))
         })
     })
 }
@@ -767,6 +794,7 @@ fn premise_source(premise: &SourcePremise) -> Source {
         });
     Source {
         fields: Arc::clone(&premise.fields),
+        items: None,
         locators: vec![premise.locator.clone()],
         period,
     }
@@ -935,6 +963,7 @@ pub fn applied_conflicts(
         }
         let source = Source {
             fields: Arc::new(fields),
+            items: None,
             locators: vec![claim.locator.clone()],
             period: claim.period.clone(),
         };
@@ -1171,10 +1200,9 @@ impl ReferenceView {
             .iter()
             .flat_map(|m| {
                 view[m.source]
-                    .fields
-                    .keys()
-                    .filter(|k| !matches!(k.as_str(), "locator" | "also"))
-                    .cloned()
+                    .field_names()
+                    .filter(|k| !matches!(*k, "locator" | "also"))
+                    .map(str::to_owned)
             })
             .collect();
         Ok(PremiseSnapshots::default().premise(&matches, view, &fields))
@@ -1471,7 +1499,7 @@ fn application_dependencies(
         .collect::<Vec<_>>();
     let fields = matches
         .iter()
-        .flat_map(|m| view[m.source].fields.keys().cloned())
+        .flat_map(|m| view[m.source].field_names().map(str::to_owned))
         .collect();
     Ok(snapshots.premise(&matches, view, &fields))
 }
@@ -1619,7 +1647,10 @@ pub fn resolve(
     } else {
         DependencyIndex::default()
     };
-    let all_fields: BTreeSet<_> = view.iter().flat_map(|s| s.fields.keys().cloned()).collect();
+    let all_fields: BTreeSet<_> = view
+        .iter()
+        .flat_map(|s| s.field_names().map(str::to_owned))
+        .collect();
     let evidence_fields: BTreeSet<_> = all_fields
         .iter()
         .filter(|k| !matches!(k.as_str(), "locator" | "also"))
