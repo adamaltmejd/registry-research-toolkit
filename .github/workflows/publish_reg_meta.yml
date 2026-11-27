@@ -57,7 +57,7 @@ jobs:
   # "Distribution"): `reg-meta` (Linux, the server a steward deploy runs), `reg-build`
   # (Linux for steward CI, macOS for local holdings checks), the export gate's
   # `reg-export-gate` (Linux, named by the gate crate's own version,
-  # crates/reg-export-gate/DESIGN.md) and `reg-mock` (every researcher platform), plus
+  # crates/reg-export-gate/DESIGN.md) and `reg-mock` (every researcher platform, including Linux arm64), plus
   # the SPA bundle a steward deploy serves (Linux leg; platform-independent). No
   # checksum files: consumers check GitHub's per-asset digest. Not gated on `wait-ci`:
   # the tagged commit already passed CI on main, and gating would skip the dispatch
@@ -77,6 +77,9 @@ jobs:
             target: x86_64-unknown-linux-gnu
             bins: reg-meta reg-build reg-export-gate reg-mock
             spa: true
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            bins: reg-mock
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             bins: reg-mock

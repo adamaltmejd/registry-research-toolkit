@@ -400,12 +400,12 @@ public.
 
 **Binaries.** The `binaries` job uploads `reg-meta-<target>` and
 `reg-export-gate-<gate version>-<target>` for `x86_64-unknown-linux-gnu`,
-`reg-build-<target>` for that and `aarch64-apple-darwin`, `reg-mock-<target>` for both
-and `x86_64-pc-windows-msvc` (`.exe`), and from the Linux leg the SPA bundle
-`reg-webapp-spa-X.Y.Z.tar.zst`: seven binaries and the bundle, with no checksum files
+`reg-build-<target>` for that and `aarch64-apple-darwin`, `reg-mock-<target>` for both,
+`aarch64-unknown-linux-gnu` and `x86_64-pc-windows-msvc` (`.exe`), and from the Linux leg the SPA bundle
+`reg-webapp-spa-X.Y.Z.tar.zst`: eight binaries and the bundle, with no checksum files
 (consumers check GitHub's per-asset digest; crates/DESIGN.md, "Distribution"). A
 steward repository downloads `reg-build`, `reg-meta` and the SPA bundle at its pinned
-tag; the MONA runner `extract.R` is read from the source at the tag. Confirm all eight:
+tag; the MONA runner `extract.R` is read from the source at the tag. Confirm all nine:
 
 ```sh
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name' |

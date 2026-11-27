@@ -22,7 +22,7 @@ catalog's answers, write the rules and compile them into `mock_spec.json`, gener
 
 ## 0. The binary and the catalog
 
-- `reg-mock` ships for macOS arm64, Linux x86_64 and Windows x86_64 on each
+- `reg-mock` ships for macOS arm64, Linux x86_64, Linux arm64 and Windows x86_64 on each
   `reg_meta/v*` GitHub release; the download and SHA-256 check are in the repository
   README's Mock data section. Use the release that matches `reg_meta_version` in
   `project_data.json`.

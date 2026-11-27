@@ -58,13 +58,14 @@ is a setting). SWECOV's catalog is also browsable at <https://data.swecov.se>.
 
 The `mock-data` skill generates local mock data shaped like a project's
 delivery with `reg-mock`. Each `reg_meta/v*` release carries it for macOS arm64
-(`aarch64-apple-darwin`), Linux x86_64 (`x86_64-unknown-linux-gnu`) and Windows x86_64
-(`x86_64-pc-windows-msvc`, asset `reg-mock-<target>.exe`). Download the binary for your
+(`aarch64-apple-darwin`), Linux x86_64 (`x86_64-unknown-linux-gnu`), Linux arm64
+(`aarch64-unknown-linux-gnu`) and Windows x86_64 (`x86_64-pc-windows-msvc`, asset
+`reg-mock-<target>.exe`). Download the binary for your
 platform and check it against the SHA-256 digest GitHub records for the asset:
 
 ```bash
 tag=reg_meta/vX.Y.Z
-target=aarch64-apple-darwin   # or x86_64-unknown-linux-gnu
+target=aarch64-apple-darwin   # or x86_64-unknown-linux-gnu, aarch64-unknown-linux-gnu
 gh release download "$tag" --repo adamaltmejd/registry-research-toolkit \
   --pattern "reg-mock-$target"
 gh release view "$tag" --repo adamaltmejd/registry-research-toolkit --json assets \
