@@ -163,22 +163,18 @@ entries) for int64 delivery, that every such key converts, and shows what the ot
 key-like columns (holders' own serials, `…id` columns) look like. It counts only; no
 value leaves the database.
 
-1. Upload `key_check.R` and the plugin's `cell_key.R` (version 0.2.0 or later, from the
-   `project-setup` skill's `scripts/`) to one folder on MONA, once. Upload them again only
-   when either changes. Keep that folder: the first run makes the salt file
-   `key_check.salt` in it, and every later run reuses it (see "What the CSV protects").
+1. Upload `key_check.R` to a folder on MONA.
 2. Edit the settings at the top of the script: `SCB_KEY_NAMES`, `SCB_KEY_PREFIXES` and
    `SCB_KEY_COLUMNS` as the steward's `[[lopnr]]` entries name them (exact names, name
    prefixes such as `P1234_LopNr_`, and one column of one table, the table by name in
    every schema; ASCII case ignored and physical names trimmed, as the holdings reader
    matches them; an empty entry stops the run with exit 2),
    `OTHER_KEY_PATTERNS` for the other key-like names, and optionally `SCHEMAS` and
-   `TABLE_PATTERN`. Only base tables are scanned, never views; don't widen the table
-   filter to tables derived from other scanned tables either.
+   `TABLE_PATTERN`. Only base tables are scanned, never views.
 3. Run it from that folder beside the steward's `extract-config.json` (only its `odbc`
    connection is used; the connection's database is the one checked): `Rscript
    key_check.R`, `R CMD BATCH key_check.R`, or `source("key_check.R")`. It installs DBI,
-   odbc, jsonlite and openssl when missing, as `extract.R` does.
+   odbc and jsonlite when missing, as `extract.R` does.
 4. A key selector that matches no column of any base table (before `SCHEMAS` and
    `TABLE_PATTERN` apply) stops the run with exit 2, naming the selector, as the
    holdings reader refuses an unused `[[lopnr]]`. If `SCHEMAS` and `TABLE_PATTERN` then
@@ -193,14 +189,15 @@ value leaves the database.
    `FAILED (SQLSTATE …)` and the driver's message in an error block that stays on MONA;
    the run goes on with the next table. The last line is `finished … exit N`: 0, 8 when
    any table failed or `key_check.csv` could not be written after the first table, 2 for
-   a setup failure (packages, configuration, `cell_key.R`, the salt file, a selector or
-   filters that match nothing, connection, the column listing, opening `key_check.csv`).
+   a setup failure (packages, configuration, a selector or filters that match nothing,
+   connection, the column listing, opening `key_check.csv`).
 
-The int64 conversion check is the answer: it uses the true counts, stays on MONA (the
-console or the batch run's `.Rout`) and is never written to the CSV. It is what
-`extract.R` needs to write a key as int64. A `.dta` order also refuses a key at or
-above 2^53 (9,007,199,254,740,992), which the check does not test; the console's
-lengths show whether any key has 16 or more digits, the only ones that can reach it.
+The int64 conversion check uses the true counts, stays on MONA (the console or the
+batch run's `.Rout`) and is never written to the CSV; the CSV's zeros give the same
+answer ("What the CSV protects"). It is what `extract.R` needs to write a key as
+int64. A `.dta` order also refuses a key at or above 2^53 (9,007,199,254,740,992),
+which the check does not test; the console's lengths show whether any key has 16 or
+more digits, the only ones that can reach it.
 
 It writes `key_check.csv` (in R's working directory) after every table: a few `#`
 comment lines, then one row per column with `schema`, `table`, `column`, `group`
@@ -229,31 +226,12 @@ key is possible: the console reports it as `CHANGES REPRESENTATION`, apart from 
 which is a value `extract.R` refuses.
 
 **What the CSV protects.** It holds names, SQL types and counts only, with no value, no
-minimum or maximum of values and no lengths. Every count, `rows` included, is perturbed
-by the toolkit's one disclosure method, the cell key method with the p-table in
-`cell_key.R` (`reg_export_gate/DESIGN.md`). No count from 1 to 4 is published, and a
-published 0 can stand for a true 0 to 5: a published zero does not establish that every
-key converted, though a positive count shows at least one failure. Read the console's
-check for the answer. Each count's noise follows from the salt and the true count
-alone:
-
-- the same true count gets the same noise wherever it appears, in any column or table
-  and on every rerun, so no set of published counts can be averaged: keep
-  `key_check.salt` and reuse it (the script refuses a malformed one, and a missing one while
-  `key_check.csv` exists: restore the salt, or remove the old CSV deliberately; a new salt
-  gives new noise, so do not export again under a new salt);
-- a count one higher gets an unrelated key, so two counts cannot be differenced.
-
-The noise is bounded (at most 5 either way, the p-table shared with the export gate),
-so related counts in one row can bound each other: with 1000 rows, 999 NULLs and one
-failing key, a reader can infer that the single non-NULL key fails. Pipeline output the
-export gate checks has the same property, and it is the method's accepted limit
-(maintainer ruling 2026-11-25). What can leak here is a technical property of a
-pseudonymised key value, not an attribute of a person.
-
-It does not protect counts of objects that overlap: a UNION ALL view's `nulls` beside
-its yearly tables' narrows each year's count. That is why views are not scanned and why
-the table filter must not take in derived copies of scanned tables. The salt file stays
-on MONA, never exported or printed. The CSV still goes through MONA's normal export
-review. The console's error block, like `extract.R`'s, may quote a value and stays on
-MONA.
+minimum or maximum of values and no lengths. Every count, `rows` included, is rounded up
+to the next multiple of 10, and a true 0 is published as 0 (maintainer ruling
+2026-11-27, #2680): 0 means none, 10 means 1 to 10. So a published 0 in `not_bigint`,
+`not_whole`, `beyond_exact`, `spaces` and `not_digits`, on a storage `extract.R` takes,
+establishes that no key fails: the console's answer. There is no cell key and no salt. The counts
+describe the shape of key values, not people. The research output that the export gate
+checks keeps the cell key (`reg_export_gate/DESIGN.md`). The CSV still goes through
+MONA's normal export review. The console's error block, like `extract.R`'s, may quote a
+value and stays on MONA.

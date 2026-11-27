@@ -9,15 +9,14 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 # in one SELECT: rows, nulls, values that do not convert to bigint, and the
 # storage-specific shapes that decide whether extract.R can write an SCB
 # lopnummer as int64. It writes key_check.csv: names, SQL types and counts only,
-# every count perturbed by the cell key method with the toolkit's p-table
-# (cell_key.R). No value leaves the database. The console, which stays on MONA,
-# holds the int64 conversion check on the true counts and each column's lengths.
+# every count rounded up to the next multiple of 10, a true 0 published as 0.
+# No value leaves the database. The console, which stays on MONA, holds the
+# int64 conversion check on the true counts and each column's lengths.
 #
 # Run: source("key_check.R") in R on MONA, `Rscript key_check.R`, or
 # `R CMD BATCH key_check.R`, beside the steward's extract-config.json (its
-# `odbc` connection only; REG_EXTRACT_CONFIG names another path) and the
-# plugin's cell_key.R (version 0.2.0 or later). Packages: base R (>= 4.2), DBI,
-# odbc, jsonlite and openssl, installed first when missing. Rationale:
+# `odbc` connection only; REG_EXTRACT_CONFIG names another path). Packages:
+# base R (>= 4.2), DBI, odbc and jsonlite, installed first when missing. Rationale:
 # reg_mona_runner/DESIGN.md, "Key check".
 #
 # This file is ASCII only: a non-ASCII name reaches SQL Server as NCHAR() code
@@ -41,21 +40,12 @@ OTHER_KEY_PATTERNS <- c("lopnr", "id$")
 
 # Optional filters: exact schema names (empty: every schema) and a regular
 # expression on the table name ("": every table). Only base tables are
-# scanned, never views: perturbed counts of overlapping objects (yearly tables
-# and their UNION ALL view) can be compared to narrow a small count. For the
-# same reason, do not widen the filter to tables derived from other scanned
-# tables.
+# scanned, never views.
 SCHEMAS <- character()
 TABLE_PATTERN <- ""
 
 # The output file, written in R's working directory unless a path is given.
 OUTPUT <- "key_check.csv"
-
-# The plugin's cell_key.R, uploaded beside this script, and the salt file: a
-# random secret made on the first run and reused after, so a rerun publishes
-# the same counts. It stays on MONA: never export, copy or print it.
-CELL_KEY_FILE <- "cell_key.R"
-SALT_FILE <- "key_check.salt"
 
 # ---- Constants ----------------------------------------------------------------------
 
@@ -261,7 +251,7 @@ clock_text <- function(seconds) {
 
 # ---- Packages and connection --------------------------------------------------------
 
-PACKAGES <- c("DBI", "odbc", "jsonlite", "openssl")
+PACKAGES <- c("DBI", "odbc", "jsonlite")
 
 # Same helper in reg_mona_runner/extract.R and reg_export_gate/export_gate.R:
 # each script is uploaded to MONA alone. Installs each package into R's default
@@ -527,106 +517,12 @@ FIELDS <- c("schema", "table", "column", "group", "sql_type", "status", COUNTS)
 
 # ---- Disclosure -----------------------------------------------------------------------
 
-# The salt: 32 random bytes as 64 hex digits on one line. Made on the first run
-# (from openssl's generator, never R's, so no seed reproduces it), written
-# owner-only and read back; afterwards read, and refused if malformed rather
-# than replaced, since a new salt gives every count new noise. Returns the salt
-# or a message, which main() prints on the setup path; never prints the salt.
-# A missing salt beside a surviving report `report` is refused too: a fresh salt
-# would give a re-export independent noise draws for the same counts.
-# simplify: no lock; one coordinator runs one batch job at a time, so two runs
-# never race to make the salt. Add a lock if runs are ever scheduled in parallel.
-read_salt <- function(path, report) {
-  valid <- function(lines) length(lines) == 1L && grepl("^[0-9a-f]{64}$", lines)
-  if (!file.exists(path) && file.exists(report)) {
-    return(paste0(
-      "salt file ", path, " is missing but the report ", report, " exists: restore the",
-      " salt from where it was kept (a new salt gives a re-export independent noise for",
-      " the same counts). Remove ", report, " to start over only if it was never exported;",
-      " if it was, restore the original salt before any re-export"
-    ))
-  }
-  if (!file.exists(path)) {
-    old_umask <- Sys.umask("077")
-    on.exit(Sys.umask(old_umask), add = TRUE)
-    tmp <- tempfile("salt_", tmpdir = dirname(path))
-    made <- tryCatch(
-      {
-        writeLines(paste(as.character(openssl::rand_bytes(32L)), collapse = ""), tmp)
-        valid(readLines(tmp, warn = FALSE)) && file.rename(tmp, path)
-      },
-      error = function(e) FALSE,
-      warning = function(w) FALSE
-    )
-    if (!made) {
-      unlink(tmp)
-      return(paste0("could not write the salt file ", path))
-    }
-    say("made a new salt file ", path, ": keep it on MONA for every later run")
-  }
-  lines <- tryCatch(readLines(path, warn = FALSE), error = function(e) character())
-  if (!valid(lines)) {
-    return(paste0(
-      "salt file ", path, " is not one line of 64 hex digits; restore it from where",
-      " it was kept (a new salt changes every published count)"
-    ))
-  }
-  lines
-}
-
-# The cell-key method (reg_export_gate/DESIGN.md; cell_key.R) with a cell key
-# per published count: HMAC-SHA256 under the salt of the true count alone, its
-# first 28 bits read mod 2^26, the resolution of cell_key.R's record keys. With
-# no record keys, keying on the count alone is the only choice that rules out
-# averaging: every cell with the same true count, in any column, table or run,
-# gets the same noise, so no set of published counts carries independent draws
-# of one count. A count one higher gets an unrelated key, so counts cannot be
-# differenced.
-cell_keys <- function(salt, n, modulus) {
-  hmac <- as.character(openssl::sha256(format(n, scientific = FALSE, trim = TRUE), key = salt))
-  (strtoi(substr(hmac, 1L, 7L), 16L) %% modulus) / modulus
-}
-
-# The published counts: each true count plus cell_key.R's ck_lookup() noise
-# (`disclosure`: salt, the sourced cell_key.R environment and its checked
-# p-table). A true 0 publishes 0 (the p-table's row 0), but so can a true 1 to
-# 5; no count from 1 to 4 is published. NA (does not apply) stays NA.
-perturb <- function(counts, disclosure) {
-  at <- !is.na(counts)
-  n <- counts[at]
-  counts[at] <- n + disclosure$ck$ck_lookup(
-    n,
-    cell_keys(disclosure$salt, n, disclosure$ck$CK_MODULUS),
-    disclosure$pt
-  )
-  counts
-}
-
-# Loads cell_key.R and makes or reads the salt: a list for perturb(), or a
-# message.
-load_disclosure <- function() {
-  if (!file.exists(CELL_KEY_FILE)) {
-    return(paste0("no ", CELL_KEY_FILE, ": upload the plugin's cell_key.R beside key_check.R"))
-  }
-  ck <- new.env()
-  loaded <- tryCatch(
-    {
-      sys.source(CELL_KEY_FILE, ck)
-      if (!exists("ck_lookup", ck, inherits = FALSE)) {
-        stop(CELL_KEY_FILE, " is older than 0.2.0: it has no ck_lookup()")
-      }
-      ck$ck_ptable()
-    },
-    error = function(e) e
-  )
-  if (inherits(loaded, "error")) {
-    return(paste0("cannot use ", CELL_KEY_FILE, ": ", conditionMessage(loaded)))
-  }
-  salt <- read_salt(SALT_FILE, OUTPUT)
-  if (!grepl("^[0-9a-f]{64}$", salt)) {
-    return(salt)
-  }
-  list(salt = salt, ck = ck, pt = loaded, version = ck$CELL_KEY_VERSION)
+# The published counts (maintainer ruling 2026-11-27, #2680): each true count
+# rounded up to the next multiple of 10, so a true 0 publishes 0 and 1 to 10
+# publish 10. A published 0 is exact. No cell key, no salt. NA
+# (does not apply) stays NA.
+publish_counts <- function(counts) {
+  ceiling(counts / 10) * 10
 }
 
 count_text <- function(n) {
@@ -664,16 +560,14 @@ append_lines <- function(lines, path, append = TRUE) {
   )
 }
 
-csv_header <- function(database, version) {
+csv_header <- function(database) {
   c(
     "# key_check.csv: counts of the shape of key-like columns, made by key_check.R.",
     paste0("# Database ", database, ", ", format(Sys.time(), "%Y-%m-%d %H:%M"), "."),
     paste0(
-      "# Aggregates only, no value. Every count is perturbed by the cell key method",
-      " (cell_key.R ", version, "): a published 0 can stand for a true 0 to 5, and 1 to 4",
-      " are never published. A published 0 does not establish that every key converts;",
-      " a positive count shows at least one failure. The int64 conversion check and the",
-      " lengths are on the run's console only, never here."
+      "# Aggregates only, no value. Every count is rounded up to the next multiple of 10:",
+      " a published 0 is a true 0, and 10 stands for 1 to 10. The int64 conversion check",
+      " and the lengths are on the run's console only, never here."
     ),
     "# Read: reg_mona_runner/README.md, \"Key check\". Skip lines starting with #.",
     paste(FIELDS, collapse = ",")
@@ -696,9 +590,9 @@ table_counts <- function(cols, result, slots) {
   values
 }
 
-# One table's CSV rows: the counts perturbed. A failed table (no values) has
+# One table's CSV rows: the counts rounded. A failed table (no values) has
 # its status and no counts.
-publish_rows <- function(cols, status, values = NULL, disclosure = NULL) {
+publish_rows <- function(cols, status, values = NULL) {
   rows <- data.frame(
     schema = cols$table_schema,
     table = cols$table_name,
@@ -707,7 +601,7 @@ publish_rows <- function(cols, status, values = NULL, disclosure = NULL) {
     sql_type = cols$data_type,
     status = status
   )
-  published <- if (!is.null(values)) perturb(values[, COUNTS, drop = FALSE], disclosure)
+  published <- if (!is.null(values)) publish_counts(values[, COUNTS, drop = FALSE])
   for (field in COUNTS) {
     rows[[field]] <- if (is.null(published)) "" else count_text(published[, field])
   }
@@ -743,7 +637,7 @@ conversion_verdict <- function(failures) {
 
 # ---- Main -----------------------------------------------------------------------------
 
-scan_table <- function(con, cols, disclosure) {
+scan_table <- function(con, cols) {
   label <- paste0(cols$table_schema[1], ".", cols$table_name[1])
   started <- Sys.time()
   batch <- tryCatch(
@@ -792,7 +686,7 @@ scan_table <- function(con, cols, disclosure) {
       values[j, "min_length"], " to ", values[j, "max_length"]
     )
   }
-  publish_rows(cols, "ok", values, disclosure)
+  publish_rows(cols, "ok", values)
 }
 
 main <- function() {
@@ -812,11 +706,6 @@ main <- function() {
   odbc <- read_odbc()
   if (is.character(odbc)) {
     say(odbc)
-    return(EXIT[["setup"]])
-  }
-  disclosure <- load_disclosure()
-  if (is.character(disclosure)) {
-    say(disclosure)
     return(EXIT[["setup"]])
   }
   con <- tryCatch(
@@ -882,7 +771,7 @@ main <- function() {
   write_failure <- function(message) {
     say("cannot write ", OUTPUT, ": ", message)
   }
-  problem <- append_lines(csv_header(setup$database, disclosure$version), OUTPUT, append = FALSE)
+  problem <- append_lines(csv_header(setup$database), OUTPUT, append = FALSE)
   if (!is.null(problem)) {
     write_failure(problem)
     return(EXIT[["setup"]])
@@ -893,7 +782,7 @@ main <- function() {
     mine <- cols[
       cols$table_schema == tables$table_schema[i] & cols$table_name == tables$table_name[i],
     ]
-    rows <- scan_table(con, mine, disclosure)
+    rows <- scan_table(con, mine)
     table_failed <- any(startsWith(rows$status, "failed"))
     failed <- failed + table_failed
     # Written after every table, so a long run that stops keeps what it counted.
