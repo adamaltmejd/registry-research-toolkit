@@ -1548,13 +1548,14 @@ fn stage(mut catalog: Catalog, scratch: &Path, staged: &Path) -> Result<()> {
 
 /// `ANALYZE` writes `sqlite_stat1` and `sqlite_stat4` in the order it walks the schema's
 /// table hash, which depends on the platform's allocator (macOS rounds allocation sizes
-/// up, Linux does not), so the same pins gave different bytes. Rewriting both in key
-/// order, with every column in the key so the order is total, makes the file
-/// platform-independent; the planner reads the same statistics.
+/// up, Linux does not), so the same pins gave different bytes. Rewriting both ordered by
+/// `tbl, idx` makes the file platform-independent. stat4 keeps ANALYZE's rowid order
+/// within an index: its samples are written in index-key order and SQLite binary-searches
+/// them in load order, so they must not be re-sorted by value.
 fn sort_stat_tables(db: &Connection) -> Result<()> {
     for (table, key) in [
-        ("sqlite_stat1", "tbl, idx, stat"),
-        ("sqlite_stat4", "tbl, idx, nlt, ndlt, neq, sample"),
+        ("sqlite_stat1", "tbl, idx"),
+        ("sqlite_stat4", "tbl, idx, rowid"),
     ] {
         let present: bool = db.query_row(
             "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE name = ?1)",
