@@ -272,6 +272,25 @@ fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOut
         .collect()
 }
 
+/// An input's SHA-256 and size for the input table. A release asset is its pin (the reader
+/// verified it); its locators name archive members, not files under the inputs root.
+fn input_digest(
+    args: &Args,
+    input: &reg_readers::Input,
+    output: &reg_readers::ReadOutput,
+) -> Result<(String, i64)> {
+    match (&input.release, &input.sha256) {
+        (Some(_), Some(pin)) => {
+            let path = input.locate(&args.inputs, args.assets.as_deref())?;
+            let len = std::fs::metadata(&path)
+                .map_err(|e| format!("{}: {e}", path.display()))?
+                .len();
+            Ok((pin.clone(), i64::try_from(len)?))
+        }
+        _ => digest(&args.inputs, &output.files.iter().cloned().collect()),
+    }
+}
+
 /// The inputs' records in manifest order, apart from what else each reader returned.
 /// Curation owns the records and reads the inputs again for a rerun after a refusal, so
 /// no second copy stays alive. The records are copied, not moved: a copy made on this
@@ -390,12 +409,34 @@ fn build_with_provenance(
         rank[i] = r;
     }
     // Curation reads the inputs once per pass. What the build reports beside the curated
-    // records (files, warnings, value-set names) comes from the same read as they do.
+    // records (digests, files, warnings, value-set names) comes from the same read as
+    // they do. A rerun keeps the statements refused against the first read, so an input
+    // that changed in between fails the build rather than mixing two states.
     let mut used = None;
+    let mut first: Option<Vec<(String, i64)>> = None;
     let mut read = || {
         let t = std::time::Instant::now();
         let outputs = read_all(args, &manifest)?;
         timing::done("read inputs", t);
+        let digests = manifest
+            .input
+            .iter()
+            .zip(&outputs)
+            .map(|(input, output)| input_digest(args, input, output))
+            .collect::<Result<Vec<_>>>()?;
+        let first = first.get_or_insert_with(|| digests.clone());
+        if let Some(input) = manifest
+            .input
+            .iter()
+            .zip(first.iter().zip(&digests))
+            .find_map(|(input, (a, b))| (a != b).then_some(input))
+        {
+            return Err(format!(
+                "{}: input-changed: the input changed between curation passes; rebuild",
+                input.name
+            )
+            .into());
+        }
         // Preserve each reader's attribution even when two manifest inputs read the
         // same file. Curation adds no synthetic manifest inputs.
         let mut valueset_names = BTreeMap::<String, BTreeSet<(usize, String)>>::new();
@@ -410,7 +451,7 @@ fn build_with_provenance(
             }
         }
         let (outputs, records) = split_frames(outputs);
-        used = Some((outputs, valueset_names));
+        used = Some((outputs, valueset_names, digests));
         Ok(records)
     };
     let mut applied = curation::run(
@@ -423,7 +464,7 @@ fn build_with_provenance(
         base,
     )?;
     timing::done("read inputs and apply curation", t);
-    let (outputs, valueset_names) = used.expect("curation read the inputs");
+    let (outputs, valueset_names, digests) = used.expect("curation read the inputs");
     let t = std::time::Instant::now();
     if !args.release {
         for finding in &applied.findings {
@@ -434,19 +475,7 @@ fn build_with_provenance(
     let mut inputs = Vec::new();
     let mut warnings = Vec::new();
     warnings.extend(applied.findings.iter().cloned());
-    for (input, output) in manifest.input.iter().zip(&outputs) {
-        // A release asset is its pin (the reader verified it); its locators name
-        // archive members, not files under the inputs root.
-        let (sha256, bytes) = match (&input.release, &input.sha256) {
-            (Some(_), Some(pin)) => {
-                let path = input.locate(&args.inputs, args.assets.as_deref())?;
-                let len = std::fs::metadata(&path)
-                    .map_err(|e| format!("{}: {e}", path.display()))?
-                    .len();
-                (pin.clone(), i64::try_from(len)?)
-            }
-            _ => digest(&args.inputs, &output.files.iter().cloned().collect())?,
-        };
+    for ((input, output), (sha256, bytes)) in manifest.input.iter().zip(&outputs).zip(digests) {
         inputs.push(emit::InputRow {
             name: input.name.clone(),
             repo: manifest.repo.clone(),
