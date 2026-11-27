@@ -2826,3 +2826,21 @@ kind = "set"
 subject = "set:provotidsperiod"
 fields = { "description" = "Början respektive slut på en treårig prövotid som HSAN kan besluta om för en legitimerad yrkesutövare." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nDe två medlemmarna är start- och slutdatum för samma prövotid.\ncatalog:variable_text:64012:9131:2932897\ncatalog:variable_text:64013:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "lova-ekonomi-arbetsmarknad: CFARNR where label = 'Arbetsställets CFAR-nummer'"
+fields.identifier = true
+evidence = "Identifier: CFARNR (Arbetsställets CFAR-nummer, delivered as Löpnummer som ersätter arbetsställets CFAR-nummer) is the workplace number or its löpnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Arbetsställets CFAR-nummer, unikt för arbetsställen med samma PEORGNR\""
+
+[[statement]]
+kind = "set"
+subject = "lova-ekonomi-arbetsmarknad: CFARNR where label = 'Löpnummer som ersätter arbetsställets CFAR-nummer'"
+fields.identifier = true
+evidence = "Identifier: CFARNR (Arbetsställets CFAR-nummer, delivered as Löpnummer som ersätter arbetsställets CFAR-nummer) is the workplace number or its löpnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Arbetsställets CFAR-nummer, unikt för arbetsställen med samma PEORGNR\""
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr-foretaget"
+fields.identifier = true
+evidence = "Identifier: Företagets organisationsnummer holds an organisation number; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets organisationsnummer\""

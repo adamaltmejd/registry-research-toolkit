@@ -1955,3 +1955,21 @@ kind = "set"
 subject = "set:belagenhetsadress"
 fields = { "description" = "Delar av belägenhetsadressen (besöksadressen): gata, gatunummer, bokstavsbeteckning, postnummer, postort och kompletterande specificering av gatudelen. För juridiska enheter med endast ett arbetsställe används adressinformation från Skatteverket. För företag med fler än ett arbetsställe samlas uppgiften in via undersökningen Kontroll av uppgifter i SCB:s Företagsdatabas." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är delar av belägenhetsadressen och delar insamlingssättet för adressuppgifter.\ncatalog:variable_text:18151:10592:20454\ncatalog:variable_text:18156:17897:20454\ncatalog:variable_text:18239:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:firma"
+fields.identifier = true
+evidence = "Identifier: Firmans namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namnet på firman som den fysiska personen har registrerat.\""
+
+[[statement]]
+kind = "set"
+subject = "var:namn-juridiska-enheten"
+fields.identifier = true
+evidence = "Identifier: Namn, juridiska enheten names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den juridiska enhetens officiella namn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:namnred"
+fields.identifier = true
+evidence = "Identifier: Redigerat namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på  firma\""

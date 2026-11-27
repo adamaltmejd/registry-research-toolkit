@@ -8766,3 +8766,9 @@ kind = "set"
 subject = "set:troskad-areal"
 fields = { "description" = "Tröskad areal för respektive kärn- och fröslag. En del av variablerna avser den ekologiska tröskade arealen, som är en delmängd av tröskad areal." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma mått per gröda; vissa medlemmar är därav-ekologisk, vilket etiketterna visar.\ncatalog:variable_text:49758:16801:19358\ncatalog:variable_text:49776:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-uppgiftslamnare"
+fields.identifier = true
+evidence = "Identifier: Namn på uppgiftslämnaren names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på uppgiftslämnaren\""

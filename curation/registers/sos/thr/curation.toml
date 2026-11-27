@@ -384,3 +384,21 @@ kind = "set"
 subject = "thr-tandhalsa-landsting: var:besoksdatum"
 fields.row_key = true
 evidence = "Row key: besoksdatum (BESOKSDATUMN) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:id"
+fields.identifier = true
+evidence = "Identifier: Mottagningens id-nummer names the care provider or care unit; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"10-siffrig kod\""
+
+[[statement]]
+kind = "set"
+subject = "var:mot-namn"
+fields.identifier = true
+evidence = "Identifier: Mottagningens namn names the care unit (mottagning); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Mottagningensnamn\""
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr"
+fields.identifier = true
+evidence = "Identifier: Vårdgivarens organisationsnummer holds the care provider's organisation number; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Mottagningens organisationsnummer 10-siffrig kod\""

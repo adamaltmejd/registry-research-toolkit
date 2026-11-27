@@ -2940,3 +2940,9 @@ kind = "set"
 subject = "set:upprakningsvikter"
 fields = { "description" = "Kalibrerade vikter som tar hänsyn till varierande urvalssannolikheter och svarsfrekvenser i olika strata samt till hjälpinformation från olika register. Variablerna skiljer sig åt i vilket urval eller vilka frågor vikten gäller." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är kalibrerade vikter med samma grundtext.\ncatalog:variable_text:30909:18078:18444\ncatalog:variable_text:30910:15156:15522\ncatalog:variable_text:30912:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:uenr"
+fields.identifier = true
+evidence = "Identifier: UENR is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"UENR - individuella id-nr\""

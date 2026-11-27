@@ -96481,3 +96481,15 @@ kind = "set"
 subject = "var:skattesats-koldioxidskatt-ovrco2sksats"
 fields = { "description" = "Skattesats för koldioxidskatt för övrigt bränsle, i ansökan om återbetalning för båt och skepp." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering.\ncatalog:variable_text:27017:13879:14245\ncatalog:variable_text:27017:16436:17167\ncatalog:variable_text:27017:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:id-nr-delagare"
+fields.identifier = true
+evidence = "Identifier: ID-nummer för delägaren holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"ID-nummer för delägaren\""
+
+[[statement]]
+kind = "set"
+subject = "var:id-nr-famansforetag"
+fields.identifier = true
+evidence = "Identifier: ID-nummer för fåmansföretaget holds an organisation number; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"ID-nummer för fåmansföretaget\""

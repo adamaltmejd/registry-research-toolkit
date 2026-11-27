@@ -3120,3 +3120,15 @@ kind = "set"
 subject = "set:studiernas-niva"
 fields = { "description" = "Nivån på personens studier: vilken utbildning personen har fått studiemedel för, nivån på studierna i vuxenutbildning inom Komvux, SSV eller CFL per termin och nivån enligt ISCED." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna beskriver nivån på studierna ur olika perspektiv; den lagrade texten för ISCED-variabeln behålls.\ncatalog:variable_text:48674:11323:20089\ncatalog:variable_text:48675:11323:11688\ncatalog:variable_text:48727:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-utbildningsanordnare"
+fields.identifier = true
+evidence = "Identifier: Namn på utbildningsanordnare names the school's principal organiser or the education provider, a municipality, region or firm; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Utbildningsanordnarens namn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:personens-namn"
+fields.identifier = true
+evidence = "Identifier: Personens namn is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på personen\""

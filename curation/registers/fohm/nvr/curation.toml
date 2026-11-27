@@ -128,3 +128,15 @@ kind = "assert"
 subject = "table:barnvaccinationer"
 fact = { entity = "table", fields = { name = "Barnvaccinationer", description = "Vaccinationer inom det nationella vaccinationsprogrammet för barn som registrerats i Nationella vaccinationsregistret, från 2013.", coverage = "2013.." } }
 evidence = "#2607 (long-COVID order trial, 2026-11-20): a project cannot order only the childhood vaccinations, because the register is one table and a steward holds them as their own file. FoHM's register description: 'Täckning: barnvaccinationer fr.o.m. 2013, covid-19 fr.o.m. 2021'.\ncatalog/source/transcriptions/fohm/registers.csv: nvr"
+
+[[statement]]
+kind = "set"
+subject = "var:vardenhet"
+fields.identifier = true
+evidence = "Identifier: Utförande vårdenhet names the care provider or care unit; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Vårdenhet som utförde vaccinationen.\""
+
+[[statement]]
+kind = "set"
+subject = "var:vardgivare"
+fields.identifier = true
+evidence = "Identifier: Ansvarig vårdgivare names the care provider or care unit; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Ansvarig vårdgivare (namn och organisationsnummer).\""

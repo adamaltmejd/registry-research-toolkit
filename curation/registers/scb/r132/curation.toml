@@ -1399,3 +1399,39 @@ kind = "set"
 subject = "set:inkopt-kvantitet"
 fields = { "description" = "Inköpt kvantitet avser kvantiteter som fakturerats av företag eller arbetsställen, även sådana inom det egna företaget eller den egna koncernen." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:39481:12418:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-namn"
+fields.identifier = true
+evidence = "Identifier: Företagets namn — Företagsnamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn enl FDB\""
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-namn-fnamn"
+fields.identifier = true
+evidence = "Identifier: Företagets namn — FNamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn enl FDB\""
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-1-kontaktperson1"
+fields.identifier = true
+evidence = "Identifier: Kontaktperson 1 — Kontaktperson1 is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Kontaktperson på redovisningsenheten. Föregående år, förprintat på blanketten\""
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-1-kpers1"
+fields.identifier = true
+evidence = "Identifier: Kontaktperson 1 — KPers1 is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Kontaktperson på redovisningsenheten. Föregående år, förprintat på blanketten\""
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-2-kontaktperson2"
+fields.identifier = true
+evidence = "Identifier: Kontaktperson 2 — Kontaktperson2 is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Kontaktperson hos arbetsstället, anges av uppgiftslämnaren\""
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson-2-kpers2"
+fields.identifier = true
+evidence = "Identifier: Kontaktperson 2 — KPers2 is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Kontaktperson hos arbetsstället, anges av uppgiftslämnaren\""

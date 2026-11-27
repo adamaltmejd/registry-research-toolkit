@@ -1000,3 +1000,9 @@ kind = "set"
 subject = "vagtrafikolyckor: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:regnr"
+fields.identifier = true
+evidence = "Identifier: Fordon, registreringsnummer is the vehicle's registration number; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Fordonets registreringsnummer\""

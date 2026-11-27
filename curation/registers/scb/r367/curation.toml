@@ -9452,3 +9452,9 @@ kind = "set"
 subject = "set:upplevd-tidsbrist"
 fields = { "description" = "Om individen upplever sig ha tidsbrist så att hen tvingas avstå från saker som hen skulle vilja göra på vardagarna. Uppgiften finns för urvalspersonen och för urvalspersonens partner." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är samma fråga om upplevd tidsbrist.\ncatalog:variable_text:52514:14791:15156\ncatalog:variable_text:52515:11139:11504"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer"
+fields.identifier = true
+evidence = "Identifier: Löpnummer is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer.\""

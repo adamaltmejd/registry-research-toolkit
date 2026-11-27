@@ -4702,3 +4702,9 @@ kind = "set"
 subject = "set:wc-standard"
 fields = { "description" = "Standarden på värderingsenhetens sanitetsutrustning, avseende om wc finns. Finns som variant för lantbruksenheter och för småhusenheter." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre variabler anger om wc finns; Standard, sanitet är den samlande variabeln för sanitetsutrustningens standard.\ncatalog:variable_text:28834:12784:12785\ncatalog:variable_text:28841:12053:12054\ncatalog:variable_text:28848:10227:10228"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-uppgiftslamnare"
+fields.identifier = true
+evidence = "Identifier: Namn på uppgiftslämnaren names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på uppgiftslämnaren\""

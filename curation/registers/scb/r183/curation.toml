@@ -2789,3 +2789,15 @@ kind = "set"
 subject = "set:underhallsutgifter"
 fields = { "description" = "Helårsuppgift om underhållsutgifter, dels för byggnader (lämnas av fastighetsförvaltande företag), dels för maskiner och transportmedel (lämnas av företag inom transport, magasinering och kommunikation). Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är helårsuppgifter om underhåll; byggnader och maskiner/transportmedel skiljer sig åt i vem som lämnar uppgiften.\ncatalog:variable_text:37495:10957:13514\ncatalog:variable_text:37496:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:firmanamn"
+fields.identifier = true
+evidence = "Identifier: Firmanamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets firmabeteckning eller namn\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-urvalsenheter"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, urvalsenheter is the löpnummer of a firm or authority; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer är identifikationen för företagen i urvalet.\""

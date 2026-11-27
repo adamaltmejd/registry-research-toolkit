@@ -1987,3 +1987,27 @@ kind = "set"
 subject = "set:meritvarde-ar9"
 fields = { "description" = "Meritvärdet är summan av elevens bästa betyg i slutbetyget, där bokstavsbetygen ersätts med poäng: A = 20, B = 17,5, C = 15, D = 12,5 och E = 10. Värdet 0,00 innebär att eleven inte har fått kunskapsrelaterade betyg eller att uppgift saknas. Variablerna skiljer sig åt i hur många betyg som räknas: de 16 bästa betygen (högst 320 poäng) respektive de 17 bästa betygen inklusive moderna språk som språkval (högst 340 poäng)." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna delar poängskala och betydelsen av 0,00 i alla år; antalet betyg och maxpoäng skiljer.\ncatalog:variable_text:30454:17089:17090\ncatalog:variable_text:30455:17089:17090"
+
+[[statement]]
+kind = "set"
+subject = "var:csnskolid"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för skolan/skolenheten is the löpnummer of the school or school unit; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer som identifierar vilken skola eller skolenhet som avses.\""
+
+[[statement]]
+kind = "set"
+subject = "var:elevid"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för eleven is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Identitet för eleven.\""
+
+[[statement]]
+kind = "set"
+subject = "var:klassbeteckning"
+fields.identifier = true
+evidence = "Identifier: Klassbeteckning names the pupil's school class, a unit SCB replaces with a project löpnummer in deliveries; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Anger beteckning för den klass eleven går i.\""
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetens-namn"
+fields.identifier = true
+evidence = "Identifier: Skolenhetens namn names the school, school unit or preschool; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på skolenheten.\""

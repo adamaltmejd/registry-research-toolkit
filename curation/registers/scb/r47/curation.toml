@@ -4592,3 +4592,15 @@ kind = "set"
 subject = "set:programmets-utbildningsinriktning"
 fields = { "description" = "Inriktning för ett utbildningsprogram, som högskolans egen programinriktningskod (för högskolor som har Ladok) eller som SUN-inriktning på 3-siffernivå (SUN2000 respektive SUN2020)." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna avser programmets inriktning i olika klassifikationer; den lagrade texten behålls eftersom den inte motsägs.\ncatalog:variable_text:33798:12965:13149\ncatalog:variable_text:33863:8401:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-person"
+fields.identifier = true
+evidence = "Identifier: Namn, person is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personens namn\""
+
+[[statement]]
+kind = "set"
+subject = "var:studentens-namn"
+fields.identifier = true
+evidence = "Identifier: Studentens namn is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Övergripande begrepp för namnsättning av olika objekt\""

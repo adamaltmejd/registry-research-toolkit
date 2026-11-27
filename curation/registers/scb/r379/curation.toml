@@ -1105,3 +1105,15 @@ kind = "set"
 subject = "set:tjanstgoringsomfattning"
 fields = { "description" = "Personens faktiska tjänstgöringstid i förhållande till heltidstjänst, i procent. Variablerna avser den totala tjänstgöringsomfattningen respektive tjänstgöringsomfattningen i chefsbefattning i arbete med barn." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda är tjänstgöringsomfattning som andel av heltid; avgränsningen (totalt eller chefsbefattning) skiljer dem åt.\ncatalog:variable_text:11259:16358:16359\ncatalog:variable_text:11276:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman-namn"
+fields.identifier = true
+evidence = "Identifier: Huvudman (namn) names the school's principal organiser or the education provider, a municipality, region or firm; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Huvudman för skolan/skolenheten.\""
+
+[[statement]]
+kind = "set"
+subject = "var:verknamn"
+fields.identifier = true
+evidence = "Identifier: Namn på verksamheten names the school, school unit or preschool; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Verksamhetens namn.\""

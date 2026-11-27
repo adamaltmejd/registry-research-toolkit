@@ -916,3 +916,9 @@ kind = "set"
 subject = "set:skal-till-arbete-utanfor-utbildningsomradet"
 fields = { "description" = "Skäl till att personen arbetar helt eller delvis inom ett annat område än det som utbildningen är inriktad mot. Varje variabel avser ett skäl, till exempel svårt att få arbete, låg lön, dåliga arbetstider eller mycket stress; en variabel anger det huvudsakliga skälet." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller skäl att arbeta utanför utbildningsområdet; varje skäl är en egen variabel.\ncatalog:variable_text:33574:14245:14610\ncatalog:variable_text:33586:14245:14610\ncatalog:variable_text:33587:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-individ"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för individ is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnumren används internt vid enkätutskick och avbockning etc.\""

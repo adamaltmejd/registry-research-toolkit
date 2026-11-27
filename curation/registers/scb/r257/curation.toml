@@ -14250,3 +14250,15 @@ kind = "set"
 subject = "innovation-i-foretagssektorn: E10e where key = 'v15619' and release = 'r2675'"
 fields = { "spelling" = "rtr" }
 evidence = "SCB documents the 2006 - 2008 wave's column under the questionnaire item E10e (key v15619); SCB's delivered CIS file for that wave carries it as rtr, the name the other waves give the same key. Delivered data wins over documentation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr"
+fields.identifier = true
+evidence = "Identifier: Organisationsnummer holds an organisation number; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Myndighetens eller företagets organisationsnummer.\""
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr-12"
+fields.identifier = true
+evidence = "Identifier: Organisationsnummer 12 siffror holds an organisation number; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagsenhetens organisationsnummer enligt SCB:s företagsdatabas (CFAR).\""

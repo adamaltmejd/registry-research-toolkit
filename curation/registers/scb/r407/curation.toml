@@ -1412,3 +1412,15 @@ kind = "set"
 subject = "set:produktinnovation"
 fields = { "description" = "Om objektet har introducerat nya eller väsentligt förbättrade produkter, uppdelat på varor och tjänster. Två härledda variabler anger om objektet är produktinnovativt och om det endast är produktinnovativt, det vill säga inte har introducerat någon processinnovation." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna mäter produktinnovation för varor och tjänster samt två härledda sammanfattningar; leverantörens operationella text för varor anger felaktigt tjänster och har rättats.\ncatalog:variable_text:36537:18628:19358\ncatalog:variable_text:36607:18628:19358\ncatalog:variable_text:36608:18628:19358\ncatalog:variable_text:36609:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbstallnamn"
+fields.identifier = true
+evidence = "Identifier: Arbetsställenamn names the workplace; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Arbetsställets namn i klartext\""
+
+[[statement]]
+kind = "set"
+subject = "var:namn-juridiska-enheten"
+fields.identifier = true
+evidence = "Identifier: Namn, juridiska enheten names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den juridiska enhetens officiella namn.\""

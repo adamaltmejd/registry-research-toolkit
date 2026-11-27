@@ -4057,3 +4057,9 @@ kind = "set"
 subject = "set:lagfarts-och-tomtrattsandel"
 fields = { "description" = "Andel av en fastighet som en person har beviljad lagfart eller tomträtt på, angiven som ett bråk med täljare och nämnare. Uppdelat på den andel som har förvärvats och den andel som har beviljats." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBråkets täljare och nämnare för två slags andel (förvärvad, beviljad).\ncatalog:variable_text:17850:17166:17167\ncatalog:variable_text:17851:17166:17167\ncatalog:variable_text:17880:17166:17167\ncatalog:variable_text:17881:17166:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-juridiska-enheten"
+fields.identifier = true
+evidence = "Identifier: Namn, juridiska enheten names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den juridiska enhetens officiella namn.\""

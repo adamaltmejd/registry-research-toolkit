@@ -3714,3 +3714,9 @@ kind = "set"
 subject = "foretagens-kortperiodiska-tillgangar-och-skulder: var:kvartal"
 fields.row_key = true
 evidence = "Row key: kvartal (Kv, kv) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:ref2"
+fields.identifier = true
+evidence = "Identifier: Referensperson 2 is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets andra kontaktperson.\""

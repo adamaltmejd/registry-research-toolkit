@@ -757,3 +757,15 @@ kind = "set"
 subject = "grundskola-nationella-prov-ak-5: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnr-elev"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för elev is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer för elev.\""
+
+[[statement]]
+kind = "set"
+subject = "var:skolans-namn"
+fields.identifier = true
+evidence = "Identifier: Skolans namn names the school, school unit or preschool; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Namn på skolan.\""

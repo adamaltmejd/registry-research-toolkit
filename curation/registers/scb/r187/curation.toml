@@ -1528,3 +1528,15 @@ kind = "set"
 subject = "industrins-orderingang: var:manad"
 fields.row_key = true
 evidence = "Row key: manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:firmanamn"
+fields.identifier = true
+evidence = "Identifier: Firmanamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets firmabeteckning eller namn\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-urvalsenheter"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, urvalsenheter is the löpnummer of a firm or authority; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer är identifikationen för företagen i urvalet.\""

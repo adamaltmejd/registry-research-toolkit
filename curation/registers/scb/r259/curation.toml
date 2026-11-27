@@ -668,3 +668,9 @@ kind = "set"
 subject = "set:utgifter-for-it-tjanster"
 fields = { "description" = "Företagets utgifter eller kostnader för köp av it-tjänster, från extern leverantör respektive från annat bolag inom koncernen." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFyra variabler för köpta it-tjänster, extern och intern leverantör.\ncatalog:variable_text:19656:16071:17532\ncatalog:variable_text:19657:16071:17532\ncatalog:variable_text:19658:13149:13514\ncatalog:variable_text:19659:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-namn"
+fields.identifier = true
+evidence = "Identifier: Företagets namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn enl FDB\""

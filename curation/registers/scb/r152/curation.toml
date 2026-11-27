@@ -298,3 +298,15 @@ kind = "set"
 subject = "var:vatten"
 fields = { "tags" = ["business"] }
 evidence = "Vattenhalten beskriver kalkproduktens sammansättning.\ncatalog:variable_text:12799:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagets-namn"
+fields.identifier = true
+evidence = "Identifier: Företagets namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn enl FDB\""
+
+[[statement]]
+kind = "set"
+subject = "var:tillverk"
+fields.identifier = true
+evidence = "Identifier: företagets namn, tillverkare names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företag som ursprungligen tillverkat kalken\""

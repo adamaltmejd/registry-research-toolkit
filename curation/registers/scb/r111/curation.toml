@@ -13860,3 +13860,15 @@ kind = "set"
 subject = "var:sysselsattningsstatus-november-mor"
 fields = { "facets" = { "person" = { "value" = "mor", "label" = "Modern" } } }
 evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Sysselsättningsstatus november, mor\ncatalog:variable_text:37358:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:enkatlopnummer"
+fields.identifier = true
+evidence = "Identifier: Löpnummer (Inträdet på arbetsmarknaden bland högskoleexaminerade) is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer.\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer"
+fields.identifier = true
+evidence = "Identifier: Löpnummer (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade) is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnummer.\""

@@ -276,3 +276,9 @@ kind = "set"
 subject = "nystartade-foretag: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr identify a row: one row per new firm, keyed on its organisation number over all years; the enterprise unit number and the 2013 to 2015 personnr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsnamn"
+fields.identifier = true
+evidence = "Identifier: Företagsnamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn\""

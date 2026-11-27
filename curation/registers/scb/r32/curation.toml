@@ -6428,3 +6428,51 @@ kind = "set"
 subject = "set:inkomst-av-tjanst"
 fields = { "description" = "Inkomst av tjänst m m, det vill säga inkomst av tjänst, inkomst av jordbruksfastighet, inkomst av rörelse och inkomst såsom delägare i handelsbolag, enkelt bolag m m. Variablerna avser bostadsföreståndaren (hushållsföreståndaren), makan, maken eller makarna sammanlagt." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar den sammansatta inkomstdefinitionen; labeln visar vem den avser.\ncatalog:variable_text:18953:0:365\ncatalog:variable_text:18954:0:365\ncatalog:variable_text:18986:0:365\ncatalog:variable_text:18990:0:365\ncatalog:variable_text:18994:0:365"
+
+[[statement]]
+kind = "set"
+subject = "var:hhfpersonnr"
+fields.identifier = true
+evidence = "Identifier: Personnummer - hushållsföreståndare holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Hushållsföreståndarens personnummer.\""
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetslopnummer"
+fields.identifier = true
+evidence = "Identifier: Lägenhetslöpnummer identifies a household; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Anger löpnummer för lägenhets/hushållstillhörighet.  Löpnumret avgränsar ett hushåll och är därmed unikt för varje enskilt hushåll. Alla personer som tillhör samma hushåll har tilldelats samma lägenhe\""
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetslopnummer-lopnrlgh-1990"
+fields.identifier = true
+evidence = "Identifier: Lägenhetslöpnummer identifies a household; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Anger löpnummer för lägenhets/hushållstillhörighet.  Löpnumret avgränsar ett hushåll och är därmed unikt för varje enskilt hushåll. Alla personer som tillhör samma hushåll har tilldelats samma lägenhe\""
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-far"
+fields.identifier = true
+evidence = "Identifier: Personnummer FoBFar holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personnummer för FoBFar\""
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-mor"
+fields.identifier = true
+evidence = "Identifier: Personnummer FoBMor holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personnummer för FoBMor\""
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-syskon"
+fields.identifier = true
+evidence = "Identifier: Personnummer FoBSyskon holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personnummer för FoBSyskon\""
+
+[[statement]]
+kind = "set"
+subject = "var:personnummer-bostadsforestandare"
+fields.identifier = true
+evidence = "Identifier: Personnummer - bostadsföreståndare holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Anger hushållsföreståndarens (bostadsföreståndarens) personnummer.\""
+
+[[statement]]
+kind = "set"
+subject = "var:samhpersonnr"
+fields.identifier = true
+evidence = "Identifier: Personnummer, samhörighet FoB holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personnummer för samhörighetsperson.\""

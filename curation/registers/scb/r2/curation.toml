@@ -8575,3 +8575,9 @@ kind = "set"
 subject = "set:yrke-vid-arbetstillstand"
 fields = { "description" = "Yrke, som tre- eller fyrsiffrig SSYK-kod, för den arbetstagare som har ansökt om och beviljats arbetstillstånd. Koden anges av arbetsgivaren vid ansökan om arbetstillstånd hos Migrationsverket. Finns enligt SSYK 96 och SSYK 2012." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition och skiljer sig åt i yrkesklassifikation (SSYK 96 respektive SSYK 2012).\ncatalog:variable_text:49081:15339:15340\ncatalog:variable_text:49082:16435:16436\ncatalog:variable_text:49083:16435:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-bostadshushall"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, bostadshushåll identifies a household; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Identitetsnummer för bostadshushåll. Ett bostadshushåll består av alla personer som är folkbokförda i samma lägenhet. Även småhus räknas som lägenheter.  Uppgifterna kommer från Skatteverket.\""

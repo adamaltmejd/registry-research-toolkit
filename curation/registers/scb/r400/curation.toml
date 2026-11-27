@@ -636,3 +636,9 @@ kind = "set"
 subject = "utvandringar: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the emigrant; one row per emigration so the key does not make rows unique; property and dwelling ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-bostadshushall"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, bostadshushåll identifies a household; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Identitetsnummer för bostadshushåll. Ett bostadshushåll består av alla personer som är folkbokförda i samma lägenhet. Även småhus räknas som lägenheter.  Uppgifterna kommer från Skatteverket.\""

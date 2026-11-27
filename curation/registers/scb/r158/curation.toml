@@ -886,3 +886,9 @@ kind = "set"
 subject = "set:syfte-for-skyddat-omrade"
 fields = { "description" = "Syftet med registerobjektet, det vill säga på vilka grunder det har tagits med i registret. Uppgiften avser syftet vid inrättande av det skyddade området och anges som primärt eller preciserat syfte. Uppgiften är inte obligatorisk, och flera objekt saknar den. Registeruttaget innehåller endast syften som avser ‘Tillgodose behov av område för friluftslivet’." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna delar definition och operationell text; primärt respektive preciserat syfte framgår av etikett.\ncatalog:variable_text:49912:20088:20089\ncatalog:variable_text:49923:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forvaltare-namn-3817"
+fields.identifier = true
+evidence = "Identifier: Förvaltare (namn) names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Ansvarig för skötsel eller förvaltning av det skyddade området\""

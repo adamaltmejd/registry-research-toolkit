@@ -258,3 +258,9 @@ kind = "set"
 subject = "energianvandning-inom-byggsektorn: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr identify a row: a firm table keyed on the firm id; the enterprise unit number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsnamn"
+fields.identifier = true
+evidence = "Identifier: Företagsnamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn\""

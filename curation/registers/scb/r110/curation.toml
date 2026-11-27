@@ -1806,3 +1806,9 @@ kind = "set"
 subject = "set:upprakningsvikt"
 fields = { "description" = "Kalibrerad vikt för uppräkning av urvalet till populationen." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre medlemmar är kalibrerade vikter för uppräkning.\ncatalog:variable_text:33485:14245:14610\ncatalog:variable_text:33539:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-individ"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för individ is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Löpnumren används internt vid enkätutskick och avbockning etc.\""

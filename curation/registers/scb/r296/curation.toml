@@ -2103,3 +2103,9 @@ kind = "set"
 subject = "set:produktgrupp-sjusifferniva-tpi"
 fields = { "description" = "Produktgruppering på sjusiffernivå inom vilken ett index beräknas (TPI). Variablerna anger produktgruppen som kod respektive namn." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; kod eller namn skiljer.\ncatalog:variable_text:48083:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-person"
+fields.identifier = true
+evidence = "Identifier: Namn, person is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personens namn\""

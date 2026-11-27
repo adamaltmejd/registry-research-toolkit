@@ -1465,3 +1465,15 @@ kind = "set"
 subject = "set:foraldrars-utbildningsniva"
 fields = { "description" = "Faderns respektive moderns utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN). Uppgiften utgår från populationen 2013-12-31 och utbildningar avklarade till och med 2013-06-30." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är en förälders utbildningsnivå enligt SUN med samma population och avklarad-utbildning-datum; förälder är det enda som skiljer.\ncatalog:variable_text:15084:16071:16252\ncatalog:variable_text:15115:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:elevnamn"
+fields.identifier = true
+evidence = "Identifier: Elevens namn is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Elevens förnamn och efternamn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:klassbeteckning"
+fields.identifier = true
+evidence = "Identifier: Klassbeteckning names the pupil's school class, a unit SCB replaces with a project löpnummer in deliveries; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Anger beteckning för den klass eleven går i.\""
