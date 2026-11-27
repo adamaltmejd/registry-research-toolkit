@@ -2017,7 +2017,9 @@ Every table in the pinned export is held. Selection is the steward's export step
 only structural (which databases, which object kinds or name prefixes the steward
 publishes from); every content decision (preliminary, raw, superseded or old snapshots,
 withheld columns) stays in the authored topology with a reason. The reader config has no
-selection vocabulary. A column's ordinal (`holding_column.ordinal`) is its
+selection vocabulary. The export step is a query a coordinator runs by hand until the
+planned `census.R` writes the export, with the selection in its settings ("Steward
+facts"). A column's ordinal (`holding_column.ordinal`) is its
 `ordinal_position`, which verify checks against the export. The ordinal does not set
 an order's column order. Materialization sorts a file's columns by source, binding,
 entry and slot index, and uses the ordinal only to break the remaining ties. It also
@@ -3285,6 +3287,93 @@ scheduled.
 The MONA runner's testthat suite reads the materialize corpus's manifests and covers the
 pre-database refusals only; extraction is verified by hand on MONA, with no SQL Server
 suite ([runner design](../reg_mona_runner/DESIGN.md), "Tests").
+
+### Steward facts
+
+#2680 (maintainer rulings 2026-11-27). This is the list of every fact the holdings build
+reads from a steward, the field it fills, where the fact comes from and what makes it
+stale. A fact the build needs that is not listed here is a design gap. The census side,
+`census.R` on the platform, is designed in
+[`reg_mona_runner/DESIGN.md`](../reg_mona_runner/DESIGN.md), "Census".
+
+There are three sources:
+
+- **census**: the database, read on the platform by `census.R` and exported as rounded
+  counts, names and types. A census fact is stale when its object's fingerprint changes
+  (columns, types or row count), when the object is new, or when the census version of
+  that measure changes.
+- **documents**: the holder's delivery documents and metadata, pinned as evidence in the
+  steward repository. Stale when a new delivery or a new document arrives.
+- **ruling**: a reviewed decision by the steward or the maintainer, with its reason in
+  the entry. Stale only when a new ruling replaces it, or when the object it names
+  changes, which the build reports as a stale or unused entry.
+
+Configuration that describes no data (`owner`, `scope`, `curation_root`, presentation,
+`[pins]`) is not a fact and is not listed.
+
+| Fact | Steward field | Source | Stale when | Build step that reads it |
+| --- | --- | --- | --- | --- |
+| Which objects and columns are held, column order, object type, storage type, length, precision, scale | `inputs.storage_export` (nine `INFORMATION_SCHEMA.COLUMNS` fields) | census (it writes the export; until then a hand-run query) | an object is added, dropped or changed | possession, accounting, storage findings, `verify` |
+| Which object kinds, schemas and name prefixes are published | the export's selection | ruling (the census's selection settings) | a new database or schema on the platform | possession |
+| Whether one table name is in several schemas | reader `schema_keyed` | census (read off the export) and ruling | the export gains a schema | table identity |
+| Which schemas share one person key | `[[space]]` in `steward.toml` | documents and ruling | the export gains a schema (refused as `holdings_space_unmapped`) | spaces, orders |
+| What a table is: dated, timeless, lookup, excluded, unknown, and why | `[[table]]` `disposition`, `reason` | documents and ruling | a new table | possession, orderability |
+| Which provider tables it delivers, and which primary release | `table_pids`, `release` | documents | a new table or delivery document | routing |
+| The days a dated table holds | `delivery` | documents; **gap** for the database side (below) | a new or changed table | periods, clipping, cumulative dating |
+| Partition label, projection parent and token | `partition`, `projection_of`, `projection_token` | documents and ruling | a new table | placement, duplicate rule |
+| Which column carries the row's period, and how it is encoded | `period_column`, `period_end_column`, `period_encoding` | documents name the column; census confirms the encoding reads every non-null value | a changed table | row filters, row keys with `period_key = "column"`, spell overlap |
+| What a received row is (entity and time components) | `[[table.key]]` | documents and ruling; **gap** for uniqueness (below) | a new table or document | row keys, orderability |
+| Which variable a column holds, over which window, with which caveat; holds and unmaps; slot topology | `[[table.column]]`, its `mapping`, `slot_*` | documents and ruling | a new column or document | routing, matching |
+| Whether a column is empty in a table | the reason of an `unmap` or `hold` | census (`values` published as 0) | a changed table | column decisions |
+| Physical spellings that differ from the documented ones | reader `[[rename]]`, `[[rewrite]]` | census (the names) and documents (what they mean) | a new physical name | matching |
+| Which columns are SCB löpnummer, and that every value converts to int64 | reader `[[lopnr]]` | ruling (which columns SCB pseudonymised); census (every value converts: none failing, none rewritten) | a changed table, or a new table with such a column | `holding_column.lopnr`, int64 delivery |
+| Which columns hold several codes, and the separator | reader `[[packed]]` | documents (several codes per value); census (the separator profile) | a changed table | `holding_column.packed`, code filters |
+| Years a steward holds that the catalog does not document | `inputs.reference_occurrences` | documents and the export's storage facts (the five conditions, "Physical possession") | a new table or a changed column type | reference occurrences |
+| Whether a table is cumulative | global curation `cumulative` | documents | a new delivery document | cumulative dating |
+| Steward-only definitions, code lists and slots | supplemental curation, transcriptions | documents | a new document | supplemental semantic part |
+
+The census also measures two facts the build does not read yet. The encoding of a text
+date column is for #2674's catalog field, by steward curation. Integer keys of 16 digits
+or more are what a `.dta` order refuses at 2^53, which `extract.R` finds only at extract
+time.
+
+**From census files to entries.** The build reads the pinned census file as one more
+steward input (`inputs.census`, optional, so a steward that maps another metadata
+source onto this list goes without). It never authors an entry from it. It proposes
+entries as a worklist in the build report, and a reviewed steward PR commits them
+(maintainer ruling 2026-11-27, point 5):
+
+- `[[lopnr]]`: a column placed on a catalog identifier variable whose census shows every
+  value converts, proposed in the one-column form. Whether SCB pseudonymised it stays
+  the steward's ruling; the worklist only says which candidates convert. An existing
+  entry whose column the census shows failing, or rewritten by a leading zero, is listed
+  as a contradiction.
+- `[[packed]]`: a text column placed on a coded variable whose values, for one candidate
+  separator, split into clean codes, proposed in the one-column form with that separator.
+- `period_encoding`: a declared period column whose census does not read every non-null
+  value under the declared encoding, with the encoding that does, if one does.
+- Coverage: a held object the census file does not list, or lists as failed or not
+  reached.
+
+`reg-build diff --holdings` then shows what changed between two builds: new tables to
+place, and new keys, packed columns or encodings to declare.
+
+**Gaps.** Facts the build needs that no source supplies today:
+
+- **The days a table holds**, as the database shows them. `delivery` is authored from
+  documents. SWECOV queried the years of its Socialstyrelsen views once (2026-11-18); no
+  other table's years are recorded. The census measures the encoding of a period
+  column, not the years in it.
+- **Row-key uniqueness.** A `[[table.key]]` declares the received row, and nothing checks
+  that the declared components are unique in the data. The census profiles single
+  columns before the build has read the keys, so it cannot check a composite key.
+- **Facts across columns.** Conclusions such as "a label column is one to one with its
+  code" or "the dispensing year is the year of the dispensing date" support column
+  decisions and owner choices. They rest on one-off aggregate checks recorded as a line
+  of ruling text, with no counts kept, so they cannot be rerun or compared. The census
+  profiles one column at a time and does not cover them.
+
+All three are open questions on #2680.
 
 ## Project semantic validation
 
