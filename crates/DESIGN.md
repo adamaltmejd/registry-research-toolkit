@@ -3342,7 +3342,14 @@ time.
 the pinned census file as one more steward input (`inputs.census`). A steward whose
 holder gives metadata another way (IFAU's documentation API) writes the same census file
 format from that source, so the build has one reader. With no census input the build
-checks nothing below. It never authors an entry from the census. The checks:
+checks nothing below. It never authors an entry from the census.
+
+The census names objects and columns only, so a census file read beside another storage
+export could lay old counts on a same-named replacement column. The census file
+therefore records the SHA-256 of the storage export its run wrote, and before any check
+below the build compares it with the pinned `inputs.storage_export`: a mismatch refuses
+(`holdings_census_stale`), naming both inputs. A source mapped from other metadata
+records the digest of the export it was written with. The checks:
 
 - **Contradictions refuse.** An existing `[[lopnr]]` entry whose column the census shows
   failing (a storage `extract.R` refuses, or a published `not_bigint`, `not_whole`,
@@ -3386,8 +3393,9 @@ checks nothing below. It never authors an entry from the census. The checks:
 - **Keys for the census.** The census checks each table's declared row key, so it must
   know the key's physical columns, which only the build resolves (a key names
   variables). The build report lists them per table (`census_keys`: schema, table,
-  columns, the period column where `period_key = "column"`; a constant period supplies
-  no column), and the steward copies that list into the census settings
+  columns with each one's `[[lopnr]]` mark, the period column where
+  `period_key = "column"`; a constant period supplies no column), and the steward copies
+  that list into the census settings
   ([`reg_mona_runner/DESIGN.md`](../reg_mona_runner/DESIGN.md), "Census"). The census
   file records the columns it checked, which is how the build finds a stale list.
 

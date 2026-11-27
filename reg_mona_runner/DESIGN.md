@@ -608,8 +608,13 @@ storage query ("Replaces").
   - years present (maintainer ruling 2026-11-27): for a column that reads cleanly, every
     non-null value under one encoding (date and date-time storage always; numeric or text
     storage under the finest of `yyyymmdd`, `yyyymm`, four-digit `year` and `date` whose
-    `not_read`, or `not_year4`, is 0), the rows per year, one measure per
-    year present. A year absent is not listed;
+    `not_read`, or `not_year4`, is 0), the rows per year, one measure per year present. A
+    year absent is not listed. The years are not known before the column is read, so a
+    fixed select list cannot hold them: after the profile query has decided, on its exact
+    counts, which columns read cleanly, one more query per object groups its rows by each
+    such column's year (`GROUP BY GROUPING SETS`, one set per column, the year taken
+    through `extract.R`'s period reading of the chosen encoding). That is one more scan of
+    each object with such a column, none for an object without one;
   - separators, for text storage: per candidate separator (space, comma, semicolon,
     `|`, `/`, `+`), `contains`, the values holding it after `char` padding is trimmed,
     `empty_token`, the values holding it at the start or end or twice in a row (an empty
@@ -626,7 +631,12 @@ storage query ("Replaces").
   rows with a NULL key component. The keys come from the `census` settings (below), so a
   key declared after a run is checked on the next one, with no extra round trip. It is a
   `GROUP BY` of the key columns, a second scan of that table, and the only measure that
-  reads several columns together.
+  reads several columns together. It groups each column by the value the delivery holds,
+  not the stored one: a column the settings mark as a löpnummer (`census_keys` carries
+  the `[[lopnr]]` mark) by `extract.R`'s int64 reading (`lopnr_digits`: trimmed, leading
+  zeros dropped), so stored `001` and `1`, distinct in SQL, count as the duplicate they
+  become in the file; a value that reading refuses is NULL there and counts in
+  `key_nulls`. Other columns group as stored, as `extract.R` writes them.
 
   A count that does not apply to the storage is absent. Observed values, minimums,
   maximums and value sets are never collected (ruling 2026-11-14: they go to project
@@ -677,7 +687,8 @@ storage query ("Replaces").
   - the census file: one row per column and measure, with schema, object, column,
     measure and published count (a year present is a measure, `year:2019`); one row per
     checked key, its columns joined in the column field; and one status row per object
-    (`ok`, or `failed` with its SQLSTATE), headed by the census version.
+    (`ok`, or `failed` with its SQLSTATE), headed by the census version and the SHA-256
+    of the storage export written in the same run, which binds the two files.
 
   They hold names, storage types and counts, no values and no lengths. A selected object
   with no current profile (failed, or the run stopped) is listed as such, so a partial
