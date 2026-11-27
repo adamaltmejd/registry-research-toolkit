@@ -2829,9 +2829,15 @@ evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one c
 
 [[statement]]
 kind = "set"
-subject = "var:lopnummer-som-ersatter-arbetsstallets-cfar-nummer"
+subject = "lova-ekonomi-arbetsmarknad: CFARNR where label = 'Arbetsställets CFAR-nummer'"
 fields.identifier = true
-evidence = "Identifier: Löpnummer som ersätter arbetsställets CFAR-nummer is the löpnummer of a workplace; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Arbetsställets CFAR-nummer, unikt för arbetsställen med samma PEORGNR\""
+evidence = "Identifier: CFARNR (Arbetsställets CFAR-nummer, delivered as Löpnummer som ersätter arbetsställets CFAR-nummer) is the workplace number or its löpnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Arbetsställets CFAR-nummer, unikt för arbetsställen med samma PEORGNR\""
+
+[[statement]]
+kind = "set"
+subject = "lova-ekonomi-arbetsmarknad: CFARNR where label = 'Löpnummer som ersätter arbetsställets CFAR-nummer'"
+fields.identifier = true
+evidence = "Identifier: CFARNR (Arbetsställets CFAR-nummer, delivered as Löpnummer som ersätter arbetsställets CFAR-nummer) is the workplace number or its löpnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Arbetsställets CFAR-nummer, unikt för arbetsställen med samma PEORGNR\""
 
 [[statement]]
 kind = "set"
