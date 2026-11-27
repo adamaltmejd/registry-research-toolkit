@@ -86,7 +86,7 @@
   },
   "meta": {
     "api_version": "7.1.0",
-    "catalog_version": "0.93.0",
+    "catalog_version": "0.94.1",
     "generation": "ccee3b447f0b7d3d2ffad09ef64e8e29aa9cf2b75dfdd54d1d187a6270e976af",
     "project_schema_version": "8.1.0"
   }
