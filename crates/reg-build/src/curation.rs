@@ -1502,7 +1502,7 @@ fn run_selected(
             root,
             retired,
             &retained,
-            read()?,
+            read().map_err(|e| after_refusals(&refusals, e))?,
             read,
             record,
             registers,
