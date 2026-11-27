@@ -157,7 +157,7 @@ writes and prints, and driving a state no route reaches (an open dialog, a fille
 in a named agent-browser session, captured at the four widths too.
 
 `dev.sh`'s first line names the checkout, the full HEAD and the invocation's output
-directory (`dev: repo … HEAD … shots $TMPDIR/reg-webapp-shots.XXXXXX`). Quote it. The
+directory (`dev: repo … HEAD … shots /tmp/reg-webapp-shots.XXXXXX`). Quote it. The
 temp directory is purged, so a path without a description of what it showed is not
 evidence; never commit.
 

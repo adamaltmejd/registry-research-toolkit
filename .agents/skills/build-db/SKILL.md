@@ -25,15 +25,15 @@ public repository holds code and authored curation (`curation/`) only.
 `curation/inputs.toml` pins the inputs repository, its commit, and each input with its
 reader. Run every build against a checkout of the inputs repository at exactly that
 commit, never its default branch, and never edit it in place. Make it a `--shared`
-clone of `~/inputs` in `$TMPDIR`: it borrows that repository's objects, so it downloads
+clone of `~/inputs` under `/tmp/<name>` (an explicit path, not `$TMPDIR`): it borrows that repository's objects, so it downloads
 nothing and its `.git` is a few hundred KB.
 
 ```sh
-git clone --shared --no-checkout ~/inputs <tmpdir>/inputs
-git -C <tmpdir>/inputs cat-file -e <commit>^{commit}
-git -C <tmpdir>/inputs fetch https://github.com/<inputs-repo>.git <commit>
-git -C <tmpdir>/inputs checkout --detach <commit>
-git -C <tmpdir>/inputs status --porcelain --untracked-files=all
+git clone --shared --no-checkout ~/inputs /tmp/<name>/inputs
+git -C /tmp/<name>/inputs cat-file -e <commit>^{commit}
+git -C /tmp/<name>/inputs fetch https://github.com/<inputs-repo>.git <commit>
+git -C /tmp/<name>/inputs checkout --detach <commit>
+git -C /tmp/<name>/inputs status --porcelain --untracked-files=all
 ```
 
 Run the `fetch` only if `cat-file` fails (the pin is not in the local checkout).
