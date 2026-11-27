@@ -28,7 +28,7 @@ struct StoredPremise {
 }
 
 /// A lock being recorded, held as canonical JSON text and filled as each statement is
-/// accepted. Kept as premises until the end, the real seed's locks outgrew the box:
+/// evaluated. Kept as premises until the end, the real seed's locks outgrew the box:
 /// every statement held its own copy of each value set it read (crates/DESIGN.md,
 /// "Builder memory").
 #[derive(Default)]

@@ -807,9 +807,11 @@ anything derived from all of them lives no longer than its phase.**
 - **The emitter is the peak.** Its rows (~4 GiB on the real seed, each cell an owned
   copy) sit beside the catalog until all are built, since text ids need every row
   first; cells borrowed from the catalog are the next cut if the seed outgrows the box.
-- **`lock` does not fit yet.** Lock mode keeps every accepted premise whole, since it
-  writes them; on the real seed it passes 13 GiB in the Fields stage. Locking runs
-  where memory allows (the maintainer's machine) until its premises are bounded too.
+- **`lock` records as it goes.** A statement's lock entry is recorded when it is
+  evaluated, as canonical text with each object held once by digest; from then on its
+  premise keeps only coordinates, as in a build. Holding the whole premises until the
+  locks were written passed 13 GiB in the Fields stage; a real-seed lock now peaks near
+  9 GiB.
 
 **Frames and readers.**
 
