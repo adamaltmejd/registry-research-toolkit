@@ -584,25 +584,31 @@ storage query ("Replaces").
   into as few batches as fit, and such an object costs more than one scan. Per column:
   - every storage: `rows`, `nulls` and `values` (the non-null values; a published 0
     there means the column is empty, which `rows` and `nulls`, each rounded, cannot show);
-  - numeric storage: `not_whole`, values with a fraction; `beyond_exact`, values at or
-    beyond 2^53 (2^24 for `real`), where distinct keys may have merged; `not_bigint`,
-    values `TRY_CAST(… AS bigint)` refuses; `digits_16`, whole values of 16 digits or
-    more, the only ones a `.dta` order's 2^53 limit can refuse;
+  - numeric storage: `not_whole` (`decimal`, `numeric`, `float`, `real`), values with a
+    fraction; `beyond_exact`, only on approximate storage (`float`, `real`), values at or
+    beyond 2^53 (2^24 for `real`), where distinct keys may have merged (an exact `bigint`
+    or `decimal` beyond 2^53 is a valid int64); `not_bigint`, values
+    `TRY_CAST(… AS bigint)` refuses; `digits_16`, whole values of 16 digits or more, the
+    separate signal for a `.dta` order's 2^53 limit;
   - text storage (legacy `text` and `ntext` read as `(max)`): `not_digits`,
     `leading_zeros`, `spaces` and `not_bigint` with `key_check.R`'s exact meaning
     (`extract.R`'s int64 rule, under `Latin1_General_BIN2`), `digits_16`, and the length
     range, which is exact and kept in the state file only;
   - date encodings, for numeric and text storage: per encoding of `extract.R`'s period
-    reading (`year`, `yyyymm`, `yyyymmdd`, and `date` for text), the values that read
-    under it ("SQL": digit count first, a calendar month or day, a fraction reads as
-    nothing). `extract.R` reads any whole number as a `year`, so for `year` the census
-    also counts whole values of four digits, the shape a worklist can propose from. Plus
+    reading (`year`, `yyyymm`, `yyyymmdd`, and `date` for text), `not_read`, the non-null
+    values that do not read under it ("SQL": digit count first, a calendar month or day,
+    a fraction reads as nothing). It counts failures, not successes, so a published 0
+    says exactly that every value reads: a rounded count of values read could publish
+    10 beside 10 non-null values when one of them fails. `extract.R` reads any whole
+    number as a `year`, so the census also publishes `not_year4`, the non-null values
+    that are not a whole number of four digits, the shape a worklist can propose from.
+    Plus
     `zero_month` and `zero_day`, eight-digit values with a `00` month or day (#2674).
     Date and date-time storage needs no shape: it is its type;
   - years present (maintainer ruling 2026-11-27): for a column that reads cleanly, every
     non-null value under one encoding (date and date-time storage always; numeric or text
-    storage under the finest of `yyyymmdd`, `yyyymm`, four-digit `year` and `date` that
-    reads every value, judged on the exact counts), the rows per year, one measure per
+    storage under the finest of `yyyymmdd`, `yyyymm`, four-digit `year` and `date` whose
+    `not_read`, or `not_year4`, is 0), the rows per year, one measure per
     year present. A year absent is not listed;
   - separators, for text storage: per candidate separator (space, comma, semicolon,
     `|`, `/`, `+`), `contains`, the values holding it after `char` padding is trimmed,
@@ -644,9 +650,14 @@ storage query ("Replaces").
   catalog-view counts (`sys.dm_db_partition_stats`) and `sys.objects.modify_date` are
   probed later only if runtime hurts.
 - **Forced rescan.** `REG_CENSUS_RESCAN=1` (an environment variable, so it works under
-  `Rscript`, `R CMD BATCH` and `source()` alike) ignores the state and scans every
-  selected object. The coordinator sets it once per new delivery, which covers in-place
-  rewrites.
+  `Rscript`, `R CMD BATCH` and `source()` alike) scans every selected object. Before the
+  first scan it marks every profile in the state file stale and writes the state
+  through, so the mark is durable: a run that stops and is restarted without the flag
+  still treats every object not scanned since as pending, and never reuses a profile
+  from before the forced run (an object rewritten in place, with the same columns and
+  row count, would otherwise match its old fingerprint). A profile written by the forced
+  run is current. The coordinator sets the flag once per new delivery, which covers
+  in-place rewrites.
 - **The console says what ran and why.** One line per object: `scanned` with its reason
   (`new`, `columns changed`, `rows changed`, `definition changed`, `measure version`,
   `key changed`, `forced`) or `reused`,

@@ -3346,7 +3346,8 @@ checks nothing below. It never authors an entry from the census. The checks:
 
 - **Contradictions refuse.** An existing `[[lopnr]]` entry whose column the census shows
   failing (a storage `extract.R` refuses, or a published `not_bigint`, `not_whole`,
-  `beyond_exact`, `spaces` or `not_digits` above 0) refuses the build with
+  `beyond_exact`, `spaces` or `not_digits` above 0, among those that apply to its
+  storage) refuses the build with
   `config:lopnr=N: holdings_lopnr_census`. A positive `leading_zeros` is a warning
   instead: the key converts, but is written without its zeros, so two keys may collide.
   An existing `[[packed]]` entry whose column has values that do not split cleanly on its
@@ -3364,8 +3365,8 @@ checks nothing below. It never authors an entry from the census. The checks:
   - `[[packed]]`: a text column placed on a coded variable whose values contain one
     candidate separator and all split cleanly on it, in the one-column form with that
     separator.
-  - `period_encoding`: a declared period column whose census does not read every
-    non-null value under the declared encoding, with the encoding that does, if one does.
+  - `period_encoding`: a declared period column whose census `not_read` under the
+    declared encoding is above 0, with an encoding whose `not_read` is 0, if one is.
   - `delivery`: a dated table whose period column's years (the census's rows per year)
     disagree with its authored `delivery`. Delivered data wins over documents (ruling
     2026-11-14), so the worklist proposes the data's years.
