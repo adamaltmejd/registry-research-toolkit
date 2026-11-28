@@ -898,3 +898,9 @@ kind = "set"
 subject = "set:riksdagsvalkrets"
 fields = { "description" = "Regional indelning i riksdagsvalkrets, den indelning som ledamöter och ersättare utses för vid riksdagsval, angiven som kod respektive namn." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar definitionen av riksdagsvalkrets; labeln visar kod eller namn.\ncatalog:variable_text:11010:7670:8035\ncatalog:variable_text:11011:7670:8035\ncatalog:variable_text:11012:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn"
+fields.identifier = true
+evidence = "Identifier: Efternamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Efternamn - släktnamn.\""

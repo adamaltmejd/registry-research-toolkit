@@ -875,3 +875,9 @@ kind = "set"
 subject = "offentligt-agda-foretag: var:orgnr"
 fields.row_key = true
 evidence = "Row key: organisationsnummer-10-siffror and orgnr identify a row: one row per publicly owned firm, keyed on its organisation number of each era; enterprise unit number and the 12-digit person-orgnr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields.identifier = true
+evidence = "Identifier: Namn names the publicly owned firm, beside its Organisationsnummer and Företagsenhetsnummer (maintainer ruling 2026-11-28, #2677: a generic Namn that names a unit (firm, workplace, establishment, person) is an identifier, checked per register; flag-more only). Provider definition: \"Övergripande begrepp för namnsättning av olika objekt\""

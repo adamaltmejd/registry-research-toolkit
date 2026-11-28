@@ -371,3 +371,21 @@ kind = "set"
 subject = "namngivna-nyfodda: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn"
+fields.identifier = true
+evidence = "Identifier: Förnamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Anger samtliga förnamn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn"
+fields.identifier = true
+evidence = "Identifier: Efternamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Efternamn - släktnamn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:tilltalsnamn-namn"
+fields.identifier = true
+evidence = "Identifier: Tilltalsnamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Tilltalsnamn på folkbokförda personer\""

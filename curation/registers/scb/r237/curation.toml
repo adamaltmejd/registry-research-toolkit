@@ -114578,3 +114578,9 @@ kind = "set"
 subject = "var:personunikt-lopnummer"
 fields.identifier = true
 evidence = "Identifier: Personunikt löpnummer is a person-level löpnummer, a pseudonymised personal key; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Ett unikt id-nummer.\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-panel-80-88-96"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, panel identifies a member of the ULF panel 1980/1988/1996 (provider definition: \"Löpnummer panel 80/88/96\") (maintainer ruling 2026-11-28, #2677: a bare Löpnummer with the unit unstated is an identifier unless it is a plain row number; flag-more only)."

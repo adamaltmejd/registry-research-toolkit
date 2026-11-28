@@ -1847,3 +1847,21 @@ kind = "set"
 subject = "set:sysselsattningsstatus-i-november"
 fields = { "description" = "Klassificering av skattad sysselsättningsstatus (förvärvsarbete) under november. Som förvärvsarbete räknas inkomstbringande arbete under i genomsnitt en timme per vecka under november. Finns enligt 1997 och 2001 års definition." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma text; de skiljer sig åt i definition.\ncatalog:variable_text:20709:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn"
+fields.identifier = true
+evidence = "Identifier: Förnamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Anger samtliga förnamn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn"
+fields.identifier = true
+evidence = "Identifier: Efternamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Efternamn - släktnamn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer"
+fields.identifier = true
+evidence = "Identifier: Löpnummer identifies the survey respondent (provider operational definition: \"Löpnumren används internt vid enkätutskick och avbockning etc.\") (maintainer ruling 2026-11-28, #2677: a bare Löpnummer with the unit unstated is an identifier unless it is a plain row number; flag-more only)."

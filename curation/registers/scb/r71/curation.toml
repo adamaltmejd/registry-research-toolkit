@@ -1972,3 +1972,9 @@ kind = "set"
 subject = "set:standardpoang"
 fields = { "description" = "Summa standardpoäng för värderingsenheten." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk definition; småhusenheter framgår av etiketten.\ncatalog:variable_text:17791:10592:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields.identifier = true
+evidence = "Identifier: Namn names the buyer or seller of a property (tables Förvärvare av fastighet and Överlåtare av fastighet, beside Person-/organisationsnummer and Juridisk form) (maintainer ruling 2026-11-28, #2677: a generic Namn that names a unit (firm, workplace, establishment, person) is an identifier, checked per register; flag-more only). Provider definition: \"Övergripande begrepp för namnsättning av olika objekt\""

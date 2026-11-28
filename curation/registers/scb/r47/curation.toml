@@ -4604,3 +4604,15 @@ kind = "set"
 subject = "var:studentens-namn"
 fields.identifier = true
 evidence = "Identifier: Studentens namn is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Övergripande begrepp för namnsättning av olika objekt\""
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields.identifier = true
+evidence = "Identifier: Namn names the doctoral student (provider operational definition: \"Doktorandens namn vid senaste rapporteringstillfället. Anges som efternamn + förnamn.\") (maintainer ruling 2026-11-28, #2677: a generic Namn that names a unit (firm, workplace, establishment, person) is an identifier, checked per register; flag-more only). Provider definition: \"Övergripande begrepp för namnsättning av olika objekt\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer"
+fields.identifier = true
+evidence = "Identifier: Löpnummer identifies each employment (provider operational definition: \"Skapas för att kunna identifiera varje unik anställning.\") (maintainer ruling 2026-11-28, #2677: a bare Löpnummer with the unit unstated is an identifier unless it is a plain row number; flag-more only)."

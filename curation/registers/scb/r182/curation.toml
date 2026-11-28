@@ -17846,3 +17846,9 @@ kind = "set"
 subject = "var:namn-juridiska-enheten"
 fields.identifier = true
 evidence = "Identifier: Namn, juridiska enheten names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den juridiska enhetens officiella namn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-anstallningar"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, antal anställningar numbers a person's employments and with the person's key identifies one employment (maintainer ruling 2026-11-28, #2677: job and employment keys are identifiers; flag-more only). Provider definition: \"Om en individ har en post anges löpnummer till 1. Om en individ har flera anställningar anges löpnummer 1-9.\""

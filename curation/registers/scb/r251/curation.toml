@@ -858,3 +858,9 @@ kind = "set"
 subject = "kursdeltagare-lasar: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per course participation in a school year; no course id, so the person id is the key and rows are not unique; school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:kursdeltid"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för kursdeltagaren identifies a course enrolment, one individual on one course (maintainer ruling 2026-11-28, #2677: course-enrolment keys are identifiers; flag-more only). Provider definition: \"Avser löpnummer för kursdeltagaren\""

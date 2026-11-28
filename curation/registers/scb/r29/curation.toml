@@ -20761,3 +20761,9 @@ kind = "set"
 subject = "set:utbildningsinriktning"
 fields = { "description" = "Inriktningen på en persons genomförda utbildning, klassificerad enligt Svensk utbildningsnomenklatur (SUN), för personens högsta utbildning, i en ursprunglig och en reviderad version." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är SUN-inriktning för högsta utbildning; den ena är reviderad.\ncatalog:variable_text:44497:10957:17897\ncatalog:variable_text:44498:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:fastnr"
+fields.identifier = true
+evidence = "Identifier: Fastighetsnummer identifies a property or dwelling (maintainer ruling 2026-11-28, #2677: property and dwelling keys are identifiers; flag-more only). Provider definition: \"Fastighetsnummer\""

@@ -336,3 +336,15 @@ kind = "set"
 subject = "var:foretagsnamn"
 fields.identifier = true
 evidence = "Identifier: Företagsnamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn\""
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggningens-namn-industri"
+fields.identifier = true
+evidence = "Identifier: Anläggningens namn names a plant or power station (maintainer ruling 2026-11-28, #2677: energy and wood-fuel plant and power-station names are identifiers; flag-more only). Provider definition: \"Anläggningens namn\""
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggningens-namn"
+fields.identifier = true
+evidence = "Identifier: Anläggningens namn (ArbNamn) names a plant or power station (maintainer ruling 2026-11-28, #2677: energy and wood-fuel plant and power-station names are identifiers; flag-more only). Provider definition: \"Anläggningens namn\""

@@ -13661,3 +13661,9 @@ kind = "set"
 subject = "var:lopnummer-kosthushall"
 fields.identifier = true
 evidence = "Identifier: Löpnummer, kosthushåll identifies a household; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Identitetsnummer för kosthushållet.\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnr"
+fields.identifier = true
+evidence = "Identifier: Löpnummer (LOPNR) is a löpnummer whose SCB object type is Hushåll, in the table Hushåll 1999-2001 (SCB Registerinformation, column LOPNR, VarId 2179: definition \"Löpnummer.\"); nothing states it is a plain row number (maintainer ruling 2026-11-28, #2677: a bare Löpnummer with the unit unstated is an identifier unless it is a plain row number; flag-more only)."

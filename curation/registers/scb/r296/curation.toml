@@ -2109,3 +2109,15 @@ kind = "set"
 subject = "var:namn-person"
 fields.identifier = true
 evidence = "Identifier: Namn, person is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personens namn\""
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftslamnarens-fornamn"
+fields.identifier = true
+evidence = "Identifier: Uppgiftslämnarens förnamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Företagets uppgiftslämnares förnamn\""
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftslamnarens-efternamn"
+fields.identifier = true
+evidence = "Identifier: Uppgiftslämnarens efternamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Företagets uppgiftslämnares efternamn\""

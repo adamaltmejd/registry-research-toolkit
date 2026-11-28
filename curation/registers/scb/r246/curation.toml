@@ -395,3 +395,15 @@ kind = "set"
 subject = "individer-i-privat-sektor: var:individnyckel"
 fields.row_key = true
 evidence = "Row key: individnyckel is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:nyckel"
+fields.identifier = true
+evidence = "Identifier: Nyckel is a key between individuals and firms (maintainer ruling 2026-11-28, #2677: job and employment keys are identifiers; flag-more only). Provider definition: \"Uppgiften är en nyckel mellan individer och företag.\""
+
+[[statement]]
+kind = "set"
+subject = "var:nyckel-key-l"
+fields.identifier = true
+evidence = "Identifier: Nyckel is a key between individuals and firms (maintainer ruling 2026-11-28, #2677: job and employment keys are identifiers; flag-more only). Provider definition: \"Uppgiften är en nyckel mellan individer och företag.\""

@@ -3327,3 +3327,15 @@ kind = "set"
 subject = "var:namn-juridiska-enheten"
 fields.identifier = true
 evidence = "Identifier: Namn, juridiska enheten names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den juridiska enhetens officiella namn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnr"
+fields.identifier = true
+evidence = "Identifier: Löpnummer identifies the survey respondent (provider operational definition: \"Löpnumren används internt vid enkätutskick och avbockning etc.\") (maintainer ruling 2026-11-28, #2677: a bare Löpnummer with the unit unstated is an identifier unless it is a plain row number; flag-more only)."
+
+[[statement]]
+kind = "set"
+subject = "var:unitid"
+fields.identifier = true
+evidence = "Identifier: Id-nummer, ramobjekt (PIN) identifies a frame object (provider definition: \"Löpnummer som identifierar ett ramobjekt under ett givet urvalsår.\") (maintainer ruling 2026-11-28, #2677: a bare Löpnummer with the unit unstated is an identifier unless it is a plain row number; flag-more only)."

@@ -6476,3 +6476,21 @@ kind = "set"
 subject = "var:samhpersonnr"
 fields.identifier = true
 evidence = "Identifier: Personnummer, samhörighet FoB holds a person's personnummer; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Personnummer för samhörighetsperson.\""
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetslopnr"
+fields.identifier = true
+evidence = "Identifier: Fastighetslöpnr identifies a property or dwelling (maintainer ruling 2026-11-28, #2677: property and dwelling keys are identifiers; flag-more only). Provider definition: \"SCB-internt löpnummer som ersättning för den officiella fastighetsbeteckningen.\""
+
+[[statement]]
+kind = "set"
+subject = "var:fastnr"
+fields.identifier = true
+evidence = "Identifier: Fastighetsnummer identifies a property or dwelling (maintainer ruling 2026-11-28, #2677: property and dwelling keys are identifiers; flag-more only). Provider definition: \"Fastighetsnummer\""
+
+[[statement]]
+kind = "set"
+subject = "var:kyrkbofastlopnr"
+fields.identifier = true
+evidence = "Identifier: Fastighetslöpnummer - folkb identifies a property or dwelling (maintainer ruling 2026-11-28, #2677: property and dwelling keys are identifiers; flag-more only). Provider definition: \"Fastighetslöpnummer för folkbokfört boende. SCB-internt löpnummer som ersättning för den officiella fastighetsbeteckningen.\""
