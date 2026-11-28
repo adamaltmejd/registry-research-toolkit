@@ -678,3 +678,9 @@ kind = "set"
 subject = "var:foretagets-namn"
 fields.identifier = true
 evidence = "Identifier: Företagets namn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn enl FDB\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnr"
+fields.identifier = true
+evidence = "Identifier: Löpnummer identifies the survey respondent (provider operational definition: \"Löpnumren används internt vid enkätutskick och avbockning etc.\") (maintainer ruling 2026-11-28, #2677: a bare Löpnummer with the unit unstated is an identifier unless it is a plain row number; flag-more only)."

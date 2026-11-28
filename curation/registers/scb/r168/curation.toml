@@ -8947,3 +8947,9 @@ kind = "set"
 subject = "set:vinst-vid-avyttring-av-anlaggningstillgangar"
 fields = { "description" = "Vinst vid avyttring av anläggningstillgångar som inte är finansiella, på enhetsnivåerna företagsenhet, kommun och verksamhetsenhet." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på tre enhetsnivåer enligt etiketterna.\ncatalog:variable_text:18604:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields.identifier = true
+evidence = "Identifier: Namn names the firm in FEK's firm-level tables (Slutdata företagsenhet and verksamhetsenhet, Preliminära data, and Investeringar per kommun, which carries the firm's bokslutsmånad and urvalsvikt beside a separate Kommun column) (maintainer ruling 2026-11-28, #2677: a generic Namn that names a unit (firm, workplace, establishment, person) is an identifier, checked per register; flag-more only). Provider definition: \"Övergripande begrepp för namnsättning av olika objekt\""

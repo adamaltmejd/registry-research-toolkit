@@ -1479,3 +1479,15 @@ kind = "set"
 subject = "var:namn-juridiska-enheten"
 fields.identifier = true
 evidence = "Identifier: Namn, juridiska enheten names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den juridiska enhetens officiella namn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:kdeltid"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för kursdeltagaren (KDeltID) identifies a course enrolment, one individual on one course (maintainer ruling 2026-11-28, #2677: course-enrolment keys are identifiers; flag-more only). Provider definition: \"Avser löpnummer för kursdeltagaren\""
+
+[[statement]]
+kind = "set"
+subject = "var:kursdeltid"
+fields.identifier = true
+evidence = "Identifier: Löpnummer för kursdeltagaren (KursDeltID) identifies a course enrolment, one individual on one course (maintainer ruling 2026-11-28, #2677: course-enrolment keys are identifiers; flag-more only). Provider definition: \"Avser löpnummer för kursdeltagaren\""

@@ -1082,3 +1082,9 @@ kind = "set"
 subject = "returravara: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields.identifier = true
+evidence = "Identifier: Namn names the reporting firm in the Returråvara table, beside its Person-/organisationsnummer (maintainer ruling 2026-11-28, #2677: a generic Namn that names a unit (firm, workplace, establishment, person) is an identifier, checked per register; flag-more only). Provider definition: \"Övergripande begrepp för namnsättning av olika objekt\""

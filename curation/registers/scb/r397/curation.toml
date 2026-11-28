@@ -643,3 +643,21 @@ kind = "set"
 subject = "set:kon"
 fields = { "description" = "Personens kön, härlett från personnumret." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk text.\ncatalog:variable_text:51921:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagarens-fornamn"
+fields.identifier = true
+evidence = "Identifier: Deltagarens förnamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Förnamnet som uppgetts till studieförbundet.\""
+
+[[statement]]
+kind = "set"
+subject = "var:deltagarens-efternamn"
+fields.identifier = true
+evidence = "Identifier: Deltagarens efternamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Efternamnet som uppgetts till studieförbundet.\""
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer"
+fields.identifier = true
+evidence = "Identifier: Löpnummer is a number SCB generates for the participant records of Deltagare i studieförbundens verksamhet and Studieförbund (provider operational definition: \"Ett nummer som genereras i registerframställningen.\"); nothing states it is a plain row number (maintainer ruling 2026-11-28, #2677: a bare Löpnummer with the unit unstated is an identifier unless it is a plain row number; flag-more only)."

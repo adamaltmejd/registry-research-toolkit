@@ -1435,3 +1435,9 @@ kind = "set"
 subject = "var:kontaktperson-2-kpers2"
 fields.identifier = true
 evidence = "Identifier: Kontaktperson 2 — KPers2 is a person's name; a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Kontaktperson hos arbetsstället, anges av uppgiftslämnaren\""
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields.identifier = true
+evidence = "Identifier: Namn names the reporting unit in Industrins energianvändning, a table keyed by the workplace's CFAR-nummer (maintainer ruling 2026-11-28, #2677: a generic Namn that names a unit (firm, workplace, establishment, person) is an identifier, checked per register; flag-more only). Provider definition: \"Övergripande begrepp för namnsättning av olika objekt\""

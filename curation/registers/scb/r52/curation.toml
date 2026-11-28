@@ -1127,3 +1127,9 @@ kind = "set"
 subject = "lonestrukturstatistik-statlig-sektor: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the employee; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-anstallningar"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, antal anställningar numbers a person's employments and with the person's key identifies one employment (maintainer ruling 2026-11-28, #2677: job and employment keys are identifiers; flag-more only). Provider definition: \"Om en individ har en post anges löpnummer till 1. Om en individ har flera anställningar anges löpnummer 1-9.\""

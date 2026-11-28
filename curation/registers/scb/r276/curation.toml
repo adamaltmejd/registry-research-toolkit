@@ -4063,3 +4063,15 @@ kind = "set"
 subject = "var:namn-juridiska-enheten"
 fields.identifier = true
 evidence = "Identifier: Namn, juridiska enheten names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Den juridiska enhetens officiella namn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn"
+fields.identifier = true
+evidence = "Identifier: Efternamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Efternamn - släktnamn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:tilltalsnamn"
+fields.identifier = true
+evidence = "Identifier: Tilltalsnamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Tilltalsnamn på folkbokförda personer\""

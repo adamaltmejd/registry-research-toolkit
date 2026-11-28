@@ -1644,3 +1644,9 @@ kind = "set"
 subject = "set:yrke"
 fields = { "description" = "Klassificering av en persons yrke enligt Standard för svensk yrkesklassificering (SSYK) eller International Standard Classification of Occupations (ISCO), samt tjänstebeteckning under mätmånaden." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna anger yrke i olika klassifikationer eller tjänstebeteckning.\ncatalog:variable_text:50154:9862:16801\ncatalog:variable_text:50181:9496:10592\ncatalog:variable_text:50168:9496:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-anstallningar"
+fields.identifier = true
+evidence = "Identifier: Löpnummer, antal anställningar numbers a person's employments and with the person's key identifies one employment (maintainer ruling 2026-11-28, #2677: job and employment keys are identifiers; flag-more only). Provider definition: \"Om en individ har en post anges löpnummer till 1. Om en individ har flera anställningar anges löpnummer 1-9.\""

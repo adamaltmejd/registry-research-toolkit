@@ -1259,3 +1259,75 @@ kind = "set"
 subject = "table:folkbokforda-biologiska"
 fields = { cumulative = true }
 evidence = "SCB Registerinformation, register Flergenerationsregistret (dictionaries/register.tsv row 17): the register holds persons born from 1932 \"som varit folkbokförda någon gång sedan 1961\", so each yearly delivery holds the whole register from 1961 to its own date; SCB documents one version, 1961-01-01 -- 2025-12-31. Maintainer ruling 2026-11-17 (#2536): the register's tables are cumulative. The personakt tables (1947-1967) are a closed archive and are not marked."
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn"
+fields.identifier = true
+evidence = "Identifier: Förnamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Anger samtliga förnamn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn"
+fields.identifier = true
+evidence = "Identifier: Efternamn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Efternamn - släktnamn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn-barn"
+fields.identifier = true
+evidence = "Identifier: Förnamn barn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Förnamn för personens barn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn-barn"
+fields.identifier = true
+evidence = "Identifier: Efternamn barn is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Efternamn - släktnamn för personens barn.\""
+
+[[statement]]
+kind = "set"
+subject = "var:fornamn-maka-make"
+fields.identifier = true
+evidence = "Identifier: Förnamn maka/make is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Samtliga förnamn för personens maka/make.\""
+
+[[statement]]
+kind = "set"
+subject = "var:efternamn-maka-make"
+fields.identifier = true
+evidence = "Identifier: Efternamn maka/make is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Efternamn - släktnamn för personens maka/make.\""
+
+[[statement]]
+kind = "set"
+subject = "var:fornamnfar"
+fields.identifier = true
+evidence = "Identifier: Förnamn far is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Förnamn för personens far.\""
+
+[[statement]]
+kind = "set"
+subject = "var:efternamnfar"
+fields.identifier = true
+evidence = "Identifier: Efternamn far is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Efternamn - släktnamn för personens far.\""
+
+[[statement]]
+kind = "set"
+subject = "var:fornamnmor"
+fields.identifier = true
+evidence = "Identifier: Förnamn mor is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Förnamn för personens mor.\""
+
+[[statement]]
+kind = "set"
+subject = "var:efternamnmor"
+fields.identifier = true
+evidence = "Identifier: Efternamn mor is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Efternamn - släktnamn för personens mor.\""
+
+[[statement]]
+kind = "set"
+subject = "var:fornamnforalder1"
+fields.identifier = true
+evidence = "Identifier: Förnamn förälder 1 is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Samtliga förnamn för den andre föräldern som inte är den person som personakten avser.\""
+
+[[statement]]
+kind = "set"
+subject = "var:efternamnforalder1"
+fields.identifier = true
+evidence = "Identifier: Efternamn förälder 1 is part of a person's name (maintainer ruling 2026-11-28, #2677: partial person names (förnamn, efternamn, tilltalsnamn alone) are identifiers; flag-more only). Provider definition: \"Efternamn - släktnamn för den andre föräldern som inte är den person som personakten avser.\""

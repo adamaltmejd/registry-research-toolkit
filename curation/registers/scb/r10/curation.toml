@@ -5829,3 +5829,9 @@ kind = "set"
 subject = "var:tradid"
 fields = { "facets" = { "undersokning" = { "value" = "tradgard", "label" = "Trädgårdsgrödor" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
 evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (trädgårdsgröda, TRADID)\ncatalog:variable_text:43231:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields.identifier = true
+evidence = "Identifier: Namn names the farm operator or agricultural enterprise (provider operational definition: \"Namn på brukaren eller jordbruksföretaget.\") (maintainer ruling 2026-11-28, #2677: a generic Namn that names a unit (firm, workplace, establishment, person) is an identifier, checked per register; flag-more only). Provider definition: \"Övergripande begrepp för namnsättning av olika objekt\""

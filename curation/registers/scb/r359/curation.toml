@@ -396,3 +396,9 @@ kind = "set"
 subject = "var:foretagsnamn"
 fields.identifier = true
 evidence = "Identifier: Företagsnamn names a firm or other organisation (legal unit, employer, owner or respondent); a variable naming a unit is an identifier (maintainer ruling 2026-11-27, #2677: flag every unit-naming variable, flag-more only). Provider definition: \"Företagets namn\""
+
+[[statement]]
+kind = "set"
+subject = "var:kontaktperson"
+fields.identifier = true
+evidence = "Identifier: Kontaktperson names the contact person (maintainer ruling 2026-11-28, #2677: contact persons are identifiers; flag-more only). Provider definition: \"Namn på kontaktperson\""
